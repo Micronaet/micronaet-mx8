@@ -49,10 +49,14 @@ class AccountInvoice(orm.Model):
     '''
     _inherit = 'account.invoice'
     
+    # TODO override partner_id onchange for set up carrier_id
+    
     _columns = {
         'start_transport': fields.datetime('Start transport', 
             help='Used in direct invoice'),
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
             help='Partner bank account used for payment'),
+        'default_carrier_id': fields.many2one(
+            'delivery.carrier', 'Carrier'), 
         }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
