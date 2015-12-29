@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_journal_link_form">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="account_code" />
+                    <field name="account_serie" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_journal_link_tree">
+            <field name="name">account.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_tree"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="account_code" />
+                    <field name="account_serie" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+

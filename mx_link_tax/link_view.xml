@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_tax_link_form">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_tax_link_tree">
+            <field name="name">account.tax.tree</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_tree"/>
+            <field name="arch" type="xml">
+                <field name="description" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
