@@ -18,7 +18,10 @@
                             </group>
                         </group>
                     </page>
-                </xpath>            
+                </xpath>        
+                <field name="payment_term_id" position="after">
+                    <field name="used_bank_id" domain="[('partner_id','=',partner_id)]" />
+                </field>
             </field>
         </record>
     </data>
