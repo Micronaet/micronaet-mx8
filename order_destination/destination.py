@@ -38,11 +38,46 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResPartner(orm.Model):
+    ''' Change name_get for show address
+    ''' 
+    _inherit = 'res.partner'
+    
+    def name_get(self, cr, uid, ids, context=None):
+        """ Return a list of tuples contains id, name.
+            result format : {[(id, name), (id, name), ...]}
+            
+            @param cr: cursor to database
+            @param uid: id of current user
+            @param ids: list of ids for which name should be read
+            @param context: context arguments, like lang, time zone
+            
+            @return: returns a list of tupples contains id, name
+        """
+        # Used for not have destination as: parent (type
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]            
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            res.append((record.id, record.name))
+        return res
+    
 class SaleOrder(orm.Model):
     ''' Manage delivery in header
     '''
     _inherit = 'sale.order'
     
+    # Override onchange for reset address name
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        res = super(SaleOrder, self).onchange_partner_id(
+            cr, uid, ids, part, context=context)
+        # Reset value if not present    
+        res['value']['destination_partner_id'] = False
+        res['value']['invoice_partner_id'] = False
+        return res
+
     _columns = {
         'destination_partner_id': fields.many2one(
             'res.partner', 'Destination'),     
