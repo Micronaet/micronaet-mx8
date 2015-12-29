@@ -31,6 +31,7 @@
     'depends': [
         'base',
         'sale',
+        'stock',
         'l10n_it_ddt',
         ],
     'init_xml': [],

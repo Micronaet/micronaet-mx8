@@ -31,5 +31,20 @@
                 </xpath>
              </field>
         </record>
+                
+        <record model="ir.ui.view" id="view_stock_picking_unlock_form">
+            <field name="name">stock.picking.unlock.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="move_lines" position="attributes">
+                     <attribute name="modifiers">{'readonly': [['state', 'in', ['cancel']]]}</attribute>
+                     <attribute name="attrs">{'readonly': [('state', 'in', ('cancel',))]}</attribute>
+                </field>
+                <!--<field name="ddt_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>-->
+            </field>
+        </record>
     </data>
 </openerp>
