@@ -10,7 +10,7 @@
                <page string="Note">
                    <group colspan="4" col="4">
                        <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','account.invoice')]" context="{'default_object':'account.invoice'}"/>
-                       <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','account.invoice.line')]" context="{'default_object':'account.invoice.line'}"/>
+                       <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','account.invoice')]" context="{'default_object':'account.invoice'}"/>
 
                        <separator string="Note (pre invoice line)" colspan="2" />
                        <separator string="Note (post invoice line)" colspan="2" />
