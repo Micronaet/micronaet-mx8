@@ -18,22 +18,25 @@
 ###############################################################################
 
 {
-    'name': '',
+    'name': 'Agent field',
     'version': '0.1',
-    'category': '',
-    'description': '''        
+    'category': 'Customization',
+    'description': '''
+        Add agent in various document
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
     'license': 'AGPL-3',
     'depends': [
         'base',
+        'sale',
+        'account',
+        'stock',
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        #'security/ir.model.access.csv',    
-        #'_view.xml',
+        'agent_view.xml',
         ],
     'active': False,
     'installable': True,

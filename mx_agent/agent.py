@@ -38,4 +38,39 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class SaleOrder(orm.Model):
+    """ Model name: Sale Order
+    """    
+    _inherit = 'sale.order'
+    
+    # TODO onchange for setup from partner
+    
+    _columns = {
+        'mx_agent_id': fields.many2one('res.partner', 'Agent', 
+            domain=[('is_agent', '=', True)]),
+        }
+
+class AccountInvoice(orm.Model):
+    """ Model name: Account Invoice
+    """    
+    _inherit = 'account.invoice'
+    
+    # TODO onchange for setup from partner
+    
+    _columns = {
+        'mx_agent_id': fields.many2one('res.partner', 'Agent', 
+            domain=[('is_agent', '=', True)]),
+        }
+
+class StockPicking(orm.Model):
+    """ Model name: Stock Picking    
+    """    
+    _inherit = 'stock.picking'
+    
+    # TODO onchange for setup from partner
+    
+    _columns = {
+        'mx_agent_id': fields.many2one('res.partner', 'Agent', 
+            domain=[('is_agent', '=', True)]),
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
