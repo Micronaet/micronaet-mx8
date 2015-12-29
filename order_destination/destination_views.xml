@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!-- sale.order --> 
         <record model="ir.ui.view" id="view_order_form_destination_fields">
             <field name="name">sale.order.destination</field>
             <field name="model">sale.order</field>
@@ -19,6 +18,21 @@
             </field>
         </record>
         
+        <record model="ir.ui.view" id="view_purchase_order_form">
+            <field name="name">purchase.order.destination</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">        
+              <field name="partner_id" position="after">
+                  <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> <!--,('is_company','=',False)-->
+                  <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> <!--,TODO ('type','=','invoice')-->                      
+               </field>
+               <field name="partner_id" position="attributes">
+                   <attribute name="domain">[('supplier','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
+               </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_stock_picking_partner_form">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>

@@ -80,9 +80,9 @@ class AccountInvoice(orm.Model):
         'default_carrier_id': fields.many2one(
             'delivery.carrier', 'Carrier'), 
         'invoice_type': fields.selection([
-            ('ft1', 'FT 1'),
-            ('ft2', 'FT 2'),
-            ('ft3', 'FT 3'),
+            ('ft1', 'FT 1 (normal)'),
+            ('ft2', 'FT 2 ()'),
+            ('ft3', 'FT 3 ()'),
             ], 'Invoice module'),
         }    
         

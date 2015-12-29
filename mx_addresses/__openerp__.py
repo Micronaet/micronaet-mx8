@@ -32,11 +32,12 @@
         'sale',
         'account',
         'stock',
+        'purchase',
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        'agent_view.xml',
+        'address_view.xml',
         ],
     'active': False,
     'installable': True,

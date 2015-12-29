@@ -85,6 +85,27 @@ class SaleOrder(orm.Model):
             'res.partner', 'Invoice'),     
         }
 
+class PurchaseOrder(orm.Model):
+    ''' Manage delivery in header
+    '''
+    _inherit = 'purchase.order'
+    
+    # Override onchange for reset address name
+    #def onchange_partner_id(self, cr, uid, ids, part, context=None):
+    #    res = super(SaleOrder, self).onchange_partner_id(
+    #        cr, uid, ids, part, context=context)
+    #    # Reset value if not present    
+    #    res['value']['destination_partner_id'] = False
+    #    res['value']['invoice_partner_id'] = False
+    #    return res
+
+    _columns = {
+        'destination_partner_id': fields.many2one(
+            'res.partner', 'Destination'),     
+        'invoice_partner_id': fields.many2one(
+            'res.partner', 'Invoice'),     
+        }
+
 class AccountInvoice(orm.Model):
     ''' Manage delivery in header
     '''
