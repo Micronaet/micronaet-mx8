@@ -45,7 +45,7 @@
                     </page>
                 </xpath>
                 <field name="partner_id" position="after">
-                    <field name="stock_picking_ids" attrs="{'invisible': [('state','not in',('confirmed','manual','done'))]}">
+                    <field name="stock_picking_ids" attrs="{'invisible': [('state','not in',('confirmed','progress','manual','done'))]}">
                         <tree string="Pick out" > <!--colors="black:ddt_number!=False"-->
                             <field name="min_date" /> <!--planned date-->
                             <field name="name" />
