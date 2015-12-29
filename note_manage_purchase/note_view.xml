@@ -20,23 +20,12 @@
                    </group> 
                </page>
            </xpath>
-        </field>
-    </record>
-
-    <!--TODO put editable TOP!!!<record model="ir.ui.view" id="view_purchase_line_line_note_form">
-        <field name="name">purchase.order.line.note.form</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_form" />
-        <field name="arch" type="xml">        
-           <xpath expr="//notebook/page/field[@name='order_line']/form//field[@name='price_unit']" position="after">
+           <xpath expr="//notebook/page/field[@name='order_line']//field[@name='price_unit']" position="after">
                <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','purchase.order.line')]" context="{'default_object':'purchase.order.line'}"/>
                <field name="text_note_pre" colspan="2" nolabel="1"/>
-               <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','purchase.order.line')]" context="{'default_object':'purchase.order.line'}"/>
-               <field name="text_note_post" colspan="2" nolabel="1"/>
            </xpath>
         </field>
-    </record>-->
-    
+    </record>
     </data>
 </openerp>
 
