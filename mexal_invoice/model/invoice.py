@@ -79,5 +79,14 @@ class AccountInvoice(orm.Model):
             help='Partner bank account used for payment'),
         'default_carrier_id': fields.many2one(
             'delivery.carrier', 'Carrier'), 
+        'invoice_type': fields.selection([
+            ('ft1', 'FT 1'),
+            ('ft2', 'FT 2'),
+            ('ft3', 'FT 3'),
+            ], 'Invoice module'),
+        }    
+        
+    _defaults = {
+        'invoice_type': lambda *x: 'ft1',
         }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

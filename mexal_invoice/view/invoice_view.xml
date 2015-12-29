@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <field name="date_invoice" position="after">
                     <field name="start_transport"/>
+                    <field name="invoice_type"/>                    
 			    </field>
                 <field name="payment_term" position="after">
                     <group colspan="4" col="4">
