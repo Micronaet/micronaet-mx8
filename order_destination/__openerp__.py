@@ -23,6 +23,7 @@
     'category': 'Order',
     'description': '''
         Manage destination for sale order child of partner
+        Manage all document after order (picking, invoice)
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
@@ -30,6 +31,8 @@
     'depends': [
         'base',
         'sale',
+        'stock',
+        'account',
         ],
     'init_xml': [],
     'demo': [],

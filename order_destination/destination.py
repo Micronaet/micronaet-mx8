@@ -46,5 +46,32 @@ class SaleOrder(orm.Model):
     _columns = {
         'destination_partner_id': fields.many2one(
             'res.partner', 'Destination'),     
+        'invoice_partner_id': fields.many2one(
+            'res.partner', 'Invoice'),     
         }
+
+class AccountInvoice(orm.Model):
+    ''' Manage delivery in header
+    '''
+    _inherit = 'account.invoice'
+    
+    _columns = {
+        'destination_partner_id': fields.many2one(
+            'res.partner', 'Destination'),     
+        'invoice_partner_id': fields.many2one(
+            'res.partner', 'Invoice'),     
+        }
+
+class StockPicking(orm.Model):
+    ''' Manage delivery in header
+    '''
+    _inherit = 'stock.picking'
+    
+    _columns = {
+        'destination_partner_id': fields.many2one(
+            'res.partner', 'Destination'),     
+        'invoice_partner_id': fields.many2one(
+            'res.partner', 'Invoice'),     
+        }
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
