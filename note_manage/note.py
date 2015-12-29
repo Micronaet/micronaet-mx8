@@ -63,6 +63,7 @@ class ResNoteTemplate(orm.Model):
             ('stock.picking', 'DDT'),
 
             ('account.invoice', 'Invoice'),
+            ('account.invoice.line', 'Invoice line'),
 
             ('mrp.production', 'MRP order'),
 

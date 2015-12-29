@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_account_invoice_note_form">
+        <field name="name">account.invoice.note.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//notebook/page" position="after">
+               <page string="Note">
+                   <group colspan="4" col="4">
+                       <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','account.invoice')]" context="{'default_object':'account.invoice'}"/>
+                       <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','account.invoice.line')]" context="{'default_object':'account.invoice.line'}"/>
+
+                       <separator string="Note (pre invoice line)" colspan="2" />
+                       <separator string="Note (post invoice line)" colspan="2" />
+                       
+                       <field name="text_note_pre" colspan="2" nolabel="1"/>
+                       <field name="text_note_post" colspan="2" nolabel="1"/>
+                   </group> 
+               </page>
+           </xpath>
+        </field>
+    </record>
+
+    <!--<record model="ir.ui.view" id="view_order_line_line_note_form">
+        <field name="name">sale.order.line.note.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">        
+           <xpath expr="//notebook/page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="after">
+               <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
+               <field name="text_note_pre" colspan="2" nolabel="1"/>
+               <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
+               <field name="text_note_post" colspan="2" nolabel="1"/>
+           </xpath>
+        </field>
+    </record>-->
+    
+    </data>
+</openerp>
+
