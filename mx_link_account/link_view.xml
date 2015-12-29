@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_link_form">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+        <!--account.view_account_tree-->
+        <record model="ir.ui.view" id="view_account_link_tree">
+            <field name="name">account.account.tree</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
