@@ -49,7 +49,7 @@ class ResNoteTemplate(orm.Model):
             help='Propagate down the document'),
         'name': fields.char(
             'Template name', size=64, required=True),     
-        'text': fields.text('Text', required=True),
+        'text': fields.text('Text', required=True, translate=True),
         'note': fields.text('Note'),
         'object': fields.selection([
             # Virtual (to be populated) TODO
