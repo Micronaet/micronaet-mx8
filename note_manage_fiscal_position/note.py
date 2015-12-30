@@ -44,13 +44,16 @@ class AccountFiscalPosition(orm.Model):
     _inherit = 'account.fiscal.position'
 
     _columns = {
-        'text_comment_invoice': fields.char('Invoice comment', size=250),    
-        'text_note_invoice': fields.text('Invoice note'),
+        'text_comment_invoice': fields.char('Invoice comment', size=250, 
+            translate=True),    
+        'text_note_invoice': fields.text('Invoice note', translate=True),
 
-        'text_comment_ddt': fields.char('DDT comment', size=250),
-        'text_note_ddt': fields.text('DDT note'),
+        'text_comment_ddt': fields.char('DDT comment', size=250, 
+            translate=True),
+        'text_note_ddt': fields.text('DDT note', translate=True),
 
-        'text_comment_picking': fields.char('Picking comment', size=250),    
-        'text_note_picking': fields.text('Picking note'),
+        'text_comment_picking': fields.char('Picking comment', size=250, 
+            translate=True),    
+        'text_note_picking': fields.text('Picking note', translate=True),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
