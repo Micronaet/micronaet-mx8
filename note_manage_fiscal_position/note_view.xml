@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_position_note_form">
+            <field name="name">account.fiscal.position.note.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="inherit_id" ref="account.view_account_position_form"/>
+            <field name="arch" type="xml">
+                <field name="account_ids" position="after">
+                   <group colspan="4" col="6">
+                       <separator string="Invoice" colspan="2" />
+                       <separator string="DDT" colspan="2" />
+                       <separator string="Picking" colspan="2" />
+                        
+                       <field name="text_comment_invoice" nolabel="1" colspan="2" placeholder="Invoice report comment..."/>
+                       <field name="text_comment_ddt" nolabel="1" colspan="2" placeholder="DDT report comment..." />
+                       <field name="text_comment_picking" nolabel="1" colspan="2" placeholder="Picking report comment..." />
+                       
+                       <field name="text_note_invoice" nolabel="1" colspan="2" placeholder="Invoice report note..." />
+                       <field name="text_note_ddt" nolabel="1" colspan="2" placeholder="DDT report note..."  />
+                       <field name="text_note_picking" nolabel="1" colspan="2" placeholder="Picking report note..."  />
+                   </group> 
+               </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+
