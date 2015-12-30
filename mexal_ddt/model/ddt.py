@@ -46,6 +46,10 @@ _logger = logging.getLogger(__name__)
 class StockPicking(orm.Model):
     _inherit = 'stock.picking'
     
+    _columns = {
+        'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
+            help='Partner bank account used for payment'),        
+        }
     # -------------    
     # Button event:    
     # ------------- 

@@ -13,6 +13,11 @@
                     <button name="force_assign_ddt" string="Assign DDT" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('ddt_number','!=',False)]}" /> <!--jump workflow-->
                     <button name="print_ddt" string="Print DDT" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('ddt_number','=',False)]}" />
 			    </field>
+                <xpath expr="/form//notebook/page/field[@name='note']" position="before">
+                    <group colspan="4" col="4">
+                        <field name="used_bank_id" />
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>
