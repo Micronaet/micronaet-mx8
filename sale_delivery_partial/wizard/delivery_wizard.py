@@ -203,7 +203,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
 
         # Read delivered per sale order line (or picked)
         sol_status = {}
-        for pick in sale_proxy.picking_ids :
+        for pick in sale_proxy.stock_picking_ids :
             for line in pick.move_lines:
                 sol_id = line.sale_line_id.id # TODO correct?
                 if sol_id not in sol_status:
