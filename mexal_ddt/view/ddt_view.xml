@@ -23,7 +23,7 @@
            </field>
            <field name="carrier_id" position="after">
                <field name="default_carrier_id" />
-               <field name="payment_term_id" />
+               <field name="payment_term_id" domain="[('partner_id','=',partner_id)]"/>
                <field name="used_bank_id" />               
            </field>
         </field>
