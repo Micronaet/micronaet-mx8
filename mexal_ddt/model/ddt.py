@@ -43,13 +43,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-class product_product(osv.osv):
-    _inherit = 'product.product'
-
-    # Override sale_stock procurement procedure!
-    def need_procurement(self, cr, uid, ids, context=None):
-        return False
-
 class StockPicking(orm.Model):
     _inherit = 'stock.picking'
     
