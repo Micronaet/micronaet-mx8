@@ -46,7 +46,7 @@ _logger = logging.getLogger(__name__)
 class product_product(osv.osv):
     _inherit = 'product.product'
 
-    #     
+    # Override sale_stock procurement procedure!
     def need_procurement(self, cr, uid, ids, context=None):
         return False
 
@@ -60,7 +60,7 @@ class StockPicking(orm.Model):
     # -------------    
     # Button event:    
     # ------------- 
-    def print_ddt(self, cr, uid, ids, context=None):
+    """def print_ddt(self, cr, uid, ids, context=None):
         ''' Print report (for pop up form)
         '''   
         return { # action report
@@ -99,5 +99,5 @@ class StockPicking(orm.Model):
         # TODO set current date for delivery ?? 
         # TODO correct!!?!?!
         return self.pool.get('wizard.assign.ddt').assign_ddt(
-            cr, uid, ids, context=ctx)
+            cr, uid, ids, context=ctx)"""
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
