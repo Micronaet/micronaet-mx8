@@ -129,5 +129,17 @@ class StockPicking(orm.Model):
         'invoice_partner_id': fields.many2one(
             'res.partner', 'Invoice'),     
         }
+
+class StockDdt(orm.Model):
+    ''' Manage delivery in header
+    '''
+    _inherit = 'stock.ddt'
+    
+    _columns = {
+        'destination_partner_id': fields.many2one(
+            'res.partner', 'Destination'),     
+        'invoice_partner_id': fields.many2one(
+            'res.partner', 'Invoice'),     
+        }
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

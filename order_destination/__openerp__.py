@@ -34,6 +34,7 @@
         'stock',
         'account',
         'purchase',
+        'l10n_it_ddt',
         ],
     'init_xml': [],
     'demo': [],

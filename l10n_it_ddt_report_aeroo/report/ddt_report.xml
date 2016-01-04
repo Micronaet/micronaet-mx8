@@ -4,7 +4,7 @@
         <record id="aeroo_stock_picking_ddt_report_id" model="ir.actions.report.xml">
             <field name="name">DDT report</field>
             <field name="type">ir.actions.report.xml</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.ddt</field>
             <field name="report_name">custom_ddt_report</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-odt</field>
@@ -18,7 +18,7 @@
         <ir_set>
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
-            <field eval="['stock.picking']" name="models"/>
+            <field eval="['stock.ddt']" name="models"/>
             <field name="name">custom_ddt</field>
             <field eval="'ir.actions.report.xml,'+str(aeroo_stock_picking_ddt_report_id)" name="value"/>
             <field eval="True" name="isobject"/>
