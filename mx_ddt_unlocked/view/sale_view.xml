@@ -46,5 +46,17 @@
                 </field>-->
             </field>
         </record>
+
+    <record model="ir.ui.view" id="view_stock_ddt_unlock_form">
+        <field name="name">stock.ddt.unlock.form</field>
+        <field name="model">stock.ddt</field>
+        <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+        <field name="arch" type="xml">           
+           <field name="picking_ids" position="attributes">
+               <attribute name="readonly">0</attribute>               
+           </field>
+        </field>
+    </record>
+        
     </data>
 </openerp>
