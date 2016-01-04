@@ -32,6 +32,7 @@
         'base',
         'sale',
         'sale_stock',
+        'l10n_it_ddt',
         ],
     'init_xml': [],
     'demo': [],

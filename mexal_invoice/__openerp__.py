@@ -30,6 +30,7 @@
     'depends': [
         'base',
         'account',
+        'delivery', # for carrier
         ],
     'init_xml': [],
     'demo': [],
