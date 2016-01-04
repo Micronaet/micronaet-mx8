@@ -55,13 +55,26 @@ class StockPicking(orm.Model):
     '''
     _inherit = 'stock.picking'
     
-    def force_assign_pick_to_ddt(self, cr, uid, ids, context=None):
+    """def force_assign_pick_to_ddt(self, cr, uid, ids, context=None):
         ''' Force creation of new DDT using wizard and associate
         '''
         wizard_pool = self.pool.get('ddt.from.pickings')
-        import pdb; pdb.set_trace()
-        wizard_pool.create(cr, uid, ids, context=context)
+        context['active_ids'] = ids 
+        wizard_id = wizard_pool.create(cr, uid, {}, context=context)
+            
+        wizard_pool.create(cr, uid, [wizard_id], context=context)
+        return True"""
+    
+    def open_ddt_report(self, cr, uid, ids, context=None):
+        ''' Open DDT form if present        
+        '''
         return True
+        
+    def open_ddt_form(self, cr, uid, ids, context=None):
+        ''' Open DDT report directly if present
+        '''
+        return True
+    
     
     _columns = {
         'sale_id': fields.many2one('sale.order', 'Sale order'), 
