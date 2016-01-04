@@ -196,6 +196,9 @@ class SaleOrder(orm.Model):
         for field in extra_fields:
             picking_data[field] = order.__getattribute__(field).id
         
+        # TODO Keep picking invoiceable???
+        #picking_data['invoice_state'] = '2binvoiced'
+        
         # Create record    
         picking_id = picking_pool.create(cr, uid, picking_data, 
             context=context)
@@ -219,8 +222,9 @@ class SaleOrder(orm.Model):
                     move_data['product_uom_qty'] = order_line_ids[line.id]                        
                     
                     # TODO workflow brutal forced: ****************************
-                    #move_data['state'] = 'assigned'
+                    move_data['state'] = 'assigned' # TODO controllare se è corretto!!!!
                     # *********************************************************
+                    move_data['invoice_state'] = '2binvoiced'
                     
                     if not move_data['product_uom_qty']:
                         continue
