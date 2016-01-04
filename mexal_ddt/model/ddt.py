@@ -43,7 +43,23 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class StockDdt(orm.Model):
+    _inherit = 'stock.ddt'
+    
+    _columns = {
+        'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
+            help='Partner bank account used for payment'),
+
+        'payment_term_id': fields.many2one(
+            'account.payment.term', 'Payment term'),
+
+        # XXX there's also carrier_id...
+        'default_carrier_id': fields.many2one(
+            'delivery.carrier', 'Default carrier'),     
+        }
+
 class StockPicking(orm.Model):
+    # TODO remove!!!
     _inherit = 'stock.picking'
     
     _columns = {

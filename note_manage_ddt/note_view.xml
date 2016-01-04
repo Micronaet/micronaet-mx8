@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_stock_ddt_note_form">
+        <field name="name">stock.ddt.note.form</field>
+        <field name="model">stock.ddt</field>
+        <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//notebook/page" position="after">
+               <page string="Note">
+                   <group colspan="4" col="4">
+                       <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','stock.ddt')]" context="{'default_object':'stock.ddt'}"/>
+                       <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','stock.ddt')]" context="{'default_object':'stock.ddt'}"/>
+
+                       <separator string="Note (pre invoice line)" colspan="2" />
+                       <separator string="Note (post invoice line)" colspan="2" />
+                       
+                       <field name="text_note_pre" colspan="2" nolabel="1"/>
+                       <field name="text_note_post" colspan="2" nolabel="1"/>
+                   </group> 
+               </page>
+           </xpath>
+           <!--<field name="invoice_line" position="attributes">
+               <attribute name="widget">0</attribute>
+               <attribute name="editable">top</attribute>
+           </field>-->
+           
+           <!--TODO use stock.movement !!!!!
+           <xpath expr="//notebook/page/field[@name='invoice_line']//field[@name='price_unit']" position="after">
+               <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
+               <field name="text_note_pre" colspan="2" nolabel="1"/>
+           </xpath>-->
+               <!--<field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
+               <field name="text_note_post" colspan="2" nolabel="1"/>-->
+        </field>
+    </record>
+
+    <!--<record model="ir.ui.view" id="view_order_line_line_note_form">
+        <field name="name">sale.order.line.note.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">        
+           <xpath expr="//notebook/page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="after">
+               <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
+               <field name="text_note_pre" colspan="2" nolabel="1"/>
+               <field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
+               <field name="text_note_post" colspan="2" nolabel="1"/>
+           </xpath>
+        </field>
+    </record>-->
+    
+    </data>
+</openerp>
+
