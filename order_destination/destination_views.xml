@@ -33,6 +33,7 @@
             </field>
         </record>
 
+        <!--TODO needed?-->
         <record model="ir.ui.view" id="view_stock_picking_partner_form">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
@@ -62,6 +63,27 @@
                  </field>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="view_stock_ddt_partner_form">
+            <field name="name">stock.ddt.form</field>
+            <field name="model">stock.ddt</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+            <field name="arch" type="xml">
+                 <field name="partner_id" position="after">
+                      <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]"/>
+                      <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address', '=', True)]"/>
+                 </field>
+                 <field name="partner_id" position="attributes">
+                     <attribute name="domain">[('customer','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
+                 </field>
+                 <field name="delivery_address_id" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                 </field>
+            </field>
+        </record>
+
+
+        
     </data>
 </openerp>
 
