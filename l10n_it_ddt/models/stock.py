@@ -32,7 +32,8 @@ class StockPickingCarriageCondition(models.Model):
     _name = "stock.picking.carriage_condition"
     _description = "Carriage Condition"
 
-    name = fields.Char(string='Carriage Condition', required=True)
+    name = fields.Char(string='Carriage Condition', required=True,
+       translate=True)
     note = fields.Text(string='Note')
 
 
@@ -41,7 +42,8 @@ class StockPickingGoodsDescription(models.Model):
     _name = 'stock.picking.goods_description'
     _description = "Description of Goods"
 
-    name = fields.Char(string='Description of Goods', required=True)
+    name = fields.Char(string='Description of Goods', required=True,
+       translate=True)
     note = fields.Text(string='Note')
 
 
@@ -50,7 +52,8 @@ class StockPickingTransportationReason(models.Model):
     _name = 'stock.picking.transportation_reason'
     _description = 'Reason for Transportation'
 
-    name = fields.Char(string='Reason For Transportation', required=True)
+    name = fields.Char(string='Reason For Transportation', required=True,
+       translate=True)
     note = fields.Text(string='Note')
 
 
@@ -59,7 +62,8 @@ class StockPickingTransportationMethod(models.Model):
     _name = 'stock.picking.transportation_method'
     _description = 'Method of Transportation'
 
-    name = fields.Char(string='Method of Transportation', required=True)
+    name = fields.Char(string='Method of Transportation', required=True,
+       translate=True)
     note = fields.Text(string='Note')
 
 class StockMove(models.Model):

@@ -21,13 +21,13 @@
                                     widget="selection"/>
                                 <field name="parcels" />
                             </group>
-                            <!--<group>
+                            <group>
                                 <field name="create_ddt"/>
-                            </group>-->
+                            </group>
                         </group>
-                        <!--<group string="Related DDTs">
+                        <group string="Related DDTs">
                             <field name="ddt_ids" nolabel="1"/>
-                        </group>-->
+                        </group>
                     </page>
                 </xpath>
             </field>

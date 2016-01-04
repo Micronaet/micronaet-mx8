@@ -220,9 +220,10 @@ class SaleOrderLine(orm.Model):
             move_ids = move_pool.search(cr, uid, [
                 ('sale_line_id', '=', line.id)], context=context)                
             for move in move_pool.browse(cr, uid, move_ids, context=context):
-                if move.picking_id.ddt_number: # was marked as DDT
-                    # TODO check UOM!!! for 
-                    res[line.id] += move.product_qty
+                # TODO jump picking for virtual count!!!!!!!!!!!!!!!!!!!!!!!!!!
+                #if move.picking_id.ddt_number: # was marked as DDT
+                # TODO check UOM!!! for 
+                res[line.id] += move.product_qty
         return res
         
     _columns = {

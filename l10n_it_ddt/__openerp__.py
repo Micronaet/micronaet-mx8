@@ -25,13 +25,13 @@
     'version': '1.0',
     'category': 'Localization/Italy',
     'summary': 'Documento di Trasporto',
-    'description': '''
+    'description': """
 Customizations needed to manage the italian DdT (delivery order).
 
 Class, method and fields name are the same of l10n_it_sale, in order
 to guarantee compatibility.
 
-    ''',
+    """,
     'author': 'Davide Corio',
     'website': 'http://www.davidecorio.com',
     'depends': ['sale_stock', 'stock_account'],
@@ -48,7 +48,7 @@ to guarantee compatibility.
         'workflow/stock_ddt_workflow.xml',
         'views/report_ddt.xml'
     ],
-    'test': [],
+    'test': ['tests/new_ddt.yml'],
     'installable': True,
     'active': False,
 }
