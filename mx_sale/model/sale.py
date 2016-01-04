@@ -73,7 +73,22 @@ class StockPicking(orm.Model):
     def open_ddt_form(self, cr, uid, ids, context=None):
         ''' Open DDT report directly if present
         '''
-        return True
+        assert len(ids) == 1, 'Only one picking!'
+        
+        pick_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not pick_proxy.ddt_id:
+            return {} # TODO error?
+            
+        return {
+            'name': 'DdT',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'stock.ddt',
+            'res_id': pick_proxy.ddt_id.id,
+            'view_id': False,
+            #'views': [(form_id, 'form'), (tree_id, 'tree')],
+            'type': 'ir.actions.act_window',
+            }
     
     
     _columns = {
