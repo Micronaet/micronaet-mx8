@@ -34,7 +34,7 @@
         'sale_stock',
         #'sale_address', # TODO needes?
         
-        'l10n_it_sale', # TODO remove
+        #'l10n_it_sale', # TODO remove
         'l10n_it_ddt', # TODO keep this only
         'mexal_ddt', # for print button
         ],
