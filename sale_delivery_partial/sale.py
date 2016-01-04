@@ -218,8 +218,9 @@ class SaleOrder(orm.Model):
                     move_data['product_uos_qty'] = order_line_ids[line.id]                        
                     move_data['product_uom_qty'] = order_line_ids[line.id]                        
                     
-                    # TODO workflow brutal forced:
-                    move_data['state'] = 'assigned'
+                    # TODO workflow brutal forced: ****************************
+                    #move_data['state'] = 'assigned'
+                    # *********************************************************
                     
                     if not move_data['product_uom_qty']:
                         continue
