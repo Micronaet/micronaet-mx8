@@ -68,8 +68,19 @@ class StockPicking(orm.Model):
     def open_ddt_report(self, cr, uid, ids, context=None):
         ''' Open DDT form if present        
         '''
-        return True
+        assert len(ids) == 1, 'Only one picking!'
         
+        import pdb; pdb.set_trace()
+        #pick_proxy = self.browse(cr, uid, ids, context=context)[0]
+        #if not pick_proxy.ddt_id:
+        #    return {} # TODO error?
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'custom_ddt_report',
+            'datas': context,
+            }         
+            
     def open_ddt_form(self, cr, uid, ids, context=None):
         ''' Open DDT report directly if present
         '''

@@ -66,47 +66,4 @@ class StockPicking(orm.Model):
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
             help='Partner bank account used for payment'),        
         }
-    # -------------    
-    # Button event:    
-    # ------------- 
-    """def print_ddt(self, cr, uid, ids, context=None):
-        ''' Print report (for pop up form)
-        '''   
-        return { # action report
-            'type': 'ir.actions.report.xml',
-            'report_name': 'custom_ddt_report',
-            'datas': context,
-            }            
-        
-    def force_assign_ddt(self, cr, uid, ids, context=None):
-        ''' Force assign of DDT after change state
-        '''
-        assert len(ids), 'Must me only one record!'
-        if context is None:
-            context = {}
-            
-        for pick in self.browse(cr, uid, ids, context=context):
-            if not pick.move_lines:
-                raise osv.except_osv(
-                    _('Error!'),
-                    _('You cannot process picking without stock moves.'))
-           
-            # Changhe state without workflow:
-            # > Line:
-            line_ids = [item.id for item in pick.move_lines]
-            self.pool.get('stock.move').write(cr, uid, line_ids, {
-                'state': 'done'}, context=context)
-
-        # > Pickout:    
-        self.write(cr, uid, ids, {
-            'state': 'done'}, context=context)
-
-        # Assign DDT (call directly ex. Wizard button):
-        ctx = context.copy()
-        ctx['active_ids'] = ids # needed list
-        
-        # TODO set current date for delivery ?? 
-        # TODO correct!!?!?!
-        return self.pool.get('wizard.assign.ddt').assign_ddt(
-            cr, uid, ids, context=ctx)"""
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
