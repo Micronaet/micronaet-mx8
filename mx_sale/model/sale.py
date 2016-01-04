@@ -55,6 +55,14 @@ class StockPicking(orm.Model):
     '''
     _inherit = 'stock.picking'
     
+    def force_assign_pick_to_ddt(self, cr, uid, ids, context=None):
+        ''' Force creation of new DDT using wizard and associate
+        '''
+        wizard_pool = self.pool.get('ddt.from.pickings')
+        import pdb; pdb.set_trace()
+        wizard_pool.create(cr, uid, ids, context=context)
+        return True
+    
     _columns = {
         'sale_id': fields.many2one('sale.order', 'Sale order'), 
         }

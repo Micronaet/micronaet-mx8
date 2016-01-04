@@ -46,11 +46,19 @@
                 </xpath>
                 <field name="partner_id" position="after">
                     <field name="stock_picking_ids" attrs="{'invisible': [('state','not in',('confirmed','progress','manual','done'))]}">
-                        <tree string="Pick out" > <!--colors="black:ddt_number!=False"-->
+                        <tree string="Pick out" colors="green:ddt_id!=False">
                             <field name="min_date" /> <!--planned date-->
                             <field name="name" />
-                            <!--<field name="ddt_number" />-->
-                            <field name="state" invisible="1"/>                            
+                            <field name="ddt_id" />
+                            <field name="state" invisible="1"/>
+                            <button name="force_assign_pick_to_ddt" 
+                                string="Assign DDT"
+                                type="object" 
+                                icon="gtk-edit" 
+                                class="oe_highlight" 
+                                groups="base.group_user" 
+                                attrs="{'invisible': [('ddt_id','!=',False)]}" />
+                            
                             <!--<button name="force_assign_ddt" string="Assign DDT" type="object" icon="gtk-edit" class="oe_highlight" groups="base.group_user"  attrs="{'invisible': [('ddt_number','!=',False)]}" />
                             <button name="print_ddt" string="Print DDT" type="object" icon="gtk-print" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('ddt_number','=',False)]}" />-->
                         </tree>
