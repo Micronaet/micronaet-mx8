@@ -18,6 +18,9 @@
         <field name="model">stock.ddt</field>
         <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
         <field name="arch" type="xml">           
+           <field name="name" position="after">
+               <button name="open_ddt_report" string="Print DDT" type="object" class="oe_highlight"/>
+           </field>
            <field name="carrier_id" position="attributes">
                <attribute name="invisible">1</attribute>               
            </field>

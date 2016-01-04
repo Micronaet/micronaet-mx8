@@ -56,10 +56,26 @@
                                 type="action"
                                 class="oe_highlight" 
                                 icon="gtk-edit" 
+                                attrs="{'invisible':[('ddt_id','!=',False)]}"
                                 />
                             <!--TODO open report directly?-->
-                            <button name="open_ddt_form" string="Open DDT form" type="object" icon="STOCK_FILE" class="oe_highlight" groups="base.group_user" />
-                            <button name="open_ddt_report" string="Open DDT report" type="object" icon="gtk-print" class="oe_highlight" groups="base.group_user" />
+                            <button name="open_ddt_form" 
+                                string="Open DDT form" 
+                                type="object" 
+                                icon="STOCK_FILE" 
+                                class="oe_highlight" 
+                                groups="base.group_user" 
+                                attrs="{'invisible':[('ddt_id','=',False)]}"
+                                />
+                            <button name="open_ddt_report" 
+                                string="Open DDT report" 
+                                type="object" 
+                                icon="gtk-print" 
+                                class="oe_highlight" 
+                                groups="base.group_user" 
+                                attrs="{'invisible':[('ddt_id','=',False)]}"
+                                />
+
                             <!--TODO remove object button<button name="force_assign_pick_to_ddt" 
                                 string="Assign DDT"
                                 type="object" 

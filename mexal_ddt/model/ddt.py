@@ -22,6 +22,7 @@
 #
 ###############################################################################
 
+
 import os
 import sys
 import logging
@@ -31,7 +32,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
@@ -45,7 +46,27 @@ _logger = logging.getLogger(__name__)
 
 class StockDdt(orm.Model):
     _inherit = 'stock.ddt'
-    
+
+    def open_ddt_report(self, cr, uid, ids, context=None):
+        ''' Open DDT form if present        
+        '''
+        assert len(ids) == 1, 'Only one picking!'
+        
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'custom_ddt_report',
+            'datas': context,
+            }         
+
+    # Override for confirm all picking    
+    # TODO
+    @api.multi
+    def action_confirm(self):
+        self.write({'state': 'confirmed'})
+        for pick in self.picking_ids:
+            # confirm all picking 
+            pass
+
     _columns = {
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
             help='Partner bank account used for payment'),
