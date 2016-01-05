@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_transportation_reason_link_form">
+            <field name="name">stock.picking.transportation_reason.form</field>
+            <field name="model">stock.picking.transportation_reason</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_transportation_reason_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="ddt_description" />
+                    <field name="invoice_description" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_transportation_reason_link_tree">
+            <field name="name">stock.picking.transportation_reason.tree</field>
+            <field name="model">stock.picking.transportation_reason</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_transportation_reason_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="ddt_description" />
+                    <field name="invoice_description" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
