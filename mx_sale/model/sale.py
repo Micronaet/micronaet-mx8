@@ -270,7 +270,7 @@ class SaleOrderLine(orm.Model):
                 # TODO check UOM!!! for 
                 res[line.id] += move.product_uos_qty
         return res
-        
+
     _columns = {
         'gr_weight': fields.float('Gross weight'),
         'colls': fields.integer('Colls'), 
@@ -288,6 +288,7 @@ class SaleOrderLine(orm.Model):
             string='Delivered', store=False, 
             help='Quantity delivered with DDT out'),            
         }
+        
     _defaults = {
         'colls': lambda *x: 1,
         }    
