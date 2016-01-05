@@ -48,41 +48,50 @@ class StockMove(orm.Model):
         'virtual_move': fields.boolean('Virtual move', 
             help='used for keep virtual quantity correctly indicated'),
         }
+
+class SaleOrder(orm.Model):
+    """ Model name: Sale order
+    """    
+    _inherit = 'sale.order'
+    
+    # Override confirm for create stock.move line
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        ''' Confirm as usual order after create virtual stock move line for
+            availablity with order
+            NOTE: Procedure only for one!
+        '''
+        res = super(SaleOrder, self).action_button_confirm(
+            cr, uid, ids, context=context)
+        import pdb; pdb.set_trace()
+        # Create stock.move for virtual availability:        
+        line_pool = self.pool.get('sale.order.line')
+        stock_pool = self.pool.get('stock.move')
+        order = self.browse(cr, uid, ids, context=context)[0]
+
+        for line in order.order_line:
+            if not line.remain_move_id: # create only once
+                continue
+            move_data = order_pool._prepare_order_line_move(
+                cr, uid, order, line, False, 
+                order.date_planned, context=context)
+
+            # Add extra information in move:
+            move_data['virtual_move'] = True
+            #move_data['state'] = 'assigned' # TODO state?
+            
+            # TODO check Q.!          
+
+            move_id = stock_pool.create(cr, uid, move_data, context=context)
+            line_pool.write(cr, uid, line.id, {
+                'remain_move_id': move_id,
+                }, context=context)        
+        return res
+    
     
 class SaleOrderLine(orm.Model):
     """ Model name: Sale line
     """    
     _inherit = 'sale.order.line'
-    
-    def create(self, cr, uid, vals, context=None):
-        """ Create a new record for a model SaleOrderLine
-            @param cr: cursor to database
-            @param uid: id of current user
-            @param vals: provides a data for new record
-            @param context: context arguments, like lang, time zone
-            
-            @return: returns a id of new record
-        """    
-        # Create before:
-        res_id = super(SaleOrderLine, self).create(
-            cr, uid, vals, context=context)
-        # TODO remove!!! ******************************************************
-        return res_id    
-
-        order_pool = self.pool.get('sale.order')
-        stock_pool = self.pool.get('stock.move')
-
-        order = order_pool.browse(cr, uid, vals.get('order_id'), 
-            context=context)
-        line = self.browse(cr, uid, res_id, context=context)
-            
-        # TODO Create stock.move with remain quantity:        
-        move_data = order_pool._prepare_order_line_move(
-            cr, uid, order, line, False, 
-            order.date_planned, context=context)
-        # TODO check Q.!    
-        stock_pool.create(cr, uid, move_data, context=context)
-        return res_id
     
     def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
