@@ -64,12 +64,22 @@ class StockDdt(orm.Model):
         self.write({'state': 'confirmed'})
 
         move_pool = self.pool.get('stock.move')
+        todo = []
         for pick in self.picking_ids:
             # confirm all picking
             for move in pick.move_lines:
-                move_pool.write(self.env.cr, self.env.uid, move.id, {
-                    'state': 'done',
-                    }, context=self.env.context)
+                if move.state in ('assigned', 'confirmed'):
+                    todo.append(move.id)
+        if todo:
+            move_pool.action_done(self.env.cr, self.env.uid, todo, 
+                context=self.env.context)
+                        
+        #TODO if start from draft...
+        #for pick in self.browse(cr, uid, ids, context=context):
+        #    for move in pick.move_lines:
+        #        if move.state == 'draft':
+        #            todo.extend(self.pool.get('stock.move').action_confirm(
+        #                cr, uid, [move.id], context=context))
 
     _columns = {
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
