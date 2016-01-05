@@ -47,6 +47,14 @@ class StockMove(orm.Model):
     _columns = {
         'virtual_move': fields.boolean('Virtual move', 
             help='used for keep virtual quantity correctly indicated'),
+        
+        # TODO used?    
+        'virtual_sale_id': fields.many2one(
+            'sale.order.line', 'Virtual sale line', ondelete='set null',
+            help='Sale order line linked (for virtual availability calc)'),
+        'virtual_purchase_id': fields.many2one(
+            'stock.move', 'Virtual purchase line', ondelete='set null',
+            help='Purchase order line linked (for virtual availability calc)'),
         }
 
 class SaleOrder(orm.Model):
@@ -65,18 +73,26 @@ class SaleOrder(orm.Model):
         order = self.browse(cr, uid, ids, context=context)[0]
 
         for line in order.order_line:
-            if line.remain_move_id: # create only once
-                # TODO update only quantity (or delete line?)
-                continue 
-            move_data = self._prepare_order_line_move(
-                cr, uid, order, line, False, 
-                order.date_confirm, context=context) # XXX before date_planned
-            # TODO product_packaging??!?! manage?                
-            import pdb; pdb.set_trace()
+            # Virtual ordered qty:
+            virtual_qty = line.product_uom_qty - line.product_delivered
+            if virtual_qty < 0.0:
+                virtual_qty = 0.0 # XXX for negative control
 
+            if line.remain_move_id: # create only once
+                stock_pool.write(cr, uid, {
+                    'product_uom_qty': virtual_qty,                    
+                    }, context=context)                
+                continue
+    
+            move_data = self._prepare_order_line_move(
+                cr, uid, order, line, False,
+                order.date_confirm, context=context) # XXX before date_planned
+                
             # Add extra information in move:
             move_data['virtual_move'] = True
-            move_data['state'] = 'assigned' # TODO force here?!?            
+            move_data['product_uom_qty'] = virtual_qty
+            move_data['state'] = 'assigned' # TODO force here?!?
+            move_data['virtual_sale_id'] = line.id
             
             # TODO check Q. als for UOM!   
 
@@ -92,8 +108,10 @@ class SaleOrder(orm.Model):
         '''
         res = super(SaleOrder, self).action_button_confirm(
             cr, uid, ids, context=context)
+        
+        # Create virtual movement for availability:    
         self._create_update_virtual_move(cr, uid, ids, context=context)
-        return res    
+        return res
     
 class SaleOrderLine(orm.Model):
     """ Model name: Sale line
@@ -117,7 +135,7 @@ class SaleOrderLine(orm.Model):
         # TODO check in there's quantity for update stock.move line
         return res
     
-    def unlink(self, cr, uid, ids, context=None):
+    '''def unlink(self, cr, uid, ids, context=None):
         """ Delete all record(s) from table heaving record id in ids
             return True on success, False otherwise 
             @param cr: cursor to database
@@ -130,8 +148,7 @@ class SaleOrderLine(orm.Model):
         # TODO delete stock.move before (use ondelete?
         res = super(SaleOrderLine, self).unlink(
             cr, uid, ids, context=context)
-        return res    
-    
+        return res'''    
     
     _columns = {
         'remain_move_id': fields.many2one(
