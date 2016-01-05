@@ -43,8 +43,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-
-
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
     """
