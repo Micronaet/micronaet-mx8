@@ -22,7 +22,44 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+import os
+import sys
+import logging
+import openerp
+import openerp.netsvc as netsvc
+import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv, expression, orm
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from openerp import SUPERUSER_ID, api
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round as round
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
+    DEFAULT_SERVER_DATETIME_FORMAT, 
+    DATETIME_FORMATS_MAP, 
+    float_compare)
 
+
+_logger = logging.getLogger(__name__)
+
+
+
+class AccountInvoice(orm.Model):
+    """ Model name: AccountInvoice
+    """
+    
+    _inherit = 'account.invoice'
+
+    # Override function for report (button click)
+    @api.multi
+    def invoice_print(self):
+        """ Print the invoice and mark it as sent, so that we can see more
+            easily the next step of the workflow
+        """
+        assert len(self) == 1, 'Use only for a single id at a time.'
+        self.sent = True
+        return self.env['report'].get_action(
+            self, 'custom_mx_invoice_report')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
