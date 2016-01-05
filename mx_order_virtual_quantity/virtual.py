@@ -39,6 +39,18 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
+class StockMove(orm.Model):
+    """ Model name: Stock Move
+    """    
+    _inherit = 'stock.move'
+
+    _columns = {
+        'virtual_move': fields.boolean('Virtual move', 
+            help='used for keep virtual quantity correctly indicated'),
+        }
+    
+    
+
 class SaleOrderLine(orm.Model):
     """ Model name: Sale line
     """    
