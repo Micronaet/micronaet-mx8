@@ -35,7 +35,26 @@ class Parser(report_sxw.rml_parse):
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
             'bank': self.get_company_bank,
+            
+            # Proforma:
+            'get_tax_line': self.get_tax_line,
         })
+
+    def get_tax_line(self, sol):
+        ''' Tax line for order / proforma invoice        
+            self: instance of class
+            sol: sale order lines for loop 
+        '''
+        res = []
+        
+        for line in sol:            
+            # TODO append and group tax
+            res.append((
+                'Descrizione IVA',
+                0.0, # Imponibile
+                0.0, # IVa
+                ))
+        return res
 
     def get_company_bank(self, o, field):
         ''' Short function for readability
