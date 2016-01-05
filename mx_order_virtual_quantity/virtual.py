@@ -53,40 +53,47 @@ class SaleOrder(orm.Model):
     """ Model name: Sale order
     """    
     _inherit = 'sale.order'
-    
-    # Override confirm for create stock.move line
-    def action_button_confirm(self, cr, uid, ids, context=None):
+
+    # Utility:    
+    def _create_update_virtual_move(self, cr, uid, ids, context=None):
         ''' Confirm as usual order after create virtual stock move line for
             availablity with order
-            NOTE: Procedure only for one!
         '''
-        res = super(SaleOrder, self).action_button_confirm(
-            cr, uid, ids, context=context)
-        import pdb; pdb.set_trace()
-        # Create stock.move for virtual availability:        
-        line_pool = self.pool.get('sale.order.line')
         stock_pool = self.pool.get('stock.move')
+        line_pool = self.pool.get('sale.order.line')
+
         order = self.browse(cr, uid, ids, context=context)[0]
 
         for line in order.order_line:
-            if not line.remain_move_id: # create only once
-                continue
-            move_data = order_pool._prepare_order_line_move(
+            if line.remain_move_id: # create only once
+                # TODO update only quantity (or delete line?)
+                continue 
+            move_data = self._prepare_order_line_move(
                 cr, uid, order, line, False, 
-                order.date_planned, context=context)
+                order.date_confirm, context=context) # XXX before date_planned
+            # TODO product_packaging??!?! manage?                
+            import pdb; pdb.set_trace()
 
             # Add extra information in move:
             move_data['virtual_move'] = True
-            #move_data['state'] = 'assigned' # TODO state?
+            move_data['state'] = 'assigned' # TODO force here?!?            
             
-            # TODO check Q.!          
+            # TODO check Q. als for UOM!   
 
             move_id = stock_pool.create(cr, uid, move_data, context=context)
             line_pool.write(cr, uid, line.id, {
                 'remain_move_id': move_id,
                 }, context=context)        
-        return res
-    
+        return True
+
+    # Override confirm for create stock.move line
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        ''' Override to create stock.move
+        '''
+        res = super(SaleOrder, self).action_button_confirm(
+            cr, uid, ids, context=context)
+        self._create_update_virtual_move(cr, uid, ids, context=context)
+        return res    
     
 class SaleOrderLine(orm.Model):
     """ Model name: Sale line
@@ -105,7 +112,7 @@ class SaleOrderLine(orm.Model):
             @return: True on success, False otherwise
         """    
         res = super(SaleOrderLine, self).write(
-            cr, user, ids, vals, context=context)
+            cr, uid, ids, vals, context=context)
         
         # TODO check in there's quantity for update stock.move line
         return res
