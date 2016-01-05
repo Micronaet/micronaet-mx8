@@ -34,7 +34,6 @@
     'license': 'AGPL-3',
     'depends' : [
         'base',
-
         'report_aeroo',
         #'report_aeroo_ooo',
         ],
