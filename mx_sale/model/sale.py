@@ -55,16 +55,6 @@ class StockPicking(orm.Model):
     '''
     _inherit = 'stock.picking'
     
-    """def force_assign_pick_to_ddt(self, cr, uid, ids, context=None):
-        ''' Force creation of new DDT using wizard and associate
-        '''
-        wizard_pool = self.pool.get('ddt.from.pickings')
-        context['active_ids'] = ids 
-        wizard_id = wizard_pool.create(cr, uid, {}, context=context)
-            
-        wizard_pool.create(cr, uid, [wizard_id], context=context)
-        return True"""
-    
     def open_ddt_report(self, cr, uid, ids, context=None):
         ''' Open DDT form if present        
         '''
@@ -72,11 +62,24 @@ class StockPicking(orm.Model):
         
         pick_proxy = self.browse(cr, uid, ids, context=context)[0]
         if not pick_proxy.ddt_id:
-            return {} # TODO error?
+            return {} # raise error (never pass here!)
         
-        # TODO errro!!!
-        return self.pool.get('stock.ddt').open_ddt_report(
-            cr, uid, [pick_proxy.ddt_id.id], context=context)
+        ctx = context.copy()
+        ctx.update({
+            #'active_model': 'stock.picking', 
+            #'params': {}, 
+            #'search_disable_custom_filters': True, 
+            'active_ids': [pick_proxy.ddt_id.id], 
+            'active_id': pick_proxy.ddt_id.id,    
+            })
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'custom_ddt_report',
+            #'datas': datas,
+            'context': ctx,
+            }
+        #return self.pool.get('stock.ddt').open_ddt_report(
+        #    cr, uid, [pick_proxy.ddt_id.id], context=context)
            
             
     def open_ddt_form(self, cr, uid, ids, context=None):

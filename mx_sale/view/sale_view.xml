@@ -52,7 +52,7 @@
                             <field name="ddt_id" />
                             <field name="state" invisible="1"/>
                             <button name="%(l10n_it_ddt.action_ddt_from_pickings)d" 
-                                string="Assegna DdT" 
+                                string="Create DdT from pick" 
                                 type="action"
                                 class="oe_highlight" 
                                 icon="gtk-edit" 
@@ -60,7 +60,7 @@
                                 />
                             <!--TODO open report directly?-->
                             <button name="open_ddt_form" 
-                                string="Open DDT form" 
+                                string="Open DDT document" 
                                 type="object" 
                                 icon="STOCK_FILE" 
                                 class="oe_highlight" 
@@ -68,7 +68,7 @@
                                 attrs="{'invisible':[('ddt_id','=',False)]}"
                                 />
                             <button name="open_ddt_report" 
-                                string="Open DDT report" 
+                                string="Print DDT" 
                                 type="object" 
                                 icon="gtk-print" 
                                 class="oe_highlight" 

@@ -51,7 +51,7 @@ class StockDdt(orm.Model):
         ''' Open DDT form if present        
         '''
         assert len(ids) == 1, 'Only one picking!'
-        
+
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'custom_ddt_report',
