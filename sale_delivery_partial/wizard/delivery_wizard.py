@@ -226,7 +226,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 # Calculated:
                 'product_delivered_qty': product_delivered_qty,
                 'product_remain_qty':
-                    line.product_uos_qty - product_delivered_qty,
+                    line.product_uom_qty - product_delivered_qty,
                 }))
         return res
         

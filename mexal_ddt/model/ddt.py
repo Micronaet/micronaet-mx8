@@ -59,13 +59,17 @@ class StockDdt(orm.Model):
             }         
 
     # Override for confirm all picking    
-    # TODO
     @api.multi
     def action_confirm(self):
         self.write({'state': 'confirmed'})
+
+        move_pool = self.pool.get('stock.move')
         for pick in self.picking_ids:
-            # confirm all picking 
-            pass
+            # confirm all picking
+            for move in pick.move_lines:
+                move_pool.write(self.env.cr, self.env.uid, move.id, {
+                    'state': 'done',
+                    }, context=self.env.context)
 
     _columns = {
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
