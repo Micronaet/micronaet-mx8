@@ -206,6 +206,7 @@ class SaleOrder(orm.Model):
         # ---------------------------------------------------------------------
         #                    TODO Split depend on deadline date
         # ---------------------------------------------------------------------
+        # TODO update virtual availability after create picking
         for line in order_line:
             #if line.state == 'done':
             #    continue

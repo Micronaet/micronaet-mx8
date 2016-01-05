@@ -263,7 +263,8 @@ class SaleOrderLine(orm.Model):
         for line in self.browse(cr, uid, ids, context=context):            
             res[line.id] = 0.0
             move_ids = move_pool.search(cr, uid, [
-                ('sale_line_id', '=', line.id)], context=context)                
+                ('sale_line_id', '=', line.id),
+                ], context=context)                
             for move in move_pool.browse(cr, uid, move_ids, context=context):
                 # TODO jump picking for virtual count!!!!!!!!!!!!!!!!!!!!!!!!!!
                 #if move.picking_id.ddt_number: # was marked as DDT

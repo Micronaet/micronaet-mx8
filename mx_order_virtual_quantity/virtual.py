@@ -38,7 +38,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-
 class StockMove(orm.Model):
     """ Model name: Stock Move
     """    
@@ -62,6 +61,32 @@ class SaleOrder(orm.Model):
     """    
     _inherit = 'sale.order'
 
+    '''def write(self, cr, uid, ids, vals, context=None):
+        """ Update record(s) comes in {ids}, with new value comes as {vals}
+            return True on success, False otherwise
+            @param cr: cursor to database
+            @param uid: id of current user
+            @param ids: list of record ids to be update
+            @param vals: dict of new values to be set
+            @param context: context arguments, like lang, time zone
+            
+            @return: True on success, False otherwise
+        """
+    
+        #TODO: process before updating resource
+        res = super(SaleOrder, self).write(
+            cr, uid, ids, vals, context=context)
+        
+        # TODO only for one:    
+        order_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if order_proxy.state in ('cancel', 'sent', 'cancel'):
+            return res
+            
+        _logger.info('WRITE OPERATION ON ORDER')
+        # TODO recalculate virtual    
+        return res'''
+    
+    
     # Utility:    
     def _create_update_virtual_move(self, cr, uid, ids, context=None):
         ''' Confirm as usual order after create virtual stock move line for
@@ -74,7 +99,7 @@ class SaleOrder(orm.Model):
 
         for line in order.order_line:
             # Virtual ordered qty:
-            virtual_qty = line.product_uom_qty - line.product_delivered
+            virtual_qty = line.product_uom_qty - line.delivered_qty
             if virtual_qty < 0.0:
                 virtual_qty = 0.0 # XXX for negative control
 
@@ -93,6 +118,8 @@ class SaleOrder(orm.Model):
             move_data['product_uom_qty'] = virtual_qty
             move_data['state'] = 'assigned' # TODO force here?!?
             move_data['virtual_sale_id'] = line.id
+            # Remove link for sale line (instead calculate delivered qty)
+            del(move_data['sale_line_id']) 
             
             # TODO check Q. als for UOM!   
 
@@ -108,7 +135,7 @@ class SaleOrder(orm.Model):
         '''
         res = super(SaleOrder, self).action_button_confirm(
             cr, uid, ids, context=context)
-        
+        return res # TODO remove
         # Create virtual movement for availability:    
         self._create_update_virtual_move(cr, uid, ids, context=context)
         return res
@@ -118,7 +145,7 @@ class SaleOrderLine(orm.Model):
     """    
     _inherit = 'sale.order.line'
     
-    def write(self, cr, uid, ids, vals, context=None):
+    '''def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise
             @param cr: cursor to database
@@ -133,7 +160,7 @@ class SaleOrderLine(orm.Model):
             cr, uid, ids, vals, context=context)
         
         # TODO check in there's quantity for update stock.move line
-        return res
+        return res'''
     
     '''def unlink(self, cr, uid, ids, context=None):
         """ Delete all record(s) from table heaving record id in ids
