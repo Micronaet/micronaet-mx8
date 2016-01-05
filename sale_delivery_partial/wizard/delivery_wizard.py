@@ -208,7 +208,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 sol_id = line.sale_line_id.id # TODO correct?
                 if sol_id not in sol_status:
                     sol_status[sol_id] = 0.0
-                sol_status[sol_id] += line.product_qty # TODO uos?
+                sol_status[sol_id] += line.product_uom_qty # TODO uos?
         
         res = []
         for line in sale_proxy.order_line:                      
@@ -226,7 +226,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 # Calculated:
                 'product_delivered_qty': product_delivered_qty,
                 'product_remain_qty':
-                    line.product_uom_qty - product_delivered_qty,
+                    line.product_uos_qty - product_delivered_qty,
                 }))
         return res
         

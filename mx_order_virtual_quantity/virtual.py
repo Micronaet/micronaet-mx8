@@ -49,8 +49,6 @@ class StockMove(orm.Model):
             help='used for keep virtual quantity correctly indicated'),
         }
     
-    
-
 class SaleOrderLine(orm.Model):
     """ Model name: Sale line
     """    
@@ -64,12 +62,26 @@ class SaleOrderLine(orm.Model):
             @param context: context arguments, like lang, time zone
             
             @return: returns a id of new record
-        """
-    
+        """    
+        # Create before:
         res_id = super(SaleOrderLine, self).create(
             cr, uid, vals, context=context)
+        # TODO remove!!! ******************************************************
+        return res_id    
+
+        order_pool = self.pool.get('sale.order')
+        stock_pool = self.pool.get('stock.move')
+
+        order = order_pool.browse(cr, uid, vals.get('order_id'), 
+            context=context)
+        line = self.browse(cr, uid, res_id, context=context)
             
-        # TODO Create stock.move with remain quantity:            
+        # TODO Create stock.move with remain quantity:        
+        move_data = order_pool._prepare_order_line_move(
+            cr, uid, order, line, False, 
+            order.date_planned, context=context)
+        # TODO check Q.!    
+        stock_pool.create(cr, uid, move_data, context=context)
         return res_id
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -86,7 +98,7 @@ class SaleOrderLine(orm.Model):
         res = super(SaleOrderLine, self).write(
             cr, user, ids, vals, context=context)
         
-        # TODO check in there's quantity    
+        # TODO check in there's quantity for update stock.move line
         return res
     
     def unlink(self, cr, uid, ids, context=None):
