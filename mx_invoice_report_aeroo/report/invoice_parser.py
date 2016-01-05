@@ -45,16 +45,19 @@ class Parser(report_sxw.rml_parse):
             self: instance of class
             sol: sale order lines for loop 
         '''
-        res = []
-        
-        for line in sol:            
-            # TODO append and group tax
-            res.append((
-                'Descrizione IVA',
-                0.0, # Imponibile
-                0.0, # IVa
-                ))
-        return res
+        res = {}
+        for line in sol:
+            if line.tax_id not in res:
+                res[line.tax_id] = [
+                    line.price_subtotal, 
+                    line.price_subtotal * line.tax_id.amount,
+                    ]
+            else:
+                res[line.tax_id][0] += line.price_subtotal
+                res[line.tax_id][1] += line.price_subtotal * \
+                    line.tax_id.amount
+                    
+        return res.iteritems()
 
     def get_company_bank(self, o, field):
         ''' Short function for readability
