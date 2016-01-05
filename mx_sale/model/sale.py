@@ -268,7 +268,7 @@ class SaleOrderLine(orm.Model):
                 # TODO jump picking for virtual count!!!!!!!!!!!!!!!!!!!!!!!!!!
                 #if move.picking_id.ddt_number: # was marked as DDT
                 # TODO check UOM!!! for 
-                res[line.id] += move.product_qty
+                res[line.id] += move.product_uos_qty
         return res
         
     _columns = {
