@@ -101,20 +101,23 @@ class DdTCreateInvoice(models.TransientModel):
             self.journal_id.id, group=True, context=None)
  
         # Save invoice created in ddt document (to no reinvoice again)
-        import pdb; pdb.set_trace()
-        ddt_model.write(ddts, {
-            'invoice_id': invoices[0],
-            })
+        if not invoices:
+            raise Warning('No invoice created!!!')
+            return # XXX error!!
+            
+        ddts.write({'invoice_id': invoices[0]})
         
         # Update with extra data taken from DDT elements:    
         invoice_obj = self.env['account.invoice'].browse(invoices)
-        invoice_obj.write({
+        
+        # TODO complete with correct fields:
+        invoice_obj.write({        
             'carriage_condition_id': ddts[0].carriage_condition_id.id,
             'goods_description_id': ddts[0].goods_description_id.id,
             'transportation_reason_id': ddts[0].transportation_reason_id.id,
             'transportation_method_id': ddts[0].transportation_method_id.id,
             'mx_agent_id': ddts[0].partner_id.agent_id.id,
-            'payment_term_id': ddts[0].payment_term_id.id,
+            #'payment_term_id': ddts[0].payment_term_id.id,
             'partner_bank_id': ddts[0].used_bank_id.id,            
             # date?
             # TODO 'parcels': ddts[0].parcels, # calculate            
