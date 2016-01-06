@@ -81,6 +81,7 @@
                     <field name="date"/>
                     <field name="delivery_date"/>
                     <field name="partner_id"/>
+                    <field name="invoice_id"/>
                     <field name="state"/>
                 </tree>
             </field>

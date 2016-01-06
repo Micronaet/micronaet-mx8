@@ -84,6 +84,8 @@ class DdTCreateInvoice(models.TransientModel):
         # TODO check also destination and invoice address?!?!
         pickings = []
         self.check_ddt_data(ddts)
+        
+        # TODO check if there's some DDT yet invoiced!!!
         for ddt in ddts:
             for picking in ddt.picking_ids:
                 pickings.append(picking.id)
@@ -97,6 +99,12 @@ class DdTCreateInvoice(models.TransientModel):
             self.env.uid,
             pickings,
             self.journal_id.id, group=True, context=None)
+ 
+        # Save invoice created in ddt document (to no reinvoice again)
+        import pdb; pdb.set_trace()
+        ddt_model.write(ddts, {
+            'invoice_id': invoices[0],
+            })
         
         # Update with extra data taken from DDT elements:    
         invoice_obj = self.env['account.invoice'].browse(invoices)
