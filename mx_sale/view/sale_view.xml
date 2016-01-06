@@ -50,23 +50,17 @@
                             <field name="min_date" /> <!--planned date-->
                             <field name="name" />
                             <field name="ddt_id" />
+                            <field name="invoice_id" />
                             <field name="state" invisible="1"/>
+                            <!--Manage DDT-->
+                            <!--Not used: force_assign_pick_to_ddt-->
                             <button name="%(l10n_it_ddt.action_ddt_from_pickings)d" 
                                 string="Create DdT from pick" 
                                 type="action"
                                 class="oe_highlight" 
                                 icon="gtk-edit" 
-                                attrs="{'invisible':[('ddt_id','!=',False)]}"
+                                attrs="{'invisible':['|',('invoice_id','!=',False),('ddt_id','!=',False)]}"
                                 />
-                            <!--TODO open report directly?-->
-                            <button name="%(mexal_ddt.action_picking_create_invoice)d" 
-                                string="Create direct invoice" 
-                                type="action"
-                                class="oe_highlight" 
-                                icon="gtk-edit" 
-                                attrs="{'invisible':[('invoice_id','!=',False)]}"
-                                /><!--Add also ddt condition-->
-                            
                             <button name="open_ddt_form" 
                                 string="Open DDT document" 
                                 type="object" 
@@ -84,16 +78,30 @@
                                 attrs="{'invisible':[('ddt_id','=',False)]}"
                                 />
 
-                            <!--TODO remove object button<button name="force_assign_pick_to_ddt" 
-                                string="Assign DDT"
-                                type="object" 
-                                icon="gtk-edit" 
+                            <!--Manage Invoice-->
+                            <button name="%(mexal_ddt.action_picking_create_invoice)d" 
+                                string="Create direct invoice" 
+                                type="action"
                                 class="oe_highlight" 
-                                groups="base.group_user"/> -->
-                                <!--attrs="{'invisible': [('ddt_id','=',False)]}" -->
-                            
-                            <!--<button name="force_assign_ddt" string="Assign DDT" type="object" icon="gtk-edit" class="oe_highlight" groups="base.group_user"  attrs="{'invisible': [('ddt_number','!=',False)]}" />
-                            <button name="print_ddt" string="Print DDT" type="object" icon="gtk-print" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('ddt_number','=',False)]}" />-->
+                                icon="gtk-edit" 
+                                attrs="{'invisible':['|',('invoice_id','!=',False),('ddt_id','!=',False)]}"
+                                />
+                            <button name="open_invoice_form" 
+                                string="Open invoice document" 
+                                type="object" 
+                                icon="STOCK_FILE" 
+                                class="oe_highlight" 
+                                groups="base.group_user" 
+                                attrs="{'invisible':[('invoice_id','=',False)]}"
+                                />
+                            <button name="open_invoice_report" 
+                                string="Print invoice" 
+                                type="object" 
+                                icon="gtk-print" 
+                                class="oe_highlight" 
+                                groups="base.group_user" 
+                                attrs="{'invisible':[('invoice_id','=',False)]}"
+                                />                            
                         </tree>
                     </field>
                 </field>

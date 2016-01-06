@@ -43,7 +43,7 @@
         #'report_aeroo_ooo',
         ],
     'init_xml' : [], 
-    'update_xml' : [
+    'data' : [
         'ddt_view.xml',
         'report/ddt_report.xml',
         ],
