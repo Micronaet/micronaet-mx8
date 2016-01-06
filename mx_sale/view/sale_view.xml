@@ -59,6 +59,14 @@
                                 attrs="{'invisible':[('ddt_id','!=',False)]}"
                                 />
                             <!--TODO open report directly?-->
+                            <button name="%(mexal_ddt.action_picking_create_invoice)d" 
+                                string="Create direct invoice" 
+                                type="action"
+                                class="oe_highlight" 
+                                icon="gtk-edit" 
+                                attrs="{'invisible':[('invoice_id','!=',False)]}"
+                                /><!--Add also ddt condition-->
+                            
                             <button name="open_ddt_form" 
                                 string="Open DDT document" 
                                 type="object" 
