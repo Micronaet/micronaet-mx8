@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_pick_ddt_search">
+            <field name="name">stock.ddt.search</field>
+            <field name="model">stock.ddt</field>
+            <field name="arch" type="xml">
+                <search string="DDT Search" version="7.0">        
+                    <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
+                    <field name="invoice_id" filter_domain="[('partner_id','=',self)]"/>
 
+                    <filter name="to_invoice" string="To invoice" domain="[('invoice_id','=',False)]"/>
+                    <filter name="Invoiced" string="Invoiced" domain="[('invoice_id','!=',False)]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_invoice" string="Invoice" context="{'group_by': 'invoice_id'}"/>
+                        <filter name="group_date" string="Date" context="{'group_by': 'date'}"/>
+                        <filter name="group_delivery" string="Delivery" context="{'group_by': 'delivery_date'}"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>                
+                </search>
+            </field>
+        </record>
+        
         <record id="stock_ddt_form" model="ir.ui.view">
             <field name="name">stock.ddt.form</field>
             <field name="model">stock.ddt</field>
@@ -77,7 +98,7 @@
             <field name="name">stock.ddt.tree</field>
             <field name="model">stock.ddt</field>
             <field name="arch" type="xml">
-                <tree string="DdT">
+                <tree string="DdT" colors="green:invoice_id!=False">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="delivery_date"/>
