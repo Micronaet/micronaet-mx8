@@ -4,7 +4,7 @@
 
         <record id="view_picking_create_direct_invoice" model="ir.ui.view">
             <field name="name">Create Direct Invoice</field>
-            <field name="model">picking.create.invoice</field>
+            <field name="model">picking.create.direct.invoice</field>
             <field name="arch" type="xml">
               <form string="Create direct invoice">
                   <group>
@@ -21,9 +21,9 @@
         </record>
 
         <record id="action_picking_create_invoice" model="ir.actions.act_window">
-            <field name="name">Create Invoice</field>
+            <field name="name">Create Direct Invoice</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">picking.create.invoice</field>
+            <field name="res_model">picking.create.direct.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_picking_create_direct_invoice"/>
