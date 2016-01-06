@@ -44,7 +44,7 @@ class DdTCreateInvoice(models.TransientModel):
                 goods_description_id = ddt.goods_description_id.id
                 transportation_reason_id = ddt.transportation_reason_id.id
                 transportation_method_id = ddt.transportation_method_id.id
-                mx_agent_id = ddt.mx_agent_id.id
+                #mx_agent_id = ddt.mx_agent_id.id
                 payment_term_id = ddt.payment_term_id.id
                 used_bank_id = ddt.used_bank_id.id
                 #default_carrier_id                
@@ -63,9 +63,9 @@ class DdTCreateInvoice(models.TransientModel):
             if ddt.transportation_method_id.id != transportation_method_id:
                 raise Warning(
                     _('Selected DDTs have different Transportation Methods'))
-            if ddt.mx_agent_id.id != mx_agent_id:
-                raise Warning(
-                    _('Selected DDTs have different Agent'))
+            #if ddt.mx_agent_id.id != mx_agent_id:
+            #    raise Warning(
+            #        _('Selected DDTs have different Agent'))
             if ddt.payment_term_id.id != payment_term_id:
                 raise Warning(
                     _('Selected DDTs have different Payment terms'))
@@ -88,10 +88,11 @@ class DdTCreateInvoice(models.TransientModel):
         for ddt in ddts:
             for picking in ddt.picking_ids:
                 pickings.append(picking.id)
-                for move in picking.move_lines:
-                    if move.invoice_state != '2binvoiced':
-                        raise Warning(
-                            _('Move %s is not invoiceable') % move.name)
+                #for move in picking.move_lines:
+                #    # XXX forced as in done state!!!! 
+                #    if move.invoice_state != '2binvoiced':
+                #        raise Warning(
+                #            _('Move %s is not invoiceable') % move.name)
         invoices = picking_pool.action_invoice_create(
             self.env.cr,
             self.env.uid,
@@ -105,7 +106,7 @@ class DdTCreateInvoice(models.TransientModel):
             'goods_description_id': ddts[0].goods_description_id.id,
             'transportation_reason_id': ddts[0].transportation_reason_id.id,
             'transportation_method_id': ddts[0].transportation_method_id.id,
-            'mx_agent_id': ddts[0].mx_agent_id.id,
+            'mx_agent_id': ddts[0].partner_id.agent_id.id,
             'payment_term_id': ddts[0].payment_term_id.id,
             'partner_bank_id': ddts[0].used_bank_id.id,            
             # date?
