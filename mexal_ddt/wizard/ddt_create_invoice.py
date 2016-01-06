@@ -87,6 +87,9 @@ class DdTCreateInvoice(models.TransientModel):
         
         # TODO check if there's some DDT yet invoiced!!!
         for ddt in ddts:
+            if ddt.invoice_id:
+                raise Warning(_('There\' DDT yet invoiced: %s') % ddt.number)
+                
             for picking in ddt.picking_ids:
                 pickings.append(picking.id)
                 #for move in picking.move_lines:
