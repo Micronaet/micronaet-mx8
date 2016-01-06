@@ -85,19 +85,30 @@ class PickingCreateDirectInvoice(models.TransientModel):
     @api.multi
     def create_direct_invoice(self):
         picking_pool = self.pool['stock.picking']
-
-        pickings = picking_pool.browse(self.env.context['active_ids'])
+        
+        pickings = picking_pool.browse(
+            self.env.cr, self.env.uid, self.env.context['active_ids'],
+            context=self.env.context)
         partners = set([picking.partner_id for picking in pickings])
         if len(partners) > 1:
             raise Warning(_("Selected pickings belong to different partners"))
-        #pickings = []
         self.check_picking_data(pickings)
+
         invoices = picking_pool.action_invoice_create(
-            self.env.cr,
-            self.env.uid,
-            pickings,
+            self.env.cr, self.env.uid, 
+            self.env.context['active_ids'],
             self.journal_id.id, group=True, context=None)
-        invoice_obj = self.env['account.invoice'].browse(invoices)
+        
+        
+        if not invoices:
+            raise Warning(
+                _('Cannot create invoice!'))
+            
+        # Update backlink in pick:
+        pickings.write({'invoice_id': invoices[0]})
+        
+        # Update extra fields in invoice:
+        invoice_obj = self.env['account.invoice'].browse(invoices)        
         invoice_obj.write({
             'carriage_condition_id': 
                 pickings[0].carriage_condition_id.id,
