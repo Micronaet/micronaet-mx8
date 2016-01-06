@@ -93,6 +93,8 @@ class StockDdT(models.Model):
     ddt_lines = fields.One2many(
         'stock.move', 'ddt_id', string='DdT Line', readonly=True,
         compute='_get_lines')
+    invoice_id = fields.Many2one(
+        'account.invoice', string='Invoice', required=False)
     partner_id = fields.Many2one(
         'res.partner', string='Partner', required=True)
     delivery_address_id = fields.Many2one(

@@ -37,6 +37,7 @@
     'demo': [],
     'data': [
         'view/ddt_view.xml',
+        'wizard/ddt_create_direct_invoice_view.xml',
         ],
     'active': False,
     'installable': True,

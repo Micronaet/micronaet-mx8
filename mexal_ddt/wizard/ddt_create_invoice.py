@@ -24,7 +24,6 @@ from openerp import models, api, fields
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
 
-
 class DdTCreateInvoice(models.TransientModel):
 
     _inherit = 'ddt.create.invoice'

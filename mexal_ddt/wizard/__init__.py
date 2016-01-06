@@ -18,6 +18,6 @@
 #
 ###############################################################################
 from . import ddt_create_invoice
-
+from . import ddt_create_direct_invoice
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
