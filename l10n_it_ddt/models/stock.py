@@ -175,8 +175,9 @@ class StockPicking(models.Model):
     ddt_id = fields.Many2one('stock.ddt', string='DdT')
     ddt_type = fields.Selection(
         string="DdT Type", related='picking_type_id.code')        
-    invoice_id = fields.Many2one('account.invoice', string="Invoice", 
-        related='ddt_id.invoice_id', store=False, readonly=True)
+    #invoice_id = fields.Many2one('account.invoice', string="Invoice", 
+    #    related='ddt_id.invoice_id', store=False, readonly=True)
+    invoice_id = fields.Many2one('account.invoice', string='Direct invoice')
 
 
     def action_invoice_create(
