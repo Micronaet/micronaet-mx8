@@ -57,4 +57,46 @@ class SaleOrder(orm.Model):
         'vector_country_id': fields.many2one('res.country', 'Country', 
             ondelete='restrict'),
         }    
+
+class AccountInvoice(orm.Model):
+    ''' Model name: AccountInvoice
+    '''
+    
+    _inherit = 'account.invoice'
+    
+    _columns = {
+        'fast_vector': fields.boolean('Fast Vector', 
+            help='Add fast vector for report and not the one in carrier'),
+        'vector_name': fields.char('Vector name'),
+        'vector_street': fields.char('Street'),
+        'vector_street2': fields.char('Street2'),
+        'vector_zip': fields.char('Zip', size=24),
+        'vector_city': fields.char('City'),
+        'vector_state_id': fields.many2one('res.country.state', 'State', 
+            ondelete='restrict'),
+        'vector_country_id': fields.many2one('res.country', 'Country', 
+            ondelete='restrict'),
+        }
+
+class StockDdt(orm.Model):
+    ''' Model name: Stock DDT
+    '''
+    
+    _inherit = 'stock.ddt'
+    
+    _columns = {
+        'fast_vector': fields.boolean('Fast Vector', 
+            help='Add fast vector for report and not the one in carrier'),
+        'vector_name': fields.char('Vector name'),
+        'vector_street': fields.char('Street'),
+        'vector_street2': fields.char('Street2'),
+        'vector_zip': fields.char('Zip', size=24),
+        'vector_city': fields.char('City'),
+        'vector_state_id': fields.many2one('res.country.state', 'State', 
+            ondelete='restrict'),
+        'vector_country_id': fields.many2one('res.country', 'Country', 
+            ondelete='restrict'),
+        }
+
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

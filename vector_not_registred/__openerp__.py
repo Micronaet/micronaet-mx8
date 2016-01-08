@@ -22,7 +22,10 @@
     'version': '0.1',
     'category': 'Customization',
     'description': '''        
-        Add fast vector data in quotation / order
+        Add fast vector data in:
+         - quotation / order
+         - DDT 
+         - Invoice (direct)        
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
@@ -31,6 +34,8 @@
         'base',
         'delivery',
         'sale',
+        'account',
+        'l10n_it_ddt',
         ],
     'init_xml': [],
     'demo': [],
