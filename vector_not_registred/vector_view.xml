@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_fast_vector_form" model="ir.ui.view">
+            <field name="name">Manual vector</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="delivery.view_order_withcarrier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div" position="after">
+                    <group colspan="4" col="4">
+                        <field name="fast_vector" />
+                        <newline />
+                        <group colspan="4" col="4">
+                            <field name="vector_name"/>
+                            <newline />
+                            <field name="vector_street"/>
+                            <field name="vector_street2"/>
+
+                            <field name="vector_zip"/>
+                            <field name="vector_city"/>
+
+                            <field name="vector_state_id"/>
+                            <field name="vector_country_id"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+
