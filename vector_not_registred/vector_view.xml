@@ -6,11 +6,11 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="delivery.view_order_withcarrier_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div" position="after">
+                <label for="carrier_id" position="before">
                     <group colspan="4" col="4">
                         <field name="fast_vector" />
                         <newline />
-                        <group colspan="4" col="4">
+                        <group colspan="4" col="4" attrs="{'invisible':[('fast_vector','=',False)]}">
                             <field name="vector_name"/>
                             <newline />
                             <field name="vector_street"/>
@@ -19,13 +19,20 @@
                             <field name="vector_zip"/>
                             <field name="vector_city"/>
 
-                            <field name="vector_state_id"/>
+                            <!--<field name="vector_state_id"/>-->
                             <field name="vector_country_id"/>
                         </group>
                     </group>
-                </xpath>
+                </label>
+                <field name="carrier_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('fast_vector','=',True)]}</attribute>
+                </field>
+                <label for="carrier_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('fast_vector','=',True)]}</attribute>
+                </label>
             </field>
         </record>
+
     </data>
 </openerp>
 

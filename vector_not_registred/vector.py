@@ -40,8 +40,7 @@ _logger = logging.getLogger(__name__)
 
 class SaleOrder(orm.Model):
     ''' Model name: SaleOrder
-    '''
-    
+    '''    
     _inherit = 'sale.order'
     
     _columns = {
@@ -60,8 +59,7 @@ class SaleOrder(orm.Model):
 
 class AccountInvoice(orm.Model):
     ''' Model name: AccountInvoice
-    '''
-    
+    '''    
     _inherit = 'account.invoice'
     
     _columns = {
@@ -80,8 +78,7 @@ class AccountInvoice(orm.Model):
 
 class StockDdt(orm.Model):
     ''' Model name: Stock DDT
-    '''
-    
+    '''    
     _inherit = 'stock.ddt'
     
     _columns = {
