@@ -47,9 +47,9 @@ class DdTFromPickings(models.TransientModel):
             'transportation_reason_id': False,
             'transportation_method_id': False,
             
-            # default_carrier_id
-            # payment_term_id
-            # used_bank_id
+            'payment_term_id': False,
+            'used_bank_id': False,
+            #'default_carrier_id': False,
             }
             
         partner = False        
@@ -67,6 +67,7 @@ class DdTFromPickings(models.TransientModel):
                     raise Warning(
                         _('Selected Pickings have different parcels'))
                 parcels = picking.sale_id.parcels
+                # TODO sum al parcels?
                 values['parcels'] = parcels
                 
         carriage_condition_id = False
@@ -125,6 +126,36 @@ class DdTFromPickings(models.TransientModel):
                     picking.sale_id.transportation_method_id)
                 values['transportation_method_id'] = (
                     transportation_method_id.id)
+
+        payment_term_id = False
+        for picking in self.picking_ids:
+            if picking.sale_id and (
+                    picking.sale_id.payment_term_id):
+                if payment_term_id and (
+                    payment_term_id != (
+                        picking.sale_id.payment_term_id)):
+                    raise Warning(
+                        _('Selected Pickings have'
+                          ' different payment terms'))
+                payment_term_id = (
+                    picking.sale_id.payment_term_id)
+                values['payment_term_id'] = (
+                    payment_term_id.id)
+
+        used_bank_id = False
+        for picking in self.picking_ids:
+            if picking.sale_id and (
+                    picking.sale_id.bank_account_id):
+                if used_bank_id and (
+                    used_bank_id != (
+                        picking.sale_id.bank_account_id)):
+                    raise Warning(
+                        _('Selected Pickings have'
+                          ' different bank account'))
+                used_bank_id = (
+                    picking.sale_id.bank_account_id)
+                values['used_bank_id'] = (
+                    used_bank_id.id)
                     
         ddt = self.env['stock.ddt'].create(values)
         for picking in self.picking_ids:
