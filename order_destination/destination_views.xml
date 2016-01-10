@@ -17,7 +17,17 @@
                </field>
             </field>
         </record>
-        
+        <record model="ir.ui.view" id="view_order_form_destination_fields_tree">
+            <field name="name">sale.order.destination.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree" />
+            <field name="arch" type="xml">        
+               <field name="partner_id" position="after">
+                   <field name="destination_partner_id" />
+               </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_purchase_order_form">
             <field name="name">purchase.order.destination</field>
             <field name="model">purchase.order</field>

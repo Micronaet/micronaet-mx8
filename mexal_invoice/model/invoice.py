@@ -73,6 +73,7 @@ class AccountInvoice(orm.Model):
         return res    
         
     _columns = {
+        'direct_invoice': fields.boolean('Direct invoice'), # TODO use it!
         'start_transport': fields.datetime('Start transport', 
             help='Used in direct invoice'),
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
