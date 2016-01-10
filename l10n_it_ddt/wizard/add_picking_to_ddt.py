@@ -70,11 +70,13 @@ class AddPickingToDdt(models.TransientModel):
                       " different transportation reason"))
             picking.ddt_id = self.ddt_id
         ir_model_data = self.env['ir.model.data']
-        form_res = ir_model_data.get_object_reference('l10n_it_ddt',
-                                                      'stock_ddt_form')
+        form_res = ir_model_data.get_object_reference(
+            'l10n_it_ddt',
+            'stock_ddt_form')
         form_id = form_res and form_res[1] or False
-        tree_res = ir_model_data.get_object_reference('l10n_it_ddt',
-                                                      'stock_ddt_tree')
+        tree_res = ir_model_data.get_object_reference(
+            'l10n_it_ddt',
+            'stock_ddt_tree')
         tree_id = tree_res and tree_res[1] or False
         return {
             'name': 'DdT',
