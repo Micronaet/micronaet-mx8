@@ -103,11 +103,16 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         
         # Proxy used:
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
+        
         # Generate line to pick out:
         pick_line_ids = {}
         for line in wiz_browse.line_ids:
-            pick_line_ids[
-                line.order_line_id.id] = line.delivery_uom_qty
+            if line.all_qty: # checked delivery remain:
+                pick_line_ids[
+                    line.order_line_id.id] = line.product_remain_qty            
+            else:    
+                pick_line_ids[
+                    line.order_line_id.id] = line.delivery_uom_qty
         
         # Create pick out with new procedure (not standard):
         context['force_date_deadline'] = wiz_browse.date_deadline or False
@@ -172,6 +177,7 @@ class SaleDeliveryPartialLineWizard(orm.TransientModel):
         'product_uom': fields.many2one(
             'product.uom', 'Unit of Measure', readonly=True),
         'date_deadline': fields.date('Deadline', readonly=True),        
+        'all_qty': fields.boolean('All'),
         
         # Load during default procedure:
         'product_delivered_qty': fields.float(
