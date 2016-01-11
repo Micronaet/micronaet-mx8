@@ -9,7 +9,7 @@
                <xpath expr="/form/sheet//field[@name='partner_id']" position="after">
                   <group name="destination_parameters" colspan="2" col="2"> 
                       <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> <!--,('is_company','=',False)-->
-                      <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> <!--,TODO ('type','=','invoice')-->                      
+                      <field name="invoice_partner_id" domain="[('is_company','=',True),('is_address','=',False)]" context="{'show_address':True}"/> <!--,TODO ('type','=','invoice')-->                      
                   </group>    
                </xpath>
                <field name="partner_id" position="attributes">
@@ -35,7 +35,7 @@
             <field name="arch" type="xml">        
               <field name="partner_id" position="after">
                   <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> <!--,('is_company','=',False)-->
-                  <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> <!--,TODO ('type','=','invoice')-->                      
+                  <field name="invoice_partner_id" domain="[('is_company','=',True),('is_address','=',False)]" context="{'show_address':True}"/> <!--,TODO ('type','=','invoice')-->                      
                </field>
                <field name="partner_id" position="attributes">
                    <attribute name="domain">[('supplier','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
                  <field name="partner_id" position="after">
                       <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]"/>
-                      <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address', '=', True)]"/>
+                      <field name="invoice_partner_id" domain="[('is_company','=',True),('is_address','=',False)]"/>
                  </field>
                  <field name="partner_id" position="attributes">
                      <attribute name="domain">[('customer','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
@@ -66,7 +66,7 @@
             <field name="arch" type="xml">
                  <field name="partner_id" position="after">
                       <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]"/>
-                      <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]"/>
+                      <field name="invoice_partner_id" domain="[('is_company','=',True),('is_address','=',False)]"/>
                  </field>
                  <field name="partner_id" position="attributes">
                      <attribute name="domain">[('customer','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
@@ -81,7 +81,7 @@
             <field name="arch" type="xml">
                  <field name="partner_id" position="after">
                       <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]"/>
-                      <field name="invoice_partner_id" domain="[('parent_id','=',partner_id),('is_address', '=', True)]"/>
+                      <field name="invoice_partner_id" domain="[('is_company','=',True),('is_address','=',False)]"/>
                  </field>
                  <field name="partner_id" position="attributes">
                      <attribute name="domain">[('customer','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
@@ -91,8 +91,6 @@
                  </field>
             </field>
         </record>
-
-
         
     </data>
 </openerp>
