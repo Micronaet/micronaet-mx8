@@ -24,6 +24,14 @@ from openerp import models, api, fields
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
 
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
+    DEFAULT_SERVER_DATETIME_FORMAT, 
+    DATETIME_FORMATS_MAP, 
+    float_compare)
+
+
 
 class PickingCreateDirectInvoice(models.TransientModel):
     ''' Wizard for create direct invoice from picking, start from wizard 
@@ -49,38 +57,51 @@ class PickingCreateDirectInvoice(models.TransientModel):
         for picking in pickings:
             i += 1
             if i == 1: # Update with first picking data:
-                carriage_condition_id = picking.carriage_condition_id.id                    
-                goods_description_id = picking.goods_description_id.id
-                transportation_reason_id = picking.transportation_reason_id.id
-                transportation_method_id = picking.transportation_method_id.id
+                carriage_condition_id = picking.sale_id.carriage_condition_id.id                    
+                goods_description_id = picking.sale_id.goods_description_id.id
+                transportation_reason_id = picking.sale_id.transportation_reason_id.id
+                transportation_method_id = picking.sale_id.transportation_method_id.id
                 #mx_agent_id = picking.mx_agent_id.id
-                payment_term_id = picking.payment_term_id.id
-                used_bank_id = picking.used_bank_id.id
-                #default_carrier_id                
+                payment_term_id = picking.sale_id.payment_term.id
+                used_bank_id = picking.sale_id.bank_account_id.id
+                default_carrier_id = picking.sale_id.carrier_id.id
                 #parcels = picking.parcels # needed?
+                destination_partner_id = picking.sale_id.destination_partner_id
+                invoice_partner_id = picking.sale_id.invoice_partner_id
                 continue # check second picking 
             
-            if picking.carriage_condition_id.id != carriage_condition_id:
+            if picking.sale_id.carriage_condition_id.id != carriage_condition_id:
                 raise Warning(
                     _('Selected pickings have different Carriage Conditions'))
-            if picking.goods_description_id.id != goods_description_id:
+            if picking.sale_id.goods_description_id.id != goods_description_id:
                 raise Warning(
                     _('Selected pickings have different Descriptions of Goods'))
-            if picking.transportation_reason_id.id != transportation_reason_id:
+            if picking.sale_id.transportation_reason_id.id != transportation_reason_id:
                 raise Warning(
                     _('Selected pickings have different Transportation Reasons'))
-            if picking.transportation_method_id.id != transportation_method_id:
+            if picking.sale_id.transportation_method_id.id != transportation_method_id:
                 raise Warning(
                     _('Selected pickings have different Transportation Methods'))
             #if picking.mx_agent_id.id != mx_agent_id:
             #    raise Warning(
             #        _('Selected pickings have different Agent'))
-            if picking.payment_term_id.id != payment_term_id:
+            if picking.sale_id.payment_term.id != payment_term_id:
                 raise Warning(
                     _('Selected pickings have different Payment terms'))
-            if picking.used_bank_id.id != used_bank_id:
+            if picking.sale_id.bank_account_id.id != used_bank_id:
                 raise Warning(
                     _('Selected pickings have different bank account'))
+            
+            if picking.sale_id.destination_partner_id.id != destination_partner_id:
+                raise Warning(
+                    _('Selected DDTs have different destination'))
+            if picking.sale_id.invoice_partner_id.id != invoice_partner_id:
+                raise Warning(
+                    _('Selected DDTs have different invoice partner'))
+            if picking.sale_id.carrier_id.id != default_carrier_id:
+                raise Warning(
+                    _('Selected DDTs have different invoice partner'))
+
 
     @api.multi
     def create_direct_invoice(self):
@@ -111,13 +132,24 @@ class PickingCreateDirectInvoice(models.TransientModel):
         invoice_obj = self.env['account.invoice'].browse(invoices)        
         invoice_obj.write({
             'carriage_condition_id': 
-                pickings[0].carriage_condition_id.id,
+                pickings[0].sale_id.carriage_condition_id.id,
             'goods_description_id': 
-                pickings[0].goods_description_id.id,
+                pickings[0].sale_id.goods_description_id.id,
             'transportation_reason_id': 
-                pickings[0].transportation_reason_id.id,
+                pickings[0].sale_id.transportation_reason_id.id,
             'transportation_method_id': 
-                pickings[0].transportation_method_id.id,
+                pickings[0].sale_id.transportation_method_id.id,
+
+            'payment_term': pickings[0].sale_id.payment_term.id,
+
+            'used_bank_id': pickings[0].sale_id.bank_account_id.id,    
+            'default_carrier_id': pickings[0].sale_id.carrier_id.id,                        
+            'destination_partner_id': pickings[0].sale_id.destination_partner_id.id,
+            'invoice_partner_id': pickings[0].sale_id.invoice_partner_id.id,
+            'direct_invoice': True,
+            'date_invoice': datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
+            
+
             # TODO other fields!    
             #'parcels': pickings[0].parcels,
             })
