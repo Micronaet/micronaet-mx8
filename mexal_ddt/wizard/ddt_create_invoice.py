@@ -46,8 +46,10 @@ class DdTCreateInvoice(models.TransientModel):
                 #mx_agent_id = ddt.mx_agent_id.id
                 payment_term_id = ddt.payment_term_id.id
                 used_bank_id = ddt.used_bank_id.id
-                #default_carrier_id                
+                default_carrier_id = ddt.default_carrier_id.id
                 #parcels = ddt.parcels # needed?
+                destination_partner_id = ddt.destination_partner_id.id
+                invoice_partner_id = ddt.invoice_partner_id.id
                 continue # check second DDT 
             
             if ddt.carriage_condition_id.id != carriage_condition_id:
@@ -71,6 +73,12 @@ class DdTCreateInvoice(models.TransientModel):
             if ddt.used_bank_id.id != used_bank_id:
                 raise Warning(
                     _('Selected DDTs have different bank account'))
+            if ddt.destination_partner_id.id != destination_partner_id:
+                raise Warning(
+                    _('Selected DDTs have different destination'))
+            if ddt.invoice_partner_id.id != invoice_partner_id:
+                raise Warning(
+                    _('Selected DDTs have different invoice partner'))
 
     @api.multi
     def create_invoice(self):
@@ -120,8 +128,17 @@ class DdTCreateInvoice(models.TransientModel):
             'transportation_reason_id': ddts[0].transportation_reason_id.id,
             'transportation_method_id': ddts[0].transportation_method_id.id,
             'mx_agent_id': ddts[0].partner_id.agent_id.id,
-            #'payment_term_id': ddts[0].payment_term_id.id,
-            'partner_bank_id': ddts[0].used_bank_id.id,            
+
+            'payment_term_id': ddts[0].payment_term_id.id, # TODO remove?
+            'payment_term': ddts[0].payment_term_id.id,
+
+            'partner_bank_id': ddts[0].used_bank_id.id,    
+            'used_bank_id': ddts[0].used_bank_id.id, # TODO remove?        
+
+            'default_carrier_id': ddts[0].default_carrier_id.id,
+                        
+            'destination_partner_id': ddts[0].destination_partner_id.id,
+            'invoice_partner_id': ddts[0].invoice_partner_id.id,
             # date?
             # TODO 'parcels': ddts[0].parcels, # calculate            
             })
