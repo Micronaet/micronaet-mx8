@@ -45,11 +45,10 @@ class DdTFromPickings(models.TransientModel):
             'carriage_condition_id': False,
             'goods_description_id': False,
             'transportation_reason_id': False,
-            'transportation_method_id': False,
-            
+            'transportation_method_id': False,            
             'payment_term_id': False,
             'used_bank_id': False,
-            #'default_carrier_id': False,
+            'default_carrier_id': False,
             }
             
         partner = False        
@@ -156,6 +155,21 @@ class DdTFromPickings(models.TransientModel):
                     picking.sale_id.bank_account_id)
                 values['used_bank_id'] = (
                     used_bank_id.id)
+
+        default_carrier_id = False
+        for picking in self.picking_ids:
+            if picking.sale_id and (
+                    picking.sale_id.carrier_id):
+                if default_carrier_id and (
+                    default_carrier_id != (
+                        picking.sale_id.carrier_id)):
+                    raise Warning(
+                        _('Selected Pickings have'
+                          ' different carrier'))
+                default_carrier_id = (
+                    picking.sale_id.carrier_id)
+                values['default_carrier_id'] = (
+                    default_carrier_id.id)
                     
         ddt = self.env['stock.ddt'].create(values)
         for picking in self.picking_ids:
