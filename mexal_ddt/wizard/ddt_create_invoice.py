@@ -44,10 +44,11 @@ class DdTCreateInvoice(models.TransientModel):
                 transportation_reason_id = ddt.transportation_reason_id.id
                 transportation_method_id = ddt.transportation_method_id.id
                 #mx_agent_id = ddt.mx_agent_id.id
+                #parcels = ddt.parcels # needed?
+                
                 payment_term_id = ddt.payment_term_id.id
                 used_bank_id = ddt.used_bank_id.id
                 default_carrier_id = ddt.default_carrier_id.id
-                #parcels = ddt.parcels # needed?
                 destination_partner_id = ddt.destination_partner_id.id
                 invoice_partner_id = ddt.invoice_partner_id.id
                 continue # check second DDT 
@@ -67,6 +68,7 @@ class DdTCreateInvoice(models.TransientModel):
             #if ddt.mx_agent_id.id != mx_agent_id:
             #    raise Warning(
             #        _('Selected DDTs have different Agent'))
+            
             if ddt.payment_term_id.id != payment_term_id:
                 raise Warning(
                     _('Selected DDTs have different Payment terms'))
@@ -129,7 +131,7 @@ class DdTCreateInvoice(models.TransientModel):
             'transportation_method_id': ddts[0].transportation_method_id.id,
             'mx_agent_id': ddts[0].partner_id.agent_id.id,
 
-            'payment_term_id': ddts[0].payment_term_id.id, # TODO remove?
+            #'payment_term_id': ddts[0].payment_term_id.id, # TODO remove?
             'payment_term': ddts[0].payment_term_id.id,
 
             'partner_bank_id': ddts[0].used_bank_id.id,    
@@ -139,6 +141,8 @@ class DdTCreateInvoice(models.TransientModel):
                         
             'destination_partner_id': ddts[0].destination_partner_id.id,
             'invoice_partner_id': ddts[0].invoice_partner_id.id,
+            'direct_invoice': False,
+                        
             # date?
             # TODO 'parcels': ddts[0].parcels, # calculate            
             })
