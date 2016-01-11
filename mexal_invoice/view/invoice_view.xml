@@ -18,6 +18,9 @@
                         <newline />
                     </group>
 			    </field>
+                <field name="fiscal_position" position="after">
+                    <field name="direct_invoice" />
+                </field>
             </field>
         </record>
     </data>
