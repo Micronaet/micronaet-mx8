@@ -55,6 +55,7 @@ class StockPicking(orm.Model):
     '''
     _inherit = 'stock.picking'
     
+    # DDT button:
     def open_ddt_report(self, cr, uid, ids, context=None):
         ''' Open DDT form if present        
         '''
@@ -102,6 +103,46 @@ class StockPicking(orm.Model):
             'type': 'ir.actions.act_window',
             }
     
+    # Invoice button:
+    def open_invoice_report(self, cr, uid, ids, context=None):
+        ''' Open DDT form if present        
+        '''
+        assert len(ids) == 1, 'Only one picking!'
+        
+        pick_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not pick_proxy.invoice_id:
+            return {} # raise error (never pass here!)
+        
+        ctx = context.copy()
+        ctx.update({
+            'active_ids': [pick_proxy.invoice_id.id], 
+            'active_id': pick_proxy.invoice_id.id,    
+            })
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'custom_mx_invoice_report',
+            'context': ctx,
+            }
+
+    def open_invoice_form(self, cr, uid, ids, context=None):
+        ''' Open DDT report directly if present
+        '''
+        assert len(ids) == 1, 'Only one picking!'
+        
+        pick_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not pick_proxy.invoice_id:
+            return {} # TODO error?
+            
+        return {
+            'name': 'DdT',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'res_id': pick_proxy.invoice_id.id,
+            'view_id': False,
+            #'views': [(form_id, 'form'), (tree_id, 'tree')],
+            'type': 'ir.actions.act_window',
+            }
     
     _columns = {
         'sale_id': fields.many2one('sale.order', 'Sale order'), 
