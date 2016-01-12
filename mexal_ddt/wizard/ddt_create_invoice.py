@@ -32,8 +32,7 @@ class StockMove(orm.Model):
 
 
     # Override function for use directyl sale_order_id  not procurements:    
-    def _get_moves_taxes(self, cr, uid, moves, context=None):
-        import pdb; pdb.set_trace()
+    '''def _get_moves_taxes(self, cr, uid, moves, context=None):
         is_extra_move, extra_move_tax = super(
             StockMove, self)._get_moves_taxes(
                 cr, uid, moves, context=context)
@@ -42,7 +41,7 @@ class StockMove(orm.Model):
             if move.sale_line_id:
                 is_extra_move[move.id] = False
                 extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.sale_line_id.tax_id])]
-        return (is_extra_move, extra_move_tax)
+        return (is_extra_move, extra_move_tax)'''
 
 class stock_picking(osv.osv):
     ''' Problem: VAT not propagate (procurement not present in my module)
@@ -50,7 +49,7 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
     # Override function:
-    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
+    '''def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         move_obj = self.pool.get('stock.move')
         invoices = {}
@@ -88,7 +87,7 @@ class stock_picking(osv.osv):
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
-        return invoices.values()
+        return invoices.values()'''
 
     
 class DdTCreateInvoice(models.TransientModel):
