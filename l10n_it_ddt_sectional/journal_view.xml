@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!--stock.ddt-->
+        <record model="ir.ui.view" id="view_stock_ddt_master_form">
+            <field name="name">stock.ddt.master</field>
+            <field name="model">stock.ddt</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/> 
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="sequence" domain="[('code', '=', 'stock.ddt')]"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
