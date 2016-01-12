@@ -32,7 +32,8 @@ class StockMove(orm.Model):
 
 
     # Override function for use directyl sale_order_id  not procurements:    
-    """def _get_moves_taxes(self, cr, uid, moves, context=None):
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        import pdb; pdb.set_trace()
         is_extra_move, extra_move_tax = super(
             StockMove, self)._get_moves_taxes(
                 cr, uid, moves, context=context)
@@ -41,7 +42,7 @@ class StockMove(orm.Model):
             if move.sale_line_id:
                 is_extra_move[move.id] = False
                 extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.sale_line_id.tax_id])]
-        return (is_extra_move, extra_move_tax)"""
+        return (is_extra_move, extra_move_tax)
 
 class stock_picking(osv.osv):
     ''' Problem: VAT not propagate (procurement not present in my module)
