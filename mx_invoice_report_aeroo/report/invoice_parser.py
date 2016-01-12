@@ -47,11 +47,12 @@ class Parser(report_sxw.rml_parse):
     def return_note(self, note):
         ''' Check if exist and after return \n note
         '''
-        if note:
+        try:
             note = note.strip()
             if note:
                 return '\n%s' % note                 
-        return ''   
+        except:
+            return ''   
     
 
     def get_partic_description(self, partner_id, product_id):
