@@ -41,7 +41,7 @@ class Parser(report_sxw.rml_parse):
             'get_partic_description': self.get_partic_description,    
         })
 
-    def get_partic_description(partner_id, product_id):
+    def get_partic_description(self, partner_id, product_id):
         ''' Check if partner has partic description
         '''
         # TODO optimize
