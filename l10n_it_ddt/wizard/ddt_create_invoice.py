@@ -103,6 +103,10 @@ class DdTCreateInvoice(models.TransientModel):
 
     @api.multi
     def create_invoice(self):
+        ''' Create invoice from selected pickings ddt
+            overrided?
+        '''
+        # Pool used:
         ddt_model = self.env['stock.ddt']
         picking_pool = self.pool['stock.picking']
 
@@ -125,6 +129,10 @@ class DdTCreateInvoice(models.TransientModel):
             pickings,
             self.journal_id.id, group=True, context=None)
         invoice_obj = self.env['account.invoice'].browse(invoices)
+        
+        # ----------------------
+        # Add extra header data:
+        # ----------------------
         invoice_obj.write({
             'carriage_condition_id': ddts[0].carriage_condition_id.id,
             'goods_description_id': ddts[0].goods_description_id.id,
@@ -135,7 +143,11 @@ class DdTCreateInvoice(models.TransientModel):
             'payment_term_id': ddts[0].payment_term_id.id,
             'used_bank_id': ddts[0].used_bank_id.id,
             'default_carrier_id': ddts[0].default_carrier_id.id,
+            
+            # TODO address??
             })
+        
+        # Open Invoice:    
         ir_model_data = self.env['ir.model.data']
         form_res = ir_model_data.get_object_reference(
             'account',

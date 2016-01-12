@@ -21,9 +21,72 @@
 
 
 from openerp import models, api, fields
+from openerp.osv import fields, osv, expression, orm
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
 
+class StockMove(orm.Model):
+    ''' Problem: VAT not propagate (procurement not present in my module)
+    '''
+    _inherit = 'stock.move'
+
+    # Override function for use directyl sale_order_id  not procurements:    
+    def _get_moves_taxes(self, cr, uid, moves, context=None):
+        is_extra_move, extra_move_tax = super(StockMove, self)._get_moves_taxes(cr, uid, moves, context=context)
+        for move in moves:
+            #if move.procurement_id and move.procurement_id.sale_line_id:
+            if move.sale_line_id:
+                is_extra_move[move.id] = False
+                extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.sale_line_id.tax_id])]
+        return (is_extra_move, extra_move_tax)
+
+class stock_picking(osv.osv):
+    ''' Problem: VAT not propagate (procurement not present in my module)
+    '''
+    _inherit = 'stock.picking'
+
+    # Override function:
+    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
+        invoice_obj = self.pool.get('account.invoice')
+        move_obj = self.pool.get('stock.move')
+        invoices = {}
+        is_extra_move, extra_move_tax = move_obj._get_moves_taxes(cr, uid, moves, context=context)
+        product_price_unit = {}
+        for move in moves:
+            company = move.company_id
+            origin = move.picking_id.name
+            partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
+
+            key = (partner, currency_id, company.id, user_id)
+            invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+
+            if key not in invoices:
+                # Get account and payment terms
+                invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
+                invoices[key] = invoice_id
+            else:
+                invoice = invoice_obj.browse(cr, uid, invoices[key], context=context)
+                if not invoice.origin or invoice_vals['origin'] not in invoice.origin.split(', '):
+                    invoice_origin = filter(None, [invoice.origin, invoice_vals['origin']])
+                    invoice.write({'origin': ', '.join(invoice_origin)})
+
+            invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+            invoice_line_vals['invoice_id'] = invoices[key]
+            invoice_line_vals['origin'] = origin
+            if not is_extra_move[move.id]:
+                product_price_unit[invoice_line_vals['product_id']] = invoice_line_vals['price_unit']
+            if is_extra_move[move.id] and invoice_line_vals['product_id'] in product_price_unit:
+                invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id']]
+            if extra_move_tax[move.picking_id, move.product_id]: # is_extra_move[move.id] and TODO correct???
+                invoice_line_vals['invoice_line_tax_id'] = extra_move_tax[move.picking_id, move.product_id]
+
+            move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
+            move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
+
+        invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
+        return invoices.values()
+
+    
 class DdTCreateInvoice(models.TransientModel):
 
     _inherit = 'ddt.create.invoice'
@@ -84,13 +147,18 @@ class DdTCreateInvoice(models.TransientModel):
 
     @api.multi
     def create_invoice(self):
+        ''' Override original metho in l10n_it_ddt for correct with extra field
+        '''
+        # Pool used:
         ddt_model = self.env['stock.ddt']
         picking_pool = self.pool['stock.picking']
+        invoice_line_pool = self.pool['account.invoice.line']
 
         ddts = ddt_model.browse(self.env.context['active_ids'])
         partners = set([ddt.partner_id for ddt in ddts])
         if len(partners) > 1:
             raise Warning(_('Selected DDTs belong to different partners'))
+
         # TODO check also destination and invoice address?!?!
         pickings = []
         self.check_ddt_data(ddts)
@@ -107,10 +175,11 @@ class DdTCreateInvoice(models.TransientModel):
                 #    if move.invoice_state != '2binvoiced':
                 #        raise Warning(
                 #            _('Move %s is not invoiceable') % move.name)
+
         invoices = picking_pool.action_invoice_create(
             self.env.cr,
             self.env.uid,
-            pickings,
+            pickings, # invoice this picking <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             self.journal_id.id, group=True, context=None)
  
         # Save invoice created in ddt document (to no reinvoice again)
@@ -119,11 +188,16 @@ class DdTCreateInvoice(models.TransientModel):
             return # XXX error!!
             
         ddts.write({'invoice_id': invoices[0]})
+                
+        # ---------------------------------------------------------------------
+        #                          Add extra fields:
+        # ---------------------------------------------------------------------
+        # -------
+        # HEADER:
+        # -------
         
-        # Update with extra data taken from DDT elements:    
+        # TODO complete with correct fields (from first DDT):
         invoice_obj = self.env['account.invoice'].browse(invoices)
-        
-        # TODO complete with correct fields:
         invoice_obj.write({        
             'carriage_condition_id': ddts[0].carriage_condition_id.id,
             'goods_description_id': ddts[0].goods_description_id.id,
@@ -147,6 +221,22 @@ class DdTCreateInvoice(models.TransientModel):
             # TODO 'parcels': ddts[0].parcels, # calculate            
             })
             
+        # ------
+        # LINES:
+        # ------
+            
+        # Update line with tax and prices:    
+        #for invoice in invoice_obj:
+        #    for line in invoice.invoice_line:
+        #        tax_ids = line.sale_id.tax_ids
+        #        invoice_line_pool.write(cr, uid, line.id, {
+        #            'invoice_line_tax_id': [(6, 0, tax_ids)]
+        #            #'price_unit': ,
+        #            }, context=context)        
+            
+        # ----------------------
+        # Open new invoice form:    
+        # ----------------------
         ir_model_data = self.env['ir.model.data']
         form_res = ir_model_data.get_object_reference(
             'account', 'invoice_form',)
