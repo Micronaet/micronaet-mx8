@@ -45,7 +45,7 @@ class Parser(report_sxw.rml_parse):
         ''' Check if partner has partic description
         '''
         # TODO optimize
-        self.pool.get('res.partner.product.partic')
+        partic_pool = self.pool.get('res.partner.product.partic')
         res = ''
         partic_ids = partic_pool.search(self.cr, self.uid, [
             ('product_id', '=', product_id),
