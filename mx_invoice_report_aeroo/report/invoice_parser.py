@@ -38,7 +38,28 @@ class Parser(report_sxw.rml_parse):
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
+            'get_partic_description': self.get_partic_description,    
         })
+
+    def get_partic_description(partner_id, product_id):
+        ''' Check if partner has partic description
+        '''
+        # TODO optimize
+        self.pool.get('res.partner.product.partic')
+        res = ''
+        partic_ids = partic_pool.search(self.cr, self.uid, [
+            ('product_id', '=', product_id),
+            ('partner_id', '=', partner_id),
+            ])
+        if not partic_ids:
+            return res
+            
+        partic_proxy = partic_browse(self.cr, self.uid, partic_ids)[0]
+        res = '\n%s %s' % (
+            partic_proxy.partner_code, 
+            partner_proxy.partner_description,
+            )
+        return res
 
     def get_tax_line(self, sol):
         ''' Tax line for order / proforma invoice        
