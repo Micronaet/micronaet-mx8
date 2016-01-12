@@ -129,6 +129,7 @@ class StockPicking(orm.Model):
         '''
         assert len(ids) == 1, 'Only one picking!'
         
+        # TODO view: account.invoice_form
         pick_proxy = self.browse(cr, uid, ids, context=context)[0]
         if not pick_proxy.invoice_id:
             return {} # TODO error?
