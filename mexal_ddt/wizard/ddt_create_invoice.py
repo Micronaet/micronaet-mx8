@@ -32,20 +32,6 @@ class StockMove(orm.Model):
 
 
     # Override function for use directyl sale_order_id  not procurements:    
-    # XXX Not modified:
-    def _get_moves_taxes(self, cr, uid, moves, context=None):
-        #extra moves with the same picking_id and product_id of a move have the same taxes
-        extra_move_tax = {}
-        is_extra_move = {}
-        for move in moves:
-            if move.picking_id:
-                is_extra_move[move.id] = True
-                if not (move.picking_id, move.product_id) in extra_move_tax:
-                    extra_move_tax[move.picking_id, move.product_id] = 0
-            else:
-                is_extra_move[move.id] = False
-        return (is_extra_move, extra_move_tax)
-
     def _get_moves_taxes(self, cr, uid, moves, context=None):
         is_extra_move, extra_move_tax = super(
             StockMove, self)._get_moves_taxes(
