@@ -47,7 +47,6 @@ class Parser(report_sxw.rml_parse):
     def return_note(self, note):
         ''' Check if exist and after return \n note
         '''
-        import pdb; pdb.set_trace()
         try:
             note = note.strip()
             if note:
