@@ -32,6 +32,7 @@
         'account',
         'stock',        
         'sale_stock',
+        'stock_account',
         ],
     'init_xml': [],
     'demo': [],
