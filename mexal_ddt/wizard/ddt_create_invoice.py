@@ -30,18 +30,38 @@ class StockMove(orm.Model):
     '''
     _inherit = 'stock.move'
 
-    # Override function for use directyl sale_order_id  not procurements:      
-    def _get_moves_taxes(self, cr, uid, moves, context=None):
+    def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
+        ''' Override function for use directyl sale_order_id  not procurements:      
+        '''
         is_extra_move, extra_move_tax = super(
             StockMove, self)._get_moves_taxes(
-                cr, uid, moves, context=context)
-        for move in moves:
-            #if move.procurement_id and move.procurement_id.sale_line_id:
-            if move.sale_line_id:
-                is_extra_move[move.id] = False
-                extra_move_tax[move.picking_id, move.product_id] = [
-                    (6, 0, [x.id for x in move.sale_line_id.tax_id])]
+                cr, uid, moves, inv_type, context=context)
+        if inv_type == 'out_invoice':
+            for move in moves:
+                #XXX 
+                #if move.procurement_id and move.procurement_id.sale_line_id:
+                if move.sale_line_id:
+                    is_extra_move[move.id] = False
+                    # XXX move.sale_line_id
+                    extra_move_tax[move.picking_id, move.product_id] = [
+                        (6, 0, [x.id for x in move.sale_line_id.tax_id])]
+                elif move.picking_id.sale_id and \
+                        move.product_id.product_tmpl_id.taxes_id:
+                    fp = move.picking_id.sale_id.fiscal_position
+                    res = self.pool.get('account.invoice.line'
+                        ).product_id_change(
+                            cr, uid, [], move.product_id.id, None, 
+                            partner_id=move.picking_id.partner_id.id, 
+                            fposition_id=(fp and fp.id), 
+                            context=context)
+                    extra_move_tax[0, move.product_id] = [
+                        (6, 0, res['value']['invoice_line_tax_id'])]
+                else:
+                    extra_move_tax[0, move.product_id] = [
+                        (6, 0, [x.id for x in \
+                            move.product_id.product_tmpl_id.taxes_id])]
         return (is_extra_move, extra_move_tax)
+
 
 class stock_picking(osv.osv):
     ''' Problem: VAT not propagate (procurement not present in my module)
@@ -50,44 +70,71 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
     # Override function:
-    def _invoice_create_line(self, cr, uid, moves, journal_id, inv_type='out_invoice', context=None):
+    def _invoice_create_line(self, cr, uid, moves, journal_id, 
+            inv_type='out_invoice', context=None):
+        
+        # Pool used:    
         invoice_obj = self.pool.get('account.invoice')
         move_obj = self.pool.get('stock.move')
+        
         invoices = {}
-        is_extra_move, extra_move_tax = move_obj._get_moves_taxes(cr, uid, moves, context=context)
+        is_extra_move, extra_move_tax = move_obj._get_moves_taxes(
+            cr, uid, moves, inv_type, context=context)
+            
         product_price_unit = {}
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
-            partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
+            partner, user_id, currency_id = move_obj._get_master_data(
+                cr, uid, move, company, context=context)
 
             key = (partner, currency_id, company.id, user_id)
-            invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+            invoice_vals = self._get_invoice_vals(
+                cr, uid, key, inv_type, journal_id, move, context=context)
 
             if key not in invoices:
                 # Get account and payment terms
-                invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
+                invoice_id = self._create_invoice_from_picking(
+                    cr, uid, move.picking_id, invoice_vals, context=context)
                 invoices[key] = invoice_id
             else:
-                invoice = invoice_obj.browse(cr, uid, invoices[key], context=context)
-                if not invoice.origin or invoice_vals['origin'] not in invoice.origin.split(', '):
-                    invoice_origin = filter(None, [invoice.origin, invoice_vals['origin']])
-                    invoice.write({'origin': ', '.join(invoice_origin)})
+                invoice = invoice_obj.browse(
+                    cr, uid, invoices[key], context=context)
+                if not invoice.origin or invoice_vals['origin'] not in \
+                        invoice.origin.split(', '):
+                    invoice_origin = filter(
+                        None, [invoice.origin, invoice_vals['origin']])
+                    invoice.write(
+                        {'origin': ', '.join(invoice_origin)})
 
-            invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+            invoice_line_vals = move_obj._get_invoice_line_vals(
+                cr, uid, move, partner, inv_type, context=context)
             invoice_line_vals['invoice_id'] = invoices[key]
             invoice_line_vals['origin'] = origin
+            
+            #import pdb; pdb.set_trace()
             if not is_extra_move[move.id]:
-                product_price_unit[invoice_line_vals['product_id']] = invoice_line_vals['price_unit']
-            if is_extra_move[move.id] and invoice_line_vals['product_id'] in product_price_unit:
-                invoice_line_vals['price_unit'] = product_price_unit[invoice_line_vals['product_id']]
-            if extra_move_tax[move.picking_id, move.product_id]: # is_extra_move[move.id] and TODO correct???
-                invoice_line_vals['invoice_line_tax_id'] = extra_move_tax[move.picking_id, move.product_id]
+                product_price_unit[
+                    invoice_line_vals['product_id']] = invoice_line_vals[
+                        'price_unit']
+            if is_extra_move[move.id] and invoice_line_vals[
+                    'product_id'] in product_price_unit:
+                invoice_line_vals['price_unit'] = \
+                    product_price_unit[invoice_line_vals['product_id']]
+            # XXX remove: is_extra_move[move.id] and TODO correct???        
+            if extra_move_tax[move.picking_id, move.product_id]: 
+                invoice_line_vals['invoice_line_tax_id'] = \
+                    extra_move_tax[move.picking_id, move.product_id]
 
-            move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-            move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
+            #import pdb; pdb.set_trace()
+            move_obj._create_invoice_line_from_vals(
+                cr, uid, move, invoice_line_vals, context=context)
+            move_obj.write(cr, uid, move.id, {
+                'invoice_state': 'invoiced'}, context=context)
 
-        invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
+        invoice_obj.button_compute(
+            cr, uid, invoices.values(), context=context, 
+            set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
     
 class DdTCreateInvoice(models.TransientModel):
