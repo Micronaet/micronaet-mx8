@@ -25,7 +25,7 @@ from openerp.osv import fields, osv, expression, orm
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
 
-class StockMove(orm.Model):
+"""class StockMove(orm.Model):
     ''' Problem: VAT not propagate (procurement not present in my module)
     '''
     _inherit = 'stock.move'
@@ -88,7 +88,7 @@ class stock_picking(osv.osv):
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
-    
+"""    
 class DdTCreateInvoice(models.TransientModel):
 
     _inherit = 'ddt.create.invoice'
