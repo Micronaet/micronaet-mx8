@@ -31,7 +31,6 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
-
 class Parser(report_sxw.rml_parse):
     counters = {}
     headers = {}
