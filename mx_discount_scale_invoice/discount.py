@@ -41,9 +41,21 @@ _logger = logging.getLogger(__name__)
 
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
-    """
-    
+    """    
     _inherit = 'account.invoice'
+    
+    def force_all_multi_discount_rates(self, cr, uid, ids, context=None):
+        ''' Force all line with header value
+        '''
+        line_pool = self.pool.get('account.invoice.line')
+        
+        header_proxy = self.browse(cr, uid, ids, context=context)[0]
+        for line in header_proxy:
+            line_pool.write(cr, uid, line.id, {
+                'multi_discount_rates': header_proxy.multi_discount_rates
+                # TODO also calculate value discount
+                #'discount': self._XXXx,
+                }, context=context)
     
     _columns = {
         'multi_discount_rates': fields.char('Discount scale', size=30, 
