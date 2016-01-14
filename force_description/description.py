@@ -56,10 +56,10 @@ class PurchaseOrderLine(orm.Model):
         'force_description': fields.text('Force description'),
         }
 
-class AccountLine(orm.Model):
+class AccountInvoiceLine(orm.Model):
     ''' Manage account line
     '''
-    _inherit = 'account.line'
+    _inherit = 'account.invoice.line'
     
     _columns = {
         'force_description': fields.text('Force description'),
