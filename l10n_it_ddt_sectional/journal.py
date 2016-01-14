@@ -39,10 +39,12 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
-class StockDdT(models.Model):
+'''TODO correct!!!
+class StockDdT(orm.Model):
 
     _inherit = 'stock.ddt'
 
+    # TODO test
     @api.multi
     def set_number(self):
         for ddt in self:
@@ -50,5 +52,5 @@ class StockDdT(models.Model):
                 ddt.write({
                     'name': ddt.sequence.get(ddt.sequence.id),
                 })
-
+'''
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

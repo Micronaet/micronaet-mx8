@@ -56,7 +56,7 @@ class SaleOrderLine(orm.Model):
     # ----------------
     # Function fields:
     # ----------------
-    def _get_accounting_state(self, cr, uid, ids, context=None):
+    def _get_pricelist_state(self, cr, uid, ids, context=None):
         ''' When change accounting state information in order propagate
             also in order line
         '''
