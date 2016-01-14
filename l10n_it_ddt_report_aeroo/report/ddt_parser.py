@@ -21,23 +21,74 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import os
+import sys
+import logging
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
+from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
+
 
 
 class Parser(report_sxw.rml_parse):
     counters = {}
+    headers = {}
     
-    def __init__(self, cr, uid, name, context):
-        
+    def __init__(self, cr, uid, name, context):        
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_address': self.get_address,
             'get_extra_data': self.get_extra_data,
             'get_partner_list': self.get_partner_list,
+            'theres_partner_ref': self.theres_partner_ref,
+            'get_headers': self.get_headers,
+            
+            # Utility:
             'get_counter': self.get_counter,
-            'set_counter': self.set_counter,
+            'set_counter': self.set_counter,            
+            'report_init_reset':  self.report_init_reset,
         })
+        
+        
+    def report_init_reset(self): 
+        ''' Reset parameter used in report 
+        '''
+        self.headers = {
+            'order': '', # NOTE: set up as '' for not print if empty!
+            'ddt': '',
+            }
+            
+        self.counters = {}
+        return ''
+        
+    def get_headers(self, ref='order'):
+        ''' Returs header dict
+        '''
+        return self.headers.get(ref, '')
+        
+    def theres_partner_ref(self, picking_id, ref='order'):
+        ''' Get sale order reference for picking_proxy if as previous nothing)
+        '''
+        # Get value:
+        if picking_id.sale_id and picking_id.sale_id.client_order_ref:
+            # Sale ref.:
+            res = _('Vs. rif.: %s') % picking_id.sale_id.client_order_ref             
+            
+        elif picking_id.origin: 
+            #¯Pick ref.:
+            res = _('Ns. rif.: %s') % picking_id.origin
+            
+        else:        
+            # Nothing:
+            res = '' # _('No reference')
+
+        if self.headers.get(ref, False) == res:
+            return False
+        else:    
+            self.headers[ref] = res # save for next call
+            return True
 
     def get_counter(self, name):
         ''' Get counter with name passed (else create an empty)
