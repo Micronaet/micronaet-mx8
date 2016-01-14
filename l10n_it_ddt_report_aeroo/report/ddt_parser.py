@@ -74,7 +74,10 @@ class Parser(report_sxw.rml_parse):
         # Get value:
         if picking_id.sale_id and picking_id.sale_id.client_order_ref:
             # Sale ref.:
-            res = _('Vs. rif.: %s') % picking_id.sale_id.client_order_ref             
+            res = _('Vs. rif.: %s  [Ns. rif. %s]') % (
+                picking_id.sale_id.client_order_ref, 
+                picking_id.sale_id.name or '/',
+                )
             
         elif picking_id.origin: 
             #¯Pick ref.:
