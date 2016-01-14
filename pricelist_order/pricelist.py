@@ -45,5 +45,29 @@ class SaleOrder(orm.Model):
     
     _columns = {
         'pricelist_order': fields.boolean('Pricelist order'),
-        }    
+        }
+
+class SaleOrderLine(orm.Model):
+    """ Model name: SaleOrderLine
+        Set a utility field also in line
+    """    
+    _inherit = 'sale.order.line'
+    
+    # ----------------
+    # Function fields:
+    # ----------------
+    def _get_accounting_state(self, cr, uid, ids, context=None):
+        ''' When change accounting state information in order propagate
+            also in order line
+        '''
+        return self.pool.get('sale.order.line').search(cr, uid, [
+            ('order_id', 'in', ids)], context=context)
+
+    _columns = {
+        'pricelist_order': fields.related(
+            'order_id', 'pricelist_order', type='boolean', 
+            string='Pricelist order', store={
+                'sale.order': (
+                    _get_pricelist_state, ['pricelist_order'], 10)})}
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
