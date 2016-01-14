@@ -20,7 +20,7 @@
             </field>
         </record>
 
-        <!--<record id="action_picking_create_invoice" model="ir.actions.act_window">
+        <record id="action_picking_create_invoice" model="ir.actions.act_window">
             <field name="name">Create Direct Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">picking.create.direct.invoice</field>
@@ -29,17 +29,15 @@
             <field name="view_id" ref="view_picking_create_direct_invoice"/>
             <field name="target">new</field>
         </record>
-        TODO use create invoice from picking?
-        -->
-
-        <record model="ir.values" id="picking_create_invoice">
+        
+        <!--<record model="ir.values" id="picking_create_invoice">
             <field name="model_id" ref="mexal_ddt.model_stock_picking" />
             <field name="name">Create direct invoice</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_picking_create_invoice'))" />
             <field name="key">action</field>
             <field name="model">stock.picking</field>
-        </record>
+        </record>-->
 
     </data>
 </openerp>
