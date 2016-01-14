@@ -33,7 +33,8 @@ class StockMove(orm.Model):
     def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
         ''' Override function for use directyl sale_order_id  not procurements:      
         '''
-        is_extra_move, extra_move_tax = super(
+        # TODO check what's extra_move
+        is_extra_move, extra_move_tax = super(        
             StockMove, self)._get_moves_taxes(
                 cr, uid, moves, inv_type, context=context)
         if inv_type == 'out_invoice':
@@ -112,7 +113,7 @@ class stock_picking(osv.osv):
             invoice_line_vals['invoice_id'] = invoices[key]
             invoice_line_vals['origin'] = origin
             
-            #import pdb; pdb.set_trace()
+            #  TODO what's is_extra_move?
             if not is_extra_move[move.id]:
                 product_price_unit[
                     invoice_line_vals['product_id']] = invoice_line_vals[
@@ -125,8 +126,19 @@ class stock_picking(osv.osv):
             if extra_move_tax[move.picking_id, move.product_id]: 
                 invoice_line_vals['invoice_line_tax_id'] = \
                     extra_move_tax[move.picking_id, move.product_id]
-
-            #import pdb; pdb.set_trace()
+            
+            # Add extra data from order:
+            # TODO manage this value if direct picking invoice / DDT
+            if move.sale_line_id:
+                # Update discount from order
+                invoice_line_vals['discount'] = move.sale_line_id.discount
+                invoice_line_vals['multi_discount_rates'] = \
+                    move.sale_line_id.multi_discount_rates
+                
+                # Update price from order
+                invoice_line_vals['price_unit'] = move.sale_line_id.price_unit
+                # TODO sequence if present!!!
+                
             move_obj._create_invoice_line_from_vals(
                 cr, uid, move, invoice_line_vals, context=context)
             move_obj.write(cr, uid, move.id, {
