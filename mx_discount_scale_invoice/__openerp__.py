@@ -29,7 +29,8 @@
     'license': 'AGPL-3',
     'depends': [
         'base',
-        'sale',
+        'account',
+        'mx_discount_scale_base',
         ],
     'init_xml': [],
     'demo': [],

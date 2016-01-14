@@ -30,7 +30,6 @@
     'depends': [
         'base',
         'sale',
-        'mx_discount_scale_base',
         ],
     'init_xml': [],
     'demo': [],

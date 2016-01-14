@@ -39,29 +39,16 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
-class SaleOrder(orm.Model):
-    ''' Model name: SaleOrder
+class ResPartner(orm.Model):
+    ''' Model name: ResPartner
     '''    
-    _inherit = 'sale.order'
-    
-    _columns = {
-        'multi_discount_rates': fields.char('Discount scale', size=30, 
-            help='Use for force the one in lines'),
-        }
+    _inherit = 'res.partner'
 
-class SaleOrderLine(orm.Model):
-    ''' Model name: SaleOrderLine
-    '''
-    
-    _inherit = 'sale.order.line'
+    # TODO add function for computation    
     
     _columns = {
-        'multi_discount_rates': fields.char('Discount scale', size=30),
-        'price_use_manual': fields.boolean('Use manual net price',
-            help='If specificed use manual net price instead of '
-                'lord price - discount'),
-        'price_unit_manual': fields.float(
-            'Manual net price', digits_compute=dp.get_precision('Sale Price')),
+        'discount_value': fields.float('Discount value', digits=(16, 2)),
+        'discount_rates': fields.char('Discount scale', size=30),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
