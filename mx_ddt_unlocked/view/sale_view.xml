@@ -58,5 +58,16 @@
         </field>
     </record>
         
+    <record model="ir.ui.view" id="view_move_picking_stock_move_unlockform">
+        <field name="name">stock.move.unlock.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_picking_form"/>
+        <field name="arch" type="xml">           
+           <field name="product_uom_qty" position="attributes">
+               <attribute name="attrs">{}</attribute>               
+           </field>
+        </field>
+    </record>
+        
     </data>
 </openerp>
