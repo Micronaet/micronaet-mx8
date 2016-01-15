@@ -49,9 +49,20 @@ class SaleOrderLine(orm.Model):
         return self.pool.get('sale.order.line').search(cr, uid, [
             ('product_id', 'in', ids)], context=context)            
     
+
+    def _get_family_name_order(self, cr, uid, ids, context=None):
+        ''' Check when family_id will be modified in product sale order
+        '''
+        return ids
+    
     _columns = {
         'family_id': fields.related('product_id', 'family_id', 
             type='many2one', relation='product.template', string='Family', 
-            store={'product.product': (_get_family_name, ['family_id'], 10)}),
+            store={
+                'product.product': (
+                    _get_family_name, ['family_id'], 10),
+                'sale.order.line': (
+                    _get_family_name_order, ['product_id'], 10),
+                }),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
