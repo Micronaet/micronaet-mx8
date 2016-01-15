@@ -49,7 +49,6 @@ class SaleOrderLine(orm.Model):
         return self.pool.get('sale.order.line').search(cr, uid, [
             ('product_id', 'in', ids)], context=context)            
     
-
     def _get_family_name_order(self, cr, uid, ids, context=None):
         ''' Check when family_id will be modified in product sale order
         '''
