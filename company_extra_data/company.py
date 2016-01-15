@@ -40,8 +40,7 @@ _logger = logging.getLogger(__name__)
 
 class ResCompany(orm.Model):
     """ Model name: ResCompany
-    """
-    
+    """    
     _inherit = 'res.company'
     
     _columns = {
@@ -50,5 +49,6 @@ class ResCompany(orm.Model):
         'header_mecc': fields.char('Mecc. code', size=12),
         'header2': fields.text('Sub slogan'),
         'header3': fields.text('Order slogan'),
+        'footer_note': fields.text('Footer note'),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
