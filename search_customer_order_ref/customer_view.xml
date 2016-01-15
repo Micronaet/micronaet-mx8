@@ -1,7 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
+         <record model="ir.ui.view" id="view_view_sales_order_partner_ref_search">
+             <field name="name">sale.order.partner.ref.search</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+             <field name="arch" type="xml">
+                 <field name="partner_id" position="after">
+                     <field name="client_order_ref" string="Customer ref."/>
+                 </field>
+             </field>
+         </record>
     </data>
 </openerp>
 

@@ -34,7 +34,7 @@
     'init_xml': [],
     'demo': [],
     'data': [
-        '_view.xml',
+        'customer_view.xml',
         ],
     'active': False,
     'installable': True,
