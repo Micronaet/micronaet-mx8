@@ -52,16 +52,100 @@ class SaleOrder(orm.Model):
 class SaleOrderLine(orm.Model):
     ''' Model name: SaleOrderLine
     '''
-    
     _inherit = 'sale.order.line'
+
+    def create(self, cr, uid, vals, context=None):
+        ''' Correct multi discount description and calculare if discount
+            not present
+        '''
+        if not vals.get('discount', 0.0) and vals.get(
+                'multi_discount_rates', False):
+            res = self.pool.get(
+                'res.partner').format_multi_discount(
+                    multi_discount_rates)
+                
+            vals['discount'] = res.get('value', 0.0)
+            vals['multi_discount_rates'] = res.get('text', 0.0)
+            
+        return super(SaleOrderLine, self).create(
+            cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        ''' Update discount if text is present
+        '''
+
+        if vals.get('multi_discount_rates', False):
+            res = self.pool.get(
+                'res.partner').format_multi_discount(
+                    multi_discount_rates)
+                
+            vals['discount'] = res.get('value', 0.0)
+            vals['multi_discount_rates'] = res.get('text', 0.0)
+        return super(SaleOrderLine, self).write(
+            cr, uid, ids, vals, context=context)
+
+    def _discount_rates_get(self, cr, uid, context=None):
+        import pdb; pdb.set_trace()
+        if context is None:
+            context = {}
+        if context.get('partner_id'):
+           cr.execute("""
+               SELECT discount_rates, id
+               FROM res_partner
+               WHERE id = %d
+               """ % context['partner_id'])
+           res = cr.fetchall()
+           if res[0][0]:
+              return res[0][0]
+           else:
+              return False
+        else:
+           return False
+
+    def _discount_value_get(self, cr, uid, context=None):
+        import pdb; pdb.set_trace()
+        if context is None:
+            context = {}
+        if context.get('partner_id', False):
+           cr.execute("""
+               SELECT discount_value, id
+               FROM res_partner
+               WHERE id = %d""" % context['partner_id'])
+           res = cr.fetchall()
+           if res[0][0]:
+              return res[0][0]
+           else:
+              return False
+        else:
+           return False
+
+    def on_change_multi_discount(self, cr, uid, ids, multi_discount_rates, 
+            context=None):
+        ''' Change multi_discount_rates and value
+        '''
+        discount_result = self.pool.get('res.partner').format_multi_discount(
+             multi_discount_rates)
+             
+        return {
+            'value': {
+                'discount': res.get('value', 0.0),
+                #'multi_discount_rates': res.get('text', ''),
+                }}    
     
     _columns = {
         'multi_discount_rates': fields.char('Discount scale', size=30),
+        
+        # TODO Used:?
         'price_use_manual': fields.boolean('Use manual net price',
             help='If specificed use manual net price instead of '
                 'lord price - discount'),
         'price_unit_manual': fields.float(
             'Manual net price', digits_compute=dp.get_precision('Sale Price')),
+        }
+
+    _defaults = {
+        'multi_discount_rates': lambda s, cr, uid, ctx:_discount_rates_get,
+        'discount': _discount_value_get,
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
