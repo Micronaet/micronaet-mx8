@@ -45,12 +45,18 @@ class ResPartner(orm.Model):
     _inherit = 'res.partner'
 
     def onchange_discount_rates(self, cr, uid, ids, discount_rates, 
-            context=None)
+            context=None):
         ''' Update value? needed?
         '''    
         # TODO create in necessary this function!!!!!! <<<<<<<<<<<<<<<<<<<<<<<<
-        res = {}
-        return res
+        res = self.pool.get('res.partner').format_multi_discount(
+             discount_rates)
+             
+        return {
+            'value': {
+                'discount_value': res.get('value', 0.0),
+                'discount_rates': res.get('text', ''),
+                }}    
 
     # Utility function for compute text and value
     def format_multi_discount(self, multi_discount):
@@ -65,7 +71,10 @@ class ResPartner(orm.Model):
         if not multi_discount:
             return res
            
-        disc = multi_discount.replace(' ', '').replace(',', '.')
+        disc = multi_discount.replace(
+            ' ', '').replace(
+                ',', '.').replace(
+                    '%', '')
         discount_list = disc.split('+')
         if discount_list:
             base_discount = 100.0

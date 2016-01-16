@@ -122,7 +122,7 @@
 
                 <!--sale.order.line-->
                 <xpath expr="/form/sheet/notebook/page//field[@name='order_line']" position="attributes">
-                    <attribute name="context">{'default_date_deadline': date_deadline}</attribute>
+                    <attribute name="context">{'default_date_deadline': date_deadline, 'partner_id': partner_id}</attribute> <!--TODO used for other module discoune!!!-->
                 </xpath>
                 <xpath expr="/form/sheet/notebook/page//field[@name='order_line']/form//field[@name='th_weight']" position="after">
                     <field name="gr_weight"/>

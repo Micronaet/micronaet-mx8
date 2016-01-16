@@ -84,46 +84,24 @@ class SaleOrderLine(orm.Model):
         return super(SaleOrderLine, self).write(
             cr, uid, ids, vals, context=context)
 
-    def _discount_rates_get(self, cr, uid, context=None):
-        import pdb; pdb.set_trace()
+    def _discount_rates_get(self, cr, uid, attribute, context=None):
         if context is None:
             context = {}
-        if context.get('partner_id'):
-           cr.execute("""
-               SELECT discount_rates, id
-               FROM res_partner
-               WHERE id = %d
-               """ % context['partner_id'])
-           res = cr.fetchall()
-           if res[0][0]:
-              return res[0][0]
-           else:
-              return False
-        else:
-           return False
+        partner_pool = self.pool.get('res.partner')    
+        partner_id = context.get('partner_id')
+        if not partner_id:
+            return False
+        
+        partner_proxy = partner_pool.browse(
+            cr, uid, partner_id, context=context)
 
-    def _discount_value_get(self, cr, uid, context=None):
-        import pdb; pdb.set_trace()
-        if context is None:
-            context = {}
-        if context.get('partner_id', False):
-           cr.execute("""
-               SELECT discount_value, id
-               FROM res_partner
-               WHERE id = %d""" % context['partner_id'])
-           res = cr.fetchall()
-           if res[0][0]:
-              return res[0][0]
-           else:
-              return False
-        else:
-           return False
+        return partner_proxy.__getattribute__(attribute)        
 
     def on_change_multi_discount(self, cr, uid, ids, multi_discount_rates, 
             context=None):
         ''' Change multi_discount_rates and value
         '''
-        discount_result = self.pool.get('res.partner').format_multi_discount(
+        res = self.pool.get('res.partner').format_multi_discount(
              multi_discount_rates)
              
         return {
@@ -144,8 +122,10 @@ class SaleOrderLine(orm.Model):
         }
 
     _defaults = {
-        'multi_discount_rates': lambda s, cr, uid, ctx:_discount_rates_get,
-        'discount': _discount_value_get,
+        'multi_discount_rates': lambda s, cr, uid, ctx: s._discount_rates_get(
+            cr, uid, 'discount_rates', context=ctx),
+        'discount':  lambda s, cr, uid, ctx: s._discount_rates_get(
+            cr, uid, 'discount_value', context=ctx),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,33 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!--<record model="ir.ui.view" id="view_invoice_form_discount_form">
-            <field name="name">account.invoice.discount.form</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='currency_id']/div" position="after">
-                    <group name="discount_force" colspan="4" col="3">
-                       <field name="multi_discount_rates" />
-                       <button name="force_all_multi_discount_rates" string="Force" type="object" />
-                    </group>   
-                </xpath>-
-            </field>
-        </record>-->
         <record id='view_partner_add_custom_fields' model='ir.ui.view'>
             <field name='name'>Accounting Partner</field>
             <field name='model'>res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name='type'>form</field>
             <field name='arch' type='xml'>
-              <xpath expr="/form/sheet/notebook/page//field[@name='date']" position="before">
-                   <separator string="Discount granted:"/>
-                   <field name='discount_rates' on_change="onchange_discount_rates(discount_rates)"/>             
-                   <field name='discount_value' />             
+              <xpath expr="/form/sheet/notebook/page//field[@name='lang']" position="after">
+                  <separator string="Discount granted:" colspan="4"/>
+                  <field name='discount_rates' on_change="onchange_discount_rates(discount_rates)"/>             
+                  <field name='discount_value' /> 
+                  <newline/>
               </xpath>
            </field>
         </record>   
-            
     </data>
 </openerp>
 

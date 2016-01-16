@@ -2,28 +2,27 @@
 <openerp>
     <data>
     <!--sale.order-->
-    <record id='view_order_line_form2_discount' model='ir.ui.view'>
+    <record id='view_order_line_form_discount' model='ir.ui.view'>
         <field name='name'>Quotation sale discount</field>
         <field name='model'>sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name='arch' type='xml'>
-              <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='discount']" position="before">
-                  <field string="Discount scale" name='multi_discount_rates' />
-              </xpath>
-              
-              <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/form//field[@name='price_unit']" position="after">
-                  <separator string="Discount:" colspan="2"/>
-                  <field string="Discount scale" name='multi_discount_rates' on_change='on_change_multi_discount(multi_discount_rates)' context="{'partner_id':parent.partner_id}" />
-                  <newline />
-                  <!--TODO unhide when managed<field name="price_use_manual" />
-                  <field name="price_unit_manual" />-->
-              </xpath>
-              <xpath expr="/form/sheet/notebook/page/field[@name='order_line']" position="attributes">
-                  <attribute name='context'>{'partner_id': partner_id}</attribute>
-              </xpath>
+           <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='discount']" position="before">
+               <field string="Discount scale" name='multi_discount_rates' />
+           </xpath>
+          
+           <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/form//field[@name='price_unit']" position="after">
+               <separator string="Discount:" colspan="2"/>
+               <field string="Discount scale" name='multi_discount_rates' on_change='on_change_multi_discount(multi_discount_rates)' context="{'partner_id':parent.partner_id}" />
+               <newline />
+               <!--TODO unhide when managed<field name="price_use_manual" />
+               <field name="price_unit_manual" />-->
+           </xpath>
+           <xpath expr="/form/sheet/notebook/page//field[@name='order_line']" position="attributes">
+               <attribute name='context'>{'partner_id': partner_id}</attribute> <!--TOOD doesn't work update: mx_sale-->
+           </xpath>
         </field>
     </record>
-
     </data>
 </openerp>
 
