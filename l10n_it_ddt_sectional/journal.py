@@ -39,18 +39,20 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
-'''TODO correct!!!
 class StockDdT(orm.Model):
-
+    '''Override DDT for change set number function:
+    '''
     _inherit = 'stock.ddt'
 
-    # TODO test
-    @api.multi
-    def set_number(self):
-        for ddt in self:
+    def set_number(self, cr, uid, ids, context=None):
+        ''' Override original function:
+        '''    
+        for ddt in self.browse(cr, uid, ids, context=context):
             if not ddt.name:
-                ddt.write({
-                    'name': ddt.sequence.get(ddt.sequence.id),
-                })
-'''
+                name = self.pool.get('ir.sequence').get_id(
+                    cr, uid, ddt.sequence.id, code_or_id='id', 
+                    context=context) 
+                self.write(cr, uid, ddt.id, {
+                    'name': name}, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
