@@ -49,6 +49,30 @@
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
+        
+        <!--carichi-->
+        <record id="aeroo_mx_carichi_report_id" model="ir.actions.report.xml">
+            <field name="name">Mx carichi report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">sale.order</field>
+            <field name="report_name">custom_mx_carichi_report</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-odt</field>
+            <field name="parser_loc">mx_invoice_report_aeroo/report/invoice_parser.py</field>
+            <field name="report_rml">mx_invoice_report_aeroo/report/carichi.odt</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+        </record>
+
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="['sale.order']" name="models"/>
+            <field name="name">action_custom_mx_carichi</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_carichi_report_id)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>
+        </ir_set>
     </data>
 </openerp>
 

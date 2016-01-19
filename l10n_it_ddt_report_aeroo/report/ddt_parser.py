@@ -135,4 +135,24 @@ class Parser(report_sxw.rml_parse):
                 "C.F.: %s" % (
                     partner_proxy.fiscalcode if partner_proxy.fiscalcode else ""), )
             )
+            
+    def get_partic_description(self, partner_id, product_id):
+        ''' Check if partner has partic description
+        '''
+        # TODO optimize
+        partic_pool = self.pool.get('res.partner.product.partic')
+        res = ''
+        partic_ids = partic_pool.search(self.cr, self.uid, [
+            ('product_id', '=', product_id),
+            ('partner_id', '=', partner_id),
+            ])
+        if not partic_ids:
+            return res
+            
+        partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
+        res = '%s %s' % (
+            partic_proxy.partner_code or '', 
+            partic_proxy.partner_description or '',
+            )
+        return res
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -36,6 +36,7 @@ class Parser(report_sxw.rml_parse):
             'set_counter': self.set_counter,
             'bank': self.get_company_bank,
             'get_partic_description': self.get_partic_description,
+            'get_tax_line_invoice':self.get_tax_line_invoice,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
@@ -91,6 +92,25 @@ class Parser(report_sxw.rml_parse):
                 res[line.tax_id][0] += line.price_subtotal
                 res[line.tax_id][1] += line.price_subtotal * \
                     line.tax_id.amount
+                    
+        return res.iteritems()
+        
+    def get_tax_line_invoice(self, il):
+        ''' Tax line for invoice        
+            self: instance of class
+            il: sale order lines for loop 
+        '''
+        res = {}
+        for line in il:
+            if line.invoice_line_tax_id not in res:
+                res[line.invoice_line_tax_id] = [
+                    line.price_subtotal, 
+                    line.price_subtotal * line.invoice_line_tax_id.amount,
+                    ]
+            else:
+                res[line.invoice_line_tax_id][0] += line.price_subtotal
+                res[line.invoice_line_tax_id][1] += line.price_subtotal * \
+                    line.invoice_line_tax_id.amount
                     
         return res.iteritems()
 
