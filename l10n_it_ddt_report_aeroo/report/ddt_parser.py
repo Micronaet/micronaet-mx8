@@ -48,6 +48,7 @@ class Parser(report_sxw.rml_parse):
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,            
             'report_init_reset':  self.report_init_reset,
+            'get_partic_description': self.get_partic_description,
         })
         
         
@@ -150,7 +151,7 @@ class Parser(report_sxw.rml_parse):
             return res
             
         partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
-        res = '%s %s' % (
+        res = '\n%s %s' % (
             partic_proxy.partner_code or '', 
             partic_proxy.partner_description or '',
             )
