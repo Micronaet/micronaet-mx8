@@ -49,6 +49,8 @@ class DdTFromPickings(models.TransientModel):
             'payment_term_id': False,
             'used_bank_id': False,
             'default_carrier_id': False,
+            'destination_partner_id': False,
+            'invoice_partner_id': False,
             }
             
         partner = False        
@@ -170,6 +172,36 @@ class DdTFromPickings(models.TransientModel):
                     picking.sale_id.carrier_id)
                 values['default_carrier_id'] = (
                     default_carrier_id.id)
+
+        destination_partner_id = False
+        for picking in self.picking_ids:
+            if picking.sale_id and (
+                    picking.sale_id.destination_partner_id):
+                if destination_partner_id and (
+                    destination_partner_id != (
+                        picking.sale_id.destination_partner_id)):
+                    raise Warning(
+                        _('Selected Pickings have'
+                          ' different destination partner'))
+                destination_partner_id = (
+                    picking.sale_id.destination_partner_id)
+                values['destination_partner_id'] = (
+                    destination_partner_id.id)
+                    
+        invoice_partner_id = False
+        for picking in self.picking_ids:
+            if picking.sale_id and (
+                    picking.sale_id.invoice_partner_id):
+                if invoice_partner_id and (
+                    invoice_partner_id != (
+                        picking.sale_id.invoice_partner_id)):
+                    raise Warning(
+                        _('Selected Pickings have'
+                          ' different invoice partner'))
+                invoice_partner_id = (
+                    picking.sale_id.invoice_partner_id)
+                values['invoice_partner_id'] = (
+                    invoice_partner_id.id)
                     
         ddt = self.env['stock.ddt'].create(values)
         for picking in self.picking_ids:

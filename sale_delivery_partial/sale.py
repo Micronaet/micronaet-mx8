@@ -192,7 +192,8 @@ class SaleOrder(orm.Model):
         
         # Add dependency for this fields: TODO vector and others needed!
         extra_fields = ('transportation_reason_id', 
-                'goods_description_id', 'carriage_condition_id')
+                'goods_description_id', 'carriage_condition_id',
+                'destination_partner_id', 'invoice_partner_id')
         for field in extra_fields:
             picking_data[field] = order.__getattribute__(field).id
         
