@@ -31,9 +31,9 @@
             <field name="model">sale.order</field>
             <field name="report_name">custom_mx_load_summary_report</field>
             <field name="report_type">aeroo</field>
-            <field name="in_format">oo-odt</field>
+            <field name="in_format">oo-ods</field>
             <field name="parser_loc">delivery_todo_report/report/delivery_parser.py</field>
-            <field name="report_rml">delivery_todo_report/report/load_summary.odt</field>
+            <field name="report_rml">delivery_todo_report/report/load_summary.ods</field>
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
