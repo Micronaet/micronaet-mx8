@@ -41,13 +41,7 @@ class Parser(report_sxw.rml_parse):
             'get_datetime': self.get_datetime,
             'get_partic': self.get_partic,
 
-            # TODO needed?            
-            'colli_total': self.colli_total,
-            'orders': self.order_browse,
-            'total_orders': self.total_orders, 
-            'is_last': self.is_last,
             'reset_print': self.reset_print,
-            'get_address_default': self.get_address_default,
         })
 
     def get_partic(self, line):
@@ -99,11 +93,14 @@ class Parser(report_sxw.rml_parse):
         products = {}
         res = []
         sale_pool = self.pool.get('sale.order')
-        
+                
         for order in sale_pool.browse(
                 self.cr, self.uid, self._get_fully_list(objects)):
  
             for line in order.order_line:
+                # TODO parametrize (jump delivered all):
+                if line.product_uom_qty - line.delivered_qty == 0:
+                    continue
                 code = line.product_id.default_code
                 if code not in products:
                     products[code] = []
