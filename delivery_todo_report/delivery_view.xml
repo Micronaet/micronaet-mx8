@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="view_sale_order_to_delivery_tree">
+            <field name="name">sale.order.delivery.tree</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="print" invisible="1"/>
+                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
+                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
+                </field>    
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sale_order_to_delivery_tree">
+            <field name="name">sale.order.delivery.tree</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                  <field name="date_order" position="after">
+                       <field name="print" invisible="1"/> 
+                       <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
+                       <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
+                  </field>
+            </field>
+        </record>
+    </data>
+</openerp>
