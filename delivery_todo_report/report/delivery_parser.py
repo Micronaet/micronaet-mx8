@@ -50,7 +50,7 @@ class Parser(report_sxw.rml_parse):
         partic_pool = self.pool.get('res.partner.product.partic')
         partic_ids = partic_pool.search(self.cr, self.uid, [
             ('partner_id', '=', line.order_id.partner_id.id),
-            ('partner_id', '=', line.product_id.id),
+            ('product_id', '=', line.product_id.id),
             ])
         if partic_ids: 
             partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
