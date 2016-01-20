@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data>
-    
+    <data>    
         <record model="ir.ui.view" id="view_sale_order_to_delivery_tree">
             <field name="name">sale.order.delivery.tree</field>
             <field name="inherit_id" ref="sale.view_quotation_tree"/>

@@ -34,7 +34,6 @@ class Parser(report_sxw.rml_parse):
         self.localcontext.update({
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
-            'bank': self.get_company_bank,
             'get_partic_description': self.get_partic_description,
             'get_tax_line_invoice':self.get_tax_line_invoice,
             
@@ -44,17 +43,6 @@ class Parser(report_sxw.rml_parse):
             # Utility:
             'return_note': self.return_note,
         })
-
-    def return_note(self, note):
-        ''' Check if exist and after return \n note
-        '''
-        try:
-            note = note.strip()
-            if note:
-                return '\n\n%s' % note                 
-        except:
-            return ''   
-    
 
     def get_partic_description(self, partner_id, product_id):
         ''' Check if partner has partic description
