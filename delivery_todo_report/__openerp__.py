@@ -37,6 +37,7 @@
     'data': [
         #'security/ir.model.access.csv',    
         'delivery_view.xml',
+        'report/delivery_report.xml',
         ],
     'active': False,
     'installable': True,

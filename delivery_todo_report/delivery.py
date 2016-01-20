@@ -38,4 +38,22 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class SaleOrder(orm.Model):
+    """ Model name: SaleOrder
+    """
+    # Button event:
+    def to_print(self, cr, uid, ids, context=None):
+        header_mod=self.write(cr, uid, ids, {'print': True}, context=context)
+        return True
+
+    def no_print(self, cr, uid, ids, context = None):
+        header_mod=self.write(cr, uid, ids, {'print': False}, context=context)
+        return True
+    
+    _inherit = 'sale.order'
+    
+    _columns = {
+        'print': fields.boolean('To Print'),
+        }
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
