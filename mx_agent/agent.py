@@ -73,4 +73,16 @@ class StockPicking(orm.Model):
         'mx_agent_id': fields.many2one('res.partner', 'Agent', 
             domain=[('is_agent', '=', True)]),
         }
+
+class StockDdt(orm.Model):
+    """ Model name: Stock DDT
+    """    
+    _inherit = 'stock.ddt'
+    
+    # TODO onchange for setup from partner
+   
+    _columns = {
+        'mx_agent_id': fields.many2one('res.partner', 'Agent', 
+            domain=[('is_agent', '=', True)]),
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

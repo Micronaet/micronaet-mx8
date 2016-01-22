@@ -47,7 +47,6 @@ class SaleOrderLine(orm.Model):
     """ Model name: SaleOrderLine
     """    
     _inherit = 'sale.order.line'
-
     
     # Override unlink action
     def unlink(self, cr, uid, ids, context=None):
