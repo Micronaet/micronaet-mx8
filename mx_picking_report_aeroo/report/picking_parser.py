@@ -45,7 +45,6 @@ class Parser(report_sxw.rml_parse):
         ''' return vector address
         '''
         res = ''
-        import pdb; pdb.set_trace()
         if o.carrier_id:
             res = _('VETTORE: %s') % o.carrier_id.name or ''
             res += '\n%s' % (
