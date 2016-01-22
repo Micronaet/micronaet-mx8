@@ -46,17 +46,20 @@ class Parser(report_sxw.rml_parse):
         '''
         res = ''
         if o.carrier_id:
-            res = 'VETTORE: %s' % o.carrier_id.name or ''
+            res = _('VETTORE: %s') % o.carrier_id.name or ''
             res += '\n%s' % (
                 o.carrier_id.partner_id.street
                 ) if o.carrier_id.partner_id.street  else ''
-            res += '\n %s' % (o.carrier_id.partner_id.zip or '')
-            res += ' %s' % (o.carrier_id.partner_id.city or '')
-            res += ' %s' % (o.carrier_id.partner_id.state_id.code or '')
+            res += '\n%s' % (
+                o.carrier_id.partner_id.zip or '')
+            res += ' %s' % (
+                o.carrier_id.partner_id.city or '')
+            res += ' %s' % (
+                o.carrier_id.partner_id.state_id.code or '')
             
-            res += '\nP.IVA: %s' % o.carrier_id.partner_id.vat
-            res += '\nTel: %s' % (o.carrier_id.partner_id.phone or '')
-            res += '\nNr. Albo Trasp.: ' % '' # TODO
+            res += _('\nP.IVA: %s') % (o.carrier_id.partner_id.vat or '')
+            res += _('\nTel: %s') % (o.carrier_id.partner_id.phone or '')
+            res += _('\nNr. Albo Trasp.: %s') % '' # TODO
         return res    
 
     def get_tax_line(self, sol):
