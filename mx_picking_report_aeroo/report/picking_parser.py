@@ -23,7 +23,7 @@
 ##############################################################################
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
-
+from openerp.tools.translate import _
 
 class Parser(report_sxw.rml_parse):
     counters = {}
@@ -35,7 +35,7 @@ class Parser(report_sxw.rml_parse):
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
             'bank': self.get_company_bank,
-            'get_vector_address': get_vector_address,
+            'get_vector_address': self.get_vector_address,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,            
@@ -45,6 +45,7 @@ class Parser(report_sxw.rml_parse):
         ''' return vector address
         '''
         res = ''
+        import pdb; pdb.set_trace()
         if o.carrier_id:
             res = _('VETTORE: %s') % o.carrier_id.name or ''
             res += '\n%s' % (
