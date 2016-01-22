@@ -57,9 +57,9 @@ class SaleOrderLine(orm.Model):
     def create(self, cr, uid, vals, context=None):
         ''' Correct multi discount description and calculare if discount
             not present
-        '''
+        '''        
         multi_discount_rates = vals.get('multi_discount_rates', False)
-        if not vals.get('discount', 0.0) and multi_discount_rates):
+        if not vals.get('discount', 0.0) and multi_discount_rates:
             res = self.pool.get(
                 'res.partner').format_multi_discount(multi_discount_rates)
 
