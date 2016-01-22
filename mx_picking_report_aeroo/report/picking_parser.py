@@ -35,10 +35,29 @@ class Parser(report_sxw.rml_parse):
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
             'bank': self.get_company_bank,
+            'get_vector_address': get_vector_address,
             
             # Proforma:
-            'get_tax_line': self.get_tax_line,
+            'get_tax_line': self.get_tax_line,            
         })
+
+    def get_vector_address(self, o):
+        ''' return vector address
+        '''
+        res = ''
+        if o.carrier_id:
+            res = 'VETTORE: %s' % o.carrier_id.name or ''
+            res += '\n%s' % (
+                o.carrier_id.partner_id.street
+                ) if o.carrier_id.partner_id.street  else ''
+            res += '\n %s' % (o.carrier_id.partner_id.zip or '')
+            res += ' %s' % (o.carrier_id.partner_id.city or '')
+            res += ' %s' % (o.carrier_id.partner_id.state_id.code or '')
+            
+            res += '\nP.IVA: %s' % o.carrier_id.partner_id.vat
+            res += '\nTel: %s' % (o.carrier_id.partner_id.phone or '')
+            res += '\nNr. Albo Trasp.: ' % '' # TODO
+        return res    
 
     def get_tax_line(self, sol):
         ''' Tax line for order / proforma invoice        
