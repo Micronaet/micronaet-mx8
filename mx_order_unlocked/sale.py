@@ -43,4 +43,21 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class SaleOrderLine(orm.Model):
+    """ Model name: SaleOrderLine
+    """    
+    _inherit = 'sale.order.line'
+
+    
+    # Override unlink action
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        """Allows to delete sales order lines in draft,cancel states"""
+        #for rec in self.browse(cr, uid, ids, context=context):
+        #    if rec.state not in ['draft', 'cancel']:
+        #        raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
+        #return super(SaleOrderLine, self).unlink(cr, uid, ids, context=context)
+        return osv.osv.unlink(self, cr, uid, ids, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
