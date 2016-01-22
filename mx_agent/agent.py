@@ -44,6 +44,25 @@ class SaleOrder(orm.Model):
     _inherit = 'sale.order'
     
     # TODO onchange for setup from partner
+    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
+        res = super(SaleOrder, self).on_change_partner_id(
+            cr, uid, ids, partner_id, context=context)
+            
+        
+        # Update agent field for partner form
+        # TODO propagate!!!
+        if 'value' not in res:
+           res['value'] = {}
+        if partner_id:
+           partner_proxy = self.pool.get('res.partner').browse(
+               cr, uid, partner_id, context=context)
+           res['value'][
+               'mx_agent_id'] = partner_proxy.agent_id.id
+        else:       
+               
+           res['value']['mx_agent_id'] = False
+        return res 
+    
     
     _columns = {
         'mx_agent_id': fields.many2one('res.partner', 'Agent', 
