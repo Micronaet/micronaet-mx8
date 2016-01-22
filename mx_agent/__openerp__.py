@@ -32,6 +32,7 @@
         'sale',
         'account',
         'stock',
+        'mx_sale',
         'l10n_it_ddt',
         ],
     'init_xml': [],
