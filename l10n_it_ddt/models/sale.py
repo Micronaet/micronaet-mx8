@@ -83,6 +83,9 @@ class SaleOrder(models.Model):
             'goods_description_id': order.goods_description_id.id,
             'transportation_reason_id': order.transportation_reason_id.id,
             'transportation_method_id': order.transportation_method_id.id,
+            
+            # Agent:
+            #'mx_agent_id': order.mx_agent_id.id,
             })
         return inv_id
 
