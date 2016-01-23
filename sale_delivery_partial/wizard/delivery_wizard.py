@@ -128,7 +128,8 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         ''' Set up line that have to be delivered depend on date
         '''
         if context is None: 
-            context = {}        
+            context = {}
+        #TODO
         return True    
 
     _columns = {
@@ -208,6 +209,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         sale_proxy = sale_pool.browse(cr, uid, order_id, context)
 
         # Read delivered per sale order line (or picked)
+        # TODO convert in a function fields?
         sol_status = {}
         for pick in sale_proxy.stock_picking_ids :
             for line in pick.move_lines:
