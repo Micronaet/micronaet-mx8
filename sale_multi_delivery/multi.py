@@ -94,10 +94,10 @@ class SaleOrderLine(orm.Model):
             type='many2one', relation='sale.order.delivery', 
             string='Multi delivery', store={
                 # Auto change if moved line in other order:
-                'sale.order.line': (
-                    lambda self, cr, uid, ids, c=None: ids,
-                    ['order_id'],
-                    10),
+                #'sale.order.line': (
+                #    lambda s, cr, uid, ids, c: ids,
+                #    ['order_id'],
+                #    10),
                 # Wneh change in order header value:    
                 'sale.order': (
                     _get_move_lines,

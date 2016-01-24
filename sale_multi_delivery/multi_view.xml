@@ -2,16 +2,37 @@
 <openerp>
     <data>
          <!--sale.order.line (for delivery)-->
+         <record model="ir.ui.view" id="view_sale_order_line_for_delivery_search">
+             <field name="name">sale.order.line.for.delivery.tree</field>
+             <field name="model">sale.order.line</field>
+             <field name="priority" eval="40" />
+             <field name="arch" type="xml">
+                 <search string="Sale order delivery" version="7.0">        
+                     <field name="product_uom_qty" />
+                     <field name="multi_delivery_id" filter_domain="[('multi_delivery_id','=',self)]"/>
+                     
+                     <!--<filter name="state" string="Done state" domain="[('state','=','done')]"/>-->
+                     
+                     <group expand="0" string="Group By">
+                         <filter name="group_product" string="Product" context="{'group_by': 'product_uom_id'}"/>
+                         <filter name="group_deadline" string="Deadline" context="{'group_by': 'date_deadline'}"/>
+                     </group>                
+                 </search>
+             </field>
+         </record>
          <record model="ir.ui.view" id="view_sale_order_line_for_delivery_tree">
              <field name="name">sale.order.line.for.delivery.form</field>
              <field name="model">sale.order.line</field>
              <field name="priority" eval="40" />
              <field name="arch" type="xml">
                  <tree string="Sale order to deliver" editable="bottom">
+                     <field name="multi_delivery_id" readonly="1" /><!--TODO invisible-->
                      <field name="order_id" readonly="1"/>
                      <field name="product_id" readonly="1" />
-                     <field name="product_uom_qty" readonly="1" />
                      <field name="product_uom" readonly="1" />
+                     <field name="product_uom_qty" readonly="1" />
+                     <!--<field name="product_uom_maked_sync_qty" readonly="1" />-->
+                     <field name="date_deadline" readonly="1" />
                      <!--TODO-->
                  </tree>
              </field>
@@ -22,9 +43,9 @@
              <field name="view_type">form</field>
              <field name="view_mode">tree</field>
              <field name="view_id" ref="view_sale_order_line_for_delivery_tree"/>
-             <!--<field name="search_view_id" ref="view_sale_order_delivery_search"/>-->
-             <!--<field name="context">{'search_default_my_open_delivery': True}</field>-->
-             <field name="domain">[('multi_delivery_id','=',active_id)]</field>
+             <field name="search_view_id" ref="view_sale_order_line_for_delivery_search"/>
+             <field name="context">{'search_default_multi_delivery_id': active_id}</field>
+             <!--<field name="domain">[('multi_delivery_id','=',active_id)]</field>-->
          </record>
          
 
