@@ -36,7 +36,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT, 
     DATETIME_FORMATS_MAP, 
     float_compare)
-from utility import * 
 
 
 _logger = logging.getLogger(__name__)
@@ -83,9 +82,19 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         sale_pool.write(cr, uid, sale_ids, {
             'delivery_id': delivery_id}, context=context)
 
-        return return_view(
-            self, cr, uid, p_id, 'mrp.mrp_production_form_view', 
-            'mrp.production', context=context) 
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',#,tree',
+            'res_model': 'sale.order.delivery',
+            #'views': views,
+            #'domain': [('id', '=', delivery_id)], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': delivery_id,
+            }
+            
 
     # -----------------
     # Default function:        
@@ -114,7 +123,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
             context = {}
 
         sale_pool = self.pool.get('sale.order')
-        sale_ids = context.get('active_ids', [])),
+        sale_ids = context.get('active_ids', []),
         res = """
                 <style>
                     .table_bf {
@@ -163,7 +172,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         
     _defaults = {
         'error': lambda s, cr, uid, c: s.default_error(
-            cr, uid, context=c)
+            cr, uid, context=c),
         'order_list': lambda s, cr, uid, c: s.default_oc_list(
             cr, uid, context=c),
          }
