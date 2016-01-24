@@ -49,12 +49,17 @@ class SaleOrderDelivery(orm.Model):
         'name': fields.char('Name', size=64, required=True),
         'create_date': fields.date('Label', readonly=True),
         'create_uid': fields.many2one('res.users', 'User', readonly=True), 
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True), 
         'note': fields.text('Note'),
+        'state': fields.selection([
+            ('draft', 'Draft'), ('done', 'Done'),
+            ], 'State', readonly=True),
         }
     
     _defaults = {
         'name': lambda *a: _('Multi delivery of: %s' % (
             datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT))),
+        'state': lambda *x: 'draft',
         }
 
 class SaleOrder(orm.Model):
