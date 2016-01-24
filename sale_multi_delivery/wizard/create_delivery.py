@@ -74,7 +74,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                     ))
         
         delivery_id = delivery_pool.create(cr, uid, {
-            'partner_id': partner_did,
+            'partner_id': partner_id,
             'note': wiz_proxy.note,
             }, context=context)
         
@@ -99,9 +99,10 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
     # -----------------
     # Default function:        
     # -----------------
-    def default_oc_list(self, cr, uid, context=None):
+    def default_error(self, cr, uid, context=None):
         ''' Check that order has all same partner
         '''
+        sale_pool = self.pool.get('sale.order')
         sale_ids = context.get('active_ids', False)
         partner_id = False
         for sale in sale_pool.browse(cr, uid, sale_ids, context=context):
@@ -123,7 +124,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
             context = {}
 
         sale_pool = self.pool.get('sale.order')
-        sale_ids = context.get('active_ids', []),
+        sale_ids = context.get('active_ids', [])
         res = """
                 <style>
                     .table_bf {
@@ -150,7 +151,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                     <th>Date</th>
                 </tr>"""
                 
-        for order in sale_pool.browse(cr, uid, ids, context=context):
+        for order in sale_pool.browse(cr, uid, sale_ids, context=context):
             res += """
                 <tr>
                     <td>%s</td>
@@ -159,13 +160,13 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                 </tr>""" % (
                     order.name,
                     order.partner_id.name,
-                    order.order_date,
+                    order.date_order,
                     )
         res += "</table>" # close table for list element
         return res
    
     _columns = {
-        'note': fields.text('Note', readonly=True),
+        'note': fields.text('Note'),
         'error': fields.text('Error', readonly=True),
         'order_list': fields.text('Order list', readonly=True),
         }

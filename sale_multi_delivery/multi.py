@@ -47,8 +47,9 @@ class SaleOrderDelivery(orm.Model):
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'create_date': fields.date('Label', readonly=True),
-        'create_uid': fields.many2one('res.users', 'User', readonly=True), 
+        'create_date': fields.date('Create date', readonly=True),
+        'create_uid': fields.many2one('res.users', 'Create user', 
+            readonly=True), 
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True), 
         'note': fields.text('Note'),
         'state': fields.selection([

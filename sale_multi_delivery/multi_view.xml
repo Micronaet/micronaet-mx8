@@ -1,6 +1,33 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+         <!--sale.order.line (for delivery)-->
+         <record model="ir.ui.view" id="view_sale_order_line_for_delivery_tree">
+             <field name="name">sale.order.line.for.delivery.form</field>
+             <field name="model">sale.order.line</field>
+             <field name="priority" eval="40" />
+             <field name="arch" type="xml">
+                 <tree string="Sale order to deliver" editable="bottom">
+                     <field name="order_id" readonly="1"/>
+                     <field name="product_id" readonly="1" />
+                     <field name="product_uom_qty" readonly="1" />
+                     <field name="product_uom" readonly="1" />
+                     <!--TODO-->
+                 </tree>
+             </field>
+         </record>
+         <record model="ir.actions.act_window" id="action_sale_order_line_for_delivery">
+             <field name="name">Sale order line delivery</field>
+             <field name="res_model">sale.order.line</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree</field>
+             <field name="view_id" ref="view_sale_order_line_for_delivery_tree"/>
+             <!--<field name="search_view_id" ref="view_sale_order_delivery_search"/>-->
+             <!--<field name="context">{'search_default_my_open_delivery': True}</field>-->
+             <field name="domain">[('multi_delivery_id','=',active_id)]</field>
+         </record>
+         
+
          <!--sale.order.delivery-->
          <record model="ir.ui.view" id="view_sale_order_delivery_form">
              <field name="name">sale.order.delivery.form</field>
@@ -8,6 +35,7 @@
              <field name="arch" type="xml">
                  <form string="Sale order delivery" version="7.0">        
                      <head>                         
+                         <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
                          <field name="state"  widget="statusbar" statusbar_visible="draft,done"/>
                      </head>
                      <sheet>
@@ -67,7 +95,7 @@
              <field name="view_mode">tree,form</field>
              <field name="view_id" ref="view_sale_order_delivery_tree"/>
              <field name="search_view_id" ref="view_sale_order_delivery_search"/>
-             <field name="context">{'default_my_open_delivery': True}</field>
+             <field name="context">{'search_default_my_open_delivery': True}</field>
              <field name="domain">[]</field>
          </record>
          

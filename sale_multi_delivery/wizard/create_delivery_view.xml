@@ -9,17 +9,17 @@
                 <form string="Create delivery" version="7.0">
                    <header>
                        <button string="Cancel" special="cancel" />
-                       <button name="action_create_delivery_order" string="Create" type="object" icon="gtk-jump-to" class="oe_highlight" attrs="{'invisible':[('error','=',True)]}"/>
+                       <button name="action_create_delivery_order" string="Create" type="object" icon="gtk-jump-to" class="oe_highlight" attrs="{'invisible':[('error','!=',False)]}"/>
                    </header>              
-                   <group colspan="4" col="2">
-                        <separator string="Orders:" />
-                        <field name="note" nolabel="1"/>
+                   <group colspan="4" col="4">
+                        <separator string="Note:" colspan="4" attrs="{'invisible':[('error','!=',False)]}"/>
+                        <field name="note" nolabel="1" colspan="4" attrs="{'invisible':[('error','!=',False)]}"/>
 
-                        <separator string="Orders:" />
-                        <field name="order_list" widget="html" nolabel="1"/>
+                        <separator string="Orders:" colspan="4"/>
+                        <field name="order_list" widget="html" nolabel="1" colspan="4"/>
 
-                        <separator string="Error:" attrs="{'invisible': [('error', '=', False)]}"/>
-                        <field name="error" nolabel="1" attrs="{'invisible': [('error', '=', False)]}" />
+                        <separator string="Error:" attrs="{'invisible': [('error', '=', False)]}" colspan="4"/>
+                        <field name="error" nolabel="1" attrs="{'invisible': [('error', '=', False)]}" colspan="4"/>
                    </group>
                 </form>
             </field>
