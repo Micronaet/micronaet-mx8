@@ -37,6 +37,7 @@
     'data': [
         'security/ir.model.access.csv',    
         'multi_view.xml',
+        'wizard/create_delivery_view.xml',
         ],
     'active': False,
     'installable': True,
