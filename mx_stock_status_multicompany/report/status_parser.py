@@ -148,6 +148,7 @@ class Parser(report_sxw.rml_parse):
         # Get unload picking
         # ---------------------------------------------------------------------
         loads = {}
+        virtual_loads = {}
         in_picking_type_ids = []
         for item in company_proxy.stock_report_load_ids:
             in_picking_type_ids.append(item.id)
@@ -160,7 +161,7 @@ class Parser(report_sxw.rml_parse):
             ('partner_id', 'not in', exclude_partner_ids), 
             
             # TODO check data date
-            ('date', '>=', from_date),
+            ('date', '>=', from_date), # XXX correct for virtual?
             ('date', '<=', to_date),
             
             # TODO state filter
@@ -168,12 +169,28 @@ class Parser(report_sxw.rml_parse):
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
-                    # TODO check state of line??
+                    # TODO check state of line??                    
                     default_code = line.product_id.default_code
-                    if default_code not in loads:
-                        loads[default_code] = line.product_uom_qty
-                    else:    
-                        loads[default_code] += line.product_uom_qty
+                    if line.state == 'assigned': # virtual
+                        _logger.info('OF virtual: %s - %s [%s]' % (
+                            line.picking_id.name,
+                            default_code,
+                            line.product_uom_qty,
+                            ))
+                        if default_code not in loads:
+                            virtual_loads[default_code] = line.product_uom_qty
+                        else:    
+                            virtual_loads[default_code] += line.product_uom_qty
+                    elif line.state == 'done':
+                        _logger.info('OF load: %s - %s [%s]' % (
+                            line.picking_id.name,
+                            default_code,
+                            line.product_uom_qty,
+                            ))
+                        if default_code not in loads:
+                            loads[default_code] = line.product_uom_qty
+                        else:    
+                            loads[default_code] += line.product_uom_qty
         
         # ---------------------------------------------------------------------
         # Get order to delivery
