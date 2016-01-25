@@ -235,7 +235,7 @@ class Parser(report_sxw.rml_parse):
             load = loads.get(default_code, 0.0)
             unload = unloads.get(default_code, 0.0)
             order = orders.get(default_code, 0.0)
-            procurement = 0.0
+            procurement = virtual_loads.get(default_code, 0.0)
             dispo = inventory + load - unload
             virtual = dispo + procurement - order
             res.append(
