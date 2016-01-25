@@ -56,16 +56,13 @@ class Parser(report_sxw.rml_parse):
     def get_object(self, data):
         ''' Search all product elements
         '''
-        # XXX remove:
-        debug_file = open('/home/administrator/photo/xls/status.txt', 'w')
-        
         # pool used:
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
         pick_pool = self.pool.get('stock.picking')
-        sale_pool = self.pool.get('sale.order')
-        sol_pool = self.pool.get('sale.order.line')
-        # procurements?
+        sale_pool = self.pool.get('sale.order') # XXX maybe not used 
+        sol_pool = self.pool.get('sale.order.line') # XXX maybe not used 
+        # procurements in stock.picking
         
         # ---------------------------------------------------------------------
         # Search partner in supplier info:
@@ -75,8 +72,11 @@ class Parser(report_sxw.rml_parse):
             ('name', '=', partner_id)])           
 
         # ---------------------------------------------------------------------
-        # Get template product suppleir by partner
+        # Get template product supplier by partner
         # ---------------------------------------------------------------------
+        # XXX DEBUG:
+        debug_file = open('/home/administrator/photo/xls/status.txt', 'w')
+
         company_proxy = False
         product_tmpl_ids = []
         for supplier in supplier_pool.browse(
@@ -84,7 +84,6 @@ class Parser(report_sxw.rml_parse):
             if not company_proxy:
                 company_proxy = supplier.name.company_id
             product_tmpl_ids.append(supplier.product_tmpl_id.id)        
-
         
         if not product_tmpl_ids:
             raise osv.except_osv(
@@ -92,8 +91,8 @@ class Parser(report_sxw.rml_parse):
                 _('No data for this partner',
                 ))
 
-        debug_file.write('\nTemplate selected:\n') # XXX
-        debug_file.write('%s' % (product_tmpl_ids)) # XXX
+        debug_file.write('\nTemplate selected:\n') # XXX DEBUG
+        debug_file.write('%s' % (product_tmpl_ids)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Get product form template:
@@ -111,10 +110,10 @@ class Parser(report_sxw.rml_parse):
                 _logger.error('More than one default_code %s' % default_code)                
             products[default_code] = product
 
-        debug_file.write('\n\nProduct code for search in other DB:\n') # XXX
-        debug_file.write('%s' % (products_code, )) # XXX
-        debug_file.write('\n\nProduct selected:\n') # XXX
-        debug_file.write('%s' % (product_ids,)) # XXX
+        debug_file.write('\n\nProduct code searched in other DB\n') # XXX DEBUG
+        debug_file.write('%s' % (products_code, )) # XXX DEBUG
+        debug_file.write('\n\nProduct selected:\n') # XXX DEBUG
+        debug_file.write('%s' % (product_ids,)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Parameter for filters:
@@ -130,8 +129,8 @@ class Parser(report_sxw.rml_parse):
         from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
         to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
 
-        debug_file.write('\n\nExclude partner list:') # XXX
-        debug_file.write('%s' % (exclude_partner_ids,)) # XXX
+        debug_file.write('\n\nExclude partner list:') # XXX DEBUG
+        debug_file.write('%s' % (exclude_partner_ids,)) # XXX DEBUG
         # ---------------------------------------------------------------------
         # Get unload picking
         # ---------------------------------------------------------------------
@@ -154,9 +153,9 @@ class Parser(report_sxw.rml_parse):
             # TODO state filter
             ])
 
-        debug_file.write('\n\nUnload picking:\n') # XXX            
+        debug_file.write('\n\nUnload picking:\n') # XXX  DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
-            debug_file.write('\nPick: %s' % pick.name) # XXX
+            debug_file.write('\nPick: %s' % pick.name) # XXX DEBUG
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
                     # TODO check state of line??
@@ -166,7 +165,7 @@ class Parser(report_sxw.rml_parse):
                     else:    
                         unloads[default_code] += line.product_uom_qty
                 debug_file.write('Prod.: %s [%s]\n' % (
-                    default_code, line.product_uom_qty)) # XXX
+                    default_code, line.product_uom_qty)) # XXX DEBUG
 
         # ---------------------------------------------------------------------
         # Get unload picking
@@ -184,13 +183,13 @@ class Parser(report_sxw.rml_parse):
             # Partner exclusion
             ('partner_id', 'not in', exclude_partner_ids), 
             
-            # TODO check data date
+            # check data date
             ('date', '>=', from_date), # XXX correct for virtual?
             ('date', '<=', to_date),
             
             # TODO state filter
             ])
-        debug_file.write('\n\nload picking:\n') # XXX            
+        debug_file.write('\n\nload picking:\n') # XXX DEBUG       
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
@@ -207,7 +206,7 @@ class Parser(report_sxw.rml_parse):
                         else:    
                             virtual_loads[default_code] += line.product_uom_qty
                         debug_file.write('Virtual: %s [%s]\n' % (
-                            default_code, line.product_uom_qty)) # XXX
+                            default_code, line.product_uom_qty)) # XXX DEBUG
                     elif line.state == 'done':
                         _logger.info('OF load: %s - %s [%s]\n' % (
                             line.picking_id.name,
@@ -219,7 +218,7 @@ class Parser(report_sxw.rml_parse):
                         else:    
                             loads[default_code] += line.product_uom_qty
                         debug_file.write('Load: %s [%s]\n' % (
-                            default_code, line.product_uom_qty)) # XXX
+                            default_code, line.product_uom_qty)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Get order to delivery
@@ -228,7 +227,7 @@ class Parser(report_sxw.rml_parse):
         sol_ids = sol_pool.search(self.cr, self.uid, [
             ('product_id', 'in', product_ids)])
             
-        debug_file.write('\n\nOrder remain:\n') # XXX
+        debug_file.write('\n\nOrder remain:\n') # XXX DEBUG
         for line in sol_pool.browse(self.cr, self.uid, sol_ids):
             # -------
             # Header:
@@ -254,9 +253,9 @@ class Parser(report_sxw.rml_parse):
                 line.order_id.name,
                 default_code,
                 remain,
-                )) # XXX
+                )) # XXX DEBUG
             debug_file.write('Product : %s [%s]\n' % (
-                default_code, remain)) # XXX
+                default_code, remain)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Transform in iteritems for report:
@@ -280,7 +279,7 @@ class Parser(report_sxw.rml_parse):
                 int(procurement), 
                 int(dispo), 
                 int(virtual),
-                )) # TODO
+                ))
         return res        
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
