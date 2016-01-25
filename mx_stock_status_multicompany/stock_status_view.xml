@@ -32,7 +32,6 @@
         </field>
     </record>
 
-
         <record model="ir.ui.view" id="view_res_partner_status_report_form">
             <field name="name">res.partner.stock.report.form</field>
             <field name="model">res.partner</field>

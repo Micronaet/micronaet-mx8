@@ -107,12 +107,14 @@ class PickingCreateDirectInvoice(models.TransientModel):
     def create_direct_invoice(self):
         picking_pool = self.pool['stock.picking']
         
+        active_ids = self.env.context['active_ids']
         pickings = picking_pool.browse(
-            self.env.cr, self.env.uid, self.env.context['active_ids'],
+            self.env.cr, self.env.uid, active_ids,
             context=self.env.context)
+            
         partners = set([picking.partner_id for picking in pickings])
         if len(partners) > 1:
-            raise Warning(_("Selected pickings belong to different partners"))
+            raise Warning(_('Selected pickings belong to different partners'))
         self.check_picking_data(pickings)
 
         invoices = picking_pool.action_invoice_create(
@@ -120,13 +122,28 @@ class PickingCreateDirectInvoice(models.TransientModel):
             self.env.context['active_ids'],
             self.journal_id.id, group=True, context=None)
         
-        
         if not invoices:
             raise Warning(
                 _('Cannot create invoice!'))
             
         # Update backlink in pick:
         pickings.write({'invoice_id': invoices[0]})
+
+        # ---------------------------------------------------------------------
+        # Unload pick stock:
+        # ---------------------------------------------------------------------
+        move_pool = self.pool.get('stock.move')
+        todo = []
+        for pick in active_ids:
+            # confirm all picking
+            for move in pick.move_lines:
+                if move.state in ('assigned', 'confirmed'):
+                    todo.append(move.id)
+        if todo:
+            move_pool.action_done(self.env.cr, self.env.uid, todo, 
+                context=self.env.context)
+        # ---------------------------------------------------------------------
+        
         
         # Update extra fields in invoice:
         invoice_obj = self.env['account.invoice'].browse(invoices)        

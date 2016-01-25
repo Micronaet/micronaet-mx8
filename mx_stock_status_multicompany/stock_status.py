@@ -109,6 +109,9 @@ class ResPartner(orm.Model):
         if remote:
             product_ids = product_pool.search(cr, uid, [
                 ('default_code', 'in', product_ids)], context=context)
+            debug_file.write('\n\nREMOTE CONTROLS:\n') # XXX DEBUG
+        else:    
+            debug_file.write('\n\nMASTER CONTROLS:\n') # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Parameter for filters:
@@ -124,7 +127,7 @@ class ResPartner(orm.Model):
         from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
         to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
 
-        debug_file.write('\n\nExclude partner list:') # XXX DEBUG
+        debug_file.write('\n\nExclude partner list:\n') # XXX DEBUG
         debug_file.write('%s' % (exclude_partner_ids,)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
@@ -136,21 +139,18 @@ class ResPartner(orm.Model):
             
         pick_ids = pick_pool.search(cr, uid, [     
             # type pick filter   
-            ('picking_type_id', 'in', out_picking_type_ids), 
-            
+            ('picking_type_id', 'in', out_picking_type_ids),
             # Partner exclusion
             ('partner_id', 'not in', exclude_partner_ids), 
-            
             # TODO check data date
             ('date', '>=', from_date), 
             ('date', '<=', to_date), 
-            
             # TODO state filter
             ])
 
         debug_file.write('\n\nUnload picking:\n') # XXX  DEBUG           
         for pick in pick_pool.browse(cr, uid, pick_ids):
-            debug_file.write('\nPick: %s' % pick.name) # XXX DEBUG
+            debug_file.write('\nPick: %s\n' % pick.name) # XXX DEBUG
             for line in pick.move_lines:
                 default_code = line.product_id.default_code
                 if line.product_id.id in product_ids: # only supplier prod.
@@ -159,7 +159,7 @@ class ResPartner(orm.Model):
                         unloads[default_code] = line.product_uom_qty
                     else:    
                         unloads[default_code] += line.product_uom_qty
-                debug_file.write('Prod.: %s [%s]\n' % (
+                debug_file.write('\nProd.: %s [%s]' % (
                     default_code, line.product_uom_qty)) # XXX DEBUG
 
         # ---------------------------------------------------------------------
@@ -171,15 +171,12 @@ class ResPartner(orm.Model):
             
         pick_ids = pick_pool.search(cr, uid, [     
             # type pick filter   
-            ('picking_type_id', 'in', in_picking_type_ids), 
-            
+            ('picking_type_id', 'in', in_picking_type_ids),            
             # Partner exclusion
-            ('partner_id', 'not in', exclude_partner_ids), 
-            
+            ('partner_id', 'not in', exclude_partner_ids),            
             # check data date
             ('date', '>=', from_date), # XXX correct for virtual?
-            ('date', '<=', to_date),
-            
+            ('date', '<=', to_date),            
             # TODO state filter
             ])
         debug_file.write('\n\nload picking:\n') # XXX DEBUG       
@@ -248,8 +245,12 @@ class ResPartner(orm.Model):
                 )) # XXX DEBUG
             debug_file.write('Product : %s [%s]\n' % (
                 default_code, remain)) # XXX DEBUG
-        return # result is the dicts!
         
+        # result is the dicts!        
+        if remote:        
+            return product_ids
+        else:
+            return        
     
     def print_stock_status_report(self, cr, uid, ids, context=None):
         ''' Print report product stock
