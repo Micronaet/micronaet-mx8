@@ -159,21 +159,22 @@ class Parser(report_sxw.rml_parse):
         res = []
         for key in sorted(products):
             default_code = products[key].default_code
+            remote_code = product_mask % default_code
             
             inventory = products[key].inventory_start or 0.0
             # XXX NOTE remote not used!
             
             load = loads.get(default_code, 0.0) + \
-                remote_loads.get(default_code, 0.0) 
+                remote_loads.get(remote_code, 0.0) 
                 
             unload = unloads.get(default_code, 0.0) + \
-                remote_unloads.get(default_code, 0.0)
+                remote_unloads.get(remote_code, 0.0)
                 
             order = orders.get(default_code, 0.0) + \
-                remote_orders.get(default_code, 0.0)
+                remote_orders.get(remote_code, 0.0)
                 
             procurement = virtual_loads.get(default_code, 0.0) + \
-                remote_virtual_loads.get(default_code, 0.0)
+                remote_virtual_loads.get(remote_code, 0.0)
                 
             dispo = inventory + load - unload
             virtual = dispo + procurement - order

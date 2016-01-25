@@ -91,6 +91,8 @@ class ResPartner(orm.Model):
         '''
         # Unpack dicts to be used:
         (loads, unloads, orders, virtual_loads) = dicts
+        
+        # TODO regenerate company_proxt (TODO passed to caller function?!?)
         company_pool = self.pool.get('res.company')
         company_ids = company_pool.search(cr, uid, [], context=context)
         company_proxy = company_pool.browse(
@@ -103,6 +105,10 @@ class ResPartner(orm.Model):
         sale_pool = self.pool.get('sale.order') # XXX maybe not used 
         sol_pool = self.pool.get('sale.order.line') # XXX maybe not used 
         # procurements in stock.picking
+
+        if remote:
+            product_ids = product_pool.search(cr, uid, [
+                ('default_code', 'in', product_ids)], context=context)
         
         # ---------------------------------------------------------------------
         # Parameter for filters:
