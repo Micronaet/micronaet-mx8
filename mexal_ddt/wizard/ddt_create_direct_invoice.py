@@ -134,7 +134,8 @@ class PickingCreateDirectInvoice(models.TransientModel):
         # ---------------------------------------------------------------------
         move_pool = self.pool.get('stock.move')
         todo = []
-        for pick in active_ids:
+        for pick in picking_pool.browse(self.env.cr, self.env.uid, active_ids,
+                context=self.env.context):
             # confirm all picking
             for move in pick.move_lines:
                 if move.state in ('assigned', 'confirmed'):
@@ -143,7 +144,6 @@ class PickingCreateDirectInvoice(models.TransientModel):
             move_pool.action_done(self.env.cr, self.env.uid, todo, 
                 context=self.env.context)
         # ---------------------------------------------------------------------
-        
         
         # Update extra fields in invoice:
         invoice_obj = self.env['account.invoice'].browse(invoices)        
