@@ -41,8 +41,7 @@ _logger = logging.getLogger(__name__)
 
 class ResCompany(orm.Model):
     """ Model name: ResCompany
-    """
-    
+    """    
     _inherit = 'res.company'
     
     _columns = {
@@ -54,6 +53,12 @@ class ResCompany(orm.Model):
             'stock.picking.type', 'company_picking_in_rel', 
             'company_id', 'type_id', 
             'Pick in type'),
+
+        'stock_explude_partner_ids': fields.many2many(
+            'res.partner', 'company_picking_exclude_partner_rel', 
+            'company_id', 'partner_id', 
+            'Exclude partner', 
+            help='Other company partner ID'), 
         
         'is_remote_stock': fields.boolean('Is remote company', 
             help='If is remote company no XMLRPC connection'),
