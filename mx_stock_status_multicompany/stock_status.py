@@ -81,7 +81,7 @@ class ResPartner(orm.Model):
     # Utility function for calculate all movement (for remote and master DB)
     # -------------------------------------------------------------------------
     def stock_movement_inventory_data(self, cr, uid, product_ids, remote, 
-            dicts=None, context=None):
+            debug_file, dicts=None, context=None):
         ''' Calculate all statistic for inventory
             The operation will be processed in this database or in a remote
             master: product_ids = list of ID
@@ -89,6 +89,13 @@ class ResPartner(orm.Model):
             inventory: contain all dictionaty used for this calculation
             context: context
         '''
+        # Unpack dicts to be used:
+        (loads, unloads, orders, virtual_loads) = dicts
+        company_pool = self.pool.get('res.company')
+        company_ids = company_pool.search(cr, uid, [], context=context)
+        company_proxy = company_pool.browse(
+            cr, uid, company_ids, context=context)[0]
+        
         # pool used:
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
@@ -113,6 +120,7 @@ class ResPartner(orm.Model):
 
         debug_file.write('\n\nExclude partner list:') # XXX DEBUG
         debug_file.write('%s' % (exclude_partner_ids,)) # XXX DEBUG
+        
         # ---------------------------------------------------------------------
         # Get unload picking
         # ---------------------------------------------------------------------
@@ -120,7 +128,7 @@ class ResPartner(orm.Model):
         for item in company_proxy.stock_report_unload_ids:
             out_picking_type_ids.append(item.id)
             
-        pick_ids = pick_pool.search(self.cr, self.uid, [     
+        pick_ids = pick_pool.search(cr, uid, [     
             # type pick filter   
             ('picking_type_id', 'in', out_picking_type_ids), 
             
@@ -135,12 +143,12 @@ class ResPartner(orm.Model):
             ])
 
         debug_file.write('\n\nUnload picking:\n') # XXX  DEBUG           
-        for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
+        for pick in pick_pool.browse(cr, uid, pick_ids):
             debug_file.write('\nPick: %s' % pick.name) # XXX DEBUG
             for line in pick.move_lines:
+                default_code = line.product_id.default_code
                 if line.product_id.id in product_ids: # only supplier prod.
                     # TODO check state of line??
-                    default_code = line.product_id.default_code
                     if default_code not in unloads:
                         unloads[default_code] = line.product_uom_qty
                     else:    
@@ -155,7 +163,7 @@ class ResPartner(orm.Model):
         for item in company_proxy.stock_report_load_ids:
             in_picking_type_ids.append(item.id)
             
-        pick_ids = pick_pool.search(self.cr, self.uid, [     
+        pick_ids = pick_pool.search(cr, uid, [     
             # type pick filter   
             ('picking_type_id', 'in', in_picking_type_ids), 
             
@@ -169,7 +177,7 @@ class ResPartner(orm.Model):
             # TODO state filter
             ])
         debug_file.write('\n\nload picking:\n') # XXX DEBUG       
-        for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
+        for pick in pick_pool.browse(cr, uid, pick_ids):
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
                     # TODO check state of line??                    
@@ -202,11 +210,11 @@ class ResPartner(orm.Model):
         # ---------------------------------------------------------------------
         # Get order to delivery
         # ---------------------------------------------------------------------
-        sol_ids = sol_pool.search(self.cr, self.uid, [
+        sol_ids = sol_pool.search(cr, uid, [
             ('product_id', 'in', product_ids)])
             
         debug_file.write('\n\nOrder remain:\n') # XXX DEBUG
-        for line in sol_pool.browse(self.cr, self.uid, sol_ids):
+        for line in sol_pool.browse(cr, uid, sol_ids):
             # -------
             # Header:
             # -------            
@@ -234,8 +242,7 @@ class ResPartner(orm.Model):
                 )) # XXX DEBUG
             debug_file.write('Product : %s [%s]\n' % (
                 default_code, remain)) # XXX DEBUG
-        
-        
+        return # result is the dicts!
         
     
     def print_stock_status_report(self, cr, uid, ids, context=None):

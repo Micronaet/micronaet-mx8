@@ -123,9 +123,8 @@ class Parser(report_sxw.rml_parse):
         orders = {}
 
         partner_pool.stock_movement_inventory_data(
-            cr, uid, product_ids, remote, 
+            self.cr, self.uid, product_ids, False, debug_file,
             dicts=[
-                products, # for inventory value
                 loads, # load document
                 unloads, # unload document
                 orders, # order not delivered
@@ -144,13 +143,15 @@ class Parser(report_sxw.rml_parse):
         remote_orders = {}
 
         # TODO call XMLRPC procedure:
-
-
-
-
-        
-        
-        
+        #partner_pool.stock_movement_inventory_data(
+        #    self.cr, self.uid, product_ids, True, debug_file,
+        #    dicts=[
+        #        remote_loads, # load document
+        #        remote_unloads, # unload document
+        #        remote_orders, # order not delivered
+        #        remote_virtual_loads, # procurement not received
+        #        ], 
+        #    context=None)        
         
         # ---------------------------------------------------------------------
         # Transform in iteritems for report:
@@ -160,7 +161,7 @@ class Parser(report_sxw.rml_parse):
             default_code = products[key].default_code
             
             inventory = products[key].inventory_start or 0.0
-            # NOTE remote not used!
+            # XXX NOTE remote not used!
             
             load = loads.get(default_code, 0.0) + \
                 remote_loads.get(default_code, 0.0) 
