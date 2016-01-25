@@ -1,7 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
+        <record model="ir.ui.view" id="view_res_partner_status_report_form">
+            <field name="name">res.partner.stock.report.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="website" position="after">
+                    <button name="print_stock_status_report" string="Print stock status" help="Status report for stock" type="object" attrs="{'invisible':['|',('is_company', '=', False),('supplier', '=', False)]}"/>
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>
 

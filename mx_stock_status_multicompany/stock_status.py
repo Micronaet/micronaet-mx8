@@ -38,4 +38,23 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResPartner(orm.Model):
+    """ Model name: ResPartner
+    """    
+    _inherit = 'res.partner'
+
+    def print_stock_status_report(self, cr, uid, ids, context=None):
+        ''' Print report product stock
+        '''
+        if context is None: 
+            context = {}            
+                    
+        datas = {}
+        datas['partner_id'] = ids[0]
+                       
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'stock_status_multicompany_report',
+            'datas': datas,
+            }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

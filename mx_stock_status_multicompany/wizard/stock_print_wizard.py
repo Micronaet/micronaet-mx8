@@ -68,13 +68,10 @@ class StockStatusPrintReportWizard(orm.TransientModel):
             'datas': datas,
             }
 
-
     _columns = { 
-        'partner_id': fields.many2one(
-            'res.partner', 'Supplier', 
+        'partner_id': fields.many2one('res.partner', 'Supplier', 
             required=True, domain=[
-                ('supplier', '=', True), 
-                ('is_company', '=', True)]), 
+                ('supplier', '=', True), ('is_company', '=', True)]), 
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

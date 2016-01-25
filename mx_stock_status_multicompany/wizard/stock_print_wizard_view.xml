@@ -25,9 +25,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
           <field name="view_id" ref="stock_status_print_report_wizard_form_view"/>
-      </record>
-      
-            
-        
+      </record>        
     </data>
 </openerp>
