@@ -24,6 +24,7 @@
 import os
 import sys
 import logging
+from datetime import datetime
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from openerp.tools.translate import _
@@ -60,6 +61,7 @@ class Parser(report_sxw.rml_parse):
         supplier_pool = self.pool.get('product.supplierinfo')
         pick_pool = self.pool.get('stock.picking')
         sale_pool = self.pool.get('sale.order')
+        sol_pool = self.pool.get('sale.order.line')
         # procurements?
         
         # ---------------------------------------------------------------------
@@ -98,30 +100,113 @@ class Parser(report_sxw.rml_parse):
             products[default_code] = product
 
         # ---------------------------------------------------------------------
+        # Parameter for filters:
+        # ---------------------------------------------------------------------
+        # Exclunde partner list:
+        exclude_partner_ids = []
+        for item in company_proxy.stock_explude_partner_ids:
+            exclude_partner_ids.append(item.id)
+        # Append also this company partner (for inventory)    
+        exclude_partner_ids.append(company_proxy.partner_id.id)
+        
+        # From date:
+        from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
+        to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
+
+        # ---------------------------------------------------------------------
         # Get unload picking
         # ---------------------------------------------------------------------
         unloads = {}
         out_picking_type_ids = []
         for item in company_proxy.stock_report_unload_ids:
             out_picking_type_ids.append(item.id)
-        pick_ids = pick_pool.search(self.cr, self.uid, [
-            ('picking_type_id', 'in', out_picking_type_ids),
-            # TODO data filter
+            
+        pick_ids = pick_pool.search(self.cr, self.uid, [     
+            # type pick filter   
+            ('picking_type_id', 'in', out_picking_type_ids), 
+            
+            # Partner exclusion
+            ('partner_id', 'not in', exclude_partner_ids), 
+            
+            # TODO check data date
+            ('date', '>=', from_date), 
+            ('date', '<=', to_date), 
+            
             # TODO state filter
             ])
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             for line in pick.move_lines:
-                # TODO check state of line??
-                default_code = line.product_id.default_code
-                if default_code not in unloads:
-                    unloads[default_code] = line.product_uom_qty
-                else:    
-                    unloads[default_code] += line.product_uom_qty
+                if line.product_id.id in product_ids: # only supplier prod.
+                    # TODO check state of line??
+                    default_code = line.product_id.default_code
+                    if default_code not in unloads:
+                        unloads[default_code] = line.product_uom_qty
+                    else:    
+                        unloads[default_code] += line.product_uom_qty
 
         # ---------------------------------------------------------------------
         # Get unload picking
         # ---------------------------------------------------------------------
         loads = {}
+        in_picking_type_ids = []
+        for item in company_proxy.stock_report_load_ids:
+            in_picking_type_ids.append(item.id)
+            
+        pick_ids = pick_pool.search(self.cr, self.uid, [     
+            # type pick filter   
+            ('picking_type_id', 'in', in_picking_type_ids), 
+            
+            # Partner exclusion
+            ('partner_id', 'not in', exclude_partner_ids), 
+            
+            # TODO check data date
+            ('date', '>=', from_date),
+            ('date', '<=', to_date),
+            
+            # TODO state filter
+            ])
+        for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
+            for line in pick.move_lines:
+                if line.product_id.id in product_ids: # only supplier prod.
+                    # TODO check state of line??
+                    default_code = line.product_id.default_code
+                    if default_code not in loads:
+                        loads[default_code] = line.product_uom_qty
+                    else:    
+                        loads[default_code] += line.product_uom_qty
+        
+        # ---------------------------------------------------------------------
+        # Get order to delivery
+        # ---------------------------------------------------------------------
+        orders = {}
+        sol_ids = sol_pool.search(self.cr, self.uid, [
+            ('product_id', 'in', product_ids)])
+        for line in sol_pool.browse(self.cr, self.uid, sol_ids):
+            # -------
+            # Header:
+            # -------            
+            # check state:
+            if line.order_id.state in ('cancel', 'draft', 'sent'): #done?
+                continue
+            
+            # ------
+            # Lines:
+            # ------            
+            # Check delivered:
+            remain = line.product_uom_qty - line.delivered_qty
+            if remain <= 0.0:
+                continue
+            
+            default_code = line.product_id.default_code
+            if default_code in orders:
+                orders[default_code] += remain
+            else:
+                orders[default_code] = remain
+            _logger.info('Order considered: %s - %s [%s]' % (
+                line.order_id.name,
+                default_code,
+                remain,
+                )) # XXX
         
         # ---------------------------------------------------------------------
         # Transform in iteritems for report:
@@ -132,7 +217,7 @@ class Parser(report_sxw.rml_parse):
             inventory = products[key].inventory_start or 0.0
             load = loads.get(default_code, 0.0)
             unload = unloads.get(default_code, 0.0)
-            order = 0.0
+            order = orders.get(default_code, 0.0)
             procurement = 0.0
             dispo = inventory + load - unload
             virtual = dispo + procurement - order
