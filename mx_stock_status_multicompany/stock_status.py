@@ -38,6 +38,24 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+
+class ResCompany(orm.Model):
+    """ Model name: ResCompany
+    """
+    
+    _inherit = 'res.company'
+    
+    _columns = {
+        'stock_report_unload_ids': fields.many2many(
+            'stock.picking.type', 'company_picking_out_rel', 
+            'company_id', 'type_id', 
+            'Pick out type'), 
+        'stock_report_load_ids': fields.many2many(
+            'stock.picking.type', 'company_picking_in_rel', 
+            'company_id', 'type_id', 
+            'Pick in type'), 
+        }
+
 class ResPartner(orm.Model):
     """ Model name: ResPartner
     """    

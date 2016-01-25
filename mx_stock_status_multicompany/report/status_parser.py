@@ -51,31 +51,78 @@ class Parser(report_sxw.rml_parse):
         # pool used:
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
+        pick_pool = self.pool.get('stock.picking')
+        sale_pool = self.pool.get('sale.order')
+        # procurements?
         
+        # ---------------------------------------------------------------------
+        # Search partner in supplier info:
+        # ---------------------------------------------------------------------
         partner_id = data.get('partner_id', False)        
         supplierinfo_ids = supplier_pool.search(self.cr, self.uid, [
-            ('name', '=', partner_id)])
-           
+            ('name', '=', partner_id)])           
+
+        # ---------------------------------------------------------------------
+        # Get template product suppleir by partner
+        # ---------------------------------------------------------------------
+        company_proxy = False
         product_tmpl_ids = []
         for supplier in supplier_pool.browse(
                 self.cr, self.uid, supplierinfo_ids):
+            if not company_proxy:
+                company_proxy = supplier.name.company_id
             product_tmpl_ids.append(supplier.product_tmpl_id.id)
         
+        if not product_tmpl_ids:
+            raise osv.except_osv(
+                _('Report error'),
+                _('No data for this partner',
+                )
+        # ---------------------------------------------------------------------
+        # Get product form template:
+        # ---------------------------------------------------------------------        
         product_ids = product_pool.search(self.cr, self.uid, [
             ('product_tmpl_id', 'in', product_tmpl_ids)])
-        products = {}         
+        products = {}
         for product in product_pool.browse(self.cr, self.uid, product_ids):                
             default_code = product.default_code
             if default_code in products:
                 _logger.error('More than one default_code %s' % default_code)                
             products[default_code] = product
 
-        # Transform in iteritems:
+        # ---------------------------------------------------------------------
+        # Get unload picking
+        # ---------------------------------------------------------------------
+        unloads = {}
+        out_picking_type_id = 3 # TODO
+        pick_ids = pick_pool.search(self.cr, self.uid, [
+            ('picking_type_id', '=', out_picking_type_id),
+            # data filter
+            # state filter
+            ])
+        for pick in pick_pool.browse(cr, uid, pick_ids):
+            for line in pick.move_lines:
+                # TODO check state of line??
+                default_code = line.product_id.default_code
+                if default_code not in unloads:
+                    unloads[default_code] = line.product_uom_qty
+                else:    
+                    unloads[default_code] += line.product_uom_qty
+
+        # ---------------------------------------------------------------------
+        # Get unload picking
+        # ---------------------------------------------------------------------
+        loads = {}
+        
+        # ---------------------------------------------------------------------
+        # Transform in iteritems for report:
+        # ---------------------------------------------------------------------
         res = []
         for key in sorted(products):
+            default_code = products[key].default_code
             inventory = products[key].inventory_start or 0.0
-            load = 0.0
-            unload = 0.0
+            load = loads.get(default_code, 0.0)
+            unload = unloads.get(default_code, 0.0)
             order = 0.0
             procurement = 0.0
             dispo = inventory + load - unload
