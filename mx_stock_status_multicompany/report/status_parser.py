@@ -39,11 +39,18 @@ class Parser(report_sxw.rml_parse):
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_object': self.get_object,
+            'get_filter': self.get_filter
             
             # Utility:
             #'get_counter': self.get_counter,
             #'set_counter': self.set_counter,            
         })
+
+    def get_filter(self, data):
+        ''' Get filter selected
+        '''
+        data = data or {}
+        return data.get('partner_name', '')
     
     def get_object(self, data):
         ''' Search all product elements
@@ -77,7 +84,7 @@ class Parser(report_sxw.rml_parse):
             raise osv.except_osv(
                 _('Report error'),
                 _('No data for this partner',
-                )
+                ))
         # ---------------------------------------------------------------------
         # Get product form template:
         # ---------------------------------------------------------------------        
@@ -94,13 +101,15 @@ class Parser(report_sxw.rml_parse):
         # Get unload picking
         # ---------------------------------------------------------------------
         unloads = {}
-        out_picking_type_id = 3 # TODO
+        out_picking_type_ids = []
+        for item in company_proxy.stock_report_unload_ids:
+            out_picking_type_ids.append(item.id)
         pick_ids = pick_pool.search(self.cr, self.uid, [
-            ('picking_type_id', '=', out_picking_type_id),
-            # data filter
-            # state filter
+            ('picking_type_id', 'in', out_picking_type_ids),
+            # TODO data filter
+            # TODO state filter
             ])
-        for pick in pick_pool.browse(cr, uid, pick_ids):
+        for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             for line in pick.move_lines:
                 # TODO check state of line??
                 default_code = line.product_id.default_code

@@ -53,7 +53,15 @@ class ResCompany(orm.Model):
         'stock_report_load_ids': fields.many2many(
             'stock.picking.type', 'company_picking_in_rel', 
             'company_id', 'type_id', 
-            'Pick in type'), 
+            'Pick in type'),
+        
+        'is_remote_stock': fields.boolean('Is remote company', 
+            help='If is remote company no XMLRPC connection'),
+        'remote_name': fields.char('XMLRPC DB name', size=80),
+        'remote_hostname': fields.char('XMLRPC Hostname', size=80),
+        'remote_port': fields.integer('XMLRPC Port'),
+        'remote_username': fields.char('XMLRPC Username', size=80),
+        'remote_password': fields.char('XMLRPC Password', size=80),
         }
 
 class ResPartner(orm.Model):
@@ -69,6 +77,8 @@ class ResPartner(orm.Model):
                     
         datas = {}
         datas['partner_id'] = ids[0]
+        datas['partner_name'] = self.browse(
+            cr, uid, ids, context=context)[0].name
                        
         return {
             'type': 'ir.actions.report.xml',

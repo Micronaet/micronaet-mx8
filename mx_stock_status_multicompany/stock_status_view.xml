@@ -9,6 +9,18 @@
             <xpath expr="//notebook/page[1]" position="after">
                 <page string="Stock report">
                     <group colspan="4" col="4">
+                        <separator string="XMLRPC parameters:" colspan="4"/>
+                        <field name="is_remote_stock" />                       
+                        <newline/>
+                        
+                        <field name="remote_name" attrs="{'invisible':[('is_remote_stock','=',True)]}"/>                       
+                        <field name="remote_hostname" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <field name="remote_port" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <field name="remote_username" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <field name="remote_password" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <newline/>
+                        
+                        <separator string="Pick to consider:" colspan="4"/>
                         <field name="stock_report_unload_ids"/>
                         <field name="stock_report_load_ids"/>
                     </group>                     
