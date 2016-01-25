@@ -158,7 +158,7 @@ class Parser(report_sxw.rml_parse):
                         unloads[default_code] = line.product_uom_qty
                     else:    
                         unloads[default_code] += line.product_uom_qty
-                debug_file.write('Prod.: %s [%s]' % (
+                debug_file.write('Prod.: %s [%s]\n' % (
                     default_code, line.product_uom_qty)) # XXX
 
         # ---------------------------------------------------------------------
@@ -190,7 +190,7 @@ class Parser(report_sxw.rml_parse):
                     # TODO check state of line??                    
                     default_code = line.product_id.default_code
                     if line.state == 'assigned': # virtual
-                        _logger.info('OF virtual: %s - %s [%s]' % (
+                        _logger.info('OF virtual: %s - %s [%s]\n' % (
                             line.picking_id.name,
                             default_code,
                             line.product_uom_qty,
@@ -199,10 +199,10 @@ class Parser(report_sxw.rml_parse):
                             virtual_loads[default_code] = line.product_uom_qty
                         else:    
                             virtual_loads[default_code] += line.product_uom_qty
-                        debug_file.write('Virtual: %s [%s]' % (
+                        debug_file.write('Virtual: %s [%s]\n' % (
                             default_code, line.product_uom_qty)) # XXX
                     elif line.state == 'done':
-                        _logger.info('OF load: %s - %s [%s]' % (
+                        _logger.info('OF load: %s - %s [%s]\n' % (
                             line.picking_id.name,
                             default_code,
                             line.product_uom_qty,
@@ -243,12 +243,12 @@ class Parser(report_sxw.rml_parse):
                 orders[default_code] += remain
             else:
                 orders[default_code] = remain
-            _logger.info('Order considered: %s - %s [%s]' % (
+            _logger.info('Order considered: %s - %s [%s]\n' % (
                 line.order_id.name,
                 default_code,
                 remain,
                 )) # XXX
-            debug_file.write('Product : %s [%s]' % (
+            debug_file.write('Product : %s [%s]\n' % (
                 default_code, remain)) # XXX
         
         # ---------------------------------------------------------------------
