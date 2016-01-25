@@ -83,7 +83,27 @@ class AccountInvoice(orm.Model):
         _logger.info('Update pick out moves')    
         move_pool = self.pool.get('stock.move')
         pick_pool = self.pool.get('stock.picking')
-        # TODO wizard dont' save invoice_id in pickin!!!!!!!!!!!!!!!!!!!!!!!!!!
+        
+        # ---------------------------------------
+        # Update pick and assign to this invoice:
+        # ---------------------------------------
+        origin = self.browse(cr, uid, ids, context=context)[0].origin
+        if origin:
+            origins = origin.split(',')
+            # not linked:
+            pick_ids = pick_pool.search(cr, uid, [
+                ('name', 'in', origins),
+                ('invoice_id', '=', False),
+                ], context=context)
+            if pick_ids:
+                pick_pool.write(cr, uid, pick_ids, {
+                    'invoice_id': ids[0],
+                    }, context=context)
+                _logger.warning('Linked pick to invoice: %s' % origin)
+                
+        # -------------------------------------
+        # Set confirmed transfer when validate:
+        # -------------------------------------
         pick_ids = pick_pool.search(cr, uid, [
             ('invoice_id', 'in', ids),
             ], context=context)
