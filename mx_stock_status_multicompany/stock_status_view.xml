@@ -11,7 +11,7 @@
                     <group colspan="4" col="4">
                         <separator string="XMLRPC parameters:" colspan="4"/>
                         <field name="is_remote_stock" />                       
-                        <newline/>
+                        <field name="product_mask"/>
                         
                         <field name="remote_name" attrs="{'invisible':[('is_remote_stock','=',True)]}"/>                       
                         <field name="remote_hostname" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       

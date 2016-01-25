@@ -92,23 +92,30 @@ class Parser(report_sxw.rml_parse):
                 _('No data for this partner',
                 ))
 
-        debug_file.write('\nTemplate selected:') # XXX
+        debug_file.write('\nTemplate selected:\n') # XXX
         debug_file.write('%s' % (product_tmpl_ids)) # XXX
+        
         # ---------------------------------------------------------------------
         # Get product form template:
         # ---------------------------------------------------------------------        
         product_ids = product_pool.search(self.cr, self.uid, [
             ('product_tmpl_id', 'in', product_tmpl_ids)])
         products = {}
+        product_mask = company_proxy.product_mask or ''
+        products_code = [] # For search in other database
 
         for product in product_pool.browse(self.cr, self.uid, product_ids):                
             default_code = product.default_code
+            products_code.append(product_mask % default_code)
             if default_code in products:
                 _logger.error('More than one default_code %s' % default_code)                
             products[default_code] = product
 
-        debug_file.write('\n\nProduct selected:') # XXX
+        debug_file.write('\n\nProduct code for search in other DB:\n') # XXX
+        debug_file.write('%s' % (products_code, )) # XXX
+        debug_file.write('\n\nProduct selected:\n') # XXX
         debug_file.write('%s' % (product_ids,)) # XXX
+        
         # ---------------------------------------------------------------------
         # Parameter for filters:
         # ---------------------------------------------------------------------
@@ -147,7 +154,7 @@ class Parser(report_sxw.rml_parse):
             # TODO state filter
             ])
 
-        debug_file.write('\n\nUnload picking:') # XXX            
+        debug_file.write('\n\nUnload picking:\n') # XXX            
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             debug_file.write('\nPick: %s' % pick.name) # XXX
             for line in pick.move_lines:
@@ -183,7 +190,7 @@ class Parser(report_sxw.rml_parse):
             
             # TODO state filter
             ])
-        debug_file.write('\n\nload picking:') # XXX            
+        debug_file.write('\n\nload picking:\n') # XXX            
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
@@ -221,7 +228,7 @@ class Parser(report_sxw.rml_parse):
         sol_ids = sol_pool.search(self.cr, self.uid, [
             ('product_id', 'in', product_ids)])
             
-        debug_file.write('\n\nOrder remain:') # XXX
+        debug_file.write('\n\nOrder remain:\n') # XXX
         for line in sol_pool.browse(self.cr, self.uid, sol_ids):
             # -------
             # Header:

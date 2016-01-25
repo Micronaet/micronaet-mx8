@@ -59,6 +59,9 @@ class ResCompany(orm.Model):
             'company_id', 'partner_id', 
             'Exclude partner', 
             help='Other company partner ID'), 
+            
+        'product_mask': fields.char(
+            'Mask', size=64, help='Mask for product in other DB'),
         
         'is_remote_stock': fields.boolean('Is remote company', 
             help='If is remote company no XMLRPC connection'),
