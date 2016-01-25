@@ -77,6 +77,23 @@ class ResPartner(orm.Model):
     """    
     _inherit = 'res.partner'
 
+    # -------------------------------------------------------------------------
+    # Utility function for calculate all movement (for remote and master DB)
+    # -------------------------------------------------------------------------
+    def stock_movement_inventory_data(self, cr, uid, product_ids, remote, 
+            dicts=None, context=None):
+        ''' Calculate all statistic for inventory
+            The operation will be processed in this database or in a remote
+            master: product_ids = list of ID
+            remote: product_ids = list of code so need to be get ID
+            inventory: contain all dictionaty used for this calculation
+            context: context
+        '''
+        
+        
+        
+        
+    
     def print_stock_status_report(self, cr, uid, ids, context=None):
         ''' Print report product stock
         '''

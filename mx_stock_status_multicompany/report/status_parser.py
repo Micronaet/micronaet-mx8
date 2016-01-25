@@ -57,6 +57,7 @@ class Parser(report_sxw.rml_parse):
         ''' Search all product elements
         '''
         # pool used:
+        partner_pool = self.pool.get('res.partner')
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
         pick_pool = self.pool.get('stock.picking')
@@ -115,6 +116,45 @@ class Parser(report_sxw.rml_parse):
         debug_file.write('\n\nProduct selected:\n') # XXX DEBUG
         debug_file.write('%s' % (product_ids,)) # XXX DEBUG
         
+        # ----------------------
+        # Call master procedure:
+        # ----------------------
+        # MASTER:
+        # products before
+        unloads = {}
+        loads = {}
+        virtual_loads = {}
+        orders = {}
+
+        partner_pool.stock_movement_inventory_data(
+            cr, uid, product_ids, remote, 
+            dicts=[
+                products, # for inventory value
+                loads, # load document
+                unloads, # unload document
+                orders, # order not delivered
+                virtual_loads, # procurement not received
+                ], 
+            context=None)
+
+        # ----------------------
+        # Call remote procedure:
+        # ----------------------
+        # REMOTE:
+        # products before
+        remote_unloads = {}
+        remote_loads = {}
+        remote_virtual_loads = {}
+        remote_orders = {}
+
+        # TODO call XMLRPC procedure:
+
+
+
+
+        
+        
+        
         # ---------------------------------------------------------------------
         # Parameter for filters:
         # ---------------------------------------------------------------------
@@ -134,7 +174,6 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         # Get unload picking
         # ---------------------------------------------------------------------
-        unloads = {}
         out_picking_type_ids = []
         for item in company_proxy.stock_report_unload_ids:
             out_picking_type_ids.append(item.id)
@@ -170,8 +209,6 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         # Get unload picking
         # ---------------------------------------------------------------------
-        loads = {}
-        virtual_loads = {}
         in_picking_type_ids = []
         for item in company_proxy.stock_report_load_ids:
             in_picking_type_ids.append(item.id)
@@ -223,7 +260,6 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         # Get order to delivery
         # ---------------------------------------------------------------------
-        orders = {}
         sol_ids = sol_pool.search(self.cr, self.uid, [
             ('product_id', 'in', product_ids)])
             
@@ -263,13 +299,25 @@ class Parser(report_sxw.rml_parse):
         res = []
         for key in sorted(products):
             default_code = products[key].default_code
+            
             inventory = products[key].inventory_start or 0.0
-            load = loads.get(default_code, 0.0)
-            unload = unloads.get(default_code, 0.0)
-            order = orders.get(default_code, 0.0)
-            procurement = virtual_loads.get(default_code, 0.0)
+            # NOTE remote not used!
+            
+            load = loads.get(default_code, 0.0) + \
+                remote_loads.get(default_code, 0.0) 
+                
+            unload = unloads.get(default_code, 0.0) + \
+                remote_unloads.get(default_code, 0.0)
+                
+            order = orders.get(default_code, 0.0) + \
+                remote_orders.get(default_code, 0.0)
+                
+            procurement = virtual_loads.get(default_code, 0.0) + \
+                remote_virtual_loads.get(default_code, 0.0)
+                
             dispo = inventory + load - unload
             virtual = dispo + procurement - order
+            
             res.append(
                 (products[key],
                 int(inventory),
