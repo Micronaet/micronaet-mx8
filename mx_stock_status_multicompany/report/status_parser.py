@@ -149,7 +149,7 @@ class Parser(report_sxw.rml_parse):
 
         debug_file.write('\n\nUnload picking:') # XXX            
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
-            debug_file.write('Pick: %s' % pick.name) # XXX
+            debug_file.write('\nPick: %s' % pick.name) # XXX
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
                     # TODO check state of line??
@@ -190,7 +190,7 @@ class Parser(report_sxw.rml_parse):
                     # TODO check state of line??                    
                     default_code = line.product_id.default_code
                     if line.state == 'assigned': # virtual
-                        _logger.info('OF virtual: %s - %s [%s]\n' % (
+                        _logger.info('\nOF virtual: %s - %s [%s]\n' % (
                             line.picking_id.name,
                             default_code,
                             line.product_uom_qty,
@@ -211,7 +211,7 @@ class Parser(report_sxw.rml_parse):
                             loads[default_code] = line.product_uom_qty
                         else:    
                             loads[default_code] += line.product_uom_qty
-                        debug_file.write('Load: %s [%s]' % (
+                        debug_file.write('Load: %s [%s]\n' % (
                             default_code, line.product_uom_qty)) # XXX
         
         # ---------------------------------------------------------------------
