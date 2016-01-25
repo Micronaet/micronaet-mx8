@@ -71,6 +71,34 @@ class AccountInvoice(orm.Model):
             res['value']['default_carrier_id'] = False
             res['value']['used_bank_id'] = False
         return res    
+
+    # ------------------------------------
+    # Override validation for update pick:   
+    # ------------------------------------
+    def invoice_validate(self, cr, uid, ids, context=None):
+        res = super(AccountInvoice, self).invoice_validate(cr, uid, ids, 
+            context=context)
+            
+        # Unload pick stock:
+        _logger.info('Update pick out moves')    
+        move_pool = self.pool.get('stock.move')
+        pick_pool = self.pool.get('stock.picking')
+        # TODO wizard dont' save invoice_id in pickin!!!!!!!!!!!!!!!!!!!!!!!!!!
+        pick_ids = pick_pool.search(cr, uid, [
+            ('invoice_id', 'in', ids),
+            ], context=context)
+        
+        todo = []
+        for pick in pick_pool.browse(cr, uid, pick_ids,
+                context=context):
+            # confirm all picking
+            for move in pick.move_lines:
+                if move.state in ('assigned', 'confirmed'):
+                    todo.append(move.id)
+        if todo:
+            move_pool.action_done(cr, uid, todo, context=context)
+            _logger.info('>>>>>> Pick out moves: %s' % (todo, ))    
+        return res
         
     _columns = {
         'direct_invoice': fields.boolean('Direct invoice'), # TODO use it!

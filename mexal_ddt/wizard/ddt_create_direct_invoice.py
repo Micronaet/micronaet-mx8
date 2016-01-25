@@ -132,17 +132,18 @@ class PickingCreateDirectInvoice(models.TransientModel):
         # ---------------------------------------------------------------------
         # Unload pick stock:
         # ---------------------------------------------------------------------
-        move_pool = self.pool.get('stock.move')
-        todo = []
-        for pick in picking_pool.browse(self.env.cr, self.env.uid, active_ids,
-                context=self.env.context):
-            # confirm all picking
-            for move in pick.move_lines:
-                if move.state in ('assigned', 'confirmed'):
-                    todo.append(move.id)
-        if todo:
-            move_pool.action_done(self.env.cr, self.env.uid, todo, 
-                context=self.env.context)
+        # TODO moved to invoice_validate
+        #move_pool = self.pool.get('stock.move')
+        #todo = []
+        #for pick in picking_pool.browse(self.env.cr, self.env.uid, active_ids,
+        #        context=self.env.context):
+        #    # confirm all picking
+        #    for move in pick.move_lines:
+        #        if move.state in ('assigned', 'confirmed'):
+        #            todo.append(move.id)
+        #if todo:
+        #    move_pool.action_done(self.env.cr, self.env.uid, todo, 
+        #        context=self.env.context)
         # ---------------------------------------------------------------------
         
         # Update extra fields in invoice:
@@ -166,7 +167,6 @@ class PickingCreateDirectInvoice(models.TransientModel):
             'direct_invoice': True,
             'date_invoice': datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
             
-
             # TODO other fields!    
             #'parcels': pickings[0].parcels,
             })
