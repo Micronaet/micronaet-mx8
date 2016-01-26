@@ -116,10 +116,11 @@ class ResPartner(orm.Model):
         # ---------------------------------------------------------------------
         # Parameter for filters:
         # ---------------------------------------------------------------------
-        # Exclunde partner list:
+        # Exclude partner list:
         exclude_partner_ids = []
         for item in company_proxy.stock_explude_partner_ids:
             exclude_partner_ids.append(item.id)
+            
         # Append also this company partner (for inventory)    
         exclude_partner_ids.append(company_proxy.partner_id.id)
         
@@ -147,7 +148,6 @@ class ResPartner(orm.Model):
             ('date', '<=', to_date), 
             # TODO state filter
             ])
-
         debug_file.write('\n\nUnload picking:\n') # XXX  DEBUG           
         for pick in pick_pool.browse(cr, uid, pick_ids):
             debug_file.write('\nPick: %s\n' % pick.name) # XXX DEBUG
@@ -159,6 +159,7 @@ class ResPartner(orm.Model):
                         unloads[default_code] = line.product_uom_qty
                     else:    
                         unloads[default_code] += line.product_uom_qty
+                        
                     debug_file.write('\nProd.: %s [%s]' % (
                         default_code, line.product_uom_qty)) # XXX DEBUG
 
@@ -238,19 +239,14 @@ class ResPartner(orm.Model):
                 orders[default_code] += remain
             else:
                 orders[default_code] = remain
-            _logger.info('Order considered: %s - %s [%s]\n' % (
-                line.order_id.name,
-                default_code,
-                remain,
-                )) # XXX DEBUG
-            debug_file.write('Product : %s [%s]\n' % (
+            debug_file.write('Product: %s [%s]\n' % (
                 default_code, remain)) # XXX DEBUG
         
         # result is the dicts!        
         if remote:        
-            return product_ids
+            return product_ids # for hignlight both product
         else:
-            return        
+            return 
     
     def print_stock_status_report(self, cr, uid, ids, context=None):
         ''' Print report product stock
