@@ -55,7 +55,7 @@ class Parser(report_sxw.rml_parse):
         if q_x_pack:
             parcel = qty / q_x_pack
             if not parcel:
-                res = '/'
+                res = ''
             else:
                 res = 'SC. %s x %s =' % (int(parcel), int(q_x_pack))
         return res
