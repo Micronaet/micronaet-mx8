@@ -76,7 +76,7 @@ class Parser(report_sxw.rml_parse):
         # XXX DEBUG:
         debug_f = '/home/administrator/photo/xls/status.txt'
         pickle_file = '/home/administrator/photo/dicts.pickle' # TODO
-        debug_file = open(, 'w')
+        debug_file = open(debug_f, 'w')
 
         company_proxy = False
         product_tmpl_ids = []
@@ -148,7 +148,6 @@ class Parser(report_sxw.rml_parse):
 
         # TODO call XMLRPC procedure:
         # ERPPEEK CLIENT:
-        import pdb; pdb.set_trace()
 
         erp = erppeek.Client(
             'http://%s:%s' % (
@@ -172,7 +171,7 @@ class Parser(report_sxw.rml_parse):
             remote_unloads, # unload document
             remote_orders, # order not delivered
             remote_virtual_loads, # procurement not received
-            ], 
+            ]
         
         # Pickle dump dict:    
         pickle_f = open(pickle_file, 'w')
@@ -180,9 +179,9 @@ class Parser(report_sxw.rml_parse):
         pickle_f.close()
         
         debug_file.close()
+        import pdb; pdb.set_trace()
         erp_partner_pool.erpeek_stock_movement_inventory_data(
-            self.cr, self.uid, products_code, True, debug_f,
-            )
+            products_code, debug_f)
         # Reopen for append:    
         debug_file = open(debug_f, 'a')    
             

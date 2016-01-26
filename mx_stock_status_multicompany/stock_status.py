@@ -78,20 +78,20 @@ class ResPartner(orm.Model):
     """    
     _inherit = 'res.partner'
 
-    def erpeek_stock_movement_inventory_data(self, cr, uid, product_ids, remote, 
+    def erpeek_stock_movement_inventory_data(self, cr, uid, product_ids, 
             debug_f):
         ''' Function called by Erpeek with dict passed by pickle file
         '''
-        debug_file = open(debug_f, 'a')    
         import pdb; pdb.set_trace()    
         pickle_file = '/home/administrator/photo/dicts.pickle' # TODO 
+        debug_file = open(debug_f, 'a')    
         
         pickle_f = open(pickle_file, 'r')        
         dicts = pickle.load(pickle_f)
         pickle_f.close()
         
-        res = self.stock_movement_inventory_data(cr, uid, product_ids, remote, 
-            debug_file, dicts, context=None)
+        res = self.stock_movement_inventory_data(cr, uid, 
+            product_ids, True, debug_file, dicts, context=None)
 
         pickle_f = open(pickle_file, 'w')
         pickle.dump(dicts, pickle_f)
@@ -111,7 +111,6 @@ class ResPartner(orm.Model):
             inventory: contain all dictionaty used for this calculation
             context: context
         '''
-        import pdb; pdb.set_trace()
         # Unpack dicts to be used:
         (loads, unloads, orders, virtual_loads) = dicts
         
