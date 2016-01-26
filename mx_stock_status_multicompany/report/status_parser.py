@@ -207,11 +207,15 @@ class Parser(report_sxw.rml_parse):
         # Transform in iteritems for report:
         # ---------------------------------------------------------------------
         res = []
+        
+        debug_file.write('\n\nInventory:\nCode;Q.\n')    
         for key in sorted(products):
             default_code = products[key].default_code
             remote_code = product_mask % default_code
             
             inventory = products[key].inventory_start or 0.0
+            debug_file.write('%s;%s\n' % (
+                default_code, inventory))
             # XXX NOTE remote not used!
             
             load = loads.get(default_code, 0.0) + \

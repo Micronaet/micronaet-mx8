@@ -159,8 +159,8 @@ class ResPartner(orm.Model):
         from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
         to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
 
-        debug_file.write('\n\nExclude partner list:\n') # XXX DEBUG
-        debug_file.write('%s' % (exclude_partner_ids,)) # XXX DEBUG
+        debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
+            exclude_partner_ids,)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Get unload picking
@@ -179,9 +179,8 @@ class ResPartner(orm.Model):
             ('date', '<=', to_date), 
             # TODO state filter
             ])
-        debug_file.write('\n\nUnload picking:\n') # XXX  DEBUG           
+        debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(cr, uid, pick_ids):
-            debug_file.write('\nPick: %s\n' % pick.name) # XXX DEBUG
             for line in pick.move_lines:
                 default_code = line.product_id.default_code
                 if line.product_id.id in product_ids: # only supplier prod.
@@ -191,8 +190,9 @@ class ResPartner(orm.Model):
                     else:    
                         unloads[default_code] += line.product_uom_qty
                         
-                    debug_file.write('\nProd.: %s [%s]' % (
-                        default_code, line.product_uom_qty)) # XXX DEBUG
+                    debug_file.write('\n%s;%s;%s;%s' % (
+                        pick.name, pick.origin, default_code, 
+                        line.product_uom_qty)) # XXX DEBUG
 
         # ---------------------------------------------------------------------
         # Get unload picking
@@ -211,7 +211,7 @@ class ResPartner(orm.Model):
             ('date', '<=', to_date),            
             # TODO state filter
             ])
-        debug_file.write('\n\nLoad picking:\n') # XXX DEBUG       
+        debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(cr, uid, pick_ids):
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
@@ -227,8 +227,11 @@ class ResPartner(orm.Model):
                             virtual_loads[default_code] = line.product_uom_qty
                         else:    
                             virtual_loads[default_code] += line.product_uom_qty
-                        debug_file.write('Virtual: %s [%s]\n' % (
-                            default_code, line.product_uom_qty)) # XXX DEBUG
+
+                        debug_file.write('\nOF;%s;%s;%s;%s' % (
+                            pick.name, pick.origin, default_code, 
+                            line.product_uom_qty)) # XXX DEBUG
+
                     elif line.state == 'done':
                         _logger.info('OF load: %s - %s [%s]\n' % (
                             line.picking_id.name,
@@ -239,8 +242,10 @@ class ResPartner(orm.Model):
                             loads[default_code] = line.product_uom_qty
                         else:    
                             loads[default_code] += line.product_uom_qty
-                        debug_file.write('Load: %s [%s]\n' % (
-                            default_code, line.product_uom_qty)) # XXX DEBUG
+
+                        debug_file.write('\nBF;%s;%s;%s;%s' % (
+                            pick.name, pick.origin, default_code, 
+                            line.product_uom_qty)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Get order to delivery
@@ -248,7 +253,7 @@ class ResPartner(orm.Model):
         sol_ids = sol_pool.search(cr, uid, [
             ('product_id', 'in', product_ids)])
             
-        debug_file.write('\n\nOrder remain:\n') # XXX DEBUG
+        debug_file.write('\n\nOrder remain:\nOrder;Code;Q.\n') # XXX DEBUG
         for line in sol_pool.browse(cr, uid, sol_ids):
             # -------
             # Header:
@@ -270,8 +275,9 @@ class ResPartner(orm.Model):
                 orders[default_code] += remain
             else:
                 orders[default_code] = remain
-            debug_file.write('Product: %s [%s]\n' % (
-                default_code, remain)) # XXX DEBUG
+                
+            debug_file.write('%s;%s;%s\n' % (
+                line.order_id.name, default_code, remain)) # XXX DEBUG
         
         # result is the dicts!        
         if remote:        
