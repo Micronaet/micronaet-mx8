@@ -40,9 +40,25 @@ class Parser(report_sxw.rml_parse):
             'get_object_line': self.get_object_line,
             'get_datetime': self.get_datetime,
             'get_partic': self.get_partic,
+            'get_parcels': self.get_parcels,
 
             'reset_print': self.reset_print,
         })
+
+    def get_parcels(self, product, qty):
+        ''' Get text for parcels totals:
+            product: proxy obj for product
+            qty: total to parcels
+        '''
+        res = ''
+        q_x_pack = product.q_x_pack
+        if q_x_pack:
+            parcel = qty / q_x_pack
+            if not parcel:
+                res = '/'
+            else:
+                res = 'SC. %s x %s =' % (int(parcel), int(q_x_pack))
+        return res
 
     def get_partic(self, line):
         ''' Return return if present partner-product partic code
