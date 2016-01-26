@@ -159,8 +159,8 @@ class ResPartner(orm.Model):
                         unloads[default_code] = line.product_uom_qty
                     else:    
                         unloads[default_code] += line.product_uom_qty
-                debug_file.write('\nProd.: %s [%s]' % (
-                    default_code, line.product_uom_qty)) # XXX DEBUG
+                    debug_file.write('\nProd.: %s [%s]' % (
+                        default_code, line.product_uom_qty)) # XXX DEBUG
 
         # ---------------------------------------------------------------------
         # Get unload picking
@@ -179,7 +179,7 @@ class ResPartner(orm.Model):
             ('date', '<=', to_date),            
             # TODO state filter
             ])
-        debug_file.write('\n\nload picking:\n') # XXX DEBUG       
+        debug_file.write('\n\nLoad picking:\n') # XXX DEBUG       
         for pick in pick_pool.browse(cr, uid, pick_ids):
             for line in pick.move_lines:
                 if line.product_id.id in product_ids: # only supplier prod.
