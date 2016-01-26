@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Copyright (C) 2001-2014 Micronaet SRL (<http://www.micronaet.it>).
@@ -16,34 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
+from . import fabric_parser
 
-{
-    'name': 'Textilene status',
-    'version': '0.1',
-    'category': 'Report',
-    'description': '''
-        Manage status report for textilene material
-        Use BOM only for this type of product
-        ''',
-    'author': 'Micronaet S.r.l. - Nicola Riolini',
-    'website': 'http://www.micronaet.it',
-    'license': 'AGPL-3',
-    'depends': [
-        'base',
-        'product',
-        'mrp',
-        'report_aeroo',
-        #'report_webkit',
-        ],
-    'init_xml': [],
-    'demo': [],
-    'data': [
-        #'security/ir.model.access.csv',        
-        'textilene_views.xml',
-        'report/fabric_report.xml',
-        'wizard/report_wizard_view.xml',
-        ],
-    'active': False,
-    'installable': True,
-    'auto_install': False,
-    }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

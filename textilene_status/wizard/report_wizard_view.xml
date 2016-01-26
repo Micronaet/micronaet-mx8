@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_product_product_fabric_report_wizard" model="ir.ui.view">
+            <field name="name">Fabric status</field>
+            <field name="model">product.product.fabric.report.wizard</field>
+            <field name="arch" type="xml">
+              <form string="Fabric status">
+                  <!--<group>
+                    <field name="journal_id"/>
+                    <field name="date"/>
+                  </group>-->
+                    <footer>
+                        <button name="open_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+              </form>
+            </field>
+        </record>
+
+        <record id="action_product_product_fabric_report_wizard" model="ir.actions.act_window">
+            <field name="name">Fabric report wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product.fabric.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_product_product_fabric_report_wizard"/>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem 
+            parent="base.menu_sales" 
+            id="menu_report_fabric_wizard" 
+            action="action_report_fabric_wizard"
+            />
+
+    </data>
+</openerp>
