@@ -136,9 +136,9 @@ class Parser(report_sxw.rml_parse):
                 ], 
             context=None)
 
-        # ---------------------------------------------------------------------
+        # =====================================================================
         # Call remote procedure:
-        # ---------------------------------------------------------------------
+        # =====================================================================
         # REMOTE:
         # products before
         remote_unloads = {}
@@ -166,22 +166,25 @@ class Parser(report_sxw.rml_parse):
 
         erp_partner_pool = erp.ResPartner
         
-        dicts=[
+        # Pack dicts:
+        dicts = (
             remote_loads, # load document
             remote_unloads, # unload document
             remote_orders, # order not delivered
             remote_virtual_loads, # procurement not received
-            ]
+            )
         
         # Pickle dump dict:    
         pickle_f = open(pickle_file, 'w')
         pickle.dump(dicts, pickle_f)
         pickle_f.close()
         
+        # Close lof file:
         debug_file.close()
-        import pdb; pdb.set_trace()
+        
         erp_partner_pool.erpeek_stock_movement_inventory_data(
             products_code, debug_f)
+            
         # Reopen for append:    
         debug_file = open(debug_f, 'a')    
             
@@ -189,9 +192,15 @@ class Parser(report_sxw.rml_parse):
         pickle_f = open(pickle_file, 'r')
         dicts = pickle.load(pickle_f)
         pickle_f.close()
-
-# ---------------------------------------------------------------------
-        # ---------------------------------------------------------------------
+        
+        # Unpack dict passed:
+        (
+            remote_loads, 
+            remote_unloads, 
+            remote_orders, 
+            remote_virtual_loads) = dicts
+        import pdb; pdb.set_trace()    
+        # =====================================================================
         
         # ---------------------------------------------------------------------
         # Transform in iteritems for report:
