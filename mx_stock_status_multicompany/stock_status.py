@@ -135,7 +135,7 @@ class ResPartner(orm.Model):
                 ('default_code', 'in', product_ids)], context=context)
             remote_default_code = []                    
             # List of code found in remote DB
-            for p in product_pool.search(cr, uid, product_ids, 
+            for p in product_pool.browse(cr, uid, product_ids, 
                     context=context):
                 remote_default_pool.append(p.default_code)                    
             debug_file.write('\n\nREMOTE CONTROLS:\n') # XXX DEBUG
@@ -275,7 +275,7 @@ class ResPartner(orm.Model):
         
         # result is the dicts!        
         if remote:        
-            return remote_default_pool # for hignlight both product
+            return remote_default_code # for hignlight both product
         else:
             return 
     

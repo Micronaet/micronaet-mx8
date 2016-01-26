@@ -187,7 +187,8 @@ class Parser(report_sxw.rml_parse):
             
         # Reopen for append:    
         debug_file = open(debug_f, 'a')    
-            
+        
+        debug_file.write('\n\nCode in remote DB: %s\n\n' % (both_products, ))    
         # Pickle load dict:    
         pickle_f = open(pickle_file, 'r')
         dicts = pickle.load(pickle_f)
@@ -195,11 +196,11 @@ class Parser(report_sxw.rml_parse):
         
         # Unpack dict passed:
         (
-            remote_loads, 
-            remote_unloads, 
+            remote_loads, # TODO check if has records (maybe never!)
+            remote_unloads, # TODO check if has records (maybe never!) 
             remote_orders, 
-            remote_virtual_loads) = dicts
-        import pdb; pdb.set_trace()    
+            remote_virtual_loads, # TODO check if has records (maybe never!)
+            ) = dicts
         # =====================================================================
         
         # ---------------------------------------------------------------------
