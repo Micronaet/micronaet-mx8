@@ -78,11 +78,13 @@ class ResPartner(orm.Model):
     """    
     _inherit = 'res.partner'
 
+    # ----------------------------------------
+    # Function called from master DB (transit)
+    # ----------------------------------------
     def erpeek_stock_movement_inventory_data(self, cr, uid, product_ids, 
             debug_f):
         ''' Function called by Erpeek with dict passed by pickle file
         '''
-        import pdb; pdb.set_trace()    
         pickle_file = '/home/administrator/photo/dicts.pickle' # TODO 
         debug_file = open(debug_f, 'a')    
         
@@ -131,8 +133,15 @@ class ResPartner(orm.Model):
         if remote:
             product_ids = product_pool.search(cr, uid, [
                 ('default_code', 'in', product_ids)], context=context)
+            remote_default_code = []                    
+            # List of code found in remote DB
+            for p in product_pool.search(cr, uid, product_ids, 
+                    context=context):
+                remote_default_pool.append(p.default_code)                    
             debug_file.write('\n\nREMOTE CONTROLS:\n') # XXX DEBUG
+            
         else:    
+            remote_default_code = False    
             debug_file.write('\n\nMASTER CONTROLS:\n') # XXX DEBUG
         
         # ---------------------------------------------------------------------
@@ -266,7 +275,7 @@ class ResPartner(orm.Model):
         
         # result is the dicts!        
         if remote:        
-            return product_ids # for hignlight both product
+            return remote_default_pool # for hignlight both product
         else:
             return 
     

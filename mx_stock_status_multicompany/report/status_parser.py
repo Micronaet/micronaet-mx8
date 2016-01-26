@@ -182,7 +182,7 @@ class Parser(report_sxw.rml_parse):
         # Close lof file:
         debug_file.close()
         
-        erp_partner_pool.erpeek_stock_movement_inventory_data(
+        both_products = erp_partner_pool.erpeek_stock_movement_inventory_data(
             products_code, debug_f)
             
         # Reopen for append:    
