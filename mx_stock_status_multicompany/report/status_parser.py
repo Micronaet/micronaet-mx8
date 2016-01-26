@@ -24,6 +24,8 @@
 import os
 import sys
 import logging
+import erppeek
+import pickle
 from datetime import datetime
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
@@ -72,7 +74,9 @@ class Parser(report_sxw.rml_parse):
         # Get template product supplier by partner
         # ---------------------------------------------------------------------
         # XXX DEBUG:
-        debug_file = open('/home/administrator/photo/xls/status.txt', 'w')
+        debug_f = '/home/administrator/photo/xls/status.txt'
+        pickle_file = '/home/administrator/photo/dicts.pickle' # TODO
+        debug_file = open(, 'w')
 
         company_proxy = False
         product_tmpl_ids = []
@@ -132,9 +136,9 @@ class Parser(report_sxw.rml_parse):
                 ], 
             context=None)
 
-        # ----------------------
+        # ---------------------------------------------------------------------
         # Call remote procedure:
-        # ----------------------
+        # ---------------------------------------------------------------------
         # REMOTE:
         # products before
         remote_unloads = {}
@@ -143,15 +147,52 @@ class Parser(report_sxw.rml_parse):
         remote_orders = {}
 
         # TODO call XMLRPC procedure:
-        #partner_pool.stock_movement_inventory_data(
-        #    self.cr, self.uid, product_ids, True, debug_file,
-        #    dicts=[
-        #        remote_loads, # load document
-        #        remote_unloads, # unload document
-        #        remote_orders, # order not delivered
-        #        remote_virtual_loads, # procurement not received
-        #        ], 
-        #    context=None)        
+        # ERPPEEK CLIENT:
+        import pdb; pdb.set_trace()
+
+        erp = erppeek.Client(
+            'http://%s:%s' % (
+                company_proxy.remote_hostname, 
+                company_proxy.remote_port),
+            db=company_proxy.remote_name,
+            user=company_proxy.remote_username,
+            password=company_proxy.remote_password,
+            )
+
+        if not erp:
+            raise osv.except_osv(
+                _('XMLRPC error'),
+                _('Cannot connect to second company',
+                ))
+
+        erp_partner_pool = erp.ResPartner
+        
+        dicts=[
+            remote_loads, # load document
+            remote_unloads, # unload document
+            remote_orders, # order not delivered
+            remote_virtual_loads, # procurement not received
+            ], 
+        
+        # Pickle dump dict:    
+        pickle_f = open(pickle_file, 'w')
+        pickle.dump(dicts, pickle_f)
+        pickle_f.close()
+        
+        debug_file.close()
+        erp_partner_pool.erpeek_stock_movement_inventory_data(
+            self.cr, self.uid, products_code, True, debug_f,
+            )
+        # Reopen for append:    
+        debug_file = open(debug_f, 'a')    
+            
+        # Pickle load dict:    
+        pickle_f = open(pickle_file, 'r')
+        dicts = pickle.load(pickle_f)
+        pickle_f.close()
+
+# ---------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         
         # ---------------------------------------------------------------------
         # Transform in iteritems for report:
