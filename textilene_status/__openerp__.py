@@ -34,6 +34,7 @@
         'mrp',
         'report_aeroo',
         #'report_webkit',
+        'mx_stock_status_multicompany', # TODO change only for parameters comp.
         ],
     'init_xml': [],
     'demo': [],

@@ -48,7 +48,7 @@ class ProductProductFabricReportWizard(models.TransientModel):
         
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'stock_status_fabric_repor',
+            'report_name': 'stock_status_fabric_report',
             'datas': datas,
             'context': context,
             }

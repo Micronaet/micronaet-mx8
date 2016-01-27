@@ -33,7 +33,7 @@
         <menuitem 
             parent="base.menu_sales" 
             id="menu_report_fabric_wizard" 
-            action="action_report_fabric_wizard"
+            action="action_product_product_fabric_report_wizard"
             />
 
     </data>

@@ -58,28 +58,194 @@ class Parser(report_sxw.rml_parse):
     def get_object(self, data):
         ''' Search all product elements
         '''
+        def get_position_season(date):
+            ''' Return position in array for correct season month:
+            '''
+            month = int(date[5:7])
+            if month >= 9: # september = 0
+                return month - 9
+            # january = 4    
+            return month + 3    
+            
         # XXX DEBUG:
         debug_f = '/home/administrator/photo/xls/status.txt'
 
         # pool used:
         product_pool = self.pool.get('product.product')
-        product_ids = product_pool.search(cr, uid, [
-            ('default_code', '=ilike', 'T%')], context=context)
+        product_ids = product_pool.search(self.cr, self.uid, [
+            ('default_code', '=ilike', 'T%')])
 
-        res = []
+        products = {}
+        moved = [] # TODO used?
         for product in product_pool.browse(
                 self.cr, self.uid, product_ids):
-            # Reset counter for this product    
-            inv = product.inventory_start
-            tcar = 0.0
-            tscar = 0.0
-            mm =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
-            oc =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
-            of =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
-            sal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
+            # TODO check fabric with selection?
             
-            res.append(
-                product, inv, tscar, tcar, mm, oc, of, sal, )
+            res[products.default_code] = [
+                # Reset counter for this product    
+                inv = product.inventory_start # LOADED!
+                tcar = 0.0
+                tscar = 0.0
+                mm =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
+                oc =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
+                of =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
+                #sal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
+                ]    
+      
+        # =====================================================================
+        # Get parameters for search:
+        # =====================================================================
+        company_pool = self.pool.get('res.company')
+        company_ids = company_pool.search(cr, uid, [], context=context)
+        company_proxy = company_pool.browse(
+            cr, uid, company_ids, context=context)[0]
+            
+        # Exclude partner list:
+        exclude_partner_ids = []
+        for item in company_proxy.stock_explude_partner_ids:
+            exclude_partner_ids.append(item.id)
+            
+        # Append also this company partner (for inventory)    
+        exclude_partner_ids.append(company_proxy.partner_id.id)
+        
+        # From date:
+        # TODO limit orders:
+        #from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
+        #to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
+
+        debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
+            exclude_partner_ids,)) # XXX DEBUG
+
+        # =====================================================================
+        # UNLOAD PICKING (CUSTOMER ORDER PICK OUT)
+        # =====================================================================
+        # Better with OC?
+        out_picking_type_ids = []
+        for item in company_proxy.stock_report_unload_ids:
+            out_picking_type_ids.append(item.id)
+            
+        pick_ids = pick_pool.search(cr, uid, [     
+            # type pick filter   
+            ('picking_type_id', 'in', out_picking_type_ids),
+            # Partner exclusion
+            ('partner_id', 'not in', exclude_partner_ids), 
+            # TODO check data date
+            #('date', '>=', from_date), 
+            #('date', '<=', to_date), 
+            # TODO state filter
+            ])
+        #debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n') # XXX DEBUG           
+        for pick in pick_pool.browse(cr, uid, pick_ids):
+            pos = get_position_season(pick.date) # cols  (min_date?)
+            for line in pick.move_lines:
+                default_code = line.product_id.default_code                
+                if not line.report_bom_id: # Theres' fabric BOM
+                    _logger.warning('No bom line')
+                    continue
+                    
+                if len(line.report_bom_id.bom_line_ids) != 1:
+                    _logger.error('BOM with more/no fabric')
+                    continue
+                              
+                fabric = line.report_bom_id.bom_line_ids[0]
+                qty = line.product_uom_qty * fabric.product_qty
+                
+                if default_code not in products:
+                    _logger.error('No product/fabric in database')
+                    continue
+                    
+                products[default_code][3][pos] -= qty # MM block
+                # TODO check state of line??
+                    
+                #debug_file.write('\n%s;%s;%s;%s' % (
+                #    pick.name, pick.origin, default_code, 
+                #    line.product_uom_qty)) # XXX DEBUG
+
+        # =====================================================================
+        # LOAD PICKING (CUSTOMER ORDER AND PICK IN )
+        # =====================================================================
+        in_picking_type_ids = []
+        for item in company_proxy.stock_report_load_ids:
+            in_picking_type_ids.append(item.id)
+            
+        pick_ids = pick_pool.search(cr, uid, [     
+            # type pick filter   
+            ('picking_type_id', 'in', in_picking_type_ids),            
+            # Partner exclusion
+            ('partner_id', 'not in', exclude_partner_ids),            
+            # check data date
+            #('date', '>=', from_date), # XXX correct for virtual?
+            #('date', '<=', to_date),            
+            # TODO state filter
+            ])
+        #debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n') # XXX DEBUG           
+        for pick in pick_pool.browse(cr, uid, pick_ids):
+            pos = get_position_season(pick.date) # for done cols  (min_date?)
+            for line in pick.move_lines:
+                default_code = line.product_id.default_code                              
+                qty = line.product_uom_qty
+                
+                if default_code not in products:
+                    _logger.error('No product/fabric in database')
+                    continue
+
+                # Order not current delivered
+                if line.state == 'assigned': # virtual
+                    pos = get_position_season(line.date_expected)
+                    products[default_code][5][pos] += qty # MM block
+                    #debug_file.write('\nOF;%s;%s;%s;%s' % (
+                    #    pick.name, pick.origin, default_code, 
+                    #    line.product_uom_qty)) # XXX DEBUG
+
+                # Order delivered so picking
+                elif line.state == 'done':
+                    products[default_code][3][pos] += qty # MM block
+                    #debug_file.write('\nBF;%s;%s;%s;%s' % (
+                    #    pick.name, pick.origin, default_code, 
+                    #    line.product_uom_qty)) # XXX DEBUG
+        
+        # ---------------------------------------------------------------------
+        # Get order to delivery
+        # ---------------------------------------------------------------------
+        sol_ids = sol_pool.search(cr, uid, [
+            ('product_id', 'in', product_ids)])
+            
+        debug_file.write('\n\nOrder remain:\nOrder;Code;Q.\n') # XXX DEBUG
+        for line in sol_pool.browse(cr, uid, sol_ids):
+            # -------
+            # Header:
+            # -------            
+            # check state:
+            if line.order_id.state in ('cancel', 'draft', 'sent'): #done?
+                continue
+            
+            # ------
+            # Lines:
+            # ------            
+            # Check delivered:
+            remain = line.product_uom_qty - line.delivered_qty
+            if remain <= 0.0:
+                continue
+            
+            default_code = line.product_id.default_code
+            if default_code in orders:
+                orders[default_code] += remain
+            else:
+                orders[default_code] = remain
+                
+            debug_file.write('%s;%s;%s\n' % (
+                line.order_id.name, default_code, remain)) # XXX DEBUG
+        
+        # result is the dicts!        
+        if remote:        
+            return remote_default_code # for hignlight both product
+        else:
+            return 
+
+
+        # Prepare data for report:            
+        for key in sorted(products):
+            res.append(products[key])
                 
         return res
                 
