@@ -104,15 +104,15 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------        
         product_ids = product_pool.search(self.cr, self.uid, [
             ('product_tmpl_id', 'in', product_tmpl_ids)])
-        debug_file.write('\nProduct ID record (prod>suppl) %s\n' % (
+        debug_file.write('\nProduct ID record (prod>suppl) %s' % (
             len(product_ids)))
             
         # Extend list:
         product_ids.extend(first_supplier_product_ids)
-        debug_file.write('\nProduct ID record (suppl) %s\n' % (
+        debug_file.write('\nProduct ID record (suppl) %s' % (
             len(first_supplier_product_ids)))
 
-        debug_file.write('\nProduct ID record totals %s\n' % (
+        debug_file.write('\nProduct ID record totals %s' % (
             len(product_ids)))
         
         if not product_ids:

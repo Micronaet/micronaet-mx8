@@ -218,11 +218,6 @@ class ResPartner(orm.Model):
                     # TODO check state of line??                    
                     default_code = line.product_id.default_code
                     if line.state == 'assigned': # virtual
-                        _logger.info('\nOF virtual: %s - %s [%s]\n' % (
-                            line.picking_id.name,
-                            default_code,
-                            line.product_uom_qty,
-                            ))
                         if default_code not in loads:
                             virtual_loads[default_code] = line.product_uom_qty
                         else:    
@@ -233,11 +228,6 @@ class ResPartner(orm.Model):
                             line.product_uom_qty)) # XXX DEBUG
 
                     elif line.state == 'done':
-                        _logger.info('OF load: %s - %s [%s]\n' % (
-                            line.picking_id.name,
-                            default_code,
-                            line.product_uom_qty,
-                            ))
                         if default_code not in loads:
                             loads[default_code] = line.product_uom_qty
                         else:    
