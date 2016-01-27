@@ -44,11 +44,17 @@ class Parser(report_sxw.rml_parse):
         self.localcontext.update({
             'get_object': self.get_object,
             'get_filter': self.get_filter
+            'get_date': self.get_date,
             
             # Utility:
             #'get_counter': self.get_counter,
             #'set_counter': self.set_counter,            
         })
+
+    def get_date(self, ):
+        ''' Get filter selected
+        '''
+        return datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def get_filter(self, data):
         ''' Get filter selected
