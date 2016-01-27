@@ -224,9 +224,8 @@ class Parser(report_sxw.rml_parse):
                     qty = line.product_uom_qty * fabric.product_qty
                 
                     if default_code not in products:
-                        _logger.error('No fabric in database')
                         debug_file.write(
-                            '%s;%s;%s;%s;%s;No BOM;\n' % (
+                            '%s;%s;%s;%s;%s;No fabric in product BOM;\n' % (
                                 pick.name,
                                 pick.origin,
                                 pick.date,
@@ -282,9 +281,8 @@ class Parser(report_sxw.rml_parse):
                 qty = line.product_uom_qty
                 
                 if default_code not in products:
-                    _logger.warning('No product/fabric in database')
                     debug_file.write(
-                        '%s;%s;%s;%s;%s;Not a fabric?\n' % (
+                        '%s;%s;%s;%s;%s;Product not fabric\n' % (
                             pick.name,
                             pick.origin,
                             pick.date,
@@ -369,7 +367,6 @@ class Parser(report_sxw.rml_parse):
                     continue
                 
                 if product_code not in boms:
-                    _logger.warning('No bom product')
                     debug_file.write(
                         '%s;%s;%s;%s;%s;NO BOM FOR PRODUCT (JUMP)!\n' % (
                             order.name,
@@ -385,6 +382,7 @@ class Parser(report_sxw.rml_parse):
                     default_code = fabric.product_id.default_code # XXX                 
                     if default_code not in products:
                         _logger.error('No product/fabric in database')
+                        # TODO create error on file!!
                         continue
                     qty = remain * fabric.product_qty
                     products[default_code][4][pos] -= qty # OC block
