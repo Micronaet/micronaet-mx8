@@ -38,7 +38,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-
 class Parser(report_sxw.rml_parse):
     counters = {}
     headers = {}
@@ -48,11 +47,7 @@ class Parser(report_sxw.rml_parse):
         self.localcontext.update({
             'get_object': self.get_object,
             'get_filter': self.get_filter
-            
-            # Utility:
-            #'get_counter': self.get_counter,
-            #'set_counter': self.set_counter,            
-        })
+            })
 
     def get_filter(self, data):
         ''' Get filter selected
@@ -102,7 +97,10 @@ class Parser(report_sxw.rml_parse):
                 #[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # SAL
                 product,
                 ]    
-      
+        
+        debug_file.write('\n\nProduct fabric selected:\n%s\n\n'% (
+            products.keys())) # XXX DEBUG
+
         # =====================================================================
         # Get parameters for search:
         # =====================================================================
@@ -113,8 +111,8 @@ class Parser(report_sxw.rml_parse):
             
         # Exclude partner list:
         exclude_partner_ids = []
-        for item in company_proxy.stock_explude_partner_ids:
-            exclude_partner_ids.append(item.id)
+        #for item in company_proxy.stock_explude_partner_ids:
+        #    exclude_partner_ids.append(item.id)
             
         # Append also this company partner (for inventory)    
         exclude_partner_ids.append(company_proxy.partner_id.id)
@@ -130,10 +128,16 @@ class Parser(report_sxw.rml_parse):
         # Load bom first:
         boms = {} # key default code
         # TODO Change filter_
+        debug_file.write('\n\nBOM list\n') # XXX DEBUG
+
         bom_ids = bom_pool.search(self.cr, self.uid, [
             ('sql_import', '=', True)])
         for bom in bom_pool.browse(self.cr, self.uid, bom_ids):
             boms[bom.product_id.default_code] = bom # theres' default_code?
+            debug_file.write('\nProduct: %s [%s]' % (
+                 bom.product_id.name,
+                 len(bom.bom_line_ids),
+                 )) # XXX DEBUG
 
         # =====================================================================
         # UNLOAD PICKING (CUSTOMER ORDER PICK OUT)
@@ -147,14 +151,16 @@ class Parser(report_sxw.rml_parse):
             # type pick filter   
             ('picking_type_id', 'in', out_picking_type_ids),
             # Partner exclusion
-            # TODO('partner_id', 'not in', exclude_partner_ids), 
+            ('partner_id', 'not in', exclude_partner_ids), # only company
+            
             # TODO check data date
             #('date', '>=', from_date), 
             #('date', '<=', to_date), 
             # TODO state filter
             ])
             
-        #debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n') # XXX DEBUG           
+        debug_file.write(
+            '\n\nUnload picking (order and delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # cols  (min_date?)
             for line in pick.move_lines:
@@ -181,9 +187,28 @@ class Parser(report_sxw.rml_parse):
                 
                     if default_code not in products:
                         _logger.error('No product/fabric in database')
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s;No BOM;\n' % (
+                                pick.name,
+                                pick.origin,
+                                pick.date,
+                                pos,
+                                default_code,                                
+                                ) # XXX DEBUG           
+                            )
+                        
                         continue                    
                     products[default_code][3][pos] -= qty # MM block
-                    
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;%s;\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            default_code,
+                            -qty,
+                            ) # XXX DEBUG           
+                        )
                 # TODO check state of line??
                     
                 #debug_file.write('\n%s;%s;%s;%s' % (
