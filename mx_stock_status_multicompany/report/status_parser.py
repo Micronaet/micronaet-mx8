@@ -43,8 +43,8 @@ class Parser(report_sxw.rml_parse):
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_object': self.get_object,
-            'get_filter': self.get_filter
             'get_date': self.get_date,
+            'get_filter': self.get_filter,
             
             # Utility:
             #'get_counter': self.get_counter,
