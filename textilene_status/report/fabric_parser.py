@@ -477,12 +477,15 @@ class Parser(report_sxw.rml_parse):
         res = []
         for key in sorted(products):            
             current = products[key] # readability:
-            total = 0.0
+            total = 0.0 # INV 0.0
+            inv_pos = 3
             for i in range(0, 12):
                 current[3][i] = round(current[3][i], 0)
                 current[4][i] = round(current[4][i], 0)
                 current[5][i] = round(current[5][i], 0)
                 
+                if i == inv_pos:
+                    total += rount(current[0], 0) # add inv.
                 total += round(
                     current[3][i] + current[4][i] + current[5][i], 0)
                 current[6][i] = total
