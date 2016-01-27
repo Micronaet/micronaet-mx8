@@ -68,7 +68,8 @@ class Parser(report_sxw.rml_parse):
             return month + 3    
             
         # XXX DEBUG:
-        debug_f = '/home/administrator/photo/xls/status.txt'
+        debug_f = '/home/administrator/photo/xls/textilene_status.txt'
+        debug_file = open(debug_f, 'w')
 
         # pool used:
         product_pool = self.pool.get('product.product')
@@ -84,7 +85,7 @@ class Parser(report_sxw.rml_parse):
                 self.cr, self.uid, product_ids):
             # TODO check fabric with selection?
             
-            res[products.default_code] = [
+            products[product.default_code] = [
                 # Reset counter for this product    
                 product.inventory_start, # inv
                 0.0, # tcar
@@ -99,9 +100,9 @@ class Parser(report_sxw.rml_parse):
         # Get parameters for search:
         # =====================================================================
         company_pool = self.pool.get('res.company')
-        company_ids = company_pool.search(cr, uid, [], context=context)
+        company_ids = company_pool.search(self.cr, self.uid, [])
         company_proxy = company_pool.browse(
-            cr, uid, company_ids, context=context)[0]
+            self.cr, self.uid, company_ids)[0]
             
         # Exclude partner list:
         exclude_partner_ids = []
@@ -122,35 +123,48 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         # UNLOAD PICKING (CUSTOMER ORDER PICK OUT)
         # =====================================================================
+        import pdb; pdb.set_trace()
         # Better with OC?
         out_picking_type_ids = []
         for item in company_proxy.stock_report_unload_ids:
             out_picking_type_ids.append(item.id)
             
-        pick_ids = pick_pool.search(cr, uid, [     
+        pick_ids = pick_pool.search(self.cr, self.uid, [     
             # type pick filter   
             ('picking_type_id', 'in', out_picking_type_ids),
             # Partner exclusion
-            ('partner_id', 'not in', exclude_partner_ids), 
+            # TODO('partner_id', 'not in', exclude_partner_ids), 
             # TODO check data date
             #('date', '>=', from_date), 
             #('date', '<=', to_date), 
             # TODO state filter
             ])
+            
         #debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n') # XXX DEBUG           
-        for pick in pick_pool.browse(cr, uid, pick_ids):
+        for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # cols  (min_date?)
             for line in pick.move_lines:
-                default_code = line.product_id.default_code                
-                if not line.report_bom_id: # Theres' fabric BOM
+                product_code = line.product_id.default_code
+                # ------------------
+                # check direct sale:
+                # ------------------
+                if product_code in products:
+                    products[default_code][3][pos] -= qty # MM block                    
+                
+                # ------------------
+                # check bom product:
+                # ------------------
+                bom = line.product_id.report_bom_id
+                if not bom: # Theres' fabric BOM
                     _logger.warning('No bom line')
                     continue
                     
-                if len(line.report_bom_id.bom_line_ids) != 1:
+                if len(bom.bom_line_ids) != 1:
                     _logger.error('BOM with more/no fabric')
                     continue
                               
-                fabric = line.report_bom_id.bom_line_ids[0]
+                fabric = bom.bom_line_ids[0]
+                default_code = fabric.product_id.default_code # XXX                
                 qty = line.product_uom_qty * fabric.product_qty
                 
                 if default_code not in products:
@@ -167,11 +181,12 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         # LOAD PICKING (CUSTOMER ORDER AND PICK IN )
         # =====================================================================
+        import pdb; pdb.set_trace()
         in_picking_type_ids = []
         for item in company_proxy.stock_report_load_ids:
             in_picking_type_ids.append(item.id)
             
-        pick_ids = pick_pool.search(cr, uid, [     
+        pick_ids = pick_pool.search(self.cr, self.uid, [     
             # type pick filter   
             ('picking_type_id', 'in', in_picking_type_ids),            
             # Partner exclusion
@@ -182,7 +197,7 @@ class Parser(report_sxw.rml_parse):
             # TODO state filter
             ])
         #debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n') # XXX DEBUG           
-        for pick in pick_pool.browse(cr, uid, pick_ids):
+        for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # for done cols  (min_date?)
             for line in pick.move_lines:
                 default_code = line.product_id.default_code                              
@@ -210,15 +225,16 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         # UNLOAD ORDER (NON DELIVERED)
         # =====================================================================
-        order_ids = sale_pool.search(cr, uid, [
+        import pdb; pdb.set_trace()
+        order_ids = sale_pool.search(self.cr, self.uid, [
             ('state', 'not in', ('cancel', 'send', 'draft')),
             ('pricelist_order', '=', False),
             # Also forecasted order
             # TODO filter date?            
             # TODO no partner exclusion
-            ], context=context)
+            ])
             
-        for order in sale_pool.browse(cr, uid, order_ids):
+        for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in pick.order_line:
                 default_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
@@ -236,14 +252,11 @@ class Parser(report_sxw.rml_parse):
                 # debug_file.write('%s;%s;%s\n' % (
                 #    line.order_id.name, default_code, remain)) # XXX DEBUG
 
-        # Prepare data for report:            
+        # Prepare data for report:     
+        res = []       
         for key in sorted(products):
             res.append(products[key])
                 
         return res
-                
-        #    raise osv.except_osv(
-        #        _('Report error'),
-        #        _('No data for this partner',
-        #        ))
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
