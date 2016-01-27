@@ -167,19 +167,16 @@ class Parser(report_sxw.rml_parse):
                     continue
                 
                 bom = boms[product_code]    
-                if len(bom.bom_line_ids) != 1:
-                    _logger.error('BOM with %s fabric' % len(bom.bom_line_ids))
-                    continue
-                              
-                fabric = bom.bom_line_ids[0]
-                default_code = fabric.product_id.default_code # XXX                
-                qty = line.product_uom_qty * fabric.product_qty
+                # Loop on all elements:
+                for fabric in bom.bom_line_ids:                                                  
+                    default_code = fabric.product_id.default_code # XXX                
+                    qty = line.product_uom_qty * fabric.product_qty
                 
-                if default_code not in products:
-                    _logger.error('No product/fabric in database')
-                    continue
+                    if default_code not in products:
+                        _logger.error('No product/fabric in database')
+                        continue                    
+                    products[default_code][3][pos] -= qty # MM block
                     
-                products[default_code][3][pos] -= qty # MM block
                 # TODO check state of line??
                     
                 #debug_file.write('\n%s;%s;%s;%s' % (
