@@ -160,7 +160,7 @@ class Parser(report_sxw.rml_parse):
             ])
             
         debug_file.write(
-            '\n\nUnload picking (order and delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
+            '\n\nUnload picking (only delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # cols  (min_date?)
             for line in pick.move_lines:                
@@ -258,13 +258,15 @@ class Parser(report_sxw.rml_parse):
             # type pick filter   
             ('picking_type_id', 'in', in_picking_type_ids),            
             # Partner exclusion
-            # TODO ('partner_id', 'not in', exclude_partner_ids),            
+            ('partner_id', 'not in', exclude_partner_ids),            
             # check data date
             #('date', '>=', from_date), # XXX correct for virtual?
             #('date', '<=', to_date),            
             # TODO state filter
             ])
-        #debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n') # XXX DEBUG           
+            
+        debug_file.write(
+            '\n\nLoad picking (order and delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # for done cols  (min_date?)
             for line in pick.move_lines:
@@ -273,22 +275,42 @@ class Parser(report_sxw.rml_parse):
                 
                 if default_code not in products:
                     _logger.warning('No product/fabric in database')
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;Not a fabric?\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            default_code,
+                            )) # XXX DEBUG           
                     continue
 
                 # Order not current delivered
                 if line.state == 'assigned': # virtual
                     pos = get_position_season(line.date_expected)
                     products[default_code][5][pos] += qty # MM block
-                    #debug_file.write('\nOF;%s;%s;%s;%s' % (
-                    #    pick.name, pick.origin, default_code, 
-                    #    line.product_uom_qty)) # XXX DEBUG
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;%s;OF\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            default_code,
+                            qty,
+                            )) # XXX DEBUG           
 
                 # Order delivered so picking
                 elif line.state == 'done':
                     products[default_code][3][pos] += qty # MM block
-                    #debug_file.write('\nBF;%s;%s;%s;%s' % (
-                    #    pick.name, pick.origin, default_code, 
-                    #    line.product_uom_qty)) # XXX DEBUG
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;%s;BF\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            default_code,
+                            qty,
+                            )) # XXX DEBUG           
         
         # =====================================================================
         # UNLOAD ORDER (NON DELIVERED)
