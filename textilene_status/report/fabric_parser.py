@@ -50,7 +50,7 @@ class Parser(report_sxw.rml_parse):
             'get_date': self.get_date,
             })
 
-    def get_date(self, data):
+    def get_date(self, ):
         ''' Get filter selected
         '''
         return datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
