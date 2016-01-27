@@ -405,7 +405,7 @@ class Parser(report_sxw.rml_parse):
             total = 0.0
             for i in range(0, 12):
                 total += current[3][i] + current[4][i] + current[5][i]                
-                current[6][i] = total
+                current[6][i] = int(total)
 
             # Append progress totals:
             res.append(current)
