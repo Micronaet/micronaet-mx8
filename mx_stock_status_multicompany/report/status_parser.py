@@ -122,7 +122,9 @@ class Parser(report_sxw.rml_parse):
             default_code = product.default_code
             products_code.append(product_mask % default_code)
             if default_code in products:
-                _logger.error('More than one default_code %s' % default_code)                
+                #_logger.error('More than one default_code %s' % default_code)                
+                # Jump bouble (TODO use sets not list!!!)
+                continue
             products[default_code] = product
 
         debug_file.write('\n\nProduct code searched in other DB\n') # XXX DEBUG
