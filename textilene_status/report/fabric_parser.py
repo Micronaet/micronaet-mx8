@@ -135,7 +135,7 @@ class Parser(report_sxw.rml_parse):
         for bom in bom_pool.browse(self.cr, self.uid, bom_ids):
             boms[bom.product_id.default_code] = bom # theres' default_code?
             debug_file.write('\nProduct: %s [%s]' % (
-                 bom.product_id.name,
+                 bom.product_id.default_code,
                  len(bom.bom_line_ids),
                  )) # XXX DEBUG
 
@@ -163,8 +163,20 @@ class Parser(report_sxw.rml_parse):
             '\n\nUnload picking (order and delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # cols  (min_date?)
-            for line in pick.move_lines:
+            for line in pick.move_lines:                
                 product_code = line.product_id.default_code
+                if line.state != 'done':
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;Not state confirmed (jumped);\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            default_code,                                
+                            ) # XXX DEBUG           
+                        )                        
+                    continue    
+                    
                 # ------------------
                 # check direct sale:
                 # ------------------
@@ -195,9 +207,9 @@ class Parser(report_sxw.rml_parse):
                                 pos,
                                 default_code,                                
                                 ) # XXX DEBUG           
-                            )
-                        
-                        continue                    
+                            )                        
+                        continue    
+                                        
                     products[default_code][3][pos] -= qty # MM block
                     debug_file.write(
                         '%s;%s;%s;%s;%s;%s;\n' % (
