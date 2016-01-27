@@ -172,7 +172,7 @@ class Parser(report_sxw.rml_parse):
                             pick.origin,
                             pick.date,
                             pos,
-                            default_code,                                
+                            product_code,                                
                             ) # XXX DEBUG           
                         )                        
                     continue    
