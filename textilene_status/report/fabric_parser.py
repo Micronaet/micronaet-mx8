@@ -72,6 +72,9 @@ class Parser(report_sxw.rml_parse):
 
         # pool used:
         product_pool = self.pool.get('product.product')
+        pick_pool = self.pool.get('stock.picking')
+        sale_pool = self.pool.get('sale.order')
+        
         product_ids = product_pool.search(self.cr, self.uid, [
             ('default_code', '=ilike', 'T%')])
 
@@ -204,44 +207,34 @@ class Parser(report_sxw.rml_parse):
                     #    pick.name, pick.origin, default_code, 
                     #    line.product_uom_qty)) # XXX DEBUG
         
-        # ---------------------------------------------------------------------
-        # Get order to delivery
-        # ---------------------------------------------------------------------
-        sol_ids = sol_pool.search(cr, uid, [
-            ('product_id', 'in', product_ids)])
+        # =====================================================================
+        # UNLOAD ORDER (NON DELIVERED)
+        # =====================================================================
+        order_ids = sale_pool.search(cr, uid, [
+            ('state', 'not in', ('cancel', 'send', 'draft')),
+            ('pricelist_order', '=', False),
+            # Also forecasted order
+            # TODO filter date?            
+            # TODO no partner exclusion
+            ], context=context)
             
-        debug_file.write('\n\nOrder remain:\nOrder;Code;Q.\n') # XXX DEBUG
-        for line in sol_pool.browse(cr, uid, sol_ids):
-            # -------
-            # Header:
-            # -------            
-            # check state:
-            if line.order_id.state in ('cancel', 'draft', 'sent'): #done?
-                continue
-            
-            # ------
-            # Lines:
-            # ------            
-            # Check delivered:
-            remain = line.product_uom_qty - line.delivered_qty
-            if remain <= 0.0:
-                continue
-            
-            default_code = line.product_id.default_code
-            if default_code in orders:
-                orders[default_code] += remain
-            else:
-                orders[default_code] = remain
+        for order in sale_pool.browse(cr, uid, order_ids):
+            for line in pick.order_line:
+                default_code = line.product_id.default_code                              
+                remain = line.product_uom_qty - line.delivered_qty
+                if remain <=0: 
+                    continue # delivered (so in pick out)
+                # TODO check production?
                 
-            debug_file.write('%s;%s;%s\n' % (
-                line.order_id.name, default_code, remain)) # XXX DEBUG
-        
-        # result is the dicts!        
-        if remote:        
-            return remote_default_code # for hignlight both product
-        else:
-            return 
+                if default_code not in products:
+                    _logger.error('No product/fabric in database')
+                    continue
 
+                # Order not current delivered
+                pos = get_position_season(line.date_deadline)
+                products[default_code][4][pos] += qty # MM block
+                # debug_file.write('%s;%s;%s\n' % (
+                #    line.order_id.name, default_code, remain)) # XXX DEBUG
 
         # Prepare data for report:            
         for key in sorted(products):
