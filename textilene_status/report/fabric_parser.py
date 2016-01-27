@@ -326,6 +326,7 @@ class Parser(report_sxw.rml_parse):
         order_ids = sale_pool.search(self.cr, self.uid, [
             ('state', 'not in', ('cancel', 'send', 'draft')),
             ('pricelist_order', '=', False),
+            ('partner_id', 'not in', exclude_partner_ids),            
             # Also forecasted order
             # TODO filter date?            
             # TODO no partner exclusion
