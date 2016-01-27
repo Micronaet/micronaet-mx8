@@ -125,14 +125,13 @@ class Parser(report_sxw.rml_parse):
         boms = {} # key default code
         # TODO Change filter_
         bom_ids = bom_pool.search(self.cr, self.uid, [
-            ('sql_import', '=', True])
+            ('sql_import', '=', True)])
         for bom in bom_pool.browse(self.cr, self.uid, bom_ids):
             boms[bom.product_id.default_code] = bom # theres' default_code?
 
         # =====================================================================
         # UNLOAD PICKING (CUSTOMER ORDER PICK OUT)
         # =====================================================================
-        import pdb; pdb.set_trace()
         # Better with OC?
         out_picking_type_ids = []
         for item in company_proxy.stock_report_unload_ids:
@@ -169,7 +168,7 @@ class Parser(report_sxw.rml_parse):
                 
                 bom = boms[product_code]    
                 if len(bom.bom_line_ids) != 1:
-                    _logger.error('BOM with more/no fabric')
+                    _logger.error('BOM with %s fabric' % len(bom.bom_line_ids))
                     continue
                               
                 fabric = bom.bom_line_ids[0]
