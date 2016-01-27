@@ -30,6 +30,7 @@ from datetime import datetime
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from openerp.tools.translate import _
+from openerp.osv import fields, osv, expression, orm
 
 _logger = logging.getLogger(__name__)
 
