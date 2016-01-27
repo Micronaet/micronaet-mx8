@@ -72,7 +72,7 @@ class Parser(report_sxw.rml_parse):
             ('name', '=', partner_id)])           
 
         # ---------------------------------------------------------------------
-        # Get template product supplier by partner
+        # A. Get template product supplier by partner (supplier under product)
         # ---------------------------------------------------------------------
         # XXX DEBUG:
         debug_f = '/home/administrator/photo/xls/status.txt'
@@ -87,20 +87,32 @@ class Parser(report_sxw.rml_parse):
                 company_proxy = supplier.name.company_id
             product_tmpl_ids.append(supplier.product_tmpl_id.id)        
         
-        if not product_tmpl_ids:
-            raise osv.except_osv(
-                _('Report error'),
-                _('No data for this partner',
-                ))
+        debug_file.write('\nTemplate selected:\n%s\n' % (product_tmpl_ids)) # XXX DEBUG
 
-        debug_file.write('\nTemplate selected:\n') # XXX DEBUG
-        debug_file.write('%s' % (product_tmpl_ids)) # XXX DEBUG
-        
+        # ---------------------------------------------------------------------
+        # B. Get product supplier by partner (field: first_supplier_id
+        # ---------------------------------------------------------------------
+        first_supplier_product_ids = product.search(self.cr, self.uid, [
+            ('first_supplier_id', '=', partner_id)])
+            
+        debug_file.write('\nFirst supplier product:\n%s\n' % (
+            first_supplier_product_ids)) # XXX DEBUG
+
         # ---------------------------------------------------------------------
         # Get product form template:
         # ---------------------------------------------------------------------        
         product_ids = product_pool.search(self.cr, self.uid, [
             ('product_tmpl_id', 'in', product_tmpl_ids)])
+            
+        # Extend list:
+        product_ids.extend(first_supplier_product_ids)
+        
+        if not product_ids:
+            raise osv.except_osv(
+                _('Report error'),
+                _('No data for this partner (no first suppl. or in product)',
+                ))
+
         products = {}
         product_mask = company_proxy.product_mask or ''
         products_code = [] # For search in other database
