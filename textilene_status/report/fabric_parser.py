@@ -403,7 +403,9 @@ class Parser(report_sxw.rml_parse):
         # Prepare data for report:     
         res = []
         for key in sorted(products):
-            res.append(products[key])
+            current = products[key]
+            current.append([])
+            res.append()
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

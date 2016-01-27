@@ -60,17 +60,13 @@ class Parser(report_sxw.rml_parse):
         ''' Search all product elements
         '''
         # pool used:
-        users_pool = self.pool.get('res.users')
-        users_proxy = users_pool.browse(self.cr, self.uid, self.uid) 
-        company_proxy = users_proxy.company_id
-        
         company_pool = self.pool.get('res.company')
         partner_pool = self.pool.get('res.partner')
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
 
-        #company_ids = company_pool.search(self.cr, self.uid, [])
-        #company_proxy = company_pool.browse(self.cr, self.uid, company_ids)[0]
+        company_ids = company_pool.search(self.cr, self.uid, [])
+        company_proxy = company_pool.browse(self.cr, self.uid, company_ids)[0]
         
         # ---------------------------------------------------------------------
         # Search partner in supplier info:
@@ -87,7 +83,6 @@ class Parser(report_sxw.rml_parse):
         pickle_file = '/home/administrator/photo/dicts.pickle' # TODO
         debug_file = open(debug_f, 'w')
 
-        company_proxy = False
         product_tmpl_ids = []
         for supplier in supplier_pool.browse(
                 self.cr, self.uid, supplierinfo_ids):
