@@ -323,6 +323,8 @@ class Parser(report_sxw.rml_parse):
             # TODO no partner exclusion
             ])
             
+        debug_file.write(
+            '\n\nOrder:\nOrder;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
                 # FC order no deadline (use date)
@@ -334,16 +336,39 @@ class Parser(report_sxw.rml_parse):
                 product_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
                 if remain <=0: 
+                    debug_file.write(
+                        '%s;%s;%s;%s;ALL DELIVERED!\n' % (
+                            order.name,
+                            order.date_deadline or order.date_order,
+                            pos,
+                            product_code,
+                            )) # XXX DEBUG           
                     continue # delivered (so in pick out)
                 # TODO check production?
                 
                 # Check for fabric order:
-                if product_code in products: # sale fabric:
+                if product_code in products: # order fabric:
                     products[product_code][4][pos] += remain # OC block
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;ORDER FABRIC!\n' % (
+                            order.name,
+                            order.date_deadline or order.date_order,
+                            pos,
+                            product_code,
+                            remain,
+                            )) # XXX DEBUG           
                     continue
                 
                 if product_code not in boms:
                     _logger.warning('No bom product')
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;NO BOM FOR PRODUCT (JUMP)!\n' % (
+                            order.name,
+                            order.date_deadline or order.date_order,
+                            pos,
+                            product_code,
+                            remain,
+                            )) # XXX DEBUG           
                     continue
                 
                 # Loop on all elements:
@@ -355,8 +380,16 @@ class Parser(report_sxw.rml_parse):
                     qty = remain * fabric.product_qty
                     products[default_code][4][pos] -= qty # OC block
 
-                # debug_file.write('%s;%s;%s\n' % (
-                #    line.order_id.name, default_code, remain)) # XXX DEBUG
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s x %s = %s;\n' % (
+                            order.name,
+                            order.date_deadline or order.date_order,
+                            pos,
+                            default_code,
+                            fabric.product_qty,
+                            qty,
+                            remain,
+                            )) # XXX DEBUG
 
         # Prepare data for report:     
         res = []
