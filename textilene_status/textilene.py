@@ -56,7 +56,8 @@ class ProductProduct(orm.Model):
         # All 'in report' bom for product passed
         mrp_ids = mrp_pool.search(cr, uid, [
             ('product_id', 'in', ids),
-            ('in_report', '=', True),
+            ('sql_import', '=', True), # TODO change!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            #('in_report', '=', True),
             ], context=context)
             
         # TODO problem if bom use template!!!!
