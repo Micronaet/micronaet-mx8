@@ -104,9 +104,16 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------        
         product_ids = product_pool.search(self.cr, self.uid, [
             ('product_tmpl_id', 'in', product_tmpl_ids)])
+        debug_file.write('\nProduct ID record (prod>suppl) %s\n' % (
+            len(product_ids)))
             
         # Extend list:
         product_ids.extend(first_supplier_product_ids)
+        debug_file.write('\nProduct ID record (suppl) %s\n' % (
+            len(first_supplier_product_ids)))
+
+        debug_file.write('\nProduct ID record totals %s\n' % (
+            len(product_ids)))
         
         if not product_ids:
             raise osv.except_osv(
@@ -118,19 +125,24 @@ class Parser(report_sxw.rml_parse):
         product_mask = company_proxy.product_mask or ''
         products_code = [] # For search in other database
 
+        clean_product_ids = []
         for product in product_pool.browse(self.cr, self.uid, product_ids):                
             default_code = product.default_code
             products_code.append(product_mask % default_code)
             if default_code in products:
-                #_logger.error('More than one default_code %s' % default_code)                
                 # Jump bouble (TODO use sets not list!!!)
                 continue
             products[default_code] = product
+            clean_product_ids.append(product.id)
+            
+        product_ids = clean_product_ids # TODO not so clean ... use sets!!!
+        debug_file.write('\nProduct ID record cleaned %s\n' % (
+            len(product_ids)))
 
-        debug_file.write('\n\nProduct code searched in other DB\n') # XXX DEBUG
-        debug_file.write('%s' % (products_code, )) # XXX DEBUG
-        debug_file.write('\n\nProduct selected:\n') # XXX DEBUG
-        debug_file.write('%s' % (product_ids,)) # XXX DEBUG
+        debug_file.write('\n\nProduct code searched in other DB\n%s' % (
+            products_code, )) # XXX DEBUG
+        debug_file.write('\n\nProduct selected:\n%s' % (
+            product_ids,)) # XXX DEBUG
         
         # ----------------------
         # Call master procedure:
