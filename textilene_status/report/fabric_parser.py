@@ -100,6 +100,7 @@ class Parser(report_sxw.rml_parse):
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # OC
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # OF
                 #[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # SAL
+                product,
                 ]    
       
         # =====================================================================
@@ -279,10 +280,9 @@ class Parser(report_sxw.rml_parse):
                 #    line.order_id.name, default_code, remain)) # XXX DEBUG
 
         # Prepare data for report:     
-        res = []       
+        res = []
         for key in sorted(products):
             res.append(products[key])
-                
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
