@@ -24,6 +24,39 @@
             </field>
         </record>
                 
+        <record model="ir.ui.view" id="view_in_report_product_normal_report_enable_tree_view">
+            <field name="name">product.product.in_report.tree</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree string="Report for material" editable="bottom">                    
+                    <field name="not_in_report" />
+                    <field name="default_code" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <!--<field name="product_uom" readonly="1"/>-->
+                </tree>    
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_product_in_report">
+            <field name="name">Product in report</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_in_report_product_normal_report_enable_tree_view"/>
+            <field name="context">{}</field>
+            <field name="domain">[('default_code', '=ilike', 'T%%')]</field>
+        </record>
+
+        <menuitem 
+            parent="base.menu_sales" 
+            id="menu_report_fabric_wizard" 
+            action="action_product_product_fabric_report_wizard"
+            />
+            <menuitem 
+                parent="menu_report_fabric_wizard" 
+                id="menu_report_fabric_choose_in_report" 
+                action="action_product_in_report"
+                />
+        
         <!--<record model="ir.ui.view" id="view_in_report_mrp_bom_form_view">
             <field name="name">mrp.bom.report.form</field>
             <field name="model">mrp.bom</field>
