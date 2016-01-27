@@ -75,6 +75,7 @@ class Parser(report_sxw.rml_parse):
         product_pool = self.pool.get('product.product')
         pick_pool = self.pool.get('stock.picking')
         sale_pool = self.pool.get('sale.order')
+        bom_pool = self.pool.get('mrp.bom')
         
         product_ids = product_pool.search(self.cr, self.uid, [
             ('default_code', '=ilike', 'T%')])
@@ -120,6 +121,14 @@ class Parser(report_sxw.rml_parse):
         debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
             exclude_partner_ids,)) # XXX DEBUG
 
+        # Load bom first:
+        boms = {} # key default code
+        # TODO Change filter_
+        bom_ids = bom_pool.search(self.cr, self.uid, [
+            ('sql_import', '=', True])
+        for bom in bom_pool.browse(self.cr, self.uid, bom_ids):
+            boms[bom.product_id.default_code] = bom # theres' default_code?
+
         # =====================================================================
         # UNLOAD PICKING (CUSTOMER ORDER PICK OUT)
         # =====================================================================
@@ -154,11 +163,11 @@ class Parser(report_sxw.rml_parse):
                 # ------------------
                 # check bom product:
                 # ------------------
-                bom = line.product_id.report_bom_id
-                if not bom: # Theres' fabric BOM
+                if product_code not in boms:
                     _logger.warning('No bom line')
                     continue
-                    
+                
+                bom = boms[product_code]    
                 if len(bom.bom_line_ids) != 1:
                     _logger.error('BOM with more/no fabric')
                     continue
