@@ -60,9 +60,13 @@ class Parser(report_sxw.rml_parse):
         ''' Search all product elements
         '''
         # pool used:
+        company_pool = self.pool.get('res.company')
         partner_pool = self.pool.get('res.partner')
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
+
+        company_id = company_pool.search(self.cr, self.uid, [])[0]
+        company_proxy = company_pool.browse(self.cr, self.uid, company_id)
         
         # ---------------------------------------------------------------------
         # Search partner in supplier info:
@@ -83,9 +87,7 @@ class Parser(report_sxw.rml_parse):
         product_tmpl_ids = []
         for supplier in supplier_pool.browse(
                 self.cr, self.uid, supplierinfo_ids):
-            if not company_proxy:
-                company_proxy = supplier.name.company_id
-            product_tmpl_ids.append(supplier.product_tmpl_id.id)        
+            product_tmpl_ids.append(supplier.product_tmpl_id.id) 
         
         debug_file.write('\nTemplate selected:\n%s\n' % (product_tmpl_ids)) # XXX DEBUG
 
