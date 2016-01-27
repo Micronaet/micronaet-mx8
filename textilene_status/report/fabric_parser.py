@@ -102,7 +102,7 @@ class Parser(report_sxw.rml_parse):
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # MM
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # OC
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # OF
-                #[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # SAL
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # SAL
                 product,
                 ]    
         
@@ -402,9 +402,14 @@ class Parser(report_sxw.rml_parse):
 
         # Prepare data for report:     
         res = []
-        for key in sorted(products):
-            current = products[key]
-            current.append([])
+        for key in sorted(products):            
+            current = products[key] # readability:
+            total = 0.0
+            for i in range(0, 12):
+                total += current[3][i] + current[4][i] + current[5][i]                
+                current[6][i] = total
+
+            # Append progress totals:
             res.append()
         return res
 
