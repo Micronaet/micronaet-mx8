@@ -30,6 +30,11 @@ from datetime import datetime
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from openerp.tools.translate import _
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
+    DEFAULT_SERVER_DATETIME_FORMAT, 
+    DATETIME_FORMATS_MAP, 
+    float_compare)
+
 
 _logger = logging.getLogger(__name__)
 
@@ -230,7 +235,6 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         # UNLOAD ORDER (NON DELIVERED)
         # =====================================================================
-        import pdb; pdb.set_trace()
         order_ids = sale_pool.search(self.cr, self.uid, [
             ('state', 'not in', ('cancel', 'send', 'draft')),
             ('pricelist_order', '=', False),
@@ -239,9 +243,15 @@ class Parser(report_sxw.rml_parse):
             # TODO no partner exclusion
             ])
             
+        import pdb; pdb.set_trace()
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
-                pos = get_position_season(line.date_deadline)                
+                # FC order no deadline (use date)
+                pos = get_position_season(
+                    line.date_deadline or order.date_order)
+                    #datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)) 
+                # TODO manage forecast order ...     
+
                 product_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
                 if remain <=0: 
