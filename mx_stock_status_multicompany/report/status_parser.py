@@ -92,7 +92,7 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         # B. Get product supplier by partner (field: first_supplier_id
         # ---------------------------------------------------------------------
-        first_supplier_product_ids = product.search(self.cr, self.uid, [
+        first_supplier_product_ids = product_pool.search(self.cr, self.uid, [
             ('first_supplier_id', '=', partner_id)])
             
         debug_file.write('\nFirst supplier product:\n%s\n' % (
