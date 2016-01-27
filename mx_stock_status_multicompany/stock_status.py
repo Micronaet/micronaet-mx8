@@ -175,8 +175,8 @@ class ResPartner(orm.Model):
             # Partner exclusion
             ('partner_id', 'not in', exclude_partner_ids), 
             # TODO check data date
-            ('date', '>=', from_date), 
-            ('date', '<=', to_date), 
+            #('date', '>=', from_date), 
+            #('date', '<=', to_date), 
             # TODO state filter
             ])
         debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n') # XXX DEBUG           
@@ -195,7 +195,7 @@ class ResPartner(orm.Model):
                         line.product_uom_qty)) # XXX DEBUG
 
         # ---------------------------------------------------------------------
-        # Get unload picking
+        # Get load picking
         # ---------------------------------------------------------------------
         in_picking_type_ids = []
         for item in company_proxy.stock_report_load_ids:
@@ -207,8 +207,8 @@ class ResPartner(orm.Model):
             # Partner exclusion
             ('partner_id', 'not in', exclude_partner_ids),            
             # check data date
-            ('date', '>=', from_date), # XXX correct for virtual?
-            ('date', '<=', to_date),            
+            #('date', '>=', from_date), # XXX correct for virtual?
+            #('date', '<=', to_date),            
             # TODO state filter
             ])
         debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n') # XXX DEBUG           
