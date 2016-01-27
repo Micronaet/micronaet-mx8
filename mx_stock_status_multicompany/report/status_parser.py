@@ -65,8 +65,8 @@ class Parser(report_sxw.rml_parse):
         product_pool = self.pool.get('product.product')
         supplier_pool = self.pool.get('product.supplierinfo')
 
-        company_id = company_pool.search(self.cr, self.uid, [])[0]
-        company_proxy = company_pool.browse(self.cr, self.uid, company_id)
+        company_ids = company_pool.search(self.cr, self.uid, [])
+        company_proxy = company_pool.browse(self.cr, self.uid, company_ids)
         
         # ---------------------------------------------------------------------
         # Search partner in supplier info:
