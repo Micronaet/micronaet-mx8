@@ -84,7 +84,9 @@ class Parser(report_sxw.rml_parse):
         bom_pool = self.pool.get('mrp.bom')
         
         product_ids = product_pool.search(self.cr, self.uid, [
-            ('default_code', '=ilike', 'T%')])
+            ('default_code', '=ilike', 'T%'),
+            ('not_in_report', '=', False),
+            ])
 
         products = {}
         moved = [] # TODO used?
