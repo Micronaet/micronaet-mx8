@@ -182,13 +182,31 @@ class Parser(report_sxw.rml_parse):
                 # ------------------
                 if product_code in products:
                     products[default_code][3][pos] -= qty # MM block  
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;%s;Direct sale of fabrics\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            product_code,
+                            qty,                      
+                            ) # XXX DEBUG           
+                        )                        
                     continue                  
                 
                 # ------------------
                 # check bom product:
                 # ------------------
                 if product_code not in boms:
-                    _logger.warning('No bom product')
+                    debug_file.write(
+                        '%s;%s;%s;%s;%s;No BOM product (jumped);\n' % (
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            product_code,                                
+                            ) # XXX DEBUG           
+                        )                        
                     continue
                 
                 bom = boms[product_code]
