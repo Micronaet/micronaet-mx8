@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
                 <field name="active" position="after">
-                    <field name="in_report" />
-                    <field name="report_bom_id" attrs="{'invisible': [('in_report','=',True)]}" readonly="1"/>
+                    <field name="not_in_report" />
+                    <!--<field name="report_bom_id" attrs="{'invisible': [('in_report','=',True)]}" readonly="1"/>-->
                 </field>
             </field>
         </record>
@@ -19,12 +19,12 @@
             <field name="inherit_id" ref="product.product_product_tree_view" />
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="in_report" />
+                    <field name="not_in_report" />
                 </field>
             </field>
         </record>
                 
-        <record model="ir.ui.view" id="view_in_report_mrp_bom_form_view">
+        <!--<record model="ir.ui.view" id="view_in_report_mrp_bom_form_view">
             <field name="name">mrp.bom.report.form</field>
             <field name="model">mrp.bom</field>
             <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
@@ -36,7 +36,7 @@
                     <field name="in_report" string="Rpt." readonly="1"/>
                 </xpath>
             </field>
-        </record>
+        </record>-->
     </data>
 </openerp>
 

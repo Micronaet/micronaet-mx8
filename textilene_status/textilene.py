@@ -70,6 +70,10 @@ class ProductProduct(orm.Model):
         return res
         
     _columns = {
+        'not_in_report': fields.boolean('Not in report',
+            help='Material that start with T but don\'t need to be track'
+                'for textylene material'),
+                
         # Raw material:
         'in_report': fields.boolean('In report',
             help='Material that need to be track in report status, used'
