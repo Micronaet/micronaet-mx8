@@ -243,7 +243,6 @@ class Parser(report_sxw.rml_parse):
             # TODO no partner exclusion
             ])
             
-        import pdb; pdb.set_trace()
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
                 # FC order no deadline (use date)
