@@ -410,7 +410,7 @@ class Parser(report_sxw.rml_parse):
                 current[6][i] = total
 
             # Append progress totals:
-            res.append()
+            res.append(current)
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
