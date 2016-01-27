@@ -157,7 +157,8 @@ class Parser(report_sxw.rml_parse):
                 # check direct sale:
                 # ------------------
                 if product_code in products:
-                    products[default_code][3][pos] -= qty # MM block                    
+                    products[default_code][3][pos] -= qty # MM block  
+                    continue                  
                 
                 # ------------------
                 # check bom product:
@@ -166,7 +167,7 @@ class Parser(report_sxw.rml_parse):
                     _logger.warning('No bom product')
                     continue
                 
-                bom = boms[product_code]    
+                bom = boms[product_code]
                 # Loop on all elements:
                 for fabric in bom.bom_line_ids:                                                  
                     default_code = fabric.product_id.default_code # XXX                
@@ -240,19 +241,31 @@ class Parser(report_sxw.rml_parse):
             
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
-                default_code = line.product_id.default_code                              
+                pos = get_position_season(line.date_deadline)                
+                product_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
                 if remain <=0: 
                     continue # delivered (so in pick out)
                 # TODO check production?
                 
-                if default_code not in products:
-                    _logger.error('No product/fabric in database')
+                # Check for fabric order:
+                if product_code in products: # sale fabric:
+                    products[product_code][4][pos] += remain # OC block
                     continue
+                
+                if product_code not in boms:
+                    _logger.warning('No bom product')
+                    continue
+                
+                # Loop on all elements:
+                for fabric in boms[product_code].bom_line_ids:                                                  
+                    default_code = fabric.product_id.default_code # XXX                 
+                    if default_code not in products:
+                        _logger.error('No product/fabric in database')
+                        continue
+                    qty = remain * fabric.product_qty
+                    products[default_code][4][pos] -= qty # OC block
 
-                # Order not current delivered
-                pos = get_position_season(line.date_deadline)
-                products[default_code][4][pos] += qty # MM block
                 # debug_file.write('%s;%s;%s\n' % (
                 #    line.order_id.name, default_code, remain)) # XXX DEBUG
 
