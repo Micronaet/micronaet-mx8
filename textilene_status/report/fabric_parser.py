@@ -83,13 +83,13 @@ class Parser(report_sxw.rml_parse):
             
             res[products.default_code] = [
                 # Reset counter for this product    
-                inv = product.inventory_start # LOADED!
-                tcar = 0.0
-                tscar = 0.0
-                mm =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
-                oc =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
-                of =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
-                #sal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    
+                product.inventory_start, # inv
+                0.0, # tcar
+                0.0, # tscar
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # MM
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # OC
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # OF
+                #[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # SAL
                 ]    
       
         # =====================================================================
