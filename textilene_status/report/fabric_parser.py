@@ -126,7 +126,16 @@ class Parser(report_sxw.rml_parse):
         exclude_partner_ids.append(company_proxy.partner_id.id)
         
         # From date:
-        # TODO limit orders:
+        # Period range for documents
+        month = datetime.now().month
+        year = datetime.now().year
+        if month >= 9:
+            period_from = '%s-09-01' % year
+            period_to = '%s-08-31' % (year + 1)
+        else:
+            period_from = '%s-09-01' % (year - 1)
+            period_to = '%s-08-31' % year
+            
         #from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
         #to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
 
@@ -171,6 +180,7 @@ class Parser(report_sxw.rml_parse):
             '\n\nUnload picking (only delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # cols  (min_date?)
+            # TODO no check for period range
             for line in pick.move_lines:                
                 product_code = line.product_id.default_code
                 if line.state != 'done':
@@ -293,6 +303,29 @@ class Parser(report_sxw.rml_parse):
 
                 # Order not current delivered
                 if line.state == 'assigned': # virtual
+                    # USE deadline data:
+                    # Before check date:
+                    if line.date_expected > period_to: # over range
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s;ERROR OVER RANGE (JUMP)\n' % (
+                                pick.name,
+                                pick.origin,
+                                line.date_expected,
+                                default_code,
+                                qty,
+                                )) # XXX DEBUG           
+                        continue
+                    if line.date_expected < period_from: # under range
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s;ERROR UNDER RANGE (JUMP)\n' % (
+                                pick.name,
+                                pick.origin,
+                                line.date_expected,
+                                default_code,
+                                qty,
+                                )) # XXX DEBUG           
+                        continue
+                                            
                     pos = get_position_season(line.date_expected)
                     products[default_code][5][pos] += qty # MM block
                     debug_file.write(
@@ -307,6 +340,28 @@ class Parser(report_sxw.rml_parse):
 
                 # Order delivered so picking
                 elif line.state == 'done':
+                    # USE order data:
+                    if pick.date > period_to: # over range
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s;ERROR OVER RANGE (JUMP)\n' % (
+                                pick.name,
+                                pick.origin,
+                                line.date_expected,
+                                default_code,
+                                qty,
+                                )) # XXX DEBUG           
+                        continue
+                    if pick.date < period_from: # under range
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s;ERROR UNDER RANGE (JUMP)\n' % (
+                                pick.name,
+                                pick.origin,
+                                line.date_expected,
+                                default_code,
+                                qty,
+                                )) # XXX DEBUG           
+                        continue
+                    
                     products[default_code][3][pos] += qty # MM block
                     debug_file.write(
                         '%s;%s;%s;%s;%s;%s;BF\n' % (
@@ -335,31 +390,51 @@ class Parser(report_sxw.rml_parse):
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
                 # FC order no deadline (use date)
-                pos = get_position_season(
-                    line.date_deadline or order.date_order)
+                date = line.date_deadline or order.date_order
+                pos = get_position_season(date)
                     #datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)) 
                 # TODO manage forecast order ...     
 
                 product_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
-                if remain <=0: 
+                if remain <=0:
                     debug_file.write(
                         '%s;%s;%s;%s;ALL DELIVERED!\n' % (
                             order.name,
-                            order.date_deadline or order.date_order,
+                            date,
                             pos,
                             product_code,
                             )) # XXX DEBUG           
                     continue # delivered (so in pick out)
                 # TODO check production?
-                
+            
+                # USE order data:
+                if date > period_to: # over range
+                    debug_file.write(
+                        '%s;%s;%s;%s;ERROR OVER RANGE (JUMP)\n' % (
+                            order.name,
+                            date,
+                            default_code,
+                            remain,
+                            )) # XXX DEBUG           
+                    continue
+                if date < period_from: # under range
+                    debug_file.write(
+                        '%s;%s;%s;%s;ERROR UNDER RANGE (JUMP)\n' % (
+                            order.name,
+                            date,
+                            default_code,
+                            remain,
+                            )) # XXX DEBUG           
+                    continue
+
                 # Check for fabric order:
                 if product_code in products: # order fabric:
                     products[product_code][4][pos] += remain # OC block
                     debug_file.write(
                         '%s;%s;%s;%s;%s;ORDER FABRIC!\n' % (
                             order.name,
-                            order.date_deadline or order.date_order,
+                            date,
                             pos,
                             product_code,
                             remain,
@@ -370,7 +445,7 @@ class Parser(report_sxw.rml_parse):
                     debug_file.write(
                         '%s;%s;%s;%s;%s;NO BOM FOR PRODUCT (JUMP)!\n' % (
                             order.name,
-                            order.date_deadline or order.date_order,
+                            date,
                             pos,
                             product_code,
                             remain,
@@ -390,7 +465,7 @@ class Parser(report_sxw.rml_parse):
                     debug_file.write(
                         '%s;%s;%s;%s;%s x %s = %s;\n' % (
                             order.name,
-                            order.date_deadline or order.date_order,
+                            date,
                             pos,
                             default_code,
                             fabric.product_qty,
