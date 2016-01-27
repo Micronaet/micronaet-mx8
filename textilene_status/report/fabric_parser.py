@@ -163,7 +163,7 @@ class Parser(report_sxw.rml_parse):
                 # check bom product:
                 # ------------------
                 if product_code not in boms:
-                    _logger.warning('No bom line')
+                    _logger.warning('No bom product')
                     continue
                 
                 bom = boms[product_code]    
@@ -186,7 +186,6 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         # LOAD PICKING (CUSTOMER ORDER AND PICK IN )
         # =====================================================================
-        import pdb; pdb.set_trace()
         in_picking_type_ids = []
         for item in company_proxy.stock_report_load_ids:
             in_picking_type_ids.append(item.id)
@@ -195,7 +194,7 @@ class Parser(report_sxw.rml_parse):
             # type pick filter   
             ('picking_type_id', 'in', in_picking_type_ids),            
             # Partner exclusion
-            ('partner_id', 'not in', exclude_partner_ids),            
+            # TODO ('partner_id', 'not in', exclude_partner_ids),            
             # check data date
             #('date', '>=', from_date), # XXX correct for virtual?
             #('date', '<=', to_date),            
@@ -209,7 +208,7 @@ class Parser(report_sxw.rml_parse):
                 qty = line.product_uom_qty
                 
                 if default_code not in products:
-                    _logger.error('No product/fabric in database')
+                    _logger.warning('No product/fabric in database')
                     continue
 
                 # Order not current delivered
@@ -240,7 +239,7 @@ class Parser(report_sxw.rml_parse):
             ])
             
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
-            for line in pick.order_line:
+            for line in order.order_line:
                 default_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
                 if remain <=0: 
