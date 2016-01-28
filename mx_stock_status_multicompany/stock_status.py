@@ -218,7 +218,13 @@ class ResPartner(orm.Model):
                     # TODO check state of line??                    
                     default_code = line.product_id.default_code
                     if line.state == 'assigned': # virtual
+                        # Bug discovered: # TODO remove this log
                         if default_code not in loads:
+                            debug_file.write('\nBUG!!!!!!!;%s;%s;%s;%s' % (
+                                pick.name, pick.origin, default_code, 
+                                line.product_uom_qty)) # XXX DEBUG                                
+                        
+                        if default_code not in virtual_loads:
                             virtual_loads[default_code] = line.product_uom_qty
                         else:    
                             virtual_loads[default_code] += line.product_uom_qty

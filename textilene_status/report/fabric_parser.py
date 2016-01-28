@@ -105,7 +105,7 @@ class Parser(report_sxw.rml_parse):
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # SAL
                 product,
                 ]    
-        
+
         debug_file.write('\n\nProduct fabric selected:\n%s\n\n'% (
             products.keys())) # XXX DEBUG
 
