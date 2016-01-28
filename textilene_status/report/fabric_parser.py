@@ -481,15 +481,15 @@ class Parser(report_sxw.rml_parse):
             # NOTE: INV now is 31/12 next put Sept.
             inv_pos = 3 # December
             for i in range(0, 12):
-                current[3][i] = round(current[3][i], 0)
-                current[4][i] = round(current[4][i], 0)
-                current[5][i] = round(current[5][i], 0)
+                current[3][i] = int(round(current[3][i], 0))
+                current[4][i] = int(round(current[4][i], 0))
+                current[5][i] = int(round(current[5][i], 0))
                 
                 if i == inv_pos:
                     total += round(current[0], 0) # add inv.
                 total += round(
                     current[3][i] + current[4][i] + current[5][i], 0)
-                current[6][i] = total
+                current[6][i] = int(total)
 
             # Append progress totals:
             res.append(current)
