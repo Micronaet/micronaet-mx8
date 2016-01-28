@@ -94,7 +94,7 @@ class SaleOderLine(orm.Model):
     def add_object_element(self, cr, uid, context=None):
         """ Add object element for sale order (and line)
         """
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         object_list = self._columns['object']
         element = ('sale.order', 'Sale Order')
         if element not in object_list:
