@@ -478,7 +478,7 @@ class Parser(report_sxw.rml_parse):
         for key in sorted(products):            
             current = products[key] # readability:
             total = 0.0 # INV 0.0
-            current[0] = 0.0 # XXX reset inventory (updated in dec. position)
+            #current[0] = 0.0 # XXX reset inventory (updated in dec. position)
             #inv_pos = 3
             for i in range(0, 12):
                 current[3][i] = round(current[3][i], 0)
