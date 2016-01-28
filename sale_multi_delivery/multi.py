@@ -70,7 +70,7 @@ class SaleOrder(orm.Model):
     
     _columns = {
         'multi_delivery_id': fields.many2one(
-            'sale.order.multidelivery', 'Multi delivery', ondelete='set null'), 
+            'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
         }
 
 class SaleOrderLine(orm.Model):
