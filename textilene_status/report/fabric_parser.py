@@ -506,7 +506,8 @@ class Parser(report_sxw.rml_parse):
                             continue                    
                         
                         qty = move_qty * fabric.product_qty
-                        products[default_code][3][pos] -= qty # MM block
+                        products[default_code][3][pos] -= qty # - MM block
+                        products[default_code][2] += qty # TCAR                    
 
                         debug_file.write(
                             '%s;%s;%s;%s;%s x %s = %s;PRODUCED-DELIVERED\n' % (
