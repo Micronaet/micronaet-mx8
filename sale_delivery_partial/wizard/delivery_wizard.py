@@ -210,6 +210,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
 
         # Read delivered per sale order line (or picked)
         # TODO convert in a function fields?
+        # TODO remove:
         #sol_status = {}
         #for pick in sale_proxy.stock_picking_ids :
         #    for line in pick.move_lines:
