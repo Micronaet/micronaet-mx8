@@ -485,10 +485,11 @@ class Parser(report_sxw.rml_parse):
                         products[default_code][4][pos] -= qty # OC block
 
                         debug_file.write(
-                            '%s;%s;%s;%s;%s x %s = %s;REMAIN ORDER:\n' % (
+                            '%s;%s;%s;[%s] > %s;%s x %s = %s;REMAIN ORDER:\n' % (
                                 order.name,
                                 date,
                                 pos,
+                                product_code,
                                 default_code,
                                 move_qty,
                                 fabric.product_qty,
