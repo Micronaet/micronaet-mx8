@@ -46,6 +46,8 @@ class ResCompany(orm.Model):
     _inherit = 'res.company'
     
     _columns = {
+        'stock_location_id': fields.many2one(
+            'stock.location', 'Default stock'), 
         'stock_report_unload_ids': fields.many2many(
             'stock.picking.type', 'company_picking_out_rel', 
             'company_id', 'type_id', 
