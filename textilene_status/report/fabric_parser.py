@@ -454,9 +454,9 @@ class Parser(report_sxw.rml_parse):
                     continue
                 
                 # Check ordered    
-                if line.delivered_maked_sync_qty:
+                if line.product_uom_maked_sync_qty:
                     move_qty = line.product_uom_qty - \
-                        line.delivered_maked_sync_qty
+                        line.product_uom_maked_sync_qty
                 else: # No production:
                     move_qty = line.product_uom_qty - \
                         line.delivered_qty    
@@ -487,9 +487,10 @@ class Parser(report_sxw.rml_parse):
                                 )) # XXX DEBUG
 
                 # Check production: >> MM
-                if line.delivered_maked_sync_qty:
-                    move_qty = line.delivered_maked_sync_qty - \
-                        line.delivered_qty                        
+                if line.product_uom_maked_sync_qty:
+                    move_qty = line.product_uom_maked_sync_qty - \
+                        line.delivered_qty                  
+                    # TODO add other date when unlink order          
                     date = line.mrp_id.date_planned # or order.date_order
                     pos = get_position_season(date)
                 
@@ -510,7 +511,7 @@ class Parser(report_sxw.rml_parse):
                                 date,
                                 pos,
                                 default_code,
-                                mrp_move_qty,
+                                move_qty,
                                 fabric.product_qty,
                                 qty,
                                 )) # XXX DEBUG
