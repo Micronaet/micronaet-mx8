@@ -541,7 +541,7 @@ class Parser(report_sxw.rml_parse):
                 
                 if not(any(current[3]) and any(current[4]) and \
                         any(current[4])):
-                    self.jumped.append(current)
+                    self.jumped.append(current[7]) # product proxy
                     continue    
                 
                 if i == inv_pos:
