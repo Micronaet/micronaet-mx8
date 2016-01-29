@@ -210,17 +210,17 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
 
         # Read delivered per sale order line (or picked)
         # TODO convert in a function fields?
-        sol_status = {}
-        for pick in sale_proxy.stock_picking_ids :
-            for line in pick.move_lines:
-                sol_id = line.sale_line_id.id # TODO correct?
-                if sol_id not in sol_status:
-                    sol_status[sol_id] = 0.0
-                sol_status[sol_id] += line.product_uom_qty # TODO uos?
+        #sol_status = {}
+        #for pick in sale_proxy.stock_picking_ids :
+        #    for line in pick.move_lines:
+        #        sol_id = line.sale_line_id.id # TODO correct?
+        #        if sol_id not in sol_status:
+        #            sol_status[sol_id] = 0.0
+        #        sol_status[sol_id] += line.product_uom_qty # TODO uos?
         
         res = []
         for line in sale_proxy.order_line:                      
-            product_delivered_qty = sol_status.get(line.id, 0.0)
+            product_delivered_qty = line.delivered_qty #sol_status.get(line.id, 0.0)
             res.append((0, False, {
                 #'wizard_id': 1,
                 'order_line_id': line.id,
