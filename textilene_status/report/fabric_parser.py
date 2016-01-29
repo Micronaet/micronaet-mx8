@@ -46,9 +46,15 @@ class Parser(report_sxw.rml_parse):
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_object': self.get_object,
+            'get_jumped': self.get_jumped,
             'get_filter': self.get_filter,
             'get_date': self.get_date,
             })
+
+    def get_jumped(self, ):
+        ''' Get filter selected
+        '''
+        return self.jumped
 
     def get_date(self, ):
         ''' Get filter selected
@@ -522,6 +528,7 @@ class Parser(report_sxw.rml_parse):
 
         # Prepare data for report:     
         res = []
+        self.jumped = []
         for key in sorted(products):            
             current = products[key] # readability:
             total = 0.0 # INV 0.0
@@ -531,6 +538,11 @@ class Parser(report_sxw.rml_parse):
                 current[3][i] = int(round(current[3][i], 0))
                 current[4][i] = int(round(current[4][i], 0))
                 current[5][i] = int(round(current[5][i], 0))
+                
+                if not(any(current[3]) and any(current[4]) and \
+                        any(current[4])):
+                    self.jumped.append(current)
+                    continue    
                 
                 if i == inv_pos:
                     total += round(current[0], 0) # add inv.
