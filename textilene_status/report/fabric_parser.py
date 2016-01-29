@@ -199,15 +199,16 @@ class Parser(report_sxw.rml_parse):
                 # check direct sale:
                 # ------------------
                 if product_code in products:
-                    products[default_code][3][pos] -= qty # MM block  
+                    products[product_code][3][pos] -= qty # MM block  
+                    products[product_code][2] += qty # TSCAR
                     debug_file.write(
-                        '%s;%s;%s;%s;%s;%s;Direct sale of fabrics\n' % (
+                        '%s;%s;%s;%s;%s;%s;TSCAR DIRECT sale of fabrics\n' % (
                             pick.name,
                             pick.origin,
                             pick.date,
                             pos,
                             product_code,
-                            qty,                      
+                            qty,   
                             ) # XXX DEBUG           
                         )                        
                     continue                  
@@ -246,6 +247,7 @@ class Parser(report_sxw.rml_parse):
                         continue    
                                         
                     products[default_code][3][pos] -= qty # MM block
+                    products[default_code][2] += qty # TSCAR
                     debug_file.write(
                         '%s;%s;%s;%s;%s;%s x %s = %s;\n' % (
                             pick.name,
@@ -363,8 +365,9 @@ class Parser(report_sxw.rml_parse):
                         continue
                     
                     products[default_code][3][pos] += qty # MM block
+                    products[default_code][1] += qty # TCAR                    
                     debug_file.write(
-                        '%s;%s;%s;%s;%s;%s;BF\n' % (
+                        '%s;%s;%s;%s;%s;%s;BF TCAR*\n' % (
                             pick.name,
                             pick.origin,
                             pick.date,
