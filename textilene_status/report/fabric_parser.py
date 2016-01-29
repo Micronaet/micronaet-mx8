@@ -534,14 +534,17 @@ class Parser(report_sxw.rml_parse):
             total = 0.0 # INV 0.0
             # NOTE: INV now is 31/12 next put Sept.
             inv_pos = 3 # December
+            jumped = False
             for i in range(0, 12):
                 current[3][i] = int(round(current[3][i], 0))
                 current[4][i] = int(round(current[4][i], 0))
                 current[5][i] = int(round(current[5][i], 0))
                 
-                if not(any(current[3]) and any(current[4]) and \
-                        any(current[4])):
+                if not(any(current[3]) or any(current[4]) or \
+                        any(current[5]) or current[0]> 0.0):
+                    #_logger.warning('Jumped: %s %s %s' % current
                     self.jumped.append(current[7]) # product proxy
+                    jumped = True
                     continue    
                 
                 if i == inv_pos:
@@ -551,7 +554,8 @@ class Parser(report_sxw.rml_parse):
                 current[6][i] = int(total)
 
             # Append progress totals:
-            res.append(current)
+            if not jumped:
+                res.append(current)
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
