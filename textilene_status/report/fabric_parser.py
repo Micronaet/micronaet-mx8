@@ -485,7 +485,7 @@ class Parser(report_sxw.rml_parse):
                         products[default_code][4][pos] -= qty # OC block
 
                         debug_file.write(
-                            '%s;%s;%s;[%s] > %s;%s x %s;;%s;REMAIN ORDER:\n' % (
+                            '%s;%s;%s;[%s] > %s;%s x %s;0.0;%s;REMAIN ORDER:\n' % (
                                 order.name,
                                 date,
                                 pos,
@@ -517,7 +517,7 @@ class Parser(report_sxw.rml_parse):
                         products[default_code][2] += qty # TCAR                    
 
                         debug_file.write(
-                            '%s;%s;%s;%s;%s x %s;%s;;PRODUCED-DELIVERED\n' % (
+                            '%s;%s;%s;%s;%s x %s;%s;0.0;PRODUCED-DELIVERED\n' % (
                                 order.name,
                                 date,
                                 pos,
