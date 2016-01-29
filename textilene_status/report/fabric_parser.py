@@ -389,15 +389,16 @@ class Parser(report_sxw.rml_parse):
             '\n\nOrder:\nOrder;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
+                product_code = line.product_id.default_code                              
+
                 # FC order no deadline (use date)
                 date = line.date_deadline or order.date_order
                 pos = get_position_season(date)
-                    #datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)) 
+                #datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)) 
+                    
                 # TODO manage forecast order ...     
-
-                product_code = line.product_id.default_code                              
                 remain = line.product_uom_qty - line.delivered_qty
-                if remain <=0:
+                if remain <= 0:
                     debug_file.write(
                         '%s;%s;%s;%s;ALL DELIVERED!\n' % (
                             order.name,
@@ -452,26 +453,67 @@ class Parser(report_sxw.rml_parse):
                             )) # XXX DEBUG           
                     continue
                 
-                # Loop on all elements:
-                for fabric in boms[product_code].bom_line_ids:                                                  
-                    default_code = fabric.product_id.default_code # XXX                 
-                    if default_code not in products:
-                        _logger.error('No product/fabric in database')
-                        # TODO create error on file!!
-                        continue
-                    qty = remain * fabric.product_qty
-                    products[default_code][4][pos] -= qty # OC block
+                # Check ordered    
+                if line.delivered_maked_sync_qty:
+                    move_qty = line.product_uom_qty - \
+                        line.delivered_maked_sync_qty
+                else: # No production:
+                    move_qty = line.product_uom_qty - \
+                        line.delivered_qty    
+                    
+                #date = line.date_deadline or order.date_order
+                #pos = get_position_season(date)
+                if move_qty: # Remain order >> =C
+                    # Loop on all elements:
+                    for fabric in boms[product_code].bom_line_ids:                                                  
+                        default_code = fabric.product_id.default_code # XXX                 
+                        if default_code not in products:
+                            _logger.error('No product / fabric in database')
+                            # TODO create error on file!!
+                            continue                    
+                        
+                        qty = move_qty * fabric.product_qty
+                        products[default_code][4][pos] -= qty # OC block
 
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s x %s = %s;\n' % (
-                            order.name,
-                            date,
-                            pos,
-                            default_code,
-                            fabric.product_qty,
-                            qty,
-                            remain,
-                            )) # XXX DEBUG
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s x %s = %s;REMAIN ORDER:\n' % (
+                                order.name,
+                                date,
+                                pos,
+                                default_code,
+                                move_qty,
+                                fabric.product_qty,
+                                qty,
+                                )) # XXX DEBUG
+
+                # Check production: >> MM
+                if line.delivered_maked_sync_qty:
+                    move_qty = line.delivered_maked_sync_qty - \
+                        line.delivered_qty                        
+                    date = line.mrp_id.date_planned # or order.date_order
+                    pos = get_position_season(date)
+                
+                    # Loop on all elements:
+                    for fabric in boms[product_code].bom_line_ids:                                                  
+                        default_code = fabric.product_id.default_code # XXX                 
+                        if default_code not in products:
+                            _logger.error('No product / fabric in database')
+                            # TODO create error on file!!
+                            continue                    
+                        
+                        qty = move_qty * fabric.product_qty
+                        products[default_code][3][pos] -= qty # MM block
+
+                        debug_file.write(
+                            '%s;%s;%s;%s;%s x %s = %s;PRODUCED-DELIVERED\n' % (
+                                order.name,
+                                date,
+                                pos,
+                                default_code,
+                                mrp_move_qty,
+                                fabric.product_qty,
+                                qty,
+                                )) # XXX DEBUG
 
         # Prepare data for report:     
         res = []
