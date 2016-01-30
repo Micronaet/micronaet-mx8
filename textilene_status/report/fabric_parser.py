@@ -81,7 +81,7 @@ class Parser(report_sxw.rml_parse):
             
         # XXX DEBUG:
         debug_f = '/home/administrator/photo/xls/textilene_status.txt'
-        debug_f_mm = '/home/administrator/photo/xls/textilene_mm.txt'
+        debug_f_mm = '/home/administrator/photo/xls/textilene_mm.csv'
         debug_file = open(debug_f, 'w')
         debug_mm = open(debug_f_mm, 'w')
 
@@ -196,7 +196,7 @@ class Parser(report_sxw.rml_parse):
             for line in pick.move_lines:                
                 product_code = line.product_id.default_code
                 if line.state != 'done':
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         pick.name,
@@ -220,7 +220,7 @@ class Parser(report_sxw.rml_parse):
                     qty = line.product_uom_qty # for direct sale            
                     products[product_code][3][pos] -= qty # MM block  
                     products[product_code][2] = qty # TSCAR
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'USED',
                         pick.name,
@@ -228,7 +228,7 @@ class Parser(report_sxw.rml_parse):
                         pick.date,
                         pos,
                         '',
-                        product_code,                                
+                        product_code, # Prod is MP
                         '',
                         -qty, # MM
                         0.0,
@@ -241,7 +241,7 @@ class Parser(report_sxw.rml_parse):
                 # check bom product:
                 # ------------------
                 if product_code not in boms: # Product
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         pick.name,
@@ -263,7 +263,7 @@ class Parser(report_sxw.rml_parse):
                 for fabric in bom.bom_line_ids:                                                  
                     default_code = fabric.product_id.default_code                
                     if default_code not in products:
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
@@ -284,7 +284,7 @@ class Parser(report_sxw.rml_parse):
                     products[default_code][3][pos] -= qty # MM block
                     products[default_code][2] = qty # TSCAR
 
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'USED',
                         pick.name,
@@ -330,7 +330,7 @@ class Parser(report_sxw.rml_parse):
                 qty = line.product_uom_qty
                 
                 if default_code not in products:
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         pick.name,
@@ -355,7 +355,7 @@ class Parser(report_sxw.rml_parse):
                     # USE deadline data:
                     # Before check date:
                     if line.date_expected > period_to: # over range
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
@@ -373,7 +373,7 @@ class Parser(report_sxw.rml_parse):
                         continue
 
                     if line.date_expected < period_from: # under range
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
@@ -392,7 +392,7 @@ class Parser(report_sxw.rml_parse):
 
                     pos = get_position_season(line.date_expected)
                     products[default_code][5][pos] += qty # OF block
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'USED',
                         pick.name,
@@ -416,7 +416,7 @@ class Parser(report_sxw.rml_parse):
                 elif line.state == 'done':
                     # USE order data:
                     if pick.date > period_to: # over range
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
@@ -435,7 +435,7 @@ class Parser(report_sxw.rml_parse):
 
 
                     if pick.date < period_from: # under range
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
@@ -454,7 +454,7 @@ class Parser(report_sxw.rml_parse):
                     
                     products[default_code][3][pos] += qty # MM block
                     products[default_code][1] += qty # TCAR                    
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'USED',
                         pick.name,
@@ -496,7 +496,7 @@ class Parser(report_sxw.rml_parse):
                 # TODO manage forecast order ...     
                 remain = line.product_uom_qty - line.delivered_qty
                 if remain <= 0:
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         order.name,
@@ -515,7 +515,7 @@ class Parser(report_sxw.rml_parse):
             
                 # USE order data:
                 if date > period_to: # over range
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         order.name,
@@ -533,7 +533,7 @@ class Parser(report_sxw.rml_parse):
                     continue
 
                 if date < period_from: # under range
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         order.name,
@@ -553,7 +553,7 @@ class Parser(report_sxw.rml_parse):
                 # Check for fabric order:
                 if product_code in products: # OC out fabric:
                     products[product_code][4][pos] += remain # OC block
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'USED',
                         order.name,
@@ -571,7 +571,7 @@ class Parser(report_sxw.rml_parse):
                     continue
                 
                 if product_code not in boms:
-                    debug_file.write(mask % (
+                    debug_mm.write(mask % (
                         block,
                         'NOT USED',
                         order.name,
@@ -606,7 +606,7 @@ class Parser(report_sxw.rml_parse):
                     for fabric in boms[product_code].bom_line_ids:                                                  
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code not in products:
-                            debug_file.write(mask % (
+                            debug_mm.write(mask % (
                                 block,
                                 'NOT USED',
                                 order.name,
@@ -626,7 +626,7 @@ class Parser(report_sxw.rml_parse):
                         qty = move_qty * fabric.product_qty
                         products[default_code][4][pos] += qty # OC block # XXX was -
                         
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             order.name,
@@ -661,7 +661,7 @@ class Parser(report_sxw.rml_parse):
                     for fabric in boms[product_code].bom_line_ids:                                                  
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code not in products:
-                            debug_file.write(mask % (
+                            debug_mm.write(mask % (
                                 block,
                                 'NOT USED',
                                 order.name,
@@ -682,7 +682,7 @@ class Parser(report_sxw.rml_parse):
                         products[default_code][3][pos] -= qty # - MM block
                         products[default_code][2] -= qty # TSCAR
 
-                        debug_file.write(mask % (
+                        debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             order.name,
