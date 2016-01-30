@@ -552,7 +552,7 @@ class Parser(report_sxw.rml_parse):
 
                 # Check for fabric order:
                 if product_code in products: # OC out fabric (no prod.):
-                    products[product_code][4][pos] += remain # OC block
+                    products[product_code][4][pos] -= remain # OC block
                     debug_mm.write(mask % (
                         block,
                         'USED',
@@ -624,7 +624,7 @@ class Parser(report_sxw.rml_parse):
                             continue
                         
                         qty = move_qty * fabric.product_qty
-                        products[default_code][4][pos] += qty # OC block # XXX was -
+                        products[default_code][4][pos] -= qty # OC block # XXX was -
                         
                         debug_mm.write(mask % (
                             block,
