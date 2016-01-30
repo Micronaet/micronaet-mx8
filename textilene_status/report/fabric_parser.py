@@ -611,7 +611,7 @@ class Parser(report_sxw.rml_parse):
 
                         # Check bom problem:                
                         if default_code in bom_product:
-                            _logerr.error(
+                            _logger.error(
                                 'BOM double problem: %s' % product_code)
                             # TODO remove ID?
                             continue    
@@ -676,7 +676,7 @@ class Parser(report_sxw.rml_parse):
                         i += 1
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code in bom_product:
-                            _logerr.error(
+                            _logger.error(
                                 'BOM double problem: %s' % product_code)
                             # TODO remove ID?
                             continue    
