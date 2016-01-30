@@ -603,10 +603,19 @@ class Parser(report_sxw.rml_parse):
                 #pos = get_position_season(date) 
                 if move_qty: # Remain order >> =C
                     # Loop on all elements:
-                    i = 0
+                    i = 0        
+                    bom_product = []            
                     for fabric in boms[product_code].bom_line_ids:                                                  
                         i += 1
-                        default_code = fabric.product_id.default_code # XXX                 
+                        default_code = fabric.product_id.default_code # XXX 
+
+                        # Check bom problem:                
+                        if default_code in bom_product:
+                            _logerr.error(
+                                'BOM double problem: %s' % product_code)
+                            # TODO remove ID?
+                            continue    
+                            
                         if default_code not in products:
                             debug_mm.write(mask % (
                                 block,
@@ -661,9 +670,18 @@ class Parser(report_sxw.rml_parse):
                 
                     # Loop on all elements:
                     i = 0
+                    
+                    bom_product = []
                     for fabric in boms[product_code].bom_line_ids:                                                  
                         i += 1
                         default_code = fabric.product_id.default_code # XXX                 
+                        if default_code in bom_product:
+                            _logerr.error(
+                                'BOM double problem: %s' % product_code)
+                            # TODO remove ID?
+                            continue    
+                        bom_product.append(default_code)
+                            
                         if default_code not in products:
                             debug_mm.write(mask % (
                                 block,
