@@ -551,7 +551,7 @@ class Parser(report_sxw.rml_parse):
                     continue
 
                 # Check for fabric order:
-                if product_code in products: # OC out fabric:
+                if product_code in products: # OC out fabric (no prod.):
                     products[product_code][4][pos] += remain # OC block
                     debug_mm.write(mask % (
                         block,
@@ -582,9 +582,9 @@ class Parser(report_sxw.rml_parse):
                         product_code, # MP
                         '',
                         0.0, # +MM
-                        remain, # -OC
+                        0.0, # -OC
                         0.0,
-                        'PRODUCT WITHOUT BOM',
+                        'PRODUCT WITHOUT BOM, Q.: %s' % qty,
                         ))                      
                     continue
                 
@@ -628,7 +628,7 @@ class Parser(report_sxw.rml_parse):
                         
                         debug_mm.write(mask % (
                             block,
-                            'NOT USED',
+                            'USED',
                             order.name,
                             '',
                             date,
@@ -642,8 +642,7 @@ class Parser(report_sxw.rml_parse):
                             0.0, # +MM
                             qty, # +OC
                             0.0,
-                            '%s %s' % ( 
-                                'REMAIN ORDER (OC-B | OC-DELIVERED (no prod))',
+                            'REMAIN OC: (OC-B|OC-DELIVERED (no prod) %s' % ( 
                                 note,
                                 )
                             ))                      
@@ -684,7 +683,7 @@ class Parser(report_sxw.rml_parse):
 
                         debug_mm.write(mask % (
                             block,
-                            'NOT USED',
+                            'USED',
                             order.name,
                             '',
                             date,
