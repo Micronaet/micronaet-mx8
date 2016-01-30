@@ -537,6 +537,8 @@ class Parser(report_sxw.rml_parse):
             inv_pos = 3 # December
             jumped = False
             for i in range(0, 12):
+                if i >= inv_pos:
+                    current[3][i] += round(current[0], 0) # add inv.
                 current[3][i] = int(round(current[3][i], 0))
                 current[4][i] = int(round(current[4][i], 0))
                 current[5][i] = int(round(current[5][i], 0))
@@ -548,8 +550,6 @@ class Parser(report_sxw.rml_parse):
                     jumped = True
                     continue    
                 
-                if i >= inv_pos:
-                    total += round(current[0], 0) # add inv.
                 total += round(
                     current[3][i] + current[4][i] + current[5][i], 0)
                 current[6][i] = int(total)
