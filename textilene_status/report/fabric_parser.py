@@ -260,8 +260,17 @@ class Parser(report_sxw.rml_parse):
                 
                 bom = boms[product_code]
                 # Loop on all elements:
+                
+                bom_product = []
                 for fabric in bom.bom_line_ids:                                                  
                     default_code = fabric.product_id.default_code                
+                    if default_code in bom_product:
+                        _logger.error(
+                            'BOM double problem: %s' % product_code)
+                        # TODO remove ID?
+                        continue    
+
+                    bom_product.append(default_code)
                     if default_code not in products:
                         debug_mm.write(mask % (
                             block,
