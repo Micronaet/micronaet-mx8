@@ -230,7 +230,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         product_code, # Prod is MP
                         '',
-                        -qty, # MM
+                        ('%s' % -qty).replace('.', ','), # MM
                         0.0,
                         0.0,
                         'Direct sale of fabric (ADD IN TSCAR)',
@@ -297,7 +297,7 @@ class Parser(report_sxw.rml_parse):
                             line.product_uom_qty,
                             fabric.product_qty,
                             ),
-                        -qty,
+                        ('%s' % -qty).replace('.', ','),
                         0.0,
                         0.0,
                         'BOM component (ADD IN TSCAR)',
@@ -404,7 +404,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         0.0,
                         0.0,
-                        qty,
+                        ('%s' % qty).replace('.', ','),
                         'OF',
                         ))                      
                     continue
@@ -464,7 +464,7 @@ class Parser(report_sxw.rml_parse):
                         '', # product_code                                
                         default_code,
                         '',
-                        qty, # +MM
+                        ('%s' % qty).replace('.', ','), # +MM
                         0.0,
                         0.0,
                         'BF ADD IN TCAR',
@@ -564,7 +564,7 @@ class Parser(report_sxw.rml_parse):
                         product_code, # MP
                         '',
                         0.0, # +MM
-                        remain, # -OC
+                        ('%s' % remain).replace('.', ','), # -OC
                         0.0,
                         'FABRIC DIRECT',
                         ))                      
@@ -640,9 +640,9 @@ class Parser(report_sxw.rml_parse):
                                 fabric.product_qty,
                                 ),
                             0.0, # +MM
-                            qty, # +OC
+                            ('%s' % qty).replace('.', ','), # +OC
                             0.0,
-                            'REMAIN OC: (OC-B|OC-DELIVERED (no prod) %s' % ( 
+                            'REMAIN OC: (OC-B or OC-DELIVERED (no prod) %s' % ( 
                                 note,
                                 )
                             ))                      
@@ -694,7 +694,7 @@ class Parser(report_sxw.rml_parse):
                                 move_qty, 
                                 fabric.product_qty,
                                 ),
-                            -qty, # -MM
+                            ('%s' % -qty).replace('.', ','), # -MM
                             0.0, # +OC
                             0.0,
                             '%s %s' % ( 
