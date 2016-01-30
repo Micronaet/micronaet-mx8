@@ -219,7 +219,7 @@ class Parser(report_sxw.rml_parse):
                 if product_code in products: # Fabric:
                     qty = line.product_uom_qty # for direct sale            
                     products[product_code][3][pos] -= qty # MM block  
-                    products[product_code][2] -= qty # TSCAR
+                    products[product_code][2] = qty # TSCAR
                     debug_file.write(mask % (
                         block,
                         'USED',
@@ -282,7 +282,7 @@ class Parser(report_sxw.rml_parse):
                                         
                     qty = line.product_uom_qty * fabric.product_qty
                     products[default_code][3][pos] -= qty # MM block
-                    products[default_code][2] -= qty # TSCAR
+                    products[default_code][2] = qty # TSCAR
 
                     debug_file.write(mask % (
                         block,
@@ -528,7 +528,7 @@ class Parser(report_sxw.rml_parse):
                         0.0, # +MM
                         0.0,
                         0.0,
-                        'OVER RANGE, qty:' % remain,
+                        'OVER RANGE, qty: %s' % remain,
                         ))                      
                     continue
 
@@ -546,7 +546,7 @@ class Parser(report_sxw.rml_parse):
                         0.0, # +MM
                         0.0,
                         0.0,
-                        'UNDER RANGE, qty:' % remain,
+                        'UNDER RANGE, qty: %s' % remain,
                         ))                      
                     continue
 
