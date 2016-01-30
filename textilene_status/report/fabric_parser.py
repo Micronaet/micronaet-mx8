@@ -644,7 +644,7 @@ class Parser(report_sxw.rml_parse):
                             0, # +MM
                             ('%s' % qty).replace('.', ','), # +OC
                             0,
-                            '[BOM # %s]REM OC: (OC-B or OC-DEL (no pr.) %s' % ( 
+                            '[BOM # %s] REMAIN OC: (OC-B or OC-DEL (no production) %s' % ( 
                                 i,
                                 note,
                                 )
