@@ -337,7 +337,7 @@ class Parser(report_sxw.rml_parse):
                         pick.origin,
                         pick.date,
                         pos,
-                        '', # product code
+                        '', # product_code
                         default_code,
                         '',
                         0.0,
@@ -360,9 +360,9 @@ class Parser(report_sxw.rml_parse):
                             'NOT USED',
                             pick.name,
                             pick.origin,
-                            pick.date_expected,
+                            line.date_expected,
                             '', # POS
-                            '', # product code                                
+                            '', # product_code                                
                             default_code,
                             '',
                             0.0,
@@ -378,9 +378,9 @@ class Parser(report_sxw.rml_parse):
                             'NOT USED',
                             pick.name,
                             pick.origin,
-                            pick.date_expected,
+                            line.date_expected,
                             '', # POS
-                            '', # product code                                
+                            '', # product_code                                
                             default_code,
                             '',
                             0.0,
@@ -397,9 +397,9 @@ class Parser(report_sxw.rml_parse):
                         'USED',
                         pick.name,
                         pick.origin,
-                        pick.date_expected,
+                        line.date_expected,
                         pos,
-                        '', # product code                                
+                        '', # product_code                                
                         default_code,
                         '',
                         0.0,
@@ -423,7 +423,7 @@ class Parser(report_sxw.rml_parse):
                             pick.origin,
                             pick.date,
                             pos,
-                            '', # product code                                
+                            '', # product_code                                
                             default_code,
                             '',
                             0.0,
@@ -442,7 +442,7 @@ class Parser(report_sxw.rml_parse):
                             pick.origin,
                             pick.date,
                             pos,
-                            '', # product code                                
+                            '', # product_code                                
                             default_code,
                             '',
                             0.0,
@@ -461,7 +461,7 @@ class Parser(report_sxw.rml_parse):
                         pick.origin,
                         pick.date,
                         pos,
-                        '', # product code                                
+                        '', # product_code                                
                         default_code,
                         '',
                         qty, # +MM
@@ -503,7 +503,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         date,
                         pos,
-                        product code,
+                        product_code,
                         '', # MP
                         '',
                         0.0, # +MM
@@ -522,7 +522,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         date,
                         pos,
-                        product code,
+                        product_code,
                         '', # MP
                         '',
                         0.0, # +MM
@@ -540,7 +540,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         date,
                         pos,
-                        product code,
+                        product_code,
                         '', # MP
                         '',
                         0.0, # +MM
@@ -560,7 +560,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         date,
                         pos,
-                        '', #product code
+                        '', #product_code
                         product_code, # MP
                         '',
                         0.0, # +MM
@@ -578,7 +578,7 @@ class Parser(report_sxw.rml_parse):
                         '',
                         date,
                         pos,
-                        '', #product code
+                        '', #product_code
                         product_code, # MP
                         '',
                         0.0, # +MM
@@ -613,7 +613,7 @@ class Parser(report_sxw.rml_parse):
                                 '',
                                 date,
                                 pos,
-                                product code
+                                product_code,
                                 default_code, # MP
                                 '',
                                 0.0, # +MM
@@ -633,7 +633,7 @@ class Parser(report_sxw.rml_parse):
                             '',
                             date,
                             pos,
-                            product code,
+                            product_code,
                             default_code,
                             '%s x %s' % (
                                 move_qty, 
@@ -645,6 +645,7 @@ class Parser(report_sxw.rml_parse):
                             '%s %s' % ( 
                                 'REMAIN ORDER (OC-B | OC-DELIVERED (no prod))',
                                 note,
+                                )
                             ))                      
                         continue
 
@@ -667,7 +668,7 @@ class Parser(report_sxw.rml_parse):
                                 '',
                                 date,
                                 pos,
-                                product code
+                                product_code,
                                 default_code, # MP
                                 '',
                                 0.0, # +MM
@@ -688,7 +689,7 @@ class Parser(report_sxw.rml_parse):
                             '',
                             date,
                             pos,
-                            product code,
+                            product_code,
                             default_code,
                             '%s x %s' % (
                                 move_qty, 
@@ -700,6 +701,7 @@ class Parser(report_sxw.rml_parse):
                             '%s %s' % ( 
                                 'PRODUCED TO DELIVER (B-DELIVER) TSCAR',
                                 note,
+                                )
                             ))                      
                         continue
 
