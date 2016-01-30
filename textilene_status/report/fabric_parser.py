@@ -548,8 +548,8 @@ class Parser(report_sxw.rml_parse):
                     jumped = True
                     continue    
                 
-                if i == inv_pos:
-                    total += round(current[0], 0) # add inv.
+                #if i == inv_pos:
+                #    total += round(current[0], 0) # add inv.
                 total += round(
                     current[3][i] + current[4][i] + current[5][i], 0)
                 current[6][i] = int(total)
