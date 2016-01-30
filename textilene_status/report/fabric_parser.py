@@ -81,7 +81,9 @@ class Parser(report_sxw.rml_parse):
             
         # XXX DEBUG:
         debug_f = '/home/administrator/photo/xls/textilene_status.txt'
+        debug_f_mm = '/home/administrator/photo/xls/textilene_mm.txt'
         debug_file = open(debug_f, 'w')
+        debug_mm = open(debug_f_mm, 'w')
 
         # pool used:
         product_pool = self.pool.get('product.product')
@@ -162,9 +164,15 @@ class Parser(report_sxw.rml_parse):
                  len(bom.bom_line_ids),
                  )) # XXX DEBUG
 
+        # XXX debug
+        debug_mm.write(
+            'Block|State|Doc.|Origin|Date|Pos.|Prod.|MP|Calc.|MM|OC|OF|Note\n')
+        mask = '%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s\n'    
         # =====================================================================
         # UNLOAD PICKING (CUSTOMER ORDER PICK OUT)
         # =====================================================================
+        block = 'BC PICK OUT'
+            
         # Better with OC?
         out_picking_type_ids = []
         for item in company_proxy.stock_report_unload_ids:
@@ -182,99 +190,124 @@ class Parser(report_sxw.rml_parse):
             # TODO state filter
             ])
             
-        debug_file.write(
-            '\n\nUnload picking (only delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # cols  (min_date?)
             # TODO no check for period range
             for line in pick.move_lines:                
                 product_code = line.product_id.default_code
                 if line.state != 'done':
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;Not state confirmed (jumped);\n' % (
-                            pick.name,
-                            pick.origin,
-                            pick.date,
-                            pos,
-                            product_code,                                
-                            ) # XXX DEBUG           
-                        )                        
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        product_code,                                
+                        '',
+                        '',
+                        0.0,
+                        0.0,
+                        0.0,
+                        'State not in done (jumped)',
+                        ))
                     continue    
                     
                 # ------------------
                 # check direct sale:
                 # ------------------
-                if product_code in products:
+                if product_code in products: # Fabric:
+                    qty = line.product_uom_qty # for direct sale            
                     products[product_code][3][pos] -= qty # MM block  
-                    products[product_code][2] += qty # TSCAR
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;%s;TSCAR DIRECT sale of fabrics\n' % (
-                            pick.name,
-                            pick.origin,
-                            pick.date,
-                            pos,
-                            product_code,
-                            qty,   
-                            ) # XXX DEBUG           
-                        )                        
-                    continue                  
+                    products[product_code][2] -= qty # TSCAR
+                    debug_file.write(mask % (
+                        block,
+                        'USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        '',
+                        product_code,                                
+                        '',
+                        -qty, # MM
+                        0.0,
+                        0.0,
+                        'Direct sale of fabric (ADD IN TSCAR)',
+                        ))
+                    continue    
                 
                 # ------------------
                 # check bom product:
                 # ------------------
-                if product_code not in boms:
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;No BOM product (jumped);\n' % (
-                            pick.name,
-                            pick.origin,
-                            pick.date,
-                            pos,
-                            product_code,                                
-                            ) # XXX DEBUG           
-                        )                        
+                if product_code not in boms: # Product
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        product_code,                                
+                        '',
+                        '',
+                        0.0,
+                        0.0,
+                        0.0,
+                        'Warn. product not in BOM',
+                        ))                      
                     continue
                 
                 bom = boms[product_code]
                 # Loop on all elements:
                 for fabric in bom.bom_line_ids:                                                  
-                    default_code = fabric.product_id.default_code # XXX                
-                    qty = line.product_uom_qty * fabric.product_qty
-                
+                    default_code = fabric.product_id.default_code                
                     if default_code not in products:
-                        debug_file.write(
-                            '%s;%s;%s;%s;%s;No fabric in product BOM;\n' % (
-                                pick.name,
-                                pick.origin,
-                                pick.date,
-                                pos,
-                                default_code,                                
-                                ) # XXX DEBUG           
-                            )                        
-                        continue    
-                                        
-                    products[default_code][3][pos] -= qty # MM block
-                    products[default_code][2] += qty # TSCAR
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;%s x %s = %s;\n' % (
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
                             pick.name,
                             pick.origin,
                             pick.date,
                             pos,
+                            product_code,                                
                             default_code,
+                            '',
+                            0.0,
+                            0.0,
+                            0.0,
+                            'Warn. fabric not in BOM',
+                            ))                      
+                        continue
+                                        
+                    qty = line.product_uom_qty * fabric.product_qty
+                    products[default_code][3][pos] -= qty # MM block
+                    products[default_code][2] -= qty # TSCAR
+
+                    debug_file.write(mask % (
+                        block,
+                        'USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        product_code,                                
+                        default_code,
+                        '%s X %s' % (
                             line.product_uom_qty,
                             fabric.product_qty,
-                            -qty,
-                            ) # XXX DEBUG           
-                        )
-                # TODO check state of line??
-                    
-                #debug_file.write('\n%s;%s;%s;%s' % (
-                #    pick.name, pick.origin, default_code, 
-                #    line.product_uom_qty)) # XXX DEBUG
+                            ),
+                        -qty,
+                        0.0,
+                        0.0,
+                        'BOM component (ADD IN TSCAR)',
+                        ))                      
+                    continue
 
         # =====================================================================
         # LOAD PICKING (CUSTOMER ORDER AND PICK IN )
         # =====================================================================
+        block = 'OF and BF'
         in_picking_type_ids = []
         for item in company_proxy.stock_report_load_ids:
             in_picking_type_ids.append(item.id)
@@ -290,8 +323,6 @@ class Parser(report_sxw.rml_parse):
             # TODO state filter
             ])
             
-        debug_file.write(
-            '\n\nLoad picking (order and delivery):\nPick;Origin;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for pick in pick_pool.browse(self.cr, self.uid, pick_ids):
             pos = get_position_season(pick.date) # for done cols  (min_date?)
             for line in pick.move_lines:
@@ -299,92 +330,151 @@ class Parser(report_sxw.rml_parse):
                 qty = line.product_uom_qty
                 
                 if default_code not in products:
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;Product not fabric\n' % (
-                            pick.name,
-                            pick.origin,
-                            pick.date,
-                            pos,
-                            default_code,
-                            )) # XXX DEBUG           
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        '', # product code
+                        default_code,
+                        '',
+                        0.0,
+                        0.0,
+                        0.0,
+                        'Warn. Code not in fabric',
+                        ))                      
                     continue
 
                 # Order not current delivered
+                # -------------------------------------------------------------
+                #          OF document
+                # -------------------------------------------------------------
                 if line.state == 'assigned': # virtual
                     # USE deadline data:
                     # Before check date:
                     if line.date_expected > period_to: # over range
-                        debug_file.write(
-                            '%s;%s;%s;%s;%s;ERROR OVER RANGE (JUMP)\n' % (
-                                pick.name,
-                                pick.origin,
-                                line.date_expected,
-                                default_code,
-                                qty,
-                                )) # XXX DEBUG           
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
+                            pick.name,
+                            pick.origin,
+                            pick.date_expected,
+                            '', # POS
+                            '', # product code                                
+                            default_code,
+                            '',
+                            0.0,
+                            0.0,
+                            0.0,
+                            'OF date expected over range!!: Q.: %s' % qty,
+                            ))                      
                         continue
+
                     if line.date_expected < period_from: # under range
-                        debug_file.write(
-                            '%s;%s;%s;%s;%s;ERROR UNDER RANGE (JUMP)\n' % (
-                                pick.name,
-                                pick.origin,
-                                line.date_expected,
-                                default_code,
-                                qty,
-                                )) # XXX DEBUG           
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
+                            pick.name,
+                            pick.origin,
+                            pick.date_expected,
+                            '', # POS
+                            '', # product code                                
+                            default_code,
+                            '',
+                            0.0,
+                            0.0,
+                            0.0,
+                            'OF date expected under range!!: Q.: %s' % qty,
+                            ))                      
                         continue
-                                            
+
                     pos = get_position_season(line.date_expected)
-                    products[default_code][5][pos] += qty # MM block
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;%s;OF\n' % (
+                    products[default_code][5][pos] += qty # OF block
+                    debug_file.write(mask % (
+                        block,
+                        'USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date_expected,
+                        pos,
+                        '', # product code                                
+                        default_code,
+                        '',
+                        0.0,
+                        0.0,
+                        qty,
+                        'OF',
+                        ))                      
+                    continue
+
+                # Order delivered so picking
+                # -------------------------------------------------------------
+                #          BF document
+                # -------------------------------------------------------------
+                elif line.state == 'done':
+                    # USE order data:
+                    if pick.date > period_to: # over range
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
                             pick.name,
                             pick.origin,
                             pick.date,
                             pos,
+                            '', # product code                                
                             default_code,
-                            qty,
-                            )) # XXX DEBUG           
-
-                # Order delivered so picking
-                elif line.state == 'done':
-                    # USE order data:
-                    if pick.date > period_to: # over range
-                        debug_file.write(
-                            '%s;%s;%s;%s;%s;ERROR OVER RANGE (JUMP)\n' % (
-                                pick.name,
-                                pick.origin,
-                                line.date_expected,
-                                default_code,
-                                qty,
-                                )) # XXX DEBUG           
+                            '',
+                            0.0,
+                            0.0,
+                            0.0,
+                            'BF date doc over range!!: Q.: %s' % qty,
+                            ))                      
                         continue
+
+
                     if pick.date < period_from: # under range
-                        debug_file.write(
-                            '%s;%s;%s;%s;%s;ERROR UNDER RANGE (JUMP)\n' % (
-                                pick.name,
-                                pick.origin,
-                                line.date_expected,
-                                default_code,
-                                qty,
-                                )) # XXX DEBUG           
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
+                            pick.name,
+                            pick.origin,
+                            pick.date,
+                            pos,
+                            '', # product code                                
+                            default_code,
+                            '',
+                            0.0,
+                            0.0,
+                            0.0,
+                            'BF date doc under range!!: Q.: %s' % qty,
+                            ))                      
                         continue
                     
                     products[default_code][3][pos] += qty # MM block
                     products[default_code][1] += qty # TCAR                    
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;%s;BF TCAR*\n' % (
-                            pick.name,
-                            pick.origin,
-                            pick.date,
-                            pos,
-                            default_code,
-                            qty,
-                            )) # XXX DEBUG           
+                    debug_file.write(mask % (
+                        block,
+                        'USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        '', # product code                                
+                        default_code,
+                        '',
+                        qty, # +MM
+                        0.0,
+                        0.0,
+                        'BF ADD IN TCAR',
+                        ))                      
+                    continue
         
         # =====================================================================
         # UNLOAD ORDER (NON DELIVERED)
         # =====================================================================
+        block = 'OC (not delivered)'
         order_ids = sale_pool.search(self.cr, self.uid, [
             ('state', 'not in', ('cancel', 'send', 'draft')),
             ('pricelist_order', '=', False),
@@ -394,8 +484,6 @@ class Parser(report_sxw.rml_parse):
             # TODO no partner exclusion
             ])
             
-        debug_file.write(
-            '\n\nOrder:\nOrder;Date;Pos,Code;Q.\n') # XXX DEBUG           
         for order in sale_pool.browse(self.cr, self.uid, order_ids):
             for line in order.order_line:
                 product_code = line.product_id.default_code                              
@@ -408,93 +496,157 @@ class Parser(report_sxw.rml_parse):
                 # TODO manage forecast order ...     
                 remain = line.product_uom_qty - line.delivered_qty
                 if remain <= 0:
-                    debug_file.write(
-                        '%s;%s;%s;%s;ALL DELIVERED!\n' % (
-                            order.name,
-                            date,
-                            pos,
-                            product_code,
-                            )) # XXX DEBUG           
-                    continue # delivered (so in pick out)
-                # TODO check production?
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        order.name,
+                        '',
+                        date,
+                        pos,
+                        product code,
+                        '', # MP
+                        '',
+                        0.0, # +MM
+                        0.0,
+                        0.0,
+                        'ALL DELIVERED',
+                        ))                      
+                    continue
             
                 # USE order data:
                 if date > period_to: # over range
-                    debug_file.write(
-                        '%s;%s;%s;%s;ERROR OVER RANGE (JUMP)\n' % (
-                            order.name,
-                            date,
-                            default_code,
-                            remain,
-                            )) # XXX DEBUG           
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        order.name,
+                        '',
+                        date,
+                        pos,
+                        product code,
+                        '', # MP
+                        '',
+                        0.0, # +MM
+                        0.0,
+                        0.0,
+                        'OVER RANGE, qty:' % remain,
+                        ))                      
                     continue
+
                 if date < period_from: # under range
-                    debug_file.write(
-                        '%s;%s;%s;%s;ERROR UNDER RANGE (JUMP)\n' % (
-                            order.name,
-                            date,
-                            default_code,
-                            remain,
-                            )) # XXX DEBUG           
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        order.name,
+                        '',
+                        date,
+                        pos,
+                        product code,
+                        '', # MP
+                        '',
+                        0.0, # +MM
+                        0.0,
+                        0.0,
+                        'UNDER RANGE, qty:' % remain,
+                        ))                      
                     continue
 
                 # Check for fabric order:
-                if product_code in products: # order fabric:
+                if product_code in products: # OC out fabric:
                     products[product_code][4][pos] += remain # OC block
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;ORDER FABRIC!\n' % (
-                            order.name,
-                            date,
-                            pos,
-                            product_code,
-                            remain,
-                            )) # XXX DEBUG           
+                    debug_file.write(mask % (
+                        block,
+                        'USED',
+                        order.name,
+                        '',
+                        date,
+                        pos,
+                        '', #product code
+                        product_code, # MP
+                        '',
+                        0.0, # +MM
+                        remain, # -OC
+                        0.0,
+                        'FABRIC DIRECT',
+                        ))                      
                     continue
                 
                 if product_code not in boms:
-                    debug_file.write(
-                        '%s;%s;%s;%s;%s;NO BOM FOR PRODUCT (JUMP)!\n' % (
-                            order.name,
-                            date,
-                            pos,
-                            product_code,
-                            remain,
-                            )) # XXX DEBUG           
+                    debug_file.write(mask % (
+                        block,
+                        'NOT USED',
+                        order.name,
+                        '',
+                        date,
+                        pos,
+                        '', #product code
+                        product_code, # MP
+                        '',
+                        0.0, # +MM
+                        remain, # -OC
+                        0.0,
+                        'PRODUCT WITHOUT BOM',
+                        ))                      
                     continue
                 
                 # Check ordered    
-                if line.product_uom_maked_sync_qty:
+                if line.product_uom_maked_sync_qty: # Remain order to produce:
                     move_qty = line.product_uom_qty - \
                         line.product_uom_maked_sync_qty
-                else: # No production:
+                    note = 'Remain order to produce'    
+                else: # No production: # Remain ordered to delivery:
                     move_qty = line.product_uom_qty - \
                         line.delivered_qty    
+                    note = 'Remain order to deliver'    
                     
+                # same as previous    
                 #date = line.date_deadline or order.date_order
-                #pos = get_position_season(date)
+                #pos = get_position_season(date) 
                 if move_qty: # Remain order >> =C
                     # Loop on all elements:
                     for fabric in boms[product_code].bom_line_ids:                                                  
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code not in products:
-                            _logger.error('No product / fabric in database')
-                            # TODO create error on file!!
-                            continue                    
-                        
-                        qty = move_qty * fabric.product_qty
-                        products[default_code][4][pos] -= qty # OC block
-
-                        debug_file.write(
-                            '%s;%s;%s;[%s] > %s;%s x %s;0.0;%s;REMAIN ORDER:\n' % (
+                            debug_file.write(mask % (
+                                block,
+                                'NOT USED',
                                 order.name,
+                                '',
                                 date,
                                 pos,
-                                product_code,
-                                default_code,
-                                move_qty,
+                                product code
+                                default_code, # MP
+                                '',
+                                0.0, # +MM
+                                0.0, # -OC
+                                0.0,
+                                'ERROR FABRIC NOT IN DATABASE!',
+                                ))                      
+                            continue
+                        
+                        qty = move_qty * fabric.product_qty
+                        products[default_code][4][pos] += qty # OC block # XXX was -
+                        
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
+                            order.name,
+                            '',
+                            date,
+                            pos,
+                            product code,
+                            default_code,
+                            '%s x %s' % (
+                                move_qty, 
                                 fabric.product_qty,
-                                qty,
-                                )) # XXX DEBUG
+                                ),
+                            0.0, # +MM
+                            qty, # +OC
+                            0.0,
+                            '%s %s' % ( 
+                                'REMAIN ORDER (OC-B | OC-DELIVERED (no prod))',
+                                note,
+                            ))                      
+                        continue
 
                 # Check production: >> MM
                 if line.product_uom_maked_sync_qty:
@@ -508,24 +660,48 @@ class Parser(report_sxw.rml_parse):
                     for fabric in boms[product_code].bom_line_ids:                                                  
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code not in products:
-                            _logger.error('No product / fabric in database')
-                            # TODO create error on file!!
-                            continue                    
+                            debug_file.write(mask % (
+                                block,
+                                'NOT USED',
+                                order.name,
+                                '',
+                                date,
+                                pos,
+                                product code
+                                default_code, # MP
+                                '',
+                                0.0, # +MM
+                                0.0, # -OC
+                                0.0,
+                                'ERROR FABRIC NOT IN DATABASE (REMAIN B)!',
+                                ))                      
+                            continue
                         
                         qty = move_qty * fabric.product_qty
                         products[default_code][3][pos] -= qty # - MM block
-                        products[default_code][2] += qty # TCAR                    
+                        products[default_code][2] -= qty # TSCAR
 
-                        debug_file.write(
-                            '%s;%s;%s;%s;%s x %s;%s;0.0;PRODUCED-DELIVERED\n' % (
-                                order.name,
-                                date,
-                                pos,
-                                default_code,
-                                move_qty,
+                        debug_file.write(mask % (
+                            block,
+                            'NOT USED',
+                            order.name,
+                            '',
+                            date,
+                            pos,
+                            product code,
+                            default_code,
+                            '%s x %s' % (
+                                move_qty, 
                                 fabric.product_qty,
-                                qty,
-                                )) # XXX DEBUG
+                                ),
+                            -qty, # -MM
+                            0.0, # +OC
+                            0.0,
+                            '%s %s' % ( 
+                                'PRODUCED TO DELIVER (B-DELIVER) TSCAR',
+                                note,
+                            ))                      
+                        continue
 
         # Prepare data for report:     
         res = []
@@ -533,12 +709,13 @@ class Parser(report_sxw.rml_parse):
         for key in sorted(products):            
             current = products[key] # readability:
             total = 0.0 # INV 0.0
+            
             # NOTE: INV now is 31/12 next put Sept.
             inv_pos = 3 # December
             jumped = False
             for i in range(0, 12):
-                if i == inv_pos:
-                    current[3][i] += round(current[0], 0) # add inv.
+                #if i == inv_pos:
+                #    current[3][i] += round(current[0], 0) # add inv.
                 current[3][i] = int(round(current[3][i], 0))
                 current[4][i] = int(round(current[4][i], 0))
                 current[5][i] = int(round(current[5][i], 0))
@@ -550,6 +727,8 @@ class Parser(report_sxw.rml_parse):
                     jumped = True
                     continue    
                 
+                if i == inv_pos:
+                    total += round(current[0], 0) # add inv.
                 total += round(
                     current[3][i] + current[4][i] + current[5][i], 0)
                 current[6][i] = int(total)
