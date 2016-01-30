@@ -603,7 +603,9 @@ class Parser(report_sxw.rml_parse):
                 #pos = get_position_season(date) 
                 if move_qty: # Remain order >> =C
                     # Loop on all elements:
+                    i = 0
                     for fabric in boms[product_code].bom_line_ids:                                                  
+                        i += 1
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code not in products:
                             debug_mm.write(mask % (
@@ -642,7 +644,8 @@ class Parser(report_sxw.rml_parse):
                             0, # +MM
                             ('%s' % qty).replace('.', ','), # +OC
                             0,
-                            'REMAIN OC: (OC-B or OC-DELIVERED (no prod) %s' % ( 
+                            '[BOM # %s]REM OC: (OC-B or OC-DEL (no pr.) %s' % ( 
+                                i,
                                 note,
                                 )
                             ))                      
@@ -657,7 +660,9 @@ class Parser(report_sxw.rml_parse):
                     pos = get_position_season(date)
                 
                     # Loop on all elements:
+                    i = 0
                     for fabric in boms[product_code].bom_line_ids:                                                  
+                        i += 1
                         default_code = fabric.product_id.default_code # XXX                 
                         if default_code not in products:
                             debug_mm.write(mask % (
@@ -697,8 +702,8 @@ class Parser(report_sxw.rml_parse):
                             ('%s' % -qty).replace('.', ','), # -MM
                             0, # +OC
                             0,
-                            '%s %s' % ( 
-                                'PRODUCED TO DELIVER (B-DELIVER) TSCAR',
+                            '[BOM #: %s] PROD TO DELIV (B-DEL.) TSCAR %s' % (
+                                i,
                                 note,
                                 )
                             ))                      
