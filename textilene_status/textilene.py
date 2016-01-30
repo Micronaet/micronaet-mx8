@@ -84,7 +84,7 @@ class ProductProduct(orm.Model):
             _get_report_bom, method=True, 
             type='many2one', relation='mrp.bom', string='Textilene bom', 
             help='One reference BOM for product (for in report status)',
-            store=False),            
+            store=False),   
         }
 
 class MrpBom(orm.Model):
