@@ -587,8 +587,8 @@ class Parser(report_sxw.rml_parse):
                         '',
                         date,
                         pos,
-                        '', #product_code
-                        product_code, # MP
+                        product_code,
+                        '', #MP
                         '',
                         0, # +MM
                         0, # -OC
