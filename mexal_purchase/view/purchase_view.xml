@@ -40,6 +40,18 @@
             </field>
         </record>
 
+        <record id="vpicktree_bf_ff" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <field name="location_dest_id" position="before">
+                     <field name="bf_number" />
+                     <field name="ff_number" />
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_stock_picking_in_search">
             <field name="name">stock.picking.in.bf.search</field>
             <field name="model">stock.picking</field>
