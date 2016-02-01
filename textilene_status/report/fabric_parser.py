@@ -73,6 +73,9 @@ class Parser(report_sxw.rml_parse):
         def get_position_season(date):
             ''' Return position in array for correct season month:
             '''
+            if not date:
+                _logger.error('Date not found')
+                return False
             month = int(date[5:7])
             if month >= 9: # september = 0
                 return month - 9
@@ -352,7 +355,7 @@ class Parser(report_sxw.rml_parse):
                         0,
                         0,
                         0,
-                        'Warn. Code not in fabric',
+                        'OF / BF Warn. Code not in fabric',
                         ))                      
                     continue
 
@@ -674,7 +677,9 @@ class Parser(report_sxw.rml_parse):
                     move_qty = line.product_uom_maked_sync_qty - \
                         line.delivered_qty                  
                     # TODO add other date when unlink order          
-                    date = line.mrp_id.date_planned # or order.date_order
+                    # TODO check for log this change!!
+                    date = line.mrp_id.date_planned or datetime.now().strftime(
+                            DEFAULT_SERVER_DATE_FORMAT)
                     pos = get_position_season(date)
                 
                     # Loop on all elements:
