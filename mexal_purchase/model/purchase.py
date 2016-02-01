@@ -43,6 +43,17 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class StockPicking(orm.Model):
+    ''' BF number
+    '''
+    _inherit = 'stock.picking'
+    
+    _columns = {
+        'bf_number': fields.char('BF number', size=64), 
+        'ff_number': fields.char('FF number', size=64), 
+        }
+        
+
 class PurchaseOrder(orm.Model):
     ''' Purchase extra field
     '''
@@ -65,4 +76,5 @@ class PurchaseOrder(orm.Model):
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
             help='Partner bank account used for payment'),
     }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
