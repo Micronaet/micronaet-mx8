@@ -745,10 +745,10 @@ class Parser(report_sxw.rml_parse):
         # Prepare data for report:     
         res = []
         self.jumped = []
-        for key in sorted(products, key=lambda new_order: '%s%s%s' % (
-                products.default_code[0:3] or '   ',
-                products.default_code[6:12] or '      ',
-                products.default_code[3:6] or '   ',
+        for key in sorted(products, key=lambda products: '%s%s%s' % (
+                products[0:3] or '   ',
+                products[6:12] or '      ',
+                products[3:6] or '   ',
                 )):
             current = products[key] # readability:
             total = 0.0 # INV 0.0
