@@ -604,11 +604,11 @@ class Parser(report_sxw.rml_parse):
                 if line.product_uom_maked_sync_qty: # Remain order to produce:
                     move_qty = line.product_uom_qty - \
                         line.product_uom_maked_sync_qty
-                    note = 'Remain order to produce'    
+                    note = 'Remain order with production (OC - B)'
                 else: # No production: # Remain ordered to delivery:
                     move_qty = line.product_uom_qty - \
                         line.delivered_qty    
-                    note = 'Remain order to deliver'    
+                    note = 'Remain order without production (OC - Delivered)'
                     
                 # same as previous    
                 #date = line.date_deadline or order.date_order
@@ -666,7 +666,7 @@ class Parser(report_sxw.rml_parse):
                             0, # +MM
                             ('%s' % qty).replace('.', ','), # +OC
                             0,
-                            '[BOM # %s] REMAIN OC: (OC-B or OC-DEL (no production) %s' % ( 
+                            '[BOM # %s] REMAIN OC [%s]' % ( 
                                 i,
                                 note,
                                 )
@@ -677,10 +677,10 @@ class Parser(report_sxw.rml_parse):
                 if line.product_uom_maked_sync_qty:
                     move_qty = line.product_uom_maked_sync_qty - \
                         line.delivered_qty                  
-                    # TODO add other date when unlink order          
-                    # TODO check for log this change!!
+                    # TODO add other date when unlink order      
+                    # TODO log this change!!
                     date = line.mrp_id.date_planned or datetime.now().strftime(
-                            DEFAULT_SERVER_DATE_FORMAT)
+                        DEFAULT_SERVER_DATE_FORMAT)
                     pos = get_position_season(date)
                 
                     # Loop on all elements:
@@ -745,7 +745,11 @@ class Parser(report_sxw.rml_parse):
         # Prepare data for report:     
         res = []
         self.jumped = []
-        for key in sorted(products):            
+        for key in sorted(products, key=lambda new_order: '%s%s%s' % (
+                products.default_code[0:3] or '   ',
+                products.default_code[6:12] or '      ',
+                products.default_code[3:6] or '   ',
+                )):
             current = products[key] # readability:
             total = 0.0 # INV 0.0
             
