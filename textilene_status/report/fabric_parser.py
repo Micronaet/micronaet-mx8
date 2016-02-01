@@ -272,8 +272,8 @@ class Parser(report_sxw.rml_parse):
                             'BOM double problem: %s' % product_code)
                         # TODO remove ID?
                         continue    
-
                     bom_product.append(default_code)
+                    
                     if default_code not in products:
                         debug_mm.write(mask % (
                             block,
@@ -627,6 +627,7 @@ class Parser(report_sxw.rml_parse):
                                 'BOM double problem: %s' % product_code)
                             # TODO remove ID?
                             continue    
+                        bom_product.append(default_code)
                             
                         if default_code not in products:
                             debug_mm.write(mask % (
