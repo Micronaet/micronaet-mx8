@@ -426,14 +426,17 @@ class Parser(report_sxw.rml_parse):
                 #          BF document
                 # -------------------------------------------------------------
                 elif line.state == 'done':
+                    date = pick.date_done or pick.min_date or pick.date
+                    pos = get_position_season(date)
+                
                     # USE order data:
-                    if pick.date > period_to: # over range
+                    if date > period_to: # over range
                         debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
                             pick.origin,
-                            pick.date,
+                            date,
                             pos,
                             '', # product_code                                
                             default_code,
@@ -445,14 +448,13 @@ class Parser(report_sxw.rml_parse):
                             ))                      
                         continue
 
-
-                    if pick.date < period_from: # under range
+                    if date < period_from: # under range
                         debug_mm.write(mask % (
                             block,
                             'NOT USED',
                             pick.name,
                             pick.origin,
-                            pick.date,
+                            date,
                             pos,
                             '', # product_code                                
                             default_code,
@@ -471,7 +473,7 @@ class Parser(report_sxw.rml_parse):
                         'USED',
                         pick.name,
                         pick.origin,
-                        pick.date,
+                        date,
                         pos,
                         '', # product_code                                
                         default_code,
