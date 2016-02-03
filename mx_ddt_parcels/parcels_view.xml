@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record id="stock_ddt_parcels_form" model="ir.ui.view">
+            <field name="name">stock.ddt.form.parcelsddt</field>
+            <field name="model">stock.ddt</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+            <field name="arch" type="xml">
+                 <field name="parcels" position="after">
+                     <button name="update_parcels_event" string="Auto counter" type="object" />
+                     <newline />
+                     <field name="parcels_note" nolabel="1"/>
+                 </field>
+            </field>
+        </record>
+
+        <record id="stock_picking_add_delivery_parcels_form" model="ir.ui.view">
+            <field name="name">stock.picking.form.parcels.ddt</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_picking_add_delivery_form"/>
+            <field name="arch" type="xml">
+                 <field name="parcels" position="after">
+                     <button name="update_parcels_event" string="Auto counter" type="object" />
+                     <newline />
+                     <field name="parcels_note" nolabel="1"/>
+                 </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
