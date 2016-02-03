@@ -10,7 +10,7 @@
                  <field name="parcels" position="after">
                      <button name="update_parcels_event" string="Auto counter" type="object" />
                      <newline />
-                     <field name="parcels_note" nolabel="1"/>
+                     <field name="parcels_note" nolabel="1" colspan="2"/>
                  </field>
             </field>
         </record>
@@ -23,7 +23,7 @@
                  <field name="parcels" position="after">
                      <button name="update_parcels_event" string="Auto counter" type="object" />
                      <newline />
-                     <field name="parcels_note" nolabel="1"/>
+                     <field name="parcels_note" nolabel="1" colspan="2"/>
                  </field>
             </field>
         </record>
