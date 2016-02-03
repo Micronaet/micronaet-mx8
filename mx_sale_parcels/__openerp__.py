@@ -31,7 +31,7 @@
         'base',
         'base_accounting_program', # q x pack fields
         'account',
-        'sale',
+        'l10n_it_ddt',
         ],
     'init_xml': [],
     'demo': [],

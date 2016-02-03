@@ -39,9 +39,8 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 class SaleOrder(orm.Model):
-    """ Model name: SaleOrder
-    """
-    
+    ''' Model name: SaleOrder
+    '''    
     _inherit = 'sale.order'
 
     # BUtton event:    
@@ -51,7 +50,7 @@ class SaleOrder(orm.Model):
         assert len(ids) == 1, 'Only one element a time'
         
         parcels = 0
-        parcels_note:
+        parcels_note = ''
         for line in self.browse(cr, uid, ids, context=context)[0].order_line:
             qty = line.product_uom_qty 
             q_x_pack = line.product_id.q_x_pack
@@ -61,9 +60,9 @@ class SaleOrder(orm.Model):
                         line.product_id.default_code)
                 else:
                     parcel = int(qty / q_x_pack)
-                    line.product_uom_qty += parcel 
-                    parcels_note += _('%s: parcels %s \n') % (
-                        line.product_id.default_code, parcel)
+                    parcels += parcel 
+                    parcels_note += _('%s: parcels [%s x] %s \n') % (
+                        line.product_id.default_code, q_x_pack, parcel)
             else:
                 parcels_note += _(
                     '%s no q x pack\n') % line.product_id.default_code    
