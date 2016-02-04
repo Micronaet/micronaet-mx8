@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <field name="origin" position="after">
                     <field name="sale_id" readonly="1"/>
-                    <button name="link_sale_id" string="Re-link" colspan="1" type="object" attrs="{'invisible':[('origin','=',False)]}"/>                    
+                    <button name="link_sale_id" string="Re-link" colspan="1" type="object" attrs="{'invisible':['|',('origin','=',False),('sale_id','!=',False)]}"/>                    
                 </field>                
             </field>
         </record>
