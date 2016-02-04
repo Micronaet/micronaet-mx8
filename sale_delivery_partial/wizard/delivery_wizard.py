@@ -222,6 +222,10 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         res = []
         for line in sale_proxy.order_line:                      
             product_delivered_qty = line.delivered_qty #sol_status.get(line.id, 0.0)
+            
+            if line.product_uom_qty - product_delivered_qty <= 0:
+                continue # Jump all delivered qty!
+                
             res.append((0, False, {
                 #'wizard_id': 1,
                 'order_line_id': line.id,
