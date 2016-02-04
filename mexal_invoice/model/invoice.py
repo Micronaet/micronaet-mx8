@@ -54,7 +54,12 @@ class StockPicking(orm.Model):
         '''
         return {}
 
-    def open_ddt_out(self, cr, uid, ids, context=None):
+    def open_ddt(self, cr, uid, ids, context=None):
+        ''' Open document DDT
+        '''
+        return {}
+
+    def open_order(self, cr, uid, ids, context=None):
         ''' Open document DDT
         '''
         return {}
