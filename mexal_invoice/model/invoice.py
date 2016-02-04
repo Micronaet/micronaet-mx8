@@ -67,7 +67,6 @@ class AccountInvoice(orm.Model):
         
         pick_pool = self.pool.get('stock.picking')
         origin = self.browse(cr, uid, ids, context=context)[0].origin
-        import pdb; pdb.set_trace()
         if origin:
             origins = origin.split(', ')
             # not linked:
