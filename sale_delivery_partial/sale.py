@@ -149,8 +149,8 @@ class SaleOrder(orm.Model):
             'sale_id': order.id, # TODO no more used!
             
             # Partner in cascade assignment:
-            'partner_id': order.partner_shipping_id.id or order.address_id.id \
-                or order.partner_id.id,
+            'partner_id': order.partner_id.id or \
+                order.address_id.id or order.partner_shipping_id.id,
             'note': order.note,
             'invoice_state': (
                 order.order_policy=='picking' and '2binvoiced') or 'none',
