@@ -43,6 +43,17 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class StockPicking(orm.Model):
+    ''' Add button event:
+    '''
+    _inherit = 'stock.picking'
+    
+    # Button event:
+    def open_pick_out(self, cr, uid, ids, context=None):
+        ''' Open document
+        '''
+        return {}
+        
 class AccountInvoice(orm.Model):
     ''' Add some extra field used in report and in management as account
         invoice
@@ -133,6 +144,9 @@ class AccountInvoice(orm.Model):
             ('ft2', 'FT 2 ()'),
             ('ft3', 'FT 3 ()'),
             ], 'Invoice module'),
+
+        'invoiced_picking_ids': fields.one2many(
+            'stock.picking', 'invoice_id', 'Picking'), 
         }    
         
     _defaults = {

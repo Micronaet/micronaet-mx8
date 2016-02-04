@@ -21,6 +21,25 @@
                 <field name="fiscal_position" position="after">
                     <field name="direct_invoice" />
                 </field>
+                <xpath expr="//notebook/page[2]" position="after">
+                    <page string="Linked document">
+                        <separator string="Pick out document:" colspan="4"/>
+                        <field name="invoiced_picking_ids" colspan="4" readonly="1" create="False">
+                            <tree string="Picking out" editable="bottom">
+                                <button name="open_pick_out" string="Open pick out" type="object" icon="gtk-goto-last"/>
+                                <field name="name" />
+                                <field name="partner_id" />
+                                <field name="date" />
+                                <field name="date_done" />
+                                <field name="ddt_id" />  
+                                <field name="origin" />                                
+                                <field name="state" /> 
+                            </tree>
+                        <separator string="DDT:" colspan="4"/>
+                        <separator string="Order:" colspan="4"/>
+                        </field>
+                    </page>
+                </xpath>
             </field>
         </record>
     </data>
