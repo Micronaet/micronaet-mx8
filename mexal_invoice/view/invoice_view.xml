@@ -35,6 +35,7 @@
                                 <button name="open_ddt" string="Open DDT" type="object" icon="gtk-goto-last" attrs="{'invisible':[('ddt_id','=',False)]}" />
                                 <field name="ddt_id" />  
                                 <button name="open_order" string="Open order" type="object" icon="gtk-goto-last" attrs="{'invisible':[('sale_id','=',False)]}" />
+                                <button name="link_sale_id" string="Re-link" colspan="1" type="object" attrs="{'invisible':['|',('origin','=',False),('sale_id','!=',False)]}" icon="gtk-refresh"/>                    
                                 <field name="sale_id" />  
                                 <field name="origin" />                                
                                 <field name="state" /> 
