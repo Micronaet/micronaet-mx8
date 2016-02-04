@@ -94,8 +94,7 @@ class StockPicking(orm.Model):
             'res_id': pick_proxy.sale_id.id,
             'view_type': 'form',
             'view_mode': 'form,tree',
-            }
-        
+            }        
         
 class AccountInvoice(orm.Model):
     ''' Add some extra field used in report and in management as account
