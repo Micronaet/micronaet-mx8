@@ -12,6 +12,17 @@
             </field>
         </record>-->
     
+        <record model="ir.ui.view" id="view_picking_link_form">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="sale_id" readonly="1"/>
+                    <button name="link_sale_id" string="Re-link" colspan="1" type="object" attrs="{'invisible':[('origin','=',False)]}"/>                    
+                </field>                
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_sale_order_pickout_form">
             <field name="name">sale.order.pick.form</field>
             <field name="model">sale.order</field>

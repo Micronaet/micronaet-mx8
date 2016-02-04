@@ -31,6 +31,8 @@
         'base',
         'account',
         'delivery', # for carrier
+        'stock',
+        'sale',
         'mx_sale', # ? for sale_id error
         ],
     'init_xml': [],

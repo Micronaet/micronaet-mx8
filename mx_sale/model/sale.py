@@ -56,6 +56,20 @@ class StockPicking(orm.Model):
     _inherit = 'stock.picking'
     
     # DDT button:
+    def link_sale_id(self, cr, uid, ids, context=None):
+        ''' Link sale_id depend on origin fields
+        '''
+        order_pool = self.pool.get('sale.order')
+        
+        origin = self.browse(cr, uid, ids, context=context)[0].origin
+        sale_ids = order_pool.search(cr, uid, [
+            ('name', '=', origin)], context=context)
+        if sale_ids and len(sale_ids) == 1:
+            self.write(cr, uid, ids, {
+                'sale_id': sale_ids[0],
+                }, context=context)    
+        return True
+        
     def open_ddt_report(self, cr, uid, ids, context=None):
         ''' Open DDT form if present        
         '''

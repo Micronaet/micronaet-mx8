@@ -52,8 +52,17 @@ class StockPicking(orm.Model):
     def open_pick_out(self, cr, uid, ids, context=None):
         ''' Open document Pick
         '''
-        return {}
-
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Linked pickout',
+            'res_model': 'stock.picking',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            #'view_id': view_id,
+            #'target': 'new',
+            #'nodestroy': True,
+            }
     def open_ddt(self, cr, uid, ids, context=None):
         ''' Open document DDT
         '''
