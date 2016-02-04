@@ -23,7 +23,8 @@
                 </field>
                 <xpath expr="//notebook/page[2]" position="after">
                     <page string="Linked document">
-                        <separator string="Pick out document:" colspan="4"/>
+                        <separator string="Pick out document:" colspan="3"/>
+                        <button name="link_pickout_document" string="Re-Link pick out" type="object" colspan="1"/>                        
                         <field name="invoiced_picking_ids" colspan="4" readonly="1" create="False">
                             <tree string="Picking out" editable="bottom">
                                 <button name="open_pick_out" string="Open pick out" type="object" icon="gtk-goto-last"/>

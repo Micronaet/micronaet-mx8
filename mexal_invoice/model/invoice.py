@@ -60,6 +60,28 @@ class AccountInvoice(orm.Model):
     '''
     _inherit = 'account.invoice'
     
+    def link_pickout_document(self, cr, uid, ids, context=None):
+        ''' Link pick out depend on origin text
+        '''
+        assert len(ids), 'Run only with one record!'
+        
+        pick_pool = self.pool.get('stock.picking')
+        origin = self.browse(cr, uid, ids, context=context)[0].origin
+        import pdb; pdb.set_trace()
+        if origin:
+            origins = origin.split(', ')
+            # not linked:
+            pick_ids = pick_pool.search(cr, uid, [
+                ('name', 'in', origins),
+                ('invoice_id', '=', False),
+                ], context=context)
+            if pick_ids:
+                pick_pool.write(cr, uid, pick_ids, {
+                    'invoice_id': ids[0],
+                    }, context=context)
+                _logger.warning('Linked pick to invoice: %s' % origin)
+        return True             
+        
     # Override partner_id onchange for set up carrier_id
     def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice, 
             payment_term, partner_bank_id, company_id, context=None):
@@ -98,20 +120,9 @@ class AccountInvoice(orm.Model):
         # ---------------------------------------
         # Update pick and assign to this invoice:
         # ---------------------------------------
-        origin = self.browse(cr, uid, ids, context=context)[0].origin
-        if origin:
-            origins = origin.split(',')
-            # not linked:
-            pick_ids = pick_pool.search(cr, uid, [
-                ('name', 'in', origins),
-                ('invoice_id', '=', False),
-                ], context=context)
-            if pick_ids:
-                pick_pool.write(cr, uid, pick_ids, {
-                    'invoice_id': ids[0],
-                    }, context=context)
-                _logger.warning('Linked pick to invoice: %s' % origin)
-                
+        # Run launching button:
+        self.link_pickout_document(cr, uid, ids, context=context)
+
         # -------------------------------------
         # Set confirmed transfer when validate:
         # -------------------------------------
