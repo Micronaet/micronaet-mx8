@@ -46,6 +46,8 @@ _logger = logging.getLogger(__name__)
 class product_product(osv.osv):
     _inherit = 'product.product'
 
+    _order = 'default_code, name'
+    
     # Override sale_stock procurement procedure!
     def need_procurement(self, cr, uid, ids, context=None):
         return False
