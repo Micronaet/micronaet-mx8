@@ -50,9 +50,15 @@ class StockPicking(orm.Model):
     
     # Button event:
     def open_pick_out(self, cr, uid, ids, context=None):
-        ''' Open document
+        ''' Open document Pick
         '''
         return {}
+
+    def open_ddt_out(self, cr, uid, ids, context=None):
+        ''' Open document DDT
+        '''
+        return {}
+        
         
 class AccountInvoice(orm.Model):
     ''' Add some extra field used in report and in management as account
@@ -80,7 +86,7 @@ class AccountInvoice(orm.Model):
                     }, context=context)
                 _logger.warning('Linked pick to invoice: %s' % origin)
         return True             
-        
+
     # Override partner_id onchange for set up carrier_id
     def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice, 
             payment_term, partner_bank_id, company_id, context=None):

@@ -24,7 +24,7 @@
                 <xpath expr="//notebook/page[2]" position="after">
                     <page string="Linked document">
                         <separator string="Pick out document:" colspan="3"/>
-                        <button name="link_pickout_document" string="Re-Link pick out" type="object" colspan="1"/>                        
+                        <button name="link_pickout_document" string="Re-Link pick out" type="object" colspan="1" attrs="{'invisible':[('origin','=',False)]}"/>
                         <field name="invoiced_picking_ids" colspan="4" readonly="1" create="False">
                             <tree string="Picking out" editable="bottom">
                                 <button name="open_pick_out" string="Open pick out" type="object" icon="gtk-goto-last"/>
@@ -32,6 +32,7 @@
                                 <field name="partner_id" />
                                 <field name="date" />
                                 <field name="date_done" />
+                                <button name="open_ddt" string="Open DDT" type="object" icon="gtk-goto-last" attrs="{'invisible':[('ddt_id','=',False)]}" />
                                 <field name="ddt_id" />  
                                 <field name="origin" />                                
                                 <field name="state" /> 
