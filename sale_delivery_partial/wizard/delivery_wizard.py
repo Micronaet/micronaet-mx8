@@ -220,12 +220,13 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         #        sol_status[sol_id] += line.product_uom_qty # TODO uos?
         
         res = []
+        lines = 0
         for line in sale_proxy.order_line:                      
             product_delivered_qty = line.delivered_qty #sol_status.get(line.id, 0.0)
             
             if line.product_uom_qty - product_delivered_qty <= 0:
                 continue # Jump all delivered qty!
-                
+            lines += 1    
             res.append((0, False, {
                 #'wizard_id': 1,
                 'order_line_id': line.id,
@@ -241,6 +242,8 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 'product_remain_qty':
                     line.product_uom_qty - product_delivered_qty,
                 }))
+        if not lines:
+            raise osv.except_osv(_('Warning'), _('All delivered!!'))
         return res
         
     _columns = {
