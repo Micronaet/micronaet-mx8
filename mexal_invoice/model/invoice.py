@@ -63,15 +63,38 @@ class StockPicking(orm.Model):
             #'target': 'new',
             #'nodestroy': True,
             }
+
     def open_ddt(self, cr, uid, ids, context=None):
         ''' Open document DDT
         '''
-        return {}
+        pick_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not pick_proxy.ddt_id:
+            return {}
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Linked DDT',
+            'res_model': 'stock.ddt',
+            'res_id': pick_proxy.ddt_id.id,
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            }
 
     def open_order(self, cr, uid, ids, context=None):
         ''' Open document DDT
         '''
-        return {}
+        pick_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not pick_proxy.sale_id:
+            return {}
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Linked Order',
+            'res_model': 'sale.order',
+            'res_id': pick_proxy.sale_id.id,
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            }
         
         
 class AccountInvoice(orm.Model):
