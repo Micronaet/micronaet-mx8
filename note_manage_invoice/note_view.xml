@@ -25,8 +25,9 @@
                <attribute name="editable">top</attribute>
            </field>-->
            <xpath expr="//notebook/page/field[@name='invoice_line']//field[@name='price_unit']" position="after">
-               <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
-               <field name="text_note_pre" colspan="2" nolabel="1"/>
+               <!--<field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>-->
+               <field name="text_note_pre" />
+               <field name="text_note_post" />
                <!--<field name="text_note_post_id" on_change="onchange_note(text_note_post_id,'text_note_post')" colspan="2" domain="[('object','=','sale.order.line')]" context="{'default_object':'sale.order.line'}"/>
                <field name="text_note_post" colspan="2" nolabel="1"/>-->
            </xpath>

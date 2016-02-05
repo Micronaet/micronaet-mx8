@@ -20,10 +20,14 @@
 ##############################################################################
 
 
+import logging
 from openerp import models, api, fields
 from openerp.osv import fields, osv, expression, orm
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
+
+
+_logger = logging.getLogger(__name__)
 
 class StockMove(orm.Model):
     ''' Problem: VAT not propagate (procurement not present in my module)
@@ -78,6 +82,7 @@ class stock_picking(osv.osv):
         
         # Pool used:    
         invoice_obj = self.pool.get('account.invoice')
+        inv_line_obj = self.pool.get('account.invoice.line')
         move_obj = self.pool.get('stock.move')
         
         invoices = {}
@@ -144,8 +149,19 @@ class stock_picking(osv.osv):
                 invoice_line_vals['price_unit'] = move.sale_line_id.price_unit
                 # TODO sequence if present!!!
                 
-            move_obj._create_invoice_line_from_vals(
+            inv_line_id = move_obj._create_invoice_line_from_vals(
                 cr, uid, move, invoice_line_vals, context=context)
+                
+            # Update invoice line with extra data:
+            inv_line_obj.write(cr, uid, inv_line_id, {
+                'text_note_pre': move.text_note_pre,
+                'text_note_post': move.text_note_post,
+                'use_text_description': move.use_text_description,                
+                # TODO:
+                # DDT ref.
+                # Order ref from pick:
+                }, context=context)
+            
             move_obj.write(cr, uid, move.id, {
                 'invoice_state': 'invoiced'}, context=context)
 
