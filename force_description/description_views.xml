@@ -26,7 +26,6 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">            
                     <field name="use_text_description"/>
-                    <label for="use_text_description"
                </field>
             </field>
         </record>
