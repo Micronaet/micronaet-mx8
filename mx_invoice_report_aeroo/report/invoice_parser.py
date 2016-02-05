@@ -43,7 +43,37 @@ class Parser(report_sxw.rml_parse):
             
             # Utility:
             'return_note': self.return_note,
+            
+            'check_pick_change': self.check_pick_change,
+            'write_reference': self.write_reference,
         })
+        self.last_picking = False # TODO is reset all reports?
+        
+    def check_pick_change(self, l):
+        ''' Check if this line has different picking value
+        '''
+        pick = l.picking_id
+        if not pick: # do nothing (old value)
+            return False
+        if not self.last_picking or self.last_picking != pick:
+            self.last_picking = pick # save browse
+            return True
+        return False    
+
+    def write_reference(self):
+        ''' Write reference for change pick
+        '''
+        try:
+            if not self.last_picking:
+                return _('No ref.')
+            res = ''
+            if self.last_picking.ddt_id:
+                res += 'DDT: %s' % self.last_picking.ddt_id.name
+            if self.last_picking.sale_id:
+                res += _('Order: %s') % self.last_picking.sale_id.name
+            return res            
+        except:
+            return _('Reference error')    
 
     def return_note(self, note):
         ''' Check if exist and after return \n note
@@ -70,11 +100,11 @@ class Parser(report_sxw.rml_parse):
             return res
             
         partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
-        res = '%s %s' % (
-            partic_proxy.partner_code or '', 
-            partic_proxy.partner_description or '',
+        res = '\n%s %s' % (
+            partic_proxy.partner_code, 
+            partic_proxy.partner_description,
             )
-        return res
+        return res.strip()
 
     def get_tax_line(self, sol):
         ''' Tax line for order / proforma invoice        

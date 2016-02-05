@@ -29,6 +29,16 @@ from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
+class AccouuntInvoiceLine(orm.Model):
+    ''' Account invoice line for link
+    '''
+    _inherit = 'account.invoice.line'
+    
+    _columns = {
+        'generator_move_id': fields.many2one(
+            'stock.move', 'Generator of line (move)'), 
+        }
+
 class StockMove(orm.Model):
     ''' Problem: VAT not propagate (procurement not present in my module)
     '''
@@ -157,7 +167,8 @@ class stock_picking(osv.osv):
                 'text_note_pre': move.text_note_pre,
                 'text_note_post': move.text_note_post,
                 'use_text_description': move.use_text_description,                
-                # TODO:
+                'generator_move_id': move.id,
+                # TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 # DDT ref.
                 # Order ref from pick:
                 }, context=context)
