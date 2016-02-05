@@ -202,6 +202,27 @@ class DdTFromPickings(models.TransientModel):
                     picking.sale_id.invoice_partner_id)
                 values['invoice_partner_id'] = (
                     invoice_partner_id.id)
+
+        # -------------------------------------
+        # Add note header in DDT (all lines!!):
+        # -------------------------------------
+        # check no repeat note:
+        note_list_pre = []
+        note_list_post = []
+        # Add fields:
+        values['text_note_pre'] = ''
+        values['text_note_post'] = ''
+
+        for picking in self.picking_ids:
+            if picking.text_note_pre:
+                if picking.text_note_pre not in note_list_pre:
+                    values['text_note_pre'] += '%s\n' % picking.text_note_pre
+                    note_list_pre.append(picking.text_note_pre)
+
+            if picking.text_note_post:
+                if picking.text_note_post not in note_list_post:
+                    values['text_note_post'] += '%s\n' % picking.text_note_post
+                    note_list_post.append(picking.text_note_post)
                     
         ddt = self.env['stock.ddt'].create(values)
         for picking in self.picking_ids:

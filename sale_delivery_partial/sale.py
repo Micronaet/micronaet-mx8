@@ -191,16 +191,20 @@ class SaleOrder(orm.Model):
                 DEFAULT_SERVER_DATE_FORMAT)
         
         # Add dependency for this fields: TODO vector and others needed!
-        extra_fields = (
+        extra_fields_m2o = (
             # DDT ref:
             'transportation_reason_id', 
             'goods_description_id', 'carriage_condition_id',
             # Partner ref.:
-            'destination_partner_id', 'invoice_partner_id',
+            'destination_partner_id', 'invoice_partner_id',)
+        extra_fields = (
             # Header note ref.:
             'text_note_pre', 'text_note_post')
-        for field in extra_fields:
+
+        for field in extra_fields_m2o:
             picking_data[field] = order.__getattribute__(field).id
+        for field in extra_fields:
+            picking_data[field] = order.__getattribute__(field)
         
         # TODO Keep picking invoiceable???
         #picking_data['invoice_state'] = '2binvoiced'
