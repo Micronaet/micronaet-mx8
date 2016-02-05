@@ -192,9 +192,13 @@ class SaleOrder(orm.Model):
         
         # Add dependency for this fields: TODO vector and others needed!
         extra_fields = (
+            # DDT ref:
             'transportation_reason_id', 
             'goods_description_id', 'carriage_condition_id',
-            'destination_partner_id', 'invoice_partner_id')
+            # Partner ref.:
+            'destination_partner_id', 'invoice_partner_id',
+            # Header note ref.:
+            'text_note_pre', 'text_note_post')
         for field in extra_fields:
             picking_data[field] = order.__getattribute__(field).id
         
@@ -228,6 +232,12 @@ class SaleOrder(orm.Model):
                     move_data['state'] = 'assigned' # TODO controllare se è corretto!!!!
                     # *********************************************************
                     move_data['invoice_state'] = '2binvoiced'
+                    
+                    # OC Field to move on:
+                    move_data[
+                        'use_text_description'] = line.use_text_description
+                    move_data['text_note_pre'] = line.text_note_pre
+                    move_data['text_note_post'] = line.text_note_post                        
                     
                     if not move_data['product_uom_qty']:
                         continue

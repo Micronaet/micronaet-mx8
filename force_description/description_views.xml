@@ -43,9 +43,9 @@
                    <attribute name="domain">[('supplier','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
                </field>
             </field>
-        </record>
+        </record>-->
 
-        <record model="ir.ui.view" id="view_stock_picking_partner_form">
+        <!--<record model="ir.ui.view" id="view_stock_picking_partner_form">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
@@ -58,9 +58,9 @@
                      <attribute name="domain">[('customer','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
                  </field>
             </field>
-        </record>
+        </record>-->
 
-        <record model="ir.ui.view" id="view_invoice_form_partner_form">
+        <!--<record model="ir.ui.view" id="view_invoice_form_partner_form">
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form"/>

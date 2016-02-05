@@ -78,6 +78,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 _('Error!'),
                 _('No elements to update, change remain q. or deadline!'))
     
+    # Utility:
     def deliver_remain_qty(self, cr, uid, ids, context=None):
         ''' Set remain qty to pick out quantity
         '''
