@@ -197,7 +197,6 @@ class StockPicking(models.Model):
         note_post_list = []
         note_pre = ''
         note_post = ''
-        import pdb; pdb.set_trace()
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.text_note_pre and \
                     picking.text_note_pre not in note_pre_list:
@@ -207,7 +206,9 @@ class StockPicking(models.Model):
                     picking.text_note_post not in note_post_list:
                 note_post += '%s\n' % picking.text_note_post
                 note_post_list.append(picking.text_note_post)
-                
+            
+            # TODO remove from middle of the loop and check that are all
+            # equals!!!    
             invoice_obj.write(cr, uid, res, {
                 # DDT fields:
                 'carriage_condition_id':

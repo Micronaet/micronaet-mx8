@@ -73,6 +73,8 @@ class stock_picking(osv.osv):
     # Override function:
     def _invoice_create_line(self, cr, uid, moves, journal_id, 
             inv_type='out_invoice', context=None):
+        ''' Create invoice line from picking (direct invoice of DDT invoice)
+        '''    
         
         # Pool used:    
         invoice_obj = self.pool.get('account.invoice')
