@@ -85,9 +85,12 @@ class stock_picking(osv.osv):
             cr, uid, moves, inv_type, context=context)
             
         product_price_unit = {}
+        # TODO check order line here!!!
         for move in moves:
             company = move.company_id
             origin = move.picking_id.name
+            _logger.info('>>> Invoicing picking: %s [%s]' % (
+                origin, move.id))
             partner, user_id, currency_id = move_obj._get_master_data(
                 cr, uid, move, company, context=context)
 

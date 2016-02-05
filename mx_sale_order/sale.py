@@ -44,5 +44,5 @@ class SaleOrderLine(orm.Model):
     """
     
     _inherit = 'sale.order.line'
-    _order = 'id'
+    _order = 'order_id, id'
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
