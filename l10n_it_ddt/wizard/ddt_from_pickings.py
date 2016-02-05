@@ -207,7 +207,6 @@ class DdTFromPickings(models.TransientModel):
         # Add note header in DDT (all lines!!):
         # -------------------------------------
         # check no repeat note:
-        import pdb; pdb.set_trace()
         note_list_pre = []
         note_list_post = []
         # Add fields:

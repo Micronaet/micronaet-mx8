@@ -183,13 +183,33 @@ class StockPicking(models.Model):
     def action_invoice_create(
             self, cr, uid, ids, journal_id, group=False, type='out_invoice',
             context=None):
+        ''' Action for create invoice from pickings (or DDT > pick > invoice)
+            Note: Inherit Append DDT extra data
+        '''    
         if not context:
             context = {}
         invoice_obj = self.pool['account.invoice']
         res = super(StockPicking, self).action_invoice_create(
             cr, uid, ids, journal_id, group, type, context)
+            
+        # TODO Use only first element?
+        note_pre_list = []
+        note_post_list = []
+        note_pre = ''
+        note_post = ''
+        import pdb; pdb.set_trace()
         for picking in self.browse(cr, uid, ids, context=context):
+            if picking.text_note_pre and \
+                    picking.text_note_pre not in note_pre_list:
+                note_pre += '%s\n' % picking.text_note_pre
+                note_pre_list.append(picking.text_note_pre)
+            if picking.text_note_post and \
+                    picking.text_note_post not in note_post_list:
+                note_post += '%s\n' % picking.text_note_post
+                note_post_list.append(picking.text_note_post)
+                
             invoice_obj.write(cr, uid, res, {
+                # DDT fields:
                 'carriage_condition_id':
                 picking.carriage_condition_id and
                 picking.carriage_condition_id.id,
@@ -202,7 +222,12 @@ class StockPicking(models.Model):
                 'transportation_method_id':
                 picking.transportation_method_id and
                 picking.transportation_method_id.id,
-                'parcels': picking.parcels,
+                'parcels': picking.parcels,                
             })
+        invoice_obj.write(cr, uid, res, {
+            'text_note_pre': note_pre,
+            'text_note_post': note_post,            
+            })
+            
         return res
 
