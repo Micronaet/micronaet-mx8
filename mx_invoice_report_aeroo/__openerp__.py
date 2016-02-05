@@ -36,6 +36,7 @@
         'base',
         'account',
         'report_aeroo',
+        #'force_description', # TODO 
         #'report_aeroo_ooo',
         ],
     'init_xml' : [], 

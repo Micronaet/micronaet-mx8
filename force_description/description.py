@@ -44,6 +44,8 @@ class SaleOrderLine(orm.Model):
     _inherit = 'sale.order.line'
     
     _columns = {
+        'use_text_description': fields.boolean('Use description', 
+            help='Use description instead of product name'),
         'force_description': fields.text('Force description'),
         }
 
@@ -53,6 +55,8 @@ class PurchaseOrderLine(orm.Model):
     _inherit = 'purchase.order.line'
     
     _columns = {
+        'use_text_description': fields.boolean('Use description', 
+            help='Use description instead of product name'),
         'force_description': fields.text('Force description'),
         }
 
@@ -62,6 +66,8 @@ class AccountInvoiceLine(orm.Model):
     _inherit = 'account.invoice.line'
     
     _columns = {
+        'use_text_description': fields.boolean('Use description', 
+            help='Use description instead of product name'),
         'force_description': fields.text('Force description'),
         }
 
@@ -71,6 +77,8 @@ class StockMode(orm.Model):
     _inherit = 'stock.move'
     
     _columns = {
+        'use_text_description': fields.boolean('Use description', 
+            help='Use description instead of product name'),
         'force_description': fields.text('Force description'),
         }
         

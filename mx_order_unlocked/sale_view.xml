@@ -27,6 +27,9 @@
                 <xpath expr="/form/sheet/notebook/page//field[@name='order_line']/form//field[@name='tax_id']" position="attributes">
                     <attribute name="attrs">{'readonly': [('state','in',('invoice_except', 'done'))]}</attribute>
                 </xpath>
+                <xpath expr="/form/sheet/notebook/page//field[@name='order_line']/form//field[@name='name']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state','in',('invoice_except', 'done'))]}</attribute>
+                </xpath>
             </field>
         </record>
     </data>

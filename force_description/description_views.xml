@@ -1,23 +1,25 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!---<record model="ir.ui.view" id="view_order_form_destination_fields">
+        <record model="ir.ui.view" id="view_order_form_destination_fields">
             <field name="name">sale.order.destination</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">        
-               <xpath expr="/form/sheet//field[@name='partner_id']" position="after">
-                  <group name="destination_parameters" colspan="2" col="2"> 
-                      <field name="destination_partner_id" domain="[('parent_id','=',partner_id),('is_address','=',True)]" context="{'show_address':True}"/> 
-                      <field name="invoice_partner_id" domain="[('is_company','=',True),('is_address','=',False)]" context="{'show_address':True}"/> 
-                  </group>    
+               <xpath expr="//notebook/page//field[@name='order_line']//form//field[@name='name']" position="after">
+                   <group>
+                       <field name="use_text_description"/>
+                   </group>   
                </xpath>
-               <field name="partner_id" position="attributes">
-                   <attribute name="domain">[('customer','=',True),('is_company','=',True),('is_address','=',False)]</attribute>
-               </field>
+               <xpath expr="//notebook/page//field[@name='order_line']//tree//field[@name='name']" position="before">
+                   <field name="use_text_description" invisible="1"/>
+               </xpath>
+               <xpath expr="//notebook/page//field[@name='order_line']//tree" position="attributes">
+                   <attribute name="colors">blue:use_text_description==True</attribute>
+               </xpath>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_order_form_destination_fields_tree">
+        <!--<record model="ir.ui.view" id="view_order_form_destination_fields_tree">
             <field name="name">sale.order.destination.tree</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_quotation_tree" />
