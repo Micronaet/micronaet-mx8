@@ -21,9 +21,13 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import logging
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
+from openerp.tools.translate import _
 
+
+_logger = logging.getLogger(__name__)
 
 class Parser(report_sxw.rml_parse):
     counters = {}
@@ -52,8 +56,8 @@ class Parser(report_sxw.rml_parse):
     def check_pick_change(self, l):
         ''' Check if this line has different picking value
         '''
-        pick = l.picking_id
-        if not pick: # do nothing (old value)
+        pick = l.generator_move_id.picking_id
+        if not pick.id: # do nothing (old value)
             return False
         if not self.last_picking or self.last_picking != pick:
             self.last_picking = pick # save browse
@@ -64,13 +68,19 @@ class Parser(report_sxw.rml_parse):
         ''' Write reference for change pick
         '''
         try:
-            if not self.last_picking:
+            if not self.last_picking.id:
                 return _('No ref.')
+
             res = ''
             if self.last_picking.ddt_id:
-                res += 'DDT: %s' % self.last_picking.ddt_id.name
+                res += ' DDT: %s' % self.last_picking.ddt_id.name
             if self.last_picking.sale_id:
-                res += _('Order: %s') % self.last_picking.sale_id.name
+                res += _(' Order: %s%s') % (
+                    self.last_picking.sale_id.name,
+                    _(' (Your ref.: %s)') % (
+                        self.last_picking.sale_id.client_order_ref) \
+                        if self.last_picking.sale_id.client_order_ref else '',
+                    )
             return res            
         except:
             return _('Reference error')    
