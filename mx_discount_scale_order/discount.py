@@ -72,8 +72,8 @@ class SaleOrderLine(orm.Model):
     def write(self, cr, uid, ids, vals, context=None):
         ''' Update discount if text is present
         '''
-
-        if vals.get('multi_discount_rates', False):
+        multi_discount_rates = vals.get('multi_discount_rates', False)
+        if multi_discount_rates:
             res = self.pool.get(
                 'res.partner').format_multi_discount(
                     multi_discount_rates)
