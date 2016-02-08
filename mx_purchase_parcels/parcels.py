@@ -3,10 +3,6 @@
 #
 #    Copyright (C) 2001-2014 Micronaet SRL (<http://www.micronaet.it>).
 #
-#    Original module for stock.move from:
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
 #    by the Free Software Foundation, either version 3 of the License, or
@@ -21,7 +17,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-
 import os
 import sys
 import logging
@@ -31,7 +26,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
@@ -43,38 +38,44 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-class StockPicking(orm.Model):
-    ''' BF number
-    '''
-    _inherit = 'stock.picking'
-    
-    _columns = {
-        'bf_number': fields.char('BF number', size=64), 
-        'ff_number': fields.char('FF number', size=64), 
-        }
-        
-
 class PurchaseOrder(orm.Model):
-    ''' Purchase extra field
-    '''
+    ''' Model name: SaleOrder
+    '''    
     _inherit = 'purchase.order'
+
+    # BUtton event:    
+    def update_parcels_event(self, cr, uid, ids, context=None):
+        ''' Get total of parcels
+        '''
+        assert len(ids) == 1, 'Only one element a time'
         
+        parcels = 0
+        parcels_note = ''
+        for line in self.browse(cr, uid, ids, context=context)[0].order_line:
+            qty = line.product_qty 
+            q_x_pack = line.product_id.q_x_pack
+            if q_x_pack > 0:
+                if qty % q_x_pack > 0:
+                    parcels_note += _('%s not correct q x pack\n') % (
+                        line.product_id.default_code)
+                else:
+                    parcel = int(qty / q_x_pack)
+                    parcels += parcel 
+                    parcels_note += _('%s: parcels [%s x] %s \n') % (
+                        line.product_id.default_code, q_x_pack, parcel)
+            else:
+                parcels_note += _(
+                    '%s no q x pack\n') % line.product_id.default_code    
+
+        self.write(cr, uid, ids, {
+            'parcels': parcels,
+            'parcels_note': parcels_note,
+            }, context=context)            
+                
     _columns = {
-        # TODO Needed all?
-        'carriage_condition_id': fields.many2one(
-            'stock.picking.carriage_condition', 'Carriage Condition'),
-        'goods_description_id': fields.many2one(
-            'stock.picking.goods_description', 'Description of Goods'),
-        'transportation_reason_id': fields.many2one(
-            'stock.picking.transportation_reason',
-            'Reason for Transportation'),
-        'transportation_method_id': fields.many2one(
-            'stock.picking.transportation_method',
-            'Method of Transportation'),
-        'parcels': fields.integer('Number of Packages'),
-
-        'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
-            help='Partner bank account used for payment'),
-    }
-
+        'parcels': fields.integer('Parcels'), # TODO here?
+        'parcels_note': fields.text(
+            'Parcel note', help='Calculation procedure note') ,
+        }            
+            
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

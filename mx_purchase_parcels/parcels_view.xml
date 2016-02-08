@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="purchase_order_form_view_ddt" model="ir.ui.view">
+            <field name="name">purchase.order.form.ddt</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="mexal_purchase.purchase_order_mx_form"/>
+            <field name="arch" type="xml">
+                 <field name="parcels" position="after">
+                     <button name="update_parcels_event" string="Auto counter" type="object" />
+                     <newline />
+                     <field name="parcels_note" nolabel="1" colspan="2"/>
+                 </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
