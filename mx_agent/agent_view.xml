@@ -29,7 +29,9 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page//field[@name='priority']" position="after">                    
-                    <field name="mx_agent_id"/>
+                    <group>
+                        <field name="mx_agent_id"/>
+                    </group>
                 </xpath>
             </field>
         </record>        
@@ -40,7 +42,9 @@
             <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="after">
-                    <field name="mx_agent_id"/>
+                    <group>
+                        <field name="mx_agent_id"/>
+                    </group>    
                 </xpath>
             </field>
         </record>

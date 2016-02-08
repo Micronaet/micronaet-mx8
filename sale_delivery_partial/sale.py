@@ -193,6 +193,7 @@ class SaleOrder(orm.Model):
         # Add dependency for this fields: TODO vector and others needed!
         extra_fields_m2o = (
             # DDT ref:
+            'mx_agent_id',
             'transportation_reason_id', 
             'goods_description_id', 'carriage_condition_id',
             # Partner ref.:

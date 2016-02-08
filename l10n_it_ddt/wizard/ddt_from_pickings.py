@@ -51,6 +51,7 @@ class DdTFromPickings(models.TransientModel):
             'default_carrier_id': False,
             'destination_partner_id': False,
             'invoice_partner_id': False,
+            'mx_invoice_id': False,
             }
             
         partner = False        
@@ -203,6 +204,22 @@ class DdTFromPickings(models.TransientModel):
                 values['invoice_partner_id'] = (
                     invoice_partner_id.id)
 
+        # Agent:
+        mx_agent_id = False
+        for picking in self.picking_ids:
+            if picking.sale_id and (
+                    picking.sale_id.mx_agent_id):
+                if mx_agent_id and (
+                    mx_agent_id != (
+                        picking.sale_id.mx_agent_id)):
+                    raise Warning(
+                        _('Selected Pickings have'
+                          ' different invoice agent'))
+                mx_agent_id = (
+                    picking.sale_id.mx_agent_id)
+                values['mx_agent_id'] = (
+                    mx_agent_id.id)
+        
         # -------------------------------------
         # Add note header in DDT (all lines!!):
         # -------------------------------------
