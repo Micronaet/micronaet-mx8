@@ -21,8 +21,9 @@
                </page>
            </xpath>
            <xpath expr="//notebook/page/field[@name='order_line']//field[@name='price_unit']" position="after">
-               <field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','purchase.order.line')]" context="{'default_object':'purchase.order.line'}"/>
-               <field name="text_note_pre" colspan="2" nolabel="1"/>
+               <!--<field name="text_note_pre_id" on_change="onchange_note(text_note_pre_id,'text_note_pre')" colspan="2" domain="[('object','=','purchase.order.line')]" context="{'default_object':'purchase.order.line'}"/>-->
+               <field name="text_note_pre"/>
+               <field name="text_note_post"/>
            </xpath>
         </field>
     </record>
