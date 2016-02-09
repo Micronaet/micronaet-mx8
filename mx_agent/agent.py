@@ -69,6 +69,75 @@ class SaleOrder(orm.Model):
             domain=[('is_agent', '=', True)]),
         }
 
+class SaleOrder(orm.Model):
+    """ Model name: Sale Order
+    """    
+    _inherit = 'sale.order.line'
+
+    # Button event:
+    def force_partner_id(self, cr, uid, ids, context=None):
+        ''' Force partner from order
+        '''
+        for line in self.browse(cr, uid, ids, context=None):
+            self.write(cr, uid, line.id, {
+                'partner_id': line.order_id.partner_id.id,
+                }, context=context)
+    def force_all_partner_id(self, cr, uid, ids, context=None):
+        ''' Force partner from order
+        '''
+        sol_ids = self.search(cr, uid, [
+            ('partner_id', '=', False),
+            ], context=context)
+        if sol_ids:    
+            self.force_partner_id(cr, uid, sol_ids, context=context)
+        return True    
+        
+
+    def force_agent_id(self, cr, uid, ids, context=None):
+        ''' Force agent from order
+        '''
+        for line in self.browse(cr, uid, ids, context=None):        
+            self.write(cr, uid, line.id, {
+                'mx_agent_id': line.order_id.mx_agent_id.id or \
+                    line.order_id.partner_id.agent_id.id or False,
+                }, context=context)
+        return True
+    def force_all_agent_id(self, cr, uid, ids, context=None):
+        ''' Force agent from order
+        '''
+        sol_ids = self.search(cr, uid, [
+            ('mx_agent_id', '=', False),
+            ], context=context)
+        if sol_ids:    
+            self.force_agent_id(cr, uid, sol_ids, context=context)
+        return True
+    
+    def _get_agent_from_order(self, cr, uid, ids, context=None):
+        ''' When change sol line order
+        '''
+        sale_pool = self.pool['sale.order']
+        res = []
+        for sale in sale_pool.browse(cr, uid, ids, context=context):
+            for line in sale.order_line:
+                res.append(line.id)
+        return res
+
+    def _get_agent_from_sol(self, cr, uid, ids, context=None):
+        ''' When change sol line order
+        '''
+        return ids
+
+    _columns = {
+        'mx_agent_id': fields.related(
+            'order_id', 'mx_agent_id', type='many2one', relation='res.partner', 
+            store={
+                'sale.order.line': (_get_agent_from_sol, ['order_id'], 10),
+                'sale.order': (_get_agent_from_order, [
+                    'partner_id', 'mx_agent_id'], 10),
+                }, string='Mx Agent',            
+            )
+        }
+
 class AccountInvoice(orm.Model):
     """ Model name: Account Invoice
     """    
