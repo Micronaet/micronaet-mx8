@@ -47,10 +47,7 @@ class SaleOrder(orm.Model):
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res = super(SaleOrder, self).onchange_partner_id(
             cr, uid, ids, part, context=context)
-            
         
-        # Update agent field for partner form
-        # TODO propagate!!!
         if 'value' not in res:
            res['value'] = {}
         if part:
@@ -58,18 +55,16 @@ class SaleOrder(orm.Model):
                cr, uid, part, context=context)
            res['value'][
                'mx_agent_id'] = partner_proxy.agent_id.id
-        else:       
-               
+        else:
            res['value']['mx_agent_id'] = False
         return res 
-    
-    
+        
     _columns = {
         'mx_agent_id': fields.many2one('res.partner', 'Agent', 
             domain=[('is_agent', '=', True)]),
         }
 
-class SaleOrder(orm.Model):
+class SaleOrderLine(orm.Model):
     """ Model name: Sale Order
     """    
     _inherit = 'sale.order.line'
@@ -136,7 +131,7 @@ class SaleOrder(orm.Model):
                     'partner_id', 'mx_agent_id'], 10),
                 }, string='Mx Agent',            
             )
-        }
+        }#'partner_id', 
 
 class AccountInvoice(orm.Model):
     """ Model name: Account Invoice
