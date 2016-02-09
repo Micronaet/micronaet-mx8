@@ -83,7 +83,7 @@ class Parser(report_sxw.rml_parse):
                     )
             return res            
         except:
-            return _('Reference error')    
+            return _(' Reference error ')
 
     def return_note(self, note):
         ''' Check if exist and after return \n note
@@ -111,8 +111,8 @@ class Parser(report_sxw.rml_parse):
             
         partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
         res = '\n%s %s' % (
-            partic_proxy.partner_code, 
-            partic_proxy.partner_description,
+            partic_proxy.partner_code or '', 
+            partic_proxy.partner_description or '',
             )
         return res.strip()
 
