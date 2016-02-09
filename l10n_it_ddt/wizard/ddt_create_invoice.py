@@ -143,7 +143,7 @@ class DdTCreateInvoice(models.TransientModel):
             'payment_term_id': ddts[0].payment_term_id.id,
             'used_bank_id': ddts[0].used_bank_id.id,
             'default_carrier_id': ddts[0].default_carrier_id.id,
-            
+            #'mx_agent_id': ddts[0].mx_agent_id.id, # Correct?            
             # TODO address??
             })
         

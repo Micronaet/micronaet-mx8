@@ -159,14 +159,15 @@ class PickingCreateDirectInvoice(models.TransientModel):
                 pickings[0].sale_id.transportation_method_id.id,
 
             'payment_term': pickings[0].sale_id.payment_term.id,
-
             'used_bank_id': pickings[0].sale_id.bank_account_id.id,    
             'default_carrier_id': pickings[0].sale_id.carrier_id.id,                        
-            'destination_partner_id': pickings[0].sale_id.destination_partner_id.id,
+            'destination_partner_id': pickings[
+                0].sale_id.destination_partner_id.id,
             'invoice_partner_id': pickings[0].sale_id.invoice_partner_id.id,
+            'mx_agent_id': pickings[0].mx_agent_id.id,            
             'direct_invoice': True,
-            'date_invoice': datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
-            
+            'date_invoice': datetime.now().strftime(
+                DEFAULT_SERVER_DATE_FORMAT),
             # TODO other fields!    
             #'parcels': pickings[0].parcels,
             })
