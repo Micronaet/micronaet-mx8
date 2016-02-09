@@ -69,15 +69,15 @@ class Parser(report_sxw.rml_parse):
         '''
         try:
             if not self.last_picking.id:
-                return _('No ref.')
+                return _('No ref. ')
 
             res = ''
             if self.last_picking.ddt_id:
-                res += ' DDT: %s' % self.last_picking.ddt_id.name
+                res += ' DDT: %s ' % self.last_picking.ddt_id.name
             if self.last_picking.sale_id:
-                res += _(' Order: %s%s') % (
+                res += _(' Order: %s%s ') % (
                     self.last_picking.sale_id.name,
-                    _(' (Your ref.: %s)') % (
+                    _(' (Your ref.: %s )') % (
                         self.last_picking.sale_id.client_order_ref) \
                         if self.last_picking.sale_id.client_order_ref else '',
                     )
