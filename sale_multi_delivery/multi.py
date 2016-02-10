@@ -35,7 +35,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
     DATETIME_FORMATS_MAP, 
     float_compare)
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -67,6 +66,29 @@ class SaleOrder(orm.Model):
     """ Model name: SaleOrder
     """    
     _inherit = 'sale.order'
+
+    '''    return {
+            'view_type': 'form',
+            'view_mode': 'form',#,tree',
+            'res_model': 'sale.order.delivery',
+            #'views': views,
+            #'domain': [('id', '=', delivery_id)], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': delivery_id,
+            }'''
+    
+    _columns = {
+        'multi_delivery_id': fields.many2one(
+            'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
+        }
+
+class StockPicking(orm.Model):
+    """ Model name: SaleOrder
+    """    
+    _inherit = 'stock.picking'
     
     _columns = {
         'multi_delivery_id': fields.many2one(
@@ -87,8 +109,14 @@ class SaleOrderLine(orm.Model):
             for line in sale.order_line:
                 res.append(line.id)
         return res
+
+    def _get_move_line_lines(self, cr, uid, ids, context=None):
+        ''' When change ref. in order also in lines
+        '''
+        return ids
     
     _columns = {
+        'to_deliver_qty': fields.float('To deliver', digits=(16, 2)), 
         'multi_delivery_id': fields.related(
             'order_id', 'multi_delivery_id', 
             type='many2one', relation='sale.order.delivery', 
@@ -100,10 +128,24 @@ class SaleOrderLine(orm.Model):
                 #    10),
                 # Wneh change in order header value:    
                 'sale.order': (
-                    _get_move_lines,
-                    ['multi_delivery_id'],
-                    10),
+                    _get_move_lines, ['multi_delivery_id'], 10),
+                'sale.order.line': (
+                    _get_move_line_lines, ['order_id'], 10),
                 }),
+        }
+
+class SaleOrderDelivery(orm.Model):
+    """ Model name: SaleOrderDelivery for 2many elements
+    """
+    _inherit = 'sale.order.delivery'
+    
+    _columns = {
+        'order_ids': fields.one2many('sale.order', 'multi_delivery_id', 
+            'Order'), 
+        'picking_ids': fields.one2many('stock.picking', 'multi_delivery_id', 
+            'Picking'), 
+        'line_ids': fields.one2many('sale.order.line', 'multi_delivery_id', 
+            'Lines'), 
         }
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

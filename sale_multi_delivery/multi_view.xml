@@ -9,9 +9,12 @@
              <field name="arch" type="xml">
                  <search string="Sale order delivery" version="7.0">        
                      <field name="product_uom_qty" />
-                     <field name="multi_delivery_id" filter_domain="[('multi_delivery_id','=',self)]"/>
-                     
-                     <!--<filter name="state" string="Done state" domain="[('state','=','done')]"/>-->
+                     <field name="multi_delivery_id" filter_domain="[('multi_delivery_id','=',self)]"/>                     
+
+                     <filter name="open_state" string="Open delivery" domain="[('state','=','draft')]"/>
+                     <filter name="closed_state" string="Closed delivery" domain="[('state','!=','draft')]"/>
+
+                     <filter name="my_open_delivery" string="My open delivery" domain="[('create_uid', '=', user.id),('state','=','draft')]"/>
                      
                      <group expand="0" string="Group By">
                          <filter name="group_product" string="Product" context="{'group_by': 'product_uom_id'}"/>
@@ -20,6 +23,7 @@
                  </search>
              </field>
          </record>
+         
          <record model="ir.ui.view" id="view_sale_order_line_for_delivery_tree">
              <field name="name">sale.order.line.for.delivery.form</field>
              <field name="model">sale.order.line</field>
@@ -31,12 +35,14 @@
                      <field name="product_id" readonly="1" />
                      <field name="product_uom" readonly="1" />
                      <field name="product_uom_qty" readonly="1" />
+                     <field name="to_deliver_qty" readonly="1" />
                      <!--<field name="product_uom_maked_sync_qty" readonly="1" />-->
                      <field name="date_deadline" readonly="1" />
                      <!--TODO-->
                  </tree>
              </field>
          </record>
+
          <record model="ir.actions.act_window" id="action_sale_order_line_for_delivery">
              <field name="name">Sale order line delivery</field>
              <field name="res_model">sale.order.line</field>
@@ -46,8 +52,7 @@
              <field name="search_view_id" ref="view_sale_order_line_for_delivery_search"/>
              <field name="context">{'search_default_multi_delivery_id': active_id}</field>
              <!--<field name="domain">[('multi_delivery_id','=',active_id)]</field>-->
-         </record>
-         
+         </record>         
 
          <!--sale.order.delivery-->
          <record model="ir.ui.view" id="view_sale_order_delivery_form">
@@ -55,8 +60,7 @@
              <field name="model">sale.order.delivery</field>
              <field name="arch" type="xml">
                  <form string="Sale order delivery" version="7.0">        
-                     <head>                         
-                         <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
+                     <head>                        
                          <field name="state"  widget="statusbar" statusbar_visible="draft,done"/>
                      </head>
                      <sheet>
@@ -65,8 +69,68 @@
                              <field name="partner_id" />
                              <field name="create_date" />
                              <field name="create_uid" />
-                             <separator string="Note" colspan="4" />
-                             <field name="note" colspan="4" nolabel="1" />
+                             <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
+                             <notebook colspan="4">
+                                 <page string="Picking">
+                                     <field name="picking_ids" >
+                                         <tree string="Picking linked" editable="bottom" create="0">
+                                             <field name="name" readonly="1"/>
+                                             <field name="partner_id" readonly="1" />
+                                             <field name="state" readonly="1" />
+                                             <field name="destination_partner_id" readonly="1" />
+                                             <field name="invoice_partner_id" readonly="1" />
+                                             <!--<field name="name" readonly="1"/>
+                                             <field name="partner_id" readonly="1" />
+                                             <field name="mx_agent_id" readonly="1" />
+                                             <field name="destination_partner_id" readonly="1" />
+                                             <field name="invoice_partner_id" readonly="1" />
+                                             <field name="date_order" readonly="1" />
+                                             <field name="date_deadline" readonly="1" />
+                                             <field name="client_order_ref" readonly="1" />
+                                             <field name="payment_term" />
+                                             <field name="state" readonly="1" />-->
+                                         </tree>
+                                     </field>
+                                 </page>
+                                 <page string="Order">
+                                     <field name="order_ids">
+                                         <tree string="Order currently linked" editable="bottom" colors="red:mx_closed==True" create="0">
+                                             <field name="mx_closed" readonly="1"/>
+                                             <field name="name" readonly="1"/>
+                                             <field name="partner_id" readonly="1" />
+                                             <field name="mx_agent_id" readonly="1" />
+                                             <field name="destination_partner_id" readonly="1" />
+                                             <field name="invoice_partner_id" readonly="1" />
+                                             <field name="date_order" readonly="1" />
+                                             <field name="date_deadline" readonly="1" />
+                                             <field name="client_order_ref" readonly="1" />
+                                             <!--<field name="payment_term" />-->
+                                             <field name="state" readonly="1" />
+                                         </tree>
+                                     </field>
+                                 </page>
+                                 <page string="Lines">
+                                     <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
+                                     <field name="line_ids">
+                                         <tree string="Lines currently linked" editable="bottom" create="0">
+                                             <field name="partner_id" readonly="1" />
+                                             <field name="order_id" readonly="1" />
+                                             <field name="date_deadline" readonly="1" />
+                                             <field name="product_id" readonly="1" />
+                                             <field name="name" readonly="1"/>
+                                             <field name="discount" readonly="1"/>
+                                             <field name="product_uom_qty" readonly="1" />
+                                             <field name="delivered_qty" readonly="1" />
+                                             <field name="to_deliver_qty" />
+                                             <field name="state" readonly="1" />
+                                         </tree>
+                                     </field>
+                                 </page>
+                                 <page string="Note">
+                                      <separator string="Note" colspan="4" />
+                                      <field name="note" colspan="4" nolabel="1" />
+                                 </page>
+                             </notebook>
                          </group>
                      </sheet>        
                  </form>
@@ -126,7 +190,5 @@
              action="action_sale_order_delivery"
              sequence="10"             
              />
-         
     </data>
 </openerp>
-

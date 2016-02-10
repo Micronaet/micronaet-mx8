@@ -32,6 +32,9 @@
     'depends': [
         'base',
         'sale',
+        'mx_sale',
+        'order_destination', # multi destination
+        'mx_close_order', # for close state
         ],
     'init_xml': [],
     'demo': [],

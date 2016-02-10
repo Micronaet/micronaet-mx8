@@ -62,7 +62,7 @@ class ResCompany(orm.Model):
             'Pick in type'),
             
         'stock_report_mrp_in_ids': fields.many2many(
-            'stock.picking.type', 'company_mrp_out_rel', 
+            'stock.picking.type', 'company_mrp_in_rel', 
             'company_id', 'type_id', 
             'MRP in type'), 
         'stock_report_mrp_out_ids': fields.many2many(
