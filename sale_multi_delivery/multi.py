@@ -59,6 +59,8 @@ class SaleOrderDelivery(orm.Model):
         move_pool = self.pool.get('stock.move')
         picking_pool = self.pool.get('stock.picking')
         type_pool = self.pool.get('stock.picking.type')
+        
+        wf_service = netsvc.LocalService('workflow') # TODO deprecated!
 
         # Parameters:
         type_ids = type_pool.search(cr, uid, [
@@ -67,6 +69,8 @@ class SaleOrderDelivery(orm.Model):
             _logger.error('Type outgoing not found')
             return
         type_id = type_ids[0]    
+        type_proxy = type_pool.browse(
+            cr, uid, type_id, context=context)
         
         date = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT) 
         
@@ -82,14 +86,14 @@ class SaleOrderDelivery(orm.Model):
                     # TODO log error
                     continue
                     
-                if not (line.to_deliver_qty or line.all_to_deliver):
+                if not line.to_deliver_qty:
                     continue # jump line
                     
                 # -------------------------------------------------------------
                 #                           PICKING
                 # -------------------------------------------------------------
                 if sale.id not in pickings:
-                    # Create pick:                                
+                    # Create pick:                       
                     pickings[sale.id] = picking_pool.create(cr, uid, {
                         # -------------------------------------------------
                         #                 Default elements:
@@ -111,9 +115,8 @@ class SaleOrderDelivery(orm.Model):
                         'partner_id': sale.partner_id.id or \
                             sale.address_id.id or sale.partner_shipping_id.id,
                         'note': sale.note,
-                        'invoice_state': (
-                            sale.order_policy=='picking' and '2binvoiced'
-                            ) or 'none',
+                        'invoice_state': '2binvoiced' if \
+                            sale.order_policy=='picking' else 'none',
                         'company_id': sale.company_id.id,
                         
                         # -------------------------------------------------
@@ -125,9 +128,9 @@ class SaleOrderDelivery(orm.Model):
                         'transportation_reason_id': 
                             sale.transportation_reason_id.id, 
                         'goods_description_id':
-                            goods_description_id.id, 
+                            sale.goods_description_id.id, 
                         'carriage_condition_id': 
-                            carriage_condition_id.id,
+                            sale.carriage_condition_id.id,
 
                         # Partner ref.:
                         'destination_partner_id': 
@@ -142,8 +145,6 @@ class SaleOrderDelivery(orm.Model):
                 #                           STOCK MOVE
                 # -------------------------------------------------------------
                 picking_id = pickings[sale.id]
-                type_proxy = type_pool.browse(
-                    cr, uid, type_id, context=context)
                 location_id = type_proxy.default_location_src_id.id
                 output_id = type_proxy.default_location_dest_id.id
                 to_deliver_qty = line.to_deliver_qty # TODO change!!!!!!!!!!!!!
@@ -167,12 +168,12 @@ class SaleOrderDelivery(orm.Model):
                             or line.product_uom.id,
                     'product_packaging': line.product_packaging.id,
                     'partner_id': line.address_allotment_id.id or \
-                        order.partner_shipping_id.id,
+                        sale.partner_shipping_id.id,
                     'location_id': location_id,
                     'location_dest_id': output_id,
                     'sale_line_id': line.id,
-                    'company_id': order.company_id.id,
-                    'price_unit': line.product_id.standard_price or 0.0
+                    'company_id': sale.company_id.id,
+                    'price_unit': line.product_id.standard_price or 0.0,
                     #'tracking_id': False,
                     #'state': 'waiting',
                     
@@ -183,18 +184,17 @@ class SaleOrderDelivery(orm.Model):
                     'product_uom_qty': to_deliver_qty,
                     
                     'state': 'assigned',
-                    'invoice_state'; '2binvoiced',
+                    'invoice_state': '2binvoiced',
                     
                     # OC Field to move on:
                     'use_text_description': line.use_text_description,
                     'text_note_pre': line.text_note_pre,
                     'text_note_post': line.text_note_post,
                     }
-                move_id = move_pool.create(
+                move_pool.create(
                     cr, uid, move_data, context=context)
 
             # Confirm workflow for picking:
-            wf_service = netsvc.LocalService('workflow') # TODO deprecated!
             if picking_id:
                 wf_service.trg_validate(
                     uid, 'stock.picking', picking_id, 'button_confirm', cr)
@@ -255,6 +255,17 @@ class SaleOrderLine(orm.Model):
     """    
     _inherit = 'sale.order.line'
     
+    def set_all_qty(self, cr, uid, ids, context=None):
+        ''' Set qty depend on remain (overridable from MRP!!!)
+        '''
+        assert len(ids) == 1, 'Only one line a time'
+        
+        line_proxy = self.browse(cr, uid, ids, context=context)[0]
+        return self.write(cr, uid, {
+            'to_deliver': 
+                line_proxy.product_uom_qty - line_proxy.delivered_qty,
+            }, context=context)
+
     def _get_move_lines(self, cr, uid, ids, context=None):
         ''' When change ref. in order also in lines
         '''
@@ -271,8 +282,6 @@ class SaleOrderLine(orm.Model):
         return ids
     
     _columns = {
-        'all_to_deliver': fields.boolean('All remain', 
-            help='All remain to deliver'),
         'to_deliver_qty': fields.float('To deliver', digits=(16, 2)), 
         'multi_delivery_id': fields.related(
             'order_id', 'multi_delivery_id', 
