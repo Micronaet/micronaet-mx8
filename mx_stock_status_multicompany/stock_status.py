@@ -51,6 +51,7 @@ class ResCompany(orm.Model):
         'stock_mrp_location_id': fields.many2one(
             'stock.location', 'Default production', 
             help='From movement in/out in production'), 
+
         'stock_report_unload_ids': fields.many2many(
             'stock.picking.type', 'company_picking_out_rel', 
             'company_id', 'type_id', 
@@ -59,6 +60,15 @@ class ResCompany(orm.Model):
             'stock.picking.type', 'company_picking_in_rel', 
             'company_id', 'type_id', 
             'Pick in type'),
+            
+        'stock_report_mrp_in_ids': fields.many2many(
+            'stock.picking.type', 'company_mrp_out_rel', 
+            'company_id', 'type_id', 
+            'MRP in type'), 
+        'stock_report_mrp_out_ids': fields.many2many(
+            'stock.picking.type', 'company_mrp_out_rel', 
+            'company_id', 'type_id', 
+            'MRP out type'),
 
         'stock_explude_partner_ids': fields.many2many(
             'res.partner', 'company_picking_exclude_partner_rel', 

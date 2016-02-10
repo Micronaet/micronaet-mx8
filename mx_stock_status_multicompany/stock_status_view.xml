@@ -24,6 +24,10 @@
                         <field name="stock_report_unload_ids"/>
                         <field name="stock_report_load_ids"/>
 
+                        <separator string="MRP to consider:" colspan="4"/>
+                        <field name="stock_report_mrp_ids"/>
+                        <field name="stock_report_mrp_ids"/>
+
                         <separator string="Exclude other company:" colspan="4"/>
                         <field name="stock_explude_partner_ids" colspan="4"/>
                         <field name="stock_location_id"/>
