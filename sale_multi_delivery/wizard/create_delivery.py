@@ -79,7 +79,9 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         
         # Assign order to delivery:
         sale_pool.write(cr, uid, sale_ids, {
-            'multi_delivery_id': delivery_id}, context=context)
+            'multi_delivery_id': delivery_id,
+            'to_deliver_qty', 0.0,
+            }, context=context)
 
         return {
             'view_type': 'form',

@@ -192,7 +192,7 @@ class SaleOrderDelivery(orm.Model):
                     'text_note_post': line.text_note_post,
                     }
                 move_pool.create(
-                    cr, uid, move_data, context=context)
+                    cr, uid, data_move, context=context)
 
             # Confirm workflow for picking:
             if picking_id:
@@ -201,10 +201,10 @@ class SaleOrderDelivery(orm.Model):
                     
         return {
             'view_type': 'form',
-            'view_mode': 'form',#,tree',
+            'view_mode': 'tree,form',
             'res_model': 'stock.picking',
             #'views': views,
-            'domain': [('id', '=', pickings.value())], 
+            'domain': [('id', '=', pickings.values())], 
             #'views': [(view_id, 'form')],
             #'view_id': delivery_id,
             'type': 'ir.actions.act_window',
