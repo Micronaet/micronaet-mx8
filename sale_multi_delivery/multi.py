@@ -43,6 +43,174 @@ class SaleOrderDelivery(orm.Model):
     """
     _name = 'sale.order.delivery'
     _description = 'Sale order delivery'
+
+        
+    # Button create picking:
+    def action_delivery(self, cr, uid, ids, context=None):
+        ''' Event for button done the delivery
+        '''
+        assert len(ids) == 1, 'Button work only with one record a time!'
+        context = context or {}
+        
+        current_proxy = self.browse(cr, uid, ids, context=context)[0]
+
+        # Pool used:        
+        line_pool = self.pool.get('sale.order.line')
+        move_pool = self.pool.get('stock.move')
+        picking_pool = self.pool.get('stock.picking')
+        type_pool = self.pool.get('stock.picking.type')
+
+        # Parameters:
+        type_ids = type_pool.search(cr, uid, [
+            ('code', '=', 'outgoing')], context=context)
+        if not type_ids:
+            _logger.error('Type outgoing not found')
+            return
+        type_id = type_ids[0]    
+        
+        date = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT) 
+        
+        pickings = {}
+        for sale in current_proxy.order_ids:
+            picking_id = False # for WF action
+            for line in sale.order_line:
+                if line.product_id.type not in ('product', 'consu'): # service
+                    # TODO log error
+                    continue
+
+                if not line.product_id:
+                    # TODO log error
+                    continue
+                    
+                if not (line.to_deliver_qty or line.all_to_deliver):
+                    continue # jump line
+                    
+                # -------------------------------------------------------------
+                #                           PICKING
+                # -------------------------------------------------------------
+                if sale.id not in pickings:
+                    # Create pick:                                
+                    pickings[sale.id] = picking_pool.create(cr, uid, {
+                        # -------------------------------------------------
+                        #                 Default elements:
+                        # -------------------------------------------------
+                        'name': self.pool.get('ir.sequence').get(
+                            cr, uid, 'stock.picking.out'),
+                        'origin': sale.name,
+                        'date': date,
+                        #'type': 'out',
+                        'picking_type_id': type_id,
+                        'state': 'done', # TODO removed: 'auto',
+                        'move_type': sale.picking_policy,
+
+                        # TODO create using group_id instead of sale_id
+                        'group_id': sale.procurement_group_id.id,
+                        'sale_id': sale.id, # TODO no more used!
+                        
+                        # Partner in cascade assignment:
+                        'partner_id': sale.partner_id.id or \
+                            sale.address_id.id or sale.partner_shipping_id.id,
+                        'note': sale.note,
+                        'invoice_state': (
+                            sale.order_policy=='picking' and '2binvoiced'
+                            ) or 'none',
+                        'company_id': sale.company_id.id,
+                        
+                        # -------------------------------------------------
+                        #                 Extra elements:
+                        # -------------------------------------------------
+                        # TODO vector and others needed!
+                        'multi_delivery_id': ids[0],
+                        'mx_agent_id': sale.mx_agent_id.id,
+                        'transportation_reason_id': 
+                            sale.transportation_reason_id.id, 
+                        'goods_description_id':
+                            goods_description_id.id, 
+                        'carriage_condition_id': 
+                            carriage_condition_id.id,
+
+                        # Partner ref.:
+                        'destination_partner_id': 
+                            sale.destination_partner_id.id, 
+                        'invoice_partner_id':
+                            sale.invoice_partner_id.id,
+                        'text_note_pre': sale.text_note_pre, 
+                        'text_note_post': sale.text_note_post,                            
+                        }, context=context)
+
+                # -------------------------------------------------------------
+                #                           STOCK MOVE
+                # -------------------------------------------------------------
+                picking_id = pickings[sale.id]
+                type_proxy = type_pool.browse(
+                    cr, uid, type_id, context=context)
+                location_id = type_proxy.default_location_src_id.id
+                output_id = type_proxy.default_location_dest_id.id
+                to_deliver_qty = line.to_deliver_qty # TODO change!!!!!!!!!!!!!
+
+                data_move = {
+                    # ---------------------------------------------------------
+                    #                   Default data:
+                    # ---------------------------------------------------------
+                    'name': line.name,
+                    'picking_id': picking_id,
+                    'product_id': line.product_id.id,
+                    'date': date,#_planned,
+                    'date_expected': date,#_planned,
+                    'product_uom_qty': line.product_uom_qty,
+                    'product_uom': line.product_uom.id,
+                    'product_uos_qty': (
+                        line.product_uos and line.product_uos_qty) or \
+                            line.product_uom_qty,
+                    'product_uos': (
+                        line.product_uos and line.product_uos.id)\
+                            or line.product_uom.id,
+                    'product_packaging': line.product_packaging.id,
+                    'partner_id': line.address_allotment_id.id or \
+                        order.partner_shipping_id.id,
+                    'location_id': location_id,
+                    'location_dest_id': output_id,
+                    'sale_line_id': line.id,
+                    'company_id': order.company_id.id,
+                    'price_unit': line.product_id.standard_price or 0.0
+                    #'tracking_id': False,
+                    #'state': 'waiting',
+                    
+                    # ---------------------------------------------------------
+                    #                   Extra data:
+                    # ---------------------------------------------------------
+                    'product_uos_qty': to_deliver_qty,
+                    'product_uom_qty': to_deliver_qty,
+                    
+                    'state': 'assigned',
+                    'invoice_state'; '2binvoiced',
+                    
+                    # OC Field to move on:
+                    'use_text_description': line.use_text_description,
+                    'text_note_pre': line.text_note_pre,
+                    'text_note_post': line.text_note_post,
+                    }
+                move_id = move_pool.create(
+                    cr, uid, move_data, context=context)
+
+            # Confirm workflow for picking:
+            wf_service = netsvc.LocalService('workflow') # TODO deprecated!
+            if picking_id:
+                wf_service.trg_validate(
+                    uid, 'stock.picking', picking_id, 'button_confirm', cr)
+                    
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',#,tree',
+            'res_model': 'stock.picking',
+            #'views': views,
+            'domain': [('id', '=', pickings.value())], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            #'res_id': delivery_id,
+            }            
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -67,19 +235,6 @@ class SaleOrder(orm.Model):
     """    
     _inherit = 'sale.order'
 
-    '''    return {
-            'view_type': 'form',
-            'view_mode': 'form',#,tree',
-            'res_model': 'sale.order.delivery',
-            #'views': views,
-            #'domain': [('id', '=', delivery_id)], 
-            #'views': [(view_id, 'form')],
-            #'view_id': delivery_id,
-            'type': 'ir.actions.act_window',
-            #'target': 'new',
-            'res_id': delivery_id,
-            }'''
-    
     _columns = {
         'multi_delivery_id': fields.many2one(
             'sale.order.delivery', 'Multi delivery', ondelete='set null'), 

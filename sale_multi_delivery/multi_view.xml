@@ -73,7 +73,9 @@
                              <field name="partner_id" />
                              <field name="create_date" />
                              <field name="create_uid" />
-                             <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
+                             <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" icon="gtk-edit" colspan="1"/>
+                             <button name="action_delivery" string="Create pickings" type="object" icon="gtk-go-forward" colspan="1"/>
+                             
                              <notebook colspan="4">
                                  <page string="Picking">
                                      <field name="picking_ids" >

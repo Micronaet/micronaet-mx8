@@ -45,7 +45,6 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
     '''    
     _name = 'create.sale.order.delivery.wizard'
     
-
     # --------------
     # Wizard button:
     # --------------
