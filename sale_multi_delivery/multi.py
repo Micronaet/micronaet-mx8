@@ -116,6 +116,8 @@ class SaleOrderLine(orm.Model):
         return ids
     
     _columns = {
+        'all_to_deliver': fields.boolean('All remain', 
+            help='All remain to deliver'),
         'to_deliver_qty': fields.float('To deliver', digits=(16, 2)), 
         'multi_delivery_id': fields.related(
             'order_id', 'multi_delivery_id', 
