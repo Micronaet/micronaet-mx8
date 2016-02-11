@@ -69,9 +69,11 @@ class StockPicking(orm.Model):
     _columns = {
         # To propagate in invoice:
         'ddt_text_note_pre': fields.related(
-            'ddt_id', 'text_note_post', type='text', string='DDT pre note'),   
+            'ddt_id', 'text_note_post', type='text', string='DDT pre note', 
+            store=False),   
         'ddt_text_note_post': fields.related(
-            'ddt_id', 'text_note_post', type='text', string='DDT post note'),   
+            'ddt_id', 'text_note_post', type='text', string='DDT post note',
+            store=False),   
         }
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

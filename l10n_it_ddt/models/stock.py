@@ -198,14 +198,23 @@ class StockPicking(models.Model):
         note_pre = ''
         note_post = ''
         for picking in self.browse(cr, uid, ids, context=context):
-            if picking.text_note_pre and \
-                    picking.text_note_pre not in note_pre_list:
-                note_pre += '%s\n' % picking.text_note_pre
-                note_pre_list.append(picking.text_note_pre)
-            if picking.text_note_post and \
-                    picking.text_note_post not in note_post_list:
-                note_post += '%s\n' % picking.text_note_post
-                note_post_list.append(picking.text_note_post)
+            # Pre pick + DDT (if exist)
+            pre_all = '%s%s' % (
+                (picking.text_note_pre or '').strip(),
+                (picking.ddt_id.ddt_text_note_pre or '').strip(),
+                )
+            if pre_all and pre_all not in note_pre_list:
+                note_pre += '%s\n' % pre_all
+                note_pre_list.append(pre_all)
+                
+            # Post pick + DDT (if exist)
+            post_all = '%s%s' % (
+                (picking.text_note_post or '').strip(),
+                (picking.ddt_id.ddt_text_note_post or '').strip(),
+                )                
+            if post_all and post_all not in note_post_list:
+                note_post += '%s\n' % post_all
+                note_post_list.append(post_all)
             
             # TODO remove from middle of the loop and check that are all
             # equals!!!    
