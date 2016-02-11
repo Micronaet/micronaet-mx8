@@ -237,7 +237,5 @@ class StockPicking(models.Model):
         invoice_obj.write(cr, uid, res, {
             'text_note_pre': note_pre,
             'text_note_post': note_post,            
-            })
-            
+            })            
         return res
-
