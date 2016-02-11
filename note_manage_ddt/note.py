@@ -60,4 +60,18 @@ class StockDdt(orm.Model):
         'text_note_pre': fields.text('Pre text'),    
         'text_note_post': fields.text('Post text'),    
         }
+
+class StockPicking(orm.Model):
+    """ Stock picking
+    """    
+    _inherit = 'stock.picking'
+
+    _columns = {
+        # To propagate in invoice:
+        'ddt_text_note_pre': fields.related(
+            'ddt_id', 'text_note_post', type='text', string='DDT pre note'),   
+        'ddt_text_note_post': fields.related(
+            'ddt_id', 'text_note_post', type='text', string='DDT post note'),   
+        }
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

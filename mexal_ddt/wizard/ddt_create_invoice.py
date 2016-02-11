@@ -258,6 +258,8 @@ class DdTCreateInvoice(models.TransientModel):
         self.check_ddt_data(ddts)
         
         # TODO check if there's some DDT yet invoiced!!!
+        note_pre = ''
+        note_post = ''
         for ddt in ddts:
             if ddt.invoice_id:
                 raise Warning(_('There\' DDT yet invoiced: %s') % ddt.number)
