@@ -41,6 +41,7 @@ class Parser(report_sxw.rml_parse):
             'get_datetime': self.get_datetime,
             'get_partic': self.get_partic,
             'get_parcels': self.get_parcels,
+            'get_parcels_table': self.get_parcels_table,
 
             'reset_print': self.reset_print,
         })
@@ -58,6 +59,36 @@ class Parser(report_sxw.rml_parse):
                 res = ''
             else:
                 res = 'SC. %s x %s =' % (int(parcel), int(q_x_pack))
+        return res
+
+    def get_parcels_table(self, l):#product, qty):
+        ''' Get text for parcels totals:
+            product: proxy obj for product
+            qty: total to parcels
+        '''
+        res = []
+        
+        elements = {
+            'S': l.product_uom_qty - \
+                l.product_uom_maked_sync_qty - \
+                l.delivered_qty,
+            'B': 
+                l.product_uom_maked_sync_qty - \
+                l.delivered_qty,
+            }
+                
+        for key, v in elements.iteritems():
+            if v:
+                q_x_pack = l.product_id.q_x_pack
+                if q_x_pack:
+                    parcel = v / q_x_pack
+                    if not parcel:
+                        parcel_text = ''
+                    else:
+                        parcel_text = 'SC. %s x %s =' % (
+                            int(parcel), int(q_x_pack))
+
+                res.append((key, parcel_text, v))        
         return res
 
     def get_partic(self, line):

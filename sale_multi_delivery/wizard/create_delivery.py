@@ -60,10 +60,13 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         # Pool used:
         delivery_pool = self.pool.get('sale.order.delivery')
         sale_pool = self.pool.get('sale.order')
+        line_pool = self.pool.get('sale.order.line')
         
         sale_ids = context.get('active_ids', False)
         partner_id = False
         for sale in sale_pool.browse(cr, uid, sale_ids, context=context):
+            if sale.mx_closed:
+                continue # jump orer
             if not partner_id:
                 partner_id = sale.partner_id.id
             if partner_id != sale.partner_id.id:
@@ -80,7 +83,12 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         # Assign order to delivery:
         sale_pool.write(cr, uid, sale_ids, {
             'multi_delivery_id': delivery_id,
-            'to_deliver_qty', 0.0,
+            }, context=context)
+
+        line_ids = line_pool.search(cr, uid, [
+            ('order_id', 'in', sale_ids)], context=context)
+        line_pool.write(cr, uid, line_ids, {
+            'to_deliver_qty': 0.0,
             }, context=context)
 
         return {
@@ -95,7 +103,6 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
             #'target': 'new',
             'res_id': delivery_id,
             }
-            
 
     # -----------------
     # Default function:        

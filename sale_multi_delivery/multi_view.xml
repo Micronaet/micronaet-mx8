@@ -79,6 +79,7 @@
                                  <page string="Picking">
                                      <field name="picking_ids" >
                                          <tree string="Picking linked" editable="bottom" create="0">
+                                             <button name="button_open_order" string="Open" type="object" icon="gtk-go-forward"/>
                                              <field name="name" readonly="1"/>
                                              <field name="partner_id" readonly="1" />
                                              <field name="state" readonly="1" />
@@ -100,6 +101,7 @@
                                  <page string="Order">
                                      <field name="order_ids">
                                          <tree string="Order currently linked" editable="bottom" colors="red:mx_closed==True" create="0">
+                                             <button name="button_open_order" string="Open" type="object" icon="gtk-go-forward"/>
                                              <field name="mx_closed" readonly="1"/>
                                              <field name="name" readonly="1"/>
                                              <field name="partner_id" readonly="1" />

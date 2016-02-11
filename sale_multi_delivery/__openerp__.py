@@ -35,6 +35,7 @@
         'mx_sale',
         'order_destination', # multi destination
         'mx_close_order', # for close state
+        'mx_discount_scale_order', # for discount
         ],
     'init_xml': [],
     'demo': [],

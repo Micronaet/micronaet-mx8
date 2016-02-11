@@ -182,6 +182,7 @@ class SaleOrderDelivery(orm.Model):
                     # ---------------------------------------------------------
                     'product_uos_qty': to_deliver_qty,
                     'product_uom_qty': to_deliver_qty,
+                    # TODO discount                    
                     
                     'state': 'assigned',
                     'invoice_state': '2binvoiced',
@@ -235,6 +236,22 @@ class SaleOrder(orm.Model):
     """    
     _inherit = 'sale.order'
 
+    def button_open_order(self, cr, uid, ids, context=None):
+        ''' Open order
+        '''
+        return {
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'sale.order',
+            #'views': views,
+            #'domain': [('id', '=', pickings.values())], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': ids[0],
+            }            
+
     _columns = {
         'multi_delivery_id': fields.many2one(
             'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
@@ -245,6 +262,21 @@ class StockPicking(orm.Model):
     """    
     _inherit = 'stock.picking'
     
+    def button_open_order(self, cr, uid, ids, context=None):
+        ''' Open order
+        '''
+        return {
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'stock.picking',
+            #'views': views,
+            #'domain': [('id', '=', ids)], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': ids[0],
+            }            
     _columns = {
         'multi_delivery_id': fields.many2one(
             'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
@@ -261,8 +293,8 @@ class SaleOrderLine(orm.Model):
         assert len(ids) == 1, 'Only one line a time'
         
         line_proxy = self.browse(cr, uid, ids, context=context)[0]
-        return self.write(cr, uid, {
-            'to_deliver': 
+        return self.write(cr, uid, ids, {
+            'to_deliver_qty': 
                 line_proxy.product_uom_qty - line_proxy.delivered_qty,
             }, context=context)
 
