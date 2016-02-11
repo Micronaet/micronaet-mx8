@@ -33,6 +33,7 @@ class Parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         
         super(Parser, self).__init__(cr, uid, name, context)
+        
         self.localcontext.update({
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
@@ -43,8 +44,19 @@ class Parser(report_sxw.rml_parse):
             'get_parcels': self.get_parcels,
             'get_parcels_table': self.get_parcels_table,
 
+            'set_total_parcel': self.set_total_parcel,
+            'get_total_parcel': self.get_total_parcel,
+
             'reset_print': self.reset_print,
         })
+        self.total_parcel = 0.0
+
+    def set_total_parcel(self, v):
+        self.total_parcel = v
+
+    def get_total_parcel(self, ):
+        return self.total_parcel or 0.0
+        
 
     def get_parcels(self, product, qty):
         ''' Get text for parcels totals:
@@ -87,7 +99,7 @@ class Parser(report_sxw.rml_parse):
                     else:
                         parcel_text = 'SC. %s x %s =' % (
                             int(parcel), int(q_x_pack))
-
+                        self.total_parcel += parcel
                 res.append((key, parcel_text, v))        
         return res
 
