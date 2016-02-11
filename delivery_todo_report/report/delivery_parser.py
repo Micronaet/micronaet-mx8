@@ -35,6 +35,8 @@ class Parser(report_sxw.rml_parse):
         super(Parser, self).__init__(cr, uid, name, context)
         
         self.localcontext.update({
+            # counter manage:
+            'reset_counter': self.reset_counter,
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
 
@@ -49,7 +51,35 @@ class Parser(report_sxw.rml_parse):
 
             'reset_print': self.reset_print,
         })
+        self.reset_counter()
+        # TODO remove        
         self.total_parcel = 0.0
+
+    # -------------------------------------------------------------------------
+    #                              COUNTER MANAGE
+    # -------------------------------------------------------------------------
+    def reset_counter(self):
+        # reset counters:
+        self.counters = {
+            'total_parcel': 0.0,
+            'volume': 0.0,
+            'volume10': 0.0,
+            'length': 0.0,
+            'weight': 0.0,
+            }
+            
+    def get_counter(self, name):
+        ''' Get counter with name passed (else create an empty)
+        '''
+        if name not in self.counters:
+            self.counters[name] = 0.0
+        return self.counters[name]
+
+    def set_counter(self, name, value):
+        ''' Set counter with name with value passed
+        '''
+        self.counters[name] = value
+        return "" # empty so no write in module
 
     def set_total_parcel(self, v):
         self.total_parcel = v
@@ -79,18 +109,30 @@ class Parser(report_sxw.rml_parse):
             qty: total to parcels
         '''
         res = []
-        
-        elements = {
-            'S': l.product_uom_qty - \
-                l.product_uom_maked_sync_qty - \
-                l.delivered_qty,
-            'B': 
-                l.product_uom_maked_sync_qty - \
-                l.delivered_qty,
-            }
+
+        if l.product_uom_maked_sync_qty >= l.delivered_qty:
+            remain = l.product_uom_qty - l.product_uom_maked_sync_qty
+            ready = l.product_uom_maked_sync_qty - l.delivered_qty
+        else: # delivered > maked
+            remain = l.product_uom_qty - l.delivered_qty
+            ready = 0 #l.product_uom_qty - l.delivered_qty
+            # TODO manage quants !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! <<<<<<<
+
+        elements = {'S': remain, 'B': ready}
                 
         for key, v in elements.iteritems():
+            product = l.product_id
             if v:
+                # Counter totals:
+                # TODO volume from dimension (pack or piece?)
+                self.counters['volume'] += v * (product.volume or 0.0)
+                self.counters['volume10'] += v * (
+                    (product.volume or 0.0) * 1.1)
+                self.counters['length'] += v* (product.linear_length or 0.0)
+                self.counters['weight'] += \
+                    v * ((product.weight or 0.0) or (
+                        product.weight_net or 0.0))
+
                 q_x_pack = l.product_id.q_x_pack
                 if q_x_pack:
                     parcel = v / q_x_pack
@@ -99,8 +141,8 @@ class Parser(report_sxw.rml_parse):
                     else:
                         parcel_text = 'SC. %s x %s =' % (
                             int(parcel), int(q_x_pack))
-                        self.total_parcel += parcel
-                res.append((key, parcel_text, v))        
+                        self.counters['total_parcel'] += parcel
+                res.append((key, parcel_text, v))
         return res
 
     def get_partic(self, line):
@@ -120,19 +162,6 @@ class Parser(report_sxw.rml_parse):
         ''' Return datetime obj
         '''
         return datetime
-
-    def get_counter(self, name):
-        ''' Get counter with name passed (else create an empty)
-        '''
-        if name not in self.counters:
-            self.counters[name] = False
-        return self.counters[name]
-
-    def set_counter(self, name, value):
-        ''' Set counter with name with value passed
-        '''
-        self.counters[name] = value
-        return "" # empty so no write in module
 
     def _get_fully_list(self, objects):
         ''' Return list of object browse id list merged with no replication 
