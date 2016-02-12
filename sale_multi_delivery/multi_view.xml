@@ -78,7 +78,7 @@
                              
                              <notebook colspan="4">
                                  <page string="Picking"  attrs="{'invisible':[('state','=','draft')]}">
-                                     <button name="button_open_all_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1"  attrs="{'invisible':[('state','=','draft')]}"/>
+                                     <button name="button_open_all_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1" attrs="{'invisible':[('state','=','draft')]}"/>
                                      <field name="picking_ids" readonly="1">
                                          <tree string="Picking linked" editable="bottom" create="0">
                                              <button name="button_open_picking" string="Open" type="object" icon="gtk-go-forward"/>
@@ -87,6 +87,9 @@
                                              <field name="state" readonly="1" />
                                              <field name="destination_partner_id" readonly="1" />
                                              <field name="invoice_partner_id" readonly="1" />
+                                             <button name="button_open_ddt" string="Open" type="object" icon="gtk-go-forward" attrs="{'invisible':[('ddt_id','=',False)]}"/>
+                                             <field name="ddt_id" readonly="1"/>
+                                             <button name="button_open_invoice" string="Open" type="object" icon="gtk-go-forward" attrs="{'invisible':[('invoice_id','=',False)]}"/>
                                              <field name="invoice_id" readonly="1"/>
                                              <field name="state" invisible="1" />
                                              
@@ -122,7 +125,7 @@
                                      </field>
                                  </page>
                                  <page string="Lines">
-                                     <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
+                                     <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" icon="gtk-edit" />
                                      <field name="line_ids" >
                                          <tree string="Lines currently linked" editable="bottom" create="0" delete="0" colors="blue:to_deliver_qty>0">
                                              <field name="partner_id" readonly="1" />
@@ -175,8 +178,8 @@
                      <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
 
                      <filter name="my_open_delivery" string="My open delivery" domain="[('create_uid', '=', uid),('state','=','draft')]"/>                     
-                     <filter name="state" string="Draft state" domain="[('state','=','draft')]"/>
-                     <filter name="state" string="Done state" domain="[('state','=','done')]"/>
+                     <filter name="state_draft" string="Draft state" domain="[('state','=','draft')]"/>
+                     <filter name="state_done" string="Done state" domain="[('state','=','done')]"/>
                      
                      <group expand="0" string="Group By">
                          <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>

@@ -43,6 +43,7 @@ class SaleOrderDelivery(orm.Model):
     """
     _name = 'sale.order.delivery'
     _description = 'Sale order delivery'
+    _order = 'create_date desc'
         
     def button_open_all_picking(self, cr, uid, ids, context=None):
         ''' Open order
@@ -280,13 +281,69 @@ class SaleOrder(orm.Model):
             'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
         }
 
+
 class StockPicking(orm.Model):
     """ Model name: SaleOrder
     """    
     _inherit = 'stock.picking'
 
+    def button_open_ddt(self, cr, uid, ids, context=None):
+        ''' Open order
+        '''
+        current_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not current_proxy.ddt_id.id:
+            return True
+            
+        return {
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'stock.ddt',
+            #'views': views,
+            #'domain': [('id', '=', pickings.values())], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': current_proxy.ddt_id.id,
+            }            
+
+    def button_open_invoice(self, cr, uid, ids, context=None):
+        ''' Open order
+        '''
+        current_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if not current_proxy.invoice_id.id:
+            return True
+
+        return {
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            #'views': views,
+            #'domain': [('id', '=', pickings.values())], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': current_proxy.invoice_id.id,
+            }            
+
     # TODO needed?!?!            
     def button_open_order(self, cr, uid, ids, context=None):
+        ''' Open order
+        '''
+        return {
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'stock.picking',
+            #'views': views,
+            #'domain': [('id', '=', ids)], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            'res_id': ids[0],
+            } 
+    def button_open_picking(self, cr, uid, ids, context=None):
         ''' Open order
         '''
         return {
