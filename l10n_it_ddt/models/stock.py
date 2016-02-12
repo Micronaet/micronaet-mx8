@@ -193,14 +193,14 @@ class StockPicking(models.Model):
             cr, uid, ids, journal_id, group, type, context)
             
         # TODO Use only first element?
-        note_pre_list = []
-        note_post_list = []
         note_pre = ''
+        note_pre_list = []
         note_post = ''
+        note_post_list = []
         for picking in self.browse(cr, uid, ids, context=context):
             # Pre pick + DDT (if exist)
             tmp_pick_pre = (picking.text_note_pre or '').strip()
-            tmp_ddt_pre = (picking.ddt_id.ddt_text_note_pre or '').strip()            
+            tmp_ddt_pre = (picking.ddt_text_note_pre or '').strip()            
             pre_all = '%s%s' % (
                 tmp_pick_pre,
                 '' if tmp_pick_pre == tmp_ddt_pre else tmp_ddt_pre,
@@ -208,10 +208,10 @@ class StockPicking(models.Model):
             if pre_all and pre_all not in note_pre_list:
                 note_pre += '%s\n' % pre_all
                 note_pre_list.append(pre_all)
-                
+
             # Post pick + DDT (if exist)
             tmp_pick_post = (picking.text_note_post or '').strip()
-            tmp_ddt_post = (picking.ddt_id.ddt_text_note_post or '').strip()
+            tmp_ddt_post = (picking.ddt_text_note_post or '').strip()
             post_all = '%s%s' % (
                 tmp_pick_post,
                 '' if tmp_pick_post == tmp_ddt_post else tmp_ddt_post,
@@ -219,7 +219,7 @@ class StockPicking(models.Model):
             if post_all and post_all not in note_post_list:
                 note_post += '%s\n' % post_all
                 note_post_list.append(post_all)
-            
+
             # TODO remove from middle of the loop and check that are all
             # equals!!!    
             invoice_obj.write(cr, uid, res, {
@@ -238,6 +238,7 @@ class StockPicking(models.Model):
                 picking.transportation_method_id.id,
                 'parcels': picking.parcels,                
             })
+        import pdb; pdb.set_trace()
         invoice_obj.write(cr, uid, res, {
             'text_note_pre': note_pre,
             'text_note_post': note_post,            
