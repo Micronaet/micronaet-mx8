@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+         <!--sale.order.line (for delivery)-->
+         
+         <record model="ir.ui.view" id="view_sale_order_line_for_mrp_delivery_tree">
+             <field name="name">sale.order.line.for.delivery.form</field>
+             <field name="model">sale.order.line</field>
+             <field name="inherit_id" ref="sale_multi_delivery.view_sale_order_line_for_delivery_tree" />
+             <field name="arch" type="xml">
+                 <field name="product_uom_qty" position="before">
+                       <field name="mx_net_qty" readony="1"/>
+                       <field name="mx_lord_qty" readony="1"/>
+                 </field>
+             </field>
+         </record>
+
+         <!--sale.order.delivery-->
+         <record model="ir.ui.view" id="view_sale_order_delivery_mrp_form">
+             <field name="name">sale.order.delivery.mrp</field>
+             <field name="model">sale.order.delivery</field>
+             <field name="inherit_id" ref="sale_multi_delivery.view_sale_order_delivery_form" />
+             <field name="arch" type="xml">
+                 <xpath expr="//field[@name='line_ids']/tree/field[@name='product_uom_qty']" position="before">
+                       <field name="mx_net_qty" readony="1"/>
+                       <field name="mx_lord_qty" readony="1" />
+                 </xpath>
+             </field>
+         </record>
+    </data>
+</openerp>
