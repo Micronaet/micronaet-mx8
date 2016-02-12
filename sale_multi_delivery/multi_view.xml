@@ -40,6 +40,7 @@
                      <field name="delivered_qty" readonly="1" />
                      <button name="set_all_qty" string=">>" type="object" />
                      <field name="to_deliver_qty" />
+                     <button name="set_zero_qty" string="0" type="object" attrs="{'invisible':[('to_deliver_qty','=',0)]}"/>
                      <!--<field name="product_uom_maked_sync_qty" readonly="1" />-->
                      <field name="date_deadline" readonly="1" />
                      <!--TODO-->
@@ -76,6 +77,31 @@
                              <button name="action_delivery" string="Create pickings" type="object" icon="gtk-go-forward" colspan="1" attrs="{'invisible':[('state','!=','draft')]}"/>
                              
                              <notebook colspan="4">
+                                 <page string="Picking"  attrs="{'invisible':[('state','=','draft')]}">
+                                     <button name="button_open_all_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1"  attrs="{'invisible':[('state','=','draft')]}"/>
+                                     <field name="picking_ids" readonly="1">
+                                         <tree string="Picking linked" editable="bottom" create="0">
+                                             <button name="button_open_picking" string="Open" type="object" icon="gtk-go-forward"/>
+                                             <field name="name" readonly="1"/>
+                                             <field name="partner_id" readonly="1" />
+                                             <field name="state" readonly="1" />
+                                             <field name="destination_partner_id" readonly="1" />
+                                             <field name="invoice_partner_id" readonly="1" />
+                                             <field name="invoice_id" readonly="1"/>
+                                             <field name="state" invisible="1" />
+                                             
+                                             <!--<field name="name" readonly="1"/>
+                                             <field name="partner_id" readonly="1" />
+                                             <field name="destination_partner_id" readonly="1" />
+                                             <field name="invoice_partner_id" readonly="1" />
+                                             <field name="date_order" readonly="1" />
+                                             <field name="date_deadline" readonly="1" />
+                                             <field name="client_order_ref" readonly="1" />
+                                             <field name="payment_term" />
+                                             <field name="state" readonly="1" />-->
+                                         </tree>
+                                     </field>
+                                 </page>
                                  <page string="Order">
                                      <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" icon="gtk-edit" colspan="1"/>
                                      <field name="order_ids" readonly="1">
@@ -90,31 +116,8 @@
                                              <field name="date_order" readonly="1" />
                                              <field name="date_deadline" readonly="1" />
                                              <field name="client_order_ref" readonly="1" />
-                                             <!--<field name="payment_term" />-->
-                                             <field name="state" readonly="1" />
-                                         </tree>
-                                     </field>
-                                 </page>
-                                 <page string="Picking">
-                                     <button name="button_all_open_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1"  attrs="{'invisible':[('state','=','draft')]}"/>
-                                     <field name="picking_ids" readonly="1">
-                                         <tree string="Picking linked" editable="bottom" create="0">
-                                             <button name="button_open_picking" string="Open" type="object" icon="gtk-go-forward"/>
-                                             <field name="name" readonly="1"/>
-                                             <field name="partner_id" readonly="1" />
-                                             <field name="state" readonly="1" />
-                                             <field name="destination_partner_id" readonly="1" />
-                                             <field name="invoice_partner_id" readonly="1" />
-                                             <!--<field name="name" readonly="1"/>
-                                             <field name="partner_id" readonly="1" />
-                                             <field name="mx_agent_id" readonly="1" />
-                                             <field name="destination_partner_id" readonly="1" />
-                                             <field name="invoice_partner_id" readonly="1" />
-                                             <field name="date_order" readonly="1" />
-                                             <field name="date_deadline" readonly="1" />
-                                             <field name="client_order_ref" readonly="1" />
                                              <field name="payment_term" />
-                                             <field name="state" readonly="1" />-->
+                                             <field name="state" readonly="1" />
                                          </tree>
                                      </field>
                                  </page>
@@ -132,7 +135,7 @@
                                              <field name="delivered_qty" readonly="1" />
                                              <button name="set_all_qty" string=">>" type="object" />
                                              <field name="to_deliver_qty" />
-                                             <button name="set_zero_qty" string="0" type="object" />
+                                             <button name="set_zero_qty" string="0" type="object" attrs="{'invisible':[('to_deliver_qty','=',0)]}"/>
                                              <field name="state" readonly="1" />
                                          </tree>
                                      </field>

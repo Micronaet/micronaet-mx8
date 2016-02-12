@@ -43,7 +43,6 @@ class SaleOrderDelivery(orm.Model):
     """
     _name = 'sale.order.delivery'
     _description = 'Sale order delivery'
-
         
     def button_open_all_picking(self, cr, uid, ids, context=None):
         ''' Open order
@@ -313,6 +312,9 @@ class SaleOrderLine(orm.Model):
     """    
     _inherit = 'sale.order.line'
     
+    def nothing(self, cr, uid, ids, context=None):
+        return True
+        
     def set_zero_qty(self, cr, uid, ids, context=None):
         ''' Set 0
         '''
