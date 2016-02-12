@@ -45,6 +45,28 @@ class SaleOrderDelivery(orm.Model):
     _description = 'Sale order delivery'
 
         
+    def button_open_all_picking(self, cr, uid, ids, context=None):
+        ''' Open order
+        '''
+        assert len(ids) == 1, 'Button work only with one record a time!'
+        context = context or {}
+        
+        current_proxy = self.browse(cr, uid, ids, context=context)[0]
+        pick_ids = [item.id for item in current_proxy.picking_ids]
+
+        return {
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'stock.picking',
+            #'views': views,
+            'domain': [('id', '=', pick_ids)], 
+            #'views': [(view_id, 'form')],
+            #'view_id': delivery_id,
+            'type': 'ir.actions.act_window',
+            #'target': 'new',
+            #'res_id': ids[0],
+            }            
+
     # Button create picking:
     def action_delivery(self, cr, uid, ids, context=None):
         ''' Event for button done the delivery
@@ -199,7 +221,9 @@ class SaleOrderDelivery(orm.Model):
             if picking_id:
                 wf_service.trg_validate(
                     uid, 'stock.picking', picking_id, 'button_confirm', cr)
-                    
+        
+        self.write(cr, uid, ids, {
+            'state': 'done', }, context=context)            
         return {
             'view_type': 'form',
             'view_mode': 'tree,form',
@@ -261,7 +285,8 @@ class StockPicking(orm.Model):
     """ Model name: SaleOrder
     """    
     _inherit = 'stock.picking'
-    
+
+    # TODO needed?!?!            
     def button_open_order(self, cr, uid, ids, context=None):
         ''' Open order
         '''
@@ -276,7 +301,8 @@ class StockPicking(orm.Model):
             'type': 'ir.actions.act_window',
             #'target': 'new',
             'res_id': ids[0],
-            }            
+            } 
+            
     _columns = {
         'multi_delivery_id': fields.many2one(
             'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
