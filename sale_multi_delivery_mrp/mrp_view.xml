@@ -10,6 +10,8 @@
              <field name="arch" type="xml">
                  <field name="product_uom_qty" position="after">
                      <field name="product_uom_maked_sync_qty" readonly="1" />
+                     <field name="is_manufactured" invisible="1" />
+                     <button name="nothing" string="Is manufactured" type="object" icon="terp-product" attrs="{'invisible': [('is_manufactured', '=', False)]}" />            
                  </field>
              </field>
          </record>
@@ -22,6 +24,8 @@
              <field name="arch" type="xml">
                  <xpath expr="//field[@name='line_ids']/tree/field[@name='product_uom_qty']" position="after">
                      <field name="product_uom_maked_sync_qty" readonly="1" />
+                     <field name="is_manufactured" invisible="1" />
+                     <button name="nothing" string="Is manufactured" type="object" icon="terp-product" attrs="{'invisible': [('is_manufactured', '=', False)]}" />            
                  </xpath>
              </field>
          </record>

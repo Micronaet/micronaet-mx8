@@ -51,18 +51,28 @@ class SaleOrderLine(orm.Model):
         assert len(ids) == 1, 'Only one line a time'
         
         line_proxy = self.browse(cr, uid, ids, context=context)[0]
-        if line_proxy.product_uom_maked_sync_qty < line_proxy.delivered_qty:
-            # Use manual!!
-            raise osv.except_osv(
-                _('Error'), 
-                _('Stock is used! Write manual to deliver qty!'))
+        if line_proxy.is_manufactured:
+            if line_proxy.product_uom_maked_sync_qty < line_proxy.delivered_qty:
+                # Use manual!!
+                raise osv.except_osv(
+                    _('Error'), 
+                    _('Stock is used! Write manual to deliver qty!'))                    
         
-        to_deliver_qty = line_proxy.product_uom_maked_sync_qty - \
-            line_proxy.delivered_qty
+            to_deliver_qty = line_proxy.product_uom_maked_sync_qty - \
+                line_proxy.delivered_qty
+        else:        
+            to_deliver_qty = line_proxy.product_uom_qty - \
+                line_proxy.delivered_qty
 
-        return self.write(cr, uid, ids, {
-            'to_deliver_qty': to_deliver_qty,
-            }, context=context)
+        if to_deliver_qty:
+            return self.write(cr, uid, ids, {
+                'to_deliver_qty': to_deliver_qty,
+                }, context=context)
+        else:
+            raise osv.except_osv(
+                _('Warning'), 
+                _('0 was move, no stock, try set manual!'))
+                
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
