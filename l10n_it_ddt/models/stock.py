@@ -199,18 +199,22 @@ class StockPicking(models.Model):
         note_post = ''
         for picking in self.browse(cr, uid, ids, context=context):
             # Pre pick + DDT (if exist)
+            tmp_pick_pre = (picking.text_note_pre or '').strip()
+            tmp_ddt_pre = (picking.ddt_id.ddt_text_note_pre or '').strip()            
             pre_all = '%s%s' % (
-                (picking.text_note_pre or '').strip(),
-                (picking.ddt_id.ddt_text_note_pre or '').strip(),
+                tmp_pick_pre,
+                '' if tmp_pick_pre == tmp_ddt_pre else tmp_ddt_pre,
                 )
             if pre_all and pre_all not in note_pre_list:
                 note_pre += '%s\n' % pre_all
                 note_pre_list.append(pre_all)
                 
             # Post pick + DDT (if exist)
+            tmp_pick_post = (picking.text_note_post or '').strip()
+            tmp_ddt_post = (picking.ddt_id.ddt_text_note_post or '').strip()
             post_all = '%s%s' % (
-                (picking.text_note_post or '').strip(),
-                (picking.ddt_id.ddt_text_note_post or '').strip(),
+                tmp_pick_post,
+                '' if tmp_pick_post == tmp_ddt_post else tmp_ddt_post,
                 )                
             if post_all and post_all not in note_post_list:
                 note_post += '%s\n' % post_all
