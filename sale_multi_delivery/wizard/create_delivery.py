@@ -87,8 +87,18 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
 
         line_ids = line_pool.search(cr, uid, [
             ('order_id', 'in', sale_ids)], context=context)
+        # Reset data for link to new delivery obj     
         line_pool.write(cr, uid, line_ids, {
             'to_deliver_qty': 0.0,
+            'multi_delivery_id': False,
+            }, context=context)
+        remain_ids = []    
+        for line in line_pool.browse(cr, uid, line_ids, context=context):
+            if line.product_uom_qty > line.delivered_qty:
+                remain_ids.append(line.id)
+            
+        line_pool.write(cr, uid, remain_ids, {
+            'multi_delivery_id': delivery_id,
             }, context=context)
 
         return {

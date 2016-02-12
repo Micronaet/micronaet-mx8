@@ -77,7 +77,7 @@
                              
                              <notebook colspan="4">
                                  <page string="Picking">
-                                     <field name="picking_ids" >
+                                     <field name="picking_ids" readonly="1">
                                          <tree string="Picking linked" editable="bottom" create="0">
                                              <button name="button_open_order" string="Open" type="object" icon="gtk-go-forward"/>
                                              <field name="name" readonly="1"/>
@@ -99,7 +99,7 @@
                                      </field>
                                  </page>
                                  <page string="Order">
-                                     <field name="order_ids">
+                                     <field name="order_ids" readonly="1">
                                          <tree string="Order currently linked" editable="bottom" colors="red:mx_closed==True" create="0">
                                              <button name="button_open_order" string="Open" type="object" icon="gtk-go-forward"/>
                                              <field name="mx_closed" readonly="1"/>
@@ -118,7 +118,7 @@
                                  </page>
                                  <page string="Lines">
                                      <button name="%(action_sale_order_line_for_delivery)d" string="Show lines" type="action" />
-                                     <field name="line_ids">
+                                     <field name="line_ids" readonly="1">
                                          <tree string="Lines currently linked" editable="bottom" create="0" colors="blue:to_deliver_qty>0">
                                              <field name="partner_id" readonly="1" />
                                              <field name="order_id" readonly="1" />

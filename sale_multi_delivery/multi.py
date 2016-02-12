@@ -298,38 +298,41 @@ class SaleOrderLine(orm.Model):
                 line_proxy.product_uom_qty - line_proxy.delivered_qty,
             }, context=context)
 
-    def _get_move_lines(self, cr, uid, ids, context=None):
-        ''' When change ref. in order also in lines
-        '''
-        sale_pool = self.pool['sale.order']
-        res = []
-        for sale in sale_pool.browse(cr, uid, ids, context=context):
-            for line in sale.order_line:
-                res.append(line.id)
-        return res
+    #def _get_move_lines(self, cr, uid, ids, context=None):
+    #    ''' When change ref. in order also in lines
+    #    '''
+    #    sale_pool = self.pool['sale.order']
+    #    res = []
+    #    for sale in sale_pool.browse(cr, uid, ids, context=context):
+    #        for line in sale.order_line:
+    #            res.append(line.id)
+    #    return res
 
-    def _get_move_line_lines(self, cr, uid, ids, context=None):
-        ''' When change ref. in order also in lines
-        '''
-        return ids
+    #def _get_move_line_lines(self, cr, uid, ids, context=None):
+    #    ''' When change ref. in order also in lines
+    #    '''
+    #    return ids
     
     _columns = {
         'to_deliver_qty': fields.float('To deliver', digits=(16, 2)), 
-        'multi_delivery_id': fields.related(
-            'order_id', 'multi_delivery_id', 
-            type='many2one', relation='sale.order.delivery', 
-            string='Multi delivery', store={
-                # Auto change if moved line in other order:
-                #'sale.order.line': (
-                #    lambda s, cr, uid, ids, c: ids,
-                #    ['order_id'],
-                #    10),
-                # Wneh change in order header value:    
-                'sale.order': (
-                    _get_move_lines, ['multi_delivery_id'], 10),
-                'sale.order.line': (
-                    _get_move_line_lines, ['order_id'], 10),
-                }),
+        'multi_delivery_id': fields.many2one(
+            'sale.order.delivery', 'Multi delivery', ondelete='set null'), 
+
+        #'multi_delivery_id': fields.related(
+        #    'order_id', 'multi_delivery_id', 
+        #    type='many2one', relation='sale.order.delivery', 
+        #    string='Multi delivery', store={
+        #        # Auto change if moved line in other order:
+        #        #'sale.order.line': (
+        #        #    lambda s, cr, uid, ids, c: ids,
+        #        #    ['order_id'],
+        #        #    10),
+        #        # Wneh change in order header value:    
+        #        'sale.order': (
+        #            _get_move_lines, ['multi_delivery_id'], 10),
+        #        'sale.order.line': (
+        #            _get_move_line_lines, ['order_id'], 10),
+        #        }),
         }
 
 class SaleOrderDelivery(orm.Model):
