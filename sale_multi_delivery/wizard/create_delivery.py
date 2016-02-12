@@ -62,11 +62,15 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         sale_pool = self.pool.get('sale.order')
         line_pool = self.pool.get('sale.order.line')
         
+        # ---------------------------------------------------------------------
+        #                               HEADER PART
+        # ---------------------------------------------------------------------
         sale_ids = context.get('active_ids', False)
         partner_id = False
+        active_order_ids = []
         for sale in sale_pool.browse(cr, uid, sale_ids, context=context):
             if sale.mx_closed:
-                continue # jump orer
+                continue # jump order
             if not partner_id:
                 partner_id = sale.partner_id.id
             if partner_id != sale.partner_id.id:
@@ -74,6 +78,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                     _('Error'),
                     _('Delivery order must have order with same partner'
                     ))
+            active_order_ids.append(sale.id)        
         
         delivery_id = delivery_pool.create(cr, uid, {
             'partner_id': partner_id,
@@ -81,12 +86,15 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
             }, context=context)
         
         # Assign order to delivery:
-        sale_pool.write(cr, uid, sale_ids, {
+        sale_pool.write(cr, uid, active_order_ids, {
             'multi_delivery_id': delivery_id,
             }, context=context)
 
+        # ---------------------------------------------------------------------
+        #                               LINE PART
+        # ---------------------------------------------------------------------
         line_ids = line_pool.search(cr, uid, [
-            ('order_id', 'in', sale_ids)], context=context)
+            ('order_id', 'in', active_order_ids)], context=context)
         # Reset data for link to new delivery obj     
         line_pool.write(cr, uid, line_ids, {
             'to_deliver_qty': 0.0,
@@ -97,6 +105,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
             if line.product_uom_qty > line.delivered_qty:
                 remain_ids.append(line.id)
             
+        # Update only line with remain q.ty
         line_pool.write(cr, uid, remain_ids, {
             'multi_delivery_id': delivery_id,
             }, context=context)
