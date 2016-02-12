@@ -73,7 +73,7 @@
                              <field name="partner_id" />
                              <field name="create_date" />
                              <field name="create_uid" />
-                             <button name="action_delivery" string="Create pickings" type="object" icon="gtk-go-forward" colspan="1" attrs="{'invisible':[('state','=','draft')]}"/>
+                             <button name="action_delivery" string="Create pickings" type="object" icon="gtk-go-forward" colspan="1" attrs="{'invisible':[('state','!=','draft')]}"/>
                              
                              <notebook colspan="4">
                                  <page string="Order">
@@ -96,7 +96,7 @@
                                      </field>
                                  </page>
                                  <page string="Picking">
-                                     <button name="button_all_open_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1"  attrs="{'invisible':[('state','!=','draft')]}"/>
+                                     <button name="button_all_open_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1"  attrs="{'invisible':[('state','=','draft')]}"/>
                                      <field name="picking_ids" readonly="1">
                                          <tree string="Picking linked" editable="bottom" create="0">
                                              <button name="button_open_picking" string="Open" type="object" icon="gtk-go-forward"/>
@@ -132,6 +132,7 @@
                                              <field name="delivered_qty" readonly="1" />
                                              <button name="set_all_qty" string=">>" type="object" />
                                              <field name="to_deliver_qty" />
+                                             <button name="set_zero_qty" string="0" type="object" />
                                              <field name="state" readonly="1" />
                                          </tree>
                                      </field>

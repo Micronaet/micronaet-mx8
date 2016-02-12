@@ -313,6 +313,16 @@ class SaleOrderLine(orm.Model):
     """    
     _inherit = 'sale.order.line'
     
+    def set_zero_qty(self, cr, uid, ids, context=None):
+        ''' Set 0
+        '''
+        assert len(ids) == 1, 'Only one line a time'
+        
+        line_proxy = self.browse(cr, uid, ids, context=context)[0]
+        return self.write(cr, uid, ids, {
+            'to_deliver_qty': 0.0,
+            }, context=context)
+
     def set_all_qty(self, cr, uid, ids, context=None):
         ''' Set qty depend on remain (overridable from MRP!!!)
         '''
