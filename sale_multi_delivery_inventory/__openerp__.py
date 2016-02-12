@@ -32,6 +32,7 @@
         'sale',
         'sale_multi_delivery',
         'inventory_status', # for stock status
+        'order_deliverable', # related field for product status
         ],
     'init_xml': [],
     'demo': [],

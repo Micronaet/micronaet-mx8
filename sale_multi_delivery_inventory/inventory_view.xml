@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-         <!--sale.order.line (for delivery)-->
-         
+         <!--sale.order.line (for delivery)-->         
          <record model="ir.ui.view" id="view_sale_order_line_for_mrp_delivery_tree">
              <field name="name">sale.order.line.for.delivery.form</field>
              <field name="model">sale.order.line</field>
