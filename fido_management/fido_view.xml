@@ -15,22 +15,19 @@
                           <field name='fido_date' attrs="{'invisible':[('fido_ko', '=', True)]}"/>
                           <field name='fido_total' attrs="{'invisible':[('fido_ko', '=', True)]}" />
                           
-                          <separator string="Fido" colspan="4" />
-                          <field name="open_payment_ids" readonly="1"> 
+                          <separator string="Open payment" colspan="4" />
+                          <field name="open_payment_ids" readonly="1" nolabel="1" colspan="4"> 
                               <tree string="Open Payment:" editable="bottom">
                                   <field name="deadline"/>
                                   <field name="in" sum="Entrate" string="Importo"  />
-                                  <field name="saldo_c" />
-                                  <field name="saldo_s" />
-                                    
-                                  <field name="scoperto_c" />
-                                   
                                   <field name="type"/>
-                                  <field name="property_account_position"/>                                  
-
                                   <field name="invoice_id" />
-                                  <!--<field name="invoice_ref" />-->
                                   <field name="invoice_date" />
+                                  <!--<field name="invoice_ref" />-->
+                                  <!--<field name="saldo_c" />
+                                  <field name="saldo_s" />                                    
+                                  <field name="scoperto_c" />-->                                   
+                                  <!--<field name="property_account_position"/>-->
                               </tree>
                           </field>
                       </group>
