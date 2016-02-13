@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id='view_partner_fido_field' model='ir.ui.view'>
+            <field name='name'>FIDO Partner</field>
+            <field name='model'>res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name='arch' type='xml'>
+              <xpath expr="/form/sheet/notebook/page[3]" position="after">
+                  <page string="FIDO">
+                      <group colspan="4" col="6">
+                          <separator string="Fido" colspan="4" col="4"/>
+                          <field name='fido_ko' />   
+                          <newline />
+                          <field name='fido_date' attrs="{'invisible':[('fido_ko', '=', True)]}"/>
+                          <field name='fido_total' attrs="{'invisible':[('fido_ko', '=', True)]}" />
+                      </group>
+                  </page>
+              </xpath>
+           </field>            
+       </record>    
+
+    <record model="ir.ui.view" id="view_res_partner_fido_filter">
+            <field name="name">Partner fido filter</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+               <field name="user_id" position="after">
+                      <filter name='no_fido' string='FIDO removed' domain="[('fido_ko','=',True)]"/>
+                      <filter name='yes_fido' string='FIDO present' domain="[('fido_ko','=',False),('fido_total','>=',0)]"/>
+               </field>
+               <filter string="Salesperson" position="after">
+                   <filter string="FIDO assignement" name="group_type" context="{'group_by': 'fido_ko'}"/>
+               </filter>
+            </field>
+    </record>
+
+   <!--<record model="ir.ui.view" id="view_partner_tree_fido_field">
+        <field name="name">Partner FIDO tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+               <field name="user_id" position="after">
+                  <field name='fido_ko' />   
+                  <field name='fido_date' attrs="{'invisible':[('fido_ko', '=', True)]}"/>
+                  <field name='fido_total' attrs="{'invisible':[('fido_ko', '=', True)]}" />
+               </field>
+        </field>
+    </record>-->
+       
+    </data>
+</openerp>
+
