@@ -149,6 +149,7 @@ class ResPartner(orm.Model):
         return res
         
     _columns = {
+        'empty': fields.char(' '),
         'fido_date': fields.date('FIDO from date'),
         'fido_ko': fields.boolean('FIDO removed'),
         'fido_total': fields.float('Total FIDO', digits=(16, 2)),
@@ -183,8 +184,9 @@ class ResPartner(orm.Model):
                 ('red', 'FIDO uncovered or no FIDO'),
                 ('black', 'FIDO removed'),
                 ]),
-        }    
+        }
+    _defaults = {
+        'empty': lambda *x: ' ',
+        }
         
-        
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

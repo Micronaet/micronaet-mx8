@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id='view_sale_order_fido_form' model='ir.ui.view'>
+            <field name='name'>Sale order FIDO</field>
+            <field name='model'>sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name='arch' type='xml'>
+              <field name="name" position="before">
+                  <field name="uncovered_state" invisible="1"/>
+                  <div style="background-color: red;text-align: center;font-weight:bold;color:white;">
+                      <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'red')]}" class="oe_color_red" />
+                  </div>
+                  <div style="background-color: yellow;text-align: center;font-weight:bold;color:white;">
+                      <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'yellow')]}" class="oe_color_red" />
+                  </div>
+                  <div style="background-color: green;text-align: center;font-weight:bold;color:white;">
+                      <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'green')]}" class="oe_color_red" />
+                  </div>
+                  <div style="background-color: black;text-align: center;font-weight:bold;color:white;">
+                      <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'black')]}" class="oe_color_red" />
+                  </div>
+              </field>
+          </field>
+      </record>
+
+       
+    </data>
+</openerp>
+
