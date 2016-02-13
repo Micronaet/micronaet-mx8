@@ -17,12 +17,13 @@
                           
                           <separator string="Open payment" colspan="4" />
                           <field name="open_payment_ids" readonly="1" nolabel="1" colspan="4"> 
-                              <tree string="Open Payment:" editable="bottom">
-                                  <field name="deadline"/>
-                                  <field name="in" sum="Entrate" string="Importo"  />
-                                  <field name="type"/>
+                              <tree string="Open Payment:" editable="bottom" color="red:out>0">
                                   <field name="invoice_id" />
                                   <field name="invoice_date" />
+                                  <field name="deadline"/>
+                                  <field name="type"/>
+                                  <field name="out" sum="Uscite" string="Import OUT"  />
+                                  <field name="in" sum="Entrate" string="Import IN"  />
                                   <!--<field name="invoice_ref" />-->
                                   <!--<field name="saldo_c" />
                                   <field name="saldo_s" />                                    
