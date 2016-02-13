@@ -6,6 +6,21 @@
             <field name='model'>res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name='arch' type='xml'>
+              <field name="image" position="before">
+                  <div style="background-color: red;text-align: center;font-weight:bold;color:white;">
+                      <br/>
+                  </div>
+                  <div style="background-color: black;text-align: center;font-weight:bold;color:white;">
+                      <br/>
+                  </div>
+                  <div style="background-color: green;text-align: center;font-weight:bold;color:white;">
+                      <br/>
+                  </div>
+                  <div style="background-color: yellow;text-align: center;font-weight:bold;color:white;">
+                      <br/>
+                  </div>
+              </field>
+
               <xpath expr="/form/sheet/notebook/page[3]" position="after">
                   <page string="FIDO">
                       <group colspan="4" col="4">

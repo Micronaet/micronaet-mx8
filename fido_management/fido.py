@@ -80,7 +80,7 @@ class StockPicking(orm.Model):
                     # Proportional with subtotal referred in order line:
                     res[ddt.id] += \
                         line.sale_line_id.price_subtotal * qty / \
-                            line.sale_line_idproduct_uom_qty
+                            line.sale_line_id.product_uom_qty
         return res
         
     _columns = {
