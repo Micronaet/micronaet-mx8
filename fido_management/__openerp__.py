@@ -29,6 +29,7 @@
     'license': 'AGPL-3',
     'depends': [
         'base',
+        'accounting_statistic_deadline', # for payment
         ],
     'init_xml': [],
     'demo': [],
