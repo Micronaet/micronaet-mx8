@@ -107,25 +107,16 @@ class ResPartner(orm.Model):
             opened = 0.0
             res[partner.id]['uncovered_state'] = 'green'
             
-            # Check black listed:
-            if partner.fido_ko:
-                # No computation partner is black listed!
-                res[partner.id]['uncovered_state'] = 'black'
-                continue
-            
             fido_date = partner.fido_date or False
             fido_total = partner.fido_total or 0.0
-            if not fido_total:
-                # No computation no Fido amount!
-                res[partner.id]['uncovered_state'] = 'red'
-                continue
 
             # ---------------------------
             # Payment in date not closed:
             # ---------------------------
             for payment in partner.open_payment_ids:
-                if not fido_date or not payment.invoice_date or \
-                        fido_date <= payment.invoice_date:
+                invoice_date = payment.invoice_date or payment.deadline or False
+                if not fido_date or not invoice_date or \
+                        fido_date <= invoice_date:
                     opened += payment.__getattribute__('in')
             
             # ----------
@@ -140,7 +131,20 @@ class ResPartner(orm.Model):
             for ddt in partner.open_picking_ids:
                 opened += ddt.open_amount_total
                 
+
             res[partner.id]['uncovered_amount'] = fido_total - opened
+
+            # Check black listed:
+            if partner.fido_ko:
+                # No computation partner is black listed!
+                res[partner.id]['uncovered_state'] = 'black'
+                continue
+
+            if not fido_total:
+                # No computation no Fido amount!
+                res[partner.id]['uncovered_state'] = 'red'
+                continue
+
             if fido_total < opened:
                 res[partner.id]['uncovered_state'] = 'red'
             elif opened / fido_total > fido_yellow:
