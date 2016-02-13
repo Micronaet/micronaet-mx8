@@ -47,6 +47,24 @@ class ResPartner(orm.Model):
         'fido_date': fields.date('FIDO from date'),
         'fido_ko': fields.boolean('FIDO removed'),
         'fido_total': fields.float('Total FIDO', digits=(16, 2)),
-        }
+        
+        # Open order:
+        'open_order_ids': fields.one2many(
+            'sale.order', 'partner_id', 
+            'Order open', domain=[
+                ('mx_closed', '=', False),
+                ('pricelist_order', '=', False),
+                ('state', 'not in', ('cancel', 'draft', 'sent')),
+                ]), 
+            
+        # Open order:
+        'open_picking_ids': fields.one2many(
+            'stock.picking', 'partner_id', 
+            'Open DDT', domain=[
+                ('ddt_id', '!=', False), 
+                ('invoice_id', '=', False),
+                ]), 
+        }    
+        
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

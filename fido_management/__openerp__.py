@@ -30,6 +30,10 @@
     'depends': [
         'base',
         'accounting_statistic_deadline', # for payment
+        'sale',
+        'mx_close_order', # close filter
+        'stock',
+        'account',
         ],
     'init_xml': [],
     'demo': [],
