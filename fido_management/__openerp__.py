@@ -32,6 +32,7 @@
         'accounting_statistic_deadline', # for payment
         'sale',
         'mx_close_order', # close filter
+        'sale_delivery_partial',
         'stock',
         'account',
         ],

@@ -38,11 +38,116 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class SaleOrder(orm.Model):
+    ''' FIDO in order 
+    '''
+    _inherit ='sale.order'
+    
+    def _get_open_amount_total_order(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = 0.0
+            for line in order.order_line:
+                remain = line.product_uom_qty - line.delivered_qty
+                if remain:
+                    res[order.id] += \
+                        line.price_subtotal * remain / line.product_uom_qty
+        return res
+        
+    _columns = {
+        'open_amount_total': fields.function(
+            _get_open_amount_total_order, method=True, 
+            type='float', string='Open amount', 
+            store=False),                         
+        }
+
+class StockPicking(orm.Model):
+    ''' FIDO in ddt 
+    '''
+    _inherit ='stock.picking'
+    
+    def _get_open_amount_total_ddt(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for ddt in self.browse(cr, uid, ids, context=context):
+            res[ddt.id] = 0.0
+            for line in ddt.move_lines:
+                qty = line.product_uom_qty
+                if qty:
+                    # Proportional with subtotal referred in order line:
+                    res[ddt.id] += \
+                        line.sale_line_id.price_subtotal * qty / \
+                            line.sale_line_idproduct_uom_qty
+        return res
+        
+    _columns = {
+        'open_amount_total': fields.function(
+            _get_open_amount_total_ddt, method=True, 
+            type='float', string='Open amount', 
+            store=False),                         
+        }
+
 class ResPartner(orm.Model):
     ''' FIDO fields for add management
     '''
     _inherit ='res.partner'
     
+    def _get_uncovered_amount_total(self, cr, uid, ids, fields, args, 
+            context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        fido_yellow = 0.85 # TODO parametrize?
+        
+        for partner in self.browse(cr, uid, ids, context=context):       
+            res[partner.id] = {}            
+            opened = 0.0
+            res[partner.id]['uncovered_state'] = 'green'
+            
+            # Check black listed:
+            if partner.fido_ko:
+                # No computation partner is black listed!
+                res[partner.id]['uncovered_state'] = 'black'
+                continue
+            
+            fido_date = partner.fido_date or False
+            fido_total = partner.fido_total or 0.0
+            if not fido_total:
+                # No computation no Fido amount!
+                res[partner.id]['uncovered_state'] = 'red'
+                continue
+
+            # ---------------------------
+            # Payment in date not closed:
+            # ---------------------------
+            for payment in partner.open_payment_ids:
+                if not fido_date or not payment.invoice_date or \
+                        fido_date <= payment.invoice_date:
+                    opened += payment.__getattribute__('in')
+            
+            # ----------
+            # OC opened:
+            # ----------
+            for order in partner.open_order_ids:
+                opened += order.open_amount_total
+                
+            # ----------------
+            # DDT not invoice:
+            # ----------------
+            for ddt in partner.open_picking_ids:
+                opened += ddt.open_amount_total
+                
+            res[partner.id]['uncovered_amount'] = fido_total - opened
+            if fido_total < opened:
+                res[partner.id]['uncovered_state'] = 'red'
+            elif opened / fido_total > fido_yellow:
+                res[partner.id]['uncovered_state'] = 'yellow'
+                
+        return res
+        
     _columns = {
         'fido_date': fields.date('FIDO from date'),
         'fido_ko': fields.boolean('FIDO removed'),
@@ -63,8 +168,23 @@ class ResPartner(orm.Model):
             'Open DDT', domain=[
                 ('ddt_id', '!=', False), 
                 ('invoice_id', '=', False),
-                ]), 
+                ]),
+
+        'uncovered_amount': fields.function(
+            _get_uncovered_amount_total, method=True, 
+            type='float', string='Uncovered amount', 
+            store=False, multi=True),
+        'uncovered_state': fields.function(
+            _get_uncovered_amount_total, method=True, 
+            type='selection', string='Uncovered state', 
+            store=False, multi=True, selection=[
+                ('green', 'OK FIDO'),
+                ('yellow', '> 85% FIDO'),
+                ('red', 'FIDO uncovered or no FIDO'),
+                ('black', 'FIDO removed'),
+                ]),
         }    
+        
         
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
