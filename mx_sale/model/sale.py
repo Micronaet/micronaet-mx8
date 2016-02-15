@@ -348,7 +348,12 @@ class SaleOrderLine(orm.Model):
         'delivered_qty': fields.function(
             _function_get_delivered, method=True, type='float', readonly=True,
             string='Delivered', store=False, 
-            help='Quantity delivered with DDT out'),            
+            help='Quantity delivered with DDT out'),
+        # TODO add to delivery qty
+        
+        # Order ref:
+        'client_order_ref': fields.related('order_id',
+            'client_order_ref', type='char', string='Client order ref.'),     
         }
         
     _defaults = {
