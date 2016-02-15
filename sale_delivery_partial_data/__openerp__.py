@@ -18,29 +18,23 @@
 ###############################################################################
 
 {
-    'name': 'FIDO Management',
+    'name': 'Partial extra data',
     'version': '0.1',
-    'category': '',
-    'description': '''
-        Manage FIDO and check payment and order / DDT  
+    'category': 'Sale',
+    'description': '''        
+        Add some field used for other modules
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
     'license': 'AGPL-3',
     'depends': [
         'base',
-        'accounting_statistic_deadline', # for payment
         'sale',
-        'mx_close_order', # close filter
         'sale_delivery_partial',
-        'sale_delivery_partial_data',
-        'stock',
-        'account',
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        'fido_view.xml',
         ],
     'active': False,
     'installable': True,

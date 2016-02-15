@@ -38,6 +38,9 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+# TODO move in a module:
+# TODO REMOVE !!!!
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 class SaleOrder(orm.Model):
     ''' FIDO in order 
     '''
@@ -55,13 +58,14 @@ class SaleOrder(orm.Model):
                     res[order.id] += \
                         line.price_subtotal * remain / line.product_uom_qty
         return res
-        
+
     _columns = {
         'open_amount_total': fields.function(
             _get_open_amount_total_order, method=True, 
             type='float', string='Open amount', 
             store=False),                         
         }
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 class StockPicking(orm.Model):
     ''' FIDO in ddt 
