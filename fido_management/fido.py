@@ -80,11 +80,13 @@ class StockPicking(orm.Model):
             res[ddt.id] = 0.0
             for line in ddt.move_lines:
                 qty = line.product_uom_qty
+                
                 if qty:
                     # Proportional with subtotal referred in order line:
-                    res[ddt.id] += \
-                        line.sale_line_id.price_subtotal * qty / \
-                            line.sale_line_id.product_uom_qty
+                    if line.sale_line_id.product_uom_qty:
+                        res[ddt.id] += \
+                            line.sale_line_id.price_subtotal * qty / \
+                                line.sale_line_id.product_uom_qty
         return res
         
     _columns = {
