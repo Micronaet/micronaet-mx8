@@ -87,6 +87,8 @@ class StockPicking(orm.Model):
                         res[ddt.id] += \
                             line.sale_line_id.price_subtotal * qty / \
                                 line.sale_line_id.product_uom_qty
+                    else:
+                        _logger.info('Division by zero!!')            
         return res
         
     _columns = {
