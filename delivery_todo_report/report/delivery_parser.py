@@ -139,7 +139,7 @@ class Parser(report_sxw.rml_parse):
                     if not parcel:
                         parcel_text = ''
                     else:
-                        parcel_text = 'SC. %s x %s =' % (
+                        parcel_text = 'SC. %sx%s=' % (
                             int(parcel), int(q_x_pack))
                         self.counters['total_parcel'] += parcel
                 res.append((key, parcel_text, v))
