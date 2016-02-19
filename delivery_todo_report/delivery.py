@@ -217,7 +217,7 @@ class SaleOrder(orm.Model):
                     'delivery_vol_partial': delivery_vol_partial,
                     }, context=context)
 
-            sol_pool.write(cr, uid, line.id, {
+            self.write(cr, uid, order.id, {
                 'delivery_ml_total': order_ml_tot,
                 'delivery_ml_partial': order_ml_part,
                 'delivery_vol_total': order_volume_tot,

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
-        <!--TODO Delivery-->
+        <!--TODO Delivery internal document-->
         <record id="aeroo_mx_load_list_report_id" model="ir.actions.report.xml">
-            <field name="name">Mx Delivery todo report</field>
+            <field name="name">Delivery internal document</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">sale.order</field>
             <field name="report_name">custom_mx_load_list_report</field>
@@ -24,9 +24,32 @@
             <field eval="True" name="replace"/>
         </ir_set>
 
-        <!--TODO Delivery-->
+        <!--TODO Delivery internal summary-->
+        <record id="aeroo_mx_load_summary_internal_report_id" model="ir.actions.report.xml">
+            <field name="name">Delivery internal summary</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">sale.order</field>
+            <field name="report_name">custom_mx_load_internal_summary_report</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-ods</field>
+            <field name="parser_loc">delivery_todo_report/report/delivery_parser.py</field>
+            <field name="report_rml">delivery_todo_report/report/load_summary.odt</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+        </record>
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="['sale.order']" name="models"/>
+            <field name="name">action_custom_mx_load_internal_summary</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_load_summary_internal_report_id)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>
+        </ir_set>
+
+        <!--TODO Delivery supplier XLS-->
         <record id="aeroo_mx_load_summary_report_id" model="ir.actions.report.xml">
-            <field name="name">Mx Delivery todo summary report</field>
+            <field name="name">Delivery supplier XLS</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">sale.order</field>
             <field name="report_name">custom_mx_load_summary_report</field>
@@ -49,7 +72,7 @@
 
         <!--TODO Purchase-->
         <record id="aeroo_mx_purchase_report_id" model="ir.actions.report.xml">
-            <field name="name">Mx Purchase internal</field>
+            <field name="name">Purchase internal unload</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">purchase.order</field>
             <field name="report_name">custom_mx_purchase_report</field>
