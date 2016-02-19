@@ -64,6 +64,8 @@
                             <group colspan="2" col="2" name="customer_box">
                                 <separator string="Customer" colspan="2"/>
                                 <field name="date_order" readonly="1" />
+                                <field name="date_confirm" readonly="1" />
+                                <field name="date_deadline" readonly="1" />
                                 <field name="client_order_ref" readonly="1" />
                             </group>    
                             <group colspan="2" col="2" name="total_box">
@@ -100,6 +102,7 @@
                                   <tree string="Line:" colors="grey:mrp_production_state=='delivered';green:mrp_production_state=='produced';blue:delivery_b>0.0;black:mrp_production_state=='no'">
                                       <field name="product_id" />
                                       <field name="name" />
+                                      <field name="date_deadline" />
 
                                       <!--TODO remove:-->                                      
                                       <field name="product_uom_qty" />
@@ -186,6 +189,10 @@
                         <field name="name" />
                         <field name="zone_id" />
                         <field name="mx_agent_id" />
+
+                        <field name="date_deadline" string="Deadline from &gt;=" filter_domain="[('date_deadline','&gt;=',self)]"/> 
+                        <field name="date_deadline" string="Deadline to &lt;=" filter_domain="[('date_deadline','&lt;=',self)]"/> 
+
                         <filter string="Not closed" name="not_closed" domain="[('mx_closed', '=', False)]" />
                         <filter name="all_produced" string="all produced" domain="[('all_produced', '=', True)]"/>
                         <!--

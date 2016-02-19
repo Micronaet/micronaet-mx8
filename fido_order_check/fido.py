@@ -52,10 +52,12 @@ class SaleOrder(orm.Model):
         partner_proxy = self.browse(
             cr, uid, ids, context=context)[0].partner_id
         res[ids[0]] = _('FIDO: %s\nDate: %s\nState: %s\nUncovered: %s\n%s') % (
-            partner_proxy.fido_total or 0,
+            ("{:,}".format(int(
+                partner_proxy.fido_total or 0))).replace(',','.') ,
             partner_proxy.fido_date or '',
             partner_proxy.uncovered_state or '',
-            partner_proxy.uncovered_amount or 0,
+            ("{:,}".format(int(
+                partner_proxy.uncovered_amount or 0))).replace(',','.') ,            
             _('REMOVED!!!') if partner_proxy.fido_ko else ''
             )
         return res    

@@ -9,6 +9,7 @@
              <field name="arch" type="xml">
                  <search string="Sale order delivery" version="7.0">        
                      <field name="product_uom_qty" />
+                     <field name="client_order_ref" readonly="1" />                                             
                      <field name="multi_delivery_id" filter_domain="[('multi_delivery_id','=',self)]"/>                     
 
                      <filter name="open_state" string="Open delivery" domain="[('state','=','draft')]"/>
@@ -100,7 +101,6 @@
                                              <field name="invoice_partner_id" readonly="1" />
                                              <field name="date_order" readonly="1" />
                                              <field name="date_deadline" readonly="1" />
-                                             <field name="client_order_ref" readonly="1" />
                                              <field name="payment_term" />
                                              <field name="state" readonly="1" />-->
                                          </tree>
@@ -120,7 +120,6 @@
                                              <field name="invoice_partner_id" readonly="1" />
                                              <field name="date_order" readonly="1" />
                                              <field name="date_deadline" readonly="1" />
-                                             <field name="client_order_ref" readonly="1" />
                                              <field name="payment_term" />
                                              <field name="state" readonly="1" />
                                          </tree>
