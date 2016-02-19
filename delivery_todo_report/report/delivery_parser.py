@@ -50,6 +50,8 @@ class Parser(report_sxw.rml_parse):
             'get_total_parcel': self.get_total_parcel,
 
             'reset_print': self.reset_print,
+            
+            'get_order_selected': self.get_order_selected,
         })
         self.reset_counter()
         # TODO remove        
@@ -168,12 +170,22 @@ class Parser(report_sxw.rml_parse):
             with al record masked for print 
         '''
         sale_pool = self.pool.get('sale.order')
+        
+        # Selection by check:
         active_ids = [x.id for x in objects]        
 
+        # Selection by button:
         print_ids = sale_pool.search(self.cr, self.uid, [
             ('print', '=', True),])
+
         active_ids.extend(print_ids)    
         return list(set(active_ids))
+
+    def get_order_selected(self, objects):
+        sale_pool = self.pool.get('sale.order')
+        
+        return sale_pool.browse(
+            self.cr, self.uid, self._get_fully_list(objects))
 
     def get_object_line(self, objects):
         ''' Selected object + print object

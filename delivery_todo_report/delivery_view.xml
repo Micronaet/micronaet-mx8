@@ -46,6 +46,8 @@
                             <group colspan="2" col="2">
                                 <field name="partner_id" readonly="1" />
                                 <field name="destination_partner_id" readonly="1" />                            
+                                <field name="mx_agent_id" readonly="1"/>
+                                <field name="zone_id" readonly="1" />
                             </group>    
                             <group colspan="2" col="2">
                                 <field name="date_order" readonly="1" />
@@ -138,6 +140,8 @@
                     <group>
                         <field name="partner_id" />
                         <field name="name" />
+                        <field name="zone_id" />
+                        <field name="mx_agent_id" />
                         <filter string="Not closed" name="not_closed" domain="[('mx_closed', '=', False)]" />
                         <filter name="all_produced" string="all produced" domain="[('all_produced', '=', True)]"/>
                         <!--
@@ -151,6 +155,8 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="14">
+                        <filter string="Zone" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'zone_id'}"/>
+                        <filter string="Agent" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'mx_agent_id'}"/>
                         <filter string="Partner" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Date" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'date_order'}"/>
                         <filter string="Deadline" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'date_deadline'}"/>
@@ -167,11 +173,13 @@
             <field name="arch" type="xml">
                 <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">
                     <field name="name" />
+                    <field name="zone_id" readonly="1" />
                     <field name="partner_id"/>
-                    <field name="partner_id"/>
+                    <field name="destination_partner_id"/>
+                    <field name="mx_agent_id"/>
                     <field name="date_order"/>
                     <field name="date_deadline"/>
-                    <field name="note" />
+                    <!--<field name="note" />-->
                     <field name="all_produced" invisible="1"/>
                     <field name="mx_closed" invisible="1"/>
                     

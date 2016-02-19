@@ -18,33 +18,24 @@
 ###############################################################################
 
 {
-    'name': 'Delivery todo report',
+    'name': 'Partner zone',
     'version': '0.1',
-    'category': 'Report',
-    'description': ''' 
-        Add print button to sale order for print a list of delivery 
-        (and a sort of order for stock user)       
+    'category': 'Customization',
+    'description': '''
+        Manage zone for partner
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
     'license': 'AGPL-3',
     'depends': [
         'base',
-        'sale',
-        'sale_delivery_partial',
-        'mx_agent',
-        'mx_close_order',
-        'production_accounting_external',
-        'mx_partner_zone',
-        'mx_agent', # agent filter
-        #'base_accounting_program', # res.partner.zone TODO move in module!
+        #'sale',
+        'base_accounting_program', # TODO remove after moves here obj res.partner.zone
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        #'security/ir.model.access.csv',    
-        'delivery_view.xml',
-        'report/delivery_report.xml',
+        'zone_view.xml',
         ],
     'active': False,
     'installable': True,
