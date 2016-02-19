@@ -36,6 +36,7 @@
         'mx_close_order',
         'production_accounting_external',
         'mx_partner_zone',
+        'fido_order_check',
         'mx_agent', # agent filter
         #'base_accounting_program', # res.partner.zone TODO move in module!
         ],

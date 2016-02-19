@@ -32,6 +32,21 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <form string="Delivery order">
+                    <head>
+                          <field name="uncovered_state" invisible="1"/>
+                          <div style="background-color: red;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'red')]}" class="oe_color_red" />
+                          </div>
+                          <div style="background-color: yellow;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'yellow')]}" class="oe_color_red" />
+                          </div>
+                          <div style="background-color: green;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'green')]}" class="oe_color_red" />
+                          </div>
+                          <div style="background-color: black;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'black')]}" class="oe_color_red" />
+                          </div>
+                    </head>
                     <sheet>
                         <h1>
                             <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
@@ -60,7 +75,7 @@
                         <notebook colspan="4">
                           <page string="Delivery lines">
                               <field name="order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">
-                                  <tree string="Line:" colors="grey:mrp_production_state=='delivered';blue:mrp_production_state=='partial';green:mrp_production_state=='produced';black:mrp_production_state=='no'">
+                                  <tree string="Line:" colors="grey:mrp_production_state=='delivered';green:mrp_production_state=='produced';blue:delivery_b>=0.0;black:mrp_production_state=='no'">
                                       <field name="name" />
                                       <field name="product_id" />
                                       <field name="product_uom_qty" />
