@@ -173,6 +173,17 @@ class SaleOrder(orm.Model):
             order_volume_part = 0.0
             
             for line in order.order_line:
+                if line.mrp_production_state == 'delivered':
+                    sol_pool.write(cr, uid, line.id, {
+                        'delivery_oc': 0,
+                        'delivery_b': 0,
+                        'delivery_s': 0,
+                        'delivery_ml_total': 0,
+                        'delivery_ml_partial': 0,
+                        'delivery_vol_total': 0,
+                        'delivery_vol_partial': 0,
+                        }, context=context)
+                    continue
                 delivery_oc = line.product_uom_qty - line.delivered_qty
                 if line.product_uom_maked_sync_qty > line.delivered_qty: 
                     # MRP:
