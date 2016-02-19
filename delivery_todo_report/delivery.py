@@ -47,11 +47,109 @@ class SaleOrder(orm.Model):
     def force_parameter_for_delivery(self, cr, uid, ids, context=None):
         ''' Compute all not closed order for delivery
         '''
-        # Update status:
-        _logger.info('Start update close and production')
-        self.scheduled_check_close_order(cr, uid, context=context)
+        return self.scheduled_check_close_order(cr, uid, context=context)
+
+    # -----------------
+    # Scheduled events:
+    # -----------------
+    def scheduled_check_close_order(self, cr, uid, context=None):
+        ''' Override original procedure for write all producted
+        '''
+        # ---------------------------------------------------------------------
+        #                       Mark order close and mrp:
+        # ---------------------------------------------------------------------
+        # Call original to update closed parameters:
+        super(SaleOrder, self).scheduled_check_close_order(
+            cr, uid, context=context)
+  
+        # --------------------------------
+        # All closed are produced in view:
+        # --------------------------------
+        sol_pool = self.pool.get('sale.order.line')
         
+        # Pricelist order are set to closed:        
+        order_ids = self.search(cr, uid, [
+            ('state', 'not in', ('cancel', 'sent', 'draft')),
+            ('mx_closed', '=', False),
+            ], context=context)
+
+        if not order_ids:
+            return True
+
+        _logger.info('Update production in order (# %s)' % len(
+            order_ids))
+           
+        produced_ids = []  
+
+        # 4 states:        
+        update_line = {
+            'delivered': [],
+            'produced': [],
+            'partial': [],
+            'no': [],            
+            }
+
+        for order in self.browse(cr, uid, order_ids, context=context):
+            all_produced = True
+            for line in order.order_line:
+                remain = line.product_uom_qty - line.delivered_qty
+                if remain <= 0.0: # all delivered:
+                    update_line['delivered'].append(line.id)
+                else: # Check type of operation:
+                    if line.delivered_qty > line.product_uom_maked_sync_qty: 
+                        # ------
+                        # stock:
+                        # ------
+                        if line.product_uom_qty <= line.delivered_qty:
+                            update_line['delivered'].append(line.id)
+                        else:
+                            update_line['partial'].append(line.id)
+                            all_produced = False
+
+                    else:
+                        # ----
+                        # mrp:
+                        # ----
+                        if line.product_uom_qty <= \
+                                line.product_uom_maked_sync_qty:
+                            update_line['produced'].append(line.id)
+                        elif line.product_uom_maked_sync_qty > \
+                                line.delivered_qty:                           
+                            update_line['partial'].append(line.id)
+                            all_produced = False
+                        else: 
+                            update_line['no'].append(line.id)
+                            all_produced = False
+
+            if all_produced:
+                produced_ids.append(order.id)
+
+        closed_state = ('delivered', )
+        for key in update_line:
+            if update_line[key]:
+                data = {
+                    'mrp_production_state': key,
+                    }
+                if key in closed_state:
+                    data.update({'mx_closed': True})
+                    
+                sol_pool.write(
+                    cr, uid, update_line[key], data, context=context)
+                _logger.info('Line %s delivered (# %s)' % (
+                    key,
+                    len(update_line[key]),
+                    ))
+               
+        if produced_ids:
+            self.write(cr, uid, produced_ids, {
+                'all_produced': True,
+                }, context=context)                
+            _logger.info('Order all produced (# %s)' % len(
+                produced_ids))
+
+        # ---------------------------------------------------------------------
         # Update readability parameter in line
+        # ---------------------------------------------------------------------
         _logger.info('Readability parameter')
         sol_pool = self.pool.get('sale.order.line')
         
@@ -118,102 +216,6 @@ class SaleOrder(orm.Model):
         # Update totale in order
         _logger.info('Total order updated')
         return
-
-    # -----------------
-    # Scheduled events:
-    # -----------------
-    def scheduled_check_close_order(self, cr, uid, context=None):
-        ''' Override original procedure for write all producted
-        '''
-        # Call original to update closed parameters:
-        super(SaleOrder, self).scheduled_check_close_order(
-            cr, uid, context=context)
-  
-        # --------------------------------
-        # All closed are produced in view:
-        # --------------------------------
-        sol_pool = self.pool.get('sale.order.line')
-        
-        # Pricelist order are set to closed:        
-        order_ids = self.search(cr, uid, [
-            ('state', 'not in', ('cancel', 'sent', 'draft')),
-            ('mx_closed', '=', False),
-            ], context=context)
-
-        if not order_ids:
-            return True
-
-        _logger.info('Update production in order (# %s)' % len(
-            order_ids))
-           
-        produced_ids = []  
-
-        # 3 states:        
-        update_line = {
-            'delivered': [],
-            'produced': [],
-            'partial': [],
-            'no': [],            
-            }
-
-        for order in self.browse(cr, uid, order_ids, context=context):
-            all_produced = True
-            for line in order.order_line:
-                remain = line.product_uom_qty - line.delivered_qty
-                if remain <= 0.0: # all delivered:
-                    update_line['delivered'].append(line.id)
-                else: # Check type of operation:
-                    if line.delivered_qty > line.product_uom_maked_sync_qty: 
-                        # ------
-                        # stock:
-                        # ------
-                        if line.product_uom_qty <= line.delivered_qty:
-                            update_line['delivered'].append(line.id)
-                        else:
-                            update_line['partial'].append(line.id)
-                            all_produced = False
-
-                    else:
-                        # ----
-                        # mrp:
-                        # ----
-                        if line.product_uom_qty <= \
-                                line.product_uom_maked_sync_qty:
-                            update_line['produced'].append(line.id)
-                        elif line.product_uom_maked_sync_qty > \
-                                line.delivered_qty:                           
-                            update_line['partial'].append(line.id)
-                            all_produced = False
-                        else: 
-                            update_line['no'].append(line.id)
-                            all_produced = False
-
-            if all_produced:
-                produced_ids.append(order.id)
-
-        closed_state = ('delivered', )
-        for key in update_line:
-            if update_line[key]:
-                data = {
-                    'mrp_production_state': key,
-                    }
-                if key in closed_state:
-                    data.update({'mx_closed': True})
-                    
-                sol_pool.write(
-                    cr, uid, update_line[key], data, context=context)
-                _logger.info('Line %s delivered (# %s)' % (
-                    key,
-                    len(update_line[key]),
-                    ))
-               
-        if produced_ids:
-            self.write(cr, uid, produced_ids, {
-                'all_produced': True,
-                }, context=context)                
-            _logger.info('Order all produced (# %s)' % len(
-                produced_ids))
-        return True        
     
     # Button event:
     def to_print(self, cr, uid, ids, context=None):
