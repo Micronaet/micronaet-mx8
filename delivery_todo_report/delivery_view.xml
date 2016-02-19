@@ -68,10 +68,10 @@
                             </group>    
                             <group colspan="2" col="2" name="total_box">
                                 <separator string="Measure" colspan="2"/>
-                                <field name="delivery_ml_total" readonly="1" />
-                                <field name="delivery_vol_total" readonly="1" />
                                 <field name="delivery_ml_partial" readonly="1" />
                                 <field name="delivery_vol_partial" readonly="1" />
+                                <field name="delivery_ml_total" readonly="1" />
+                                <field name="delivery_vol_total" readonly="1" />
                             </group>    
                             <group colspan="2" col="2" name="fido_box">
                                 <separator string="FIDO" colspan="2"/>
