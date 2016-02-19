@@ -53,7 +53,7 @@
                             <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                             <field name="name" class="oe_inline" readonly="1"/>
                         </h1>
-                        <group colspan="4" col="8">
+                        <group colspan="4" col="10">
                             <group colspan="2" col="2" name="order_box">
                                 <field name="partner_id" readonly="1" />
                                 <field name="destination_partner_id" readonly="1" />                            
@@ -72,6 +72,11 @@
                                 <field name="delivery_vol_total" readonly="1" />
                                 <field name="delivery_ml_partial" readonly="1" />
                                 <field name="delivery_vol_partial" readonly="1" />
+                            </group>    
+                            <group colspan="2" col="2" name="amount_box">                            
+                                <field name="delivery_amount_b" readonly="1" />
+                                <field name="delivery_amount_s" readonly="1" />
+                                <field name="amount_untaxed" readonly="1" />
                             </group>    
                             <group colspan="2" col="6" name="total_box">
                                <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />

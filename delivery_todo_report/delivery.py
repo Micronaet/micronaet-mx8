@@ -175,6 +175,8 @@ class SaleOrder(orm.Model):
             order_ml_tot = 0.0
             order_volume_tot = 0.0
             order_volume_part = 0.0
+            order_amount_b = 0.0
+            order_amount_s = 0.0
             
             for line in order.order_line:
                 if line.mrp_production_state == 'delivered':
@@ -206,11 +208,19 @@ class SaleOrder(orm.Model):
                 delivery_ml_partial = delivery_b * ml
                 delivery_vol_total = delivery_oc * volume
                 delivery_vol_partial = delivery_b * volume
-                
+
+                # Total for order:
+                if line.product_uom_qty:
+                    order_amount_b += delivery_b * line.price_subtotal / \
+                        line.product_uom_qty
+                    order_amount_s += delivery_s * line.price_subtotal / \
+                        line.product_uom_qty
+                        
                 order_ml_tot += delivery_ml_total
                 order_ml_part += delivery_ml_partial
                 order_volume_tot += delivery_vol_total
                 order_volume_part += delivery_vol_partial
+
                 sol_pool.write(cr, uid, line.id, {
                     'delivery_oc': delivery_oc,
                     'delivery_b': delivery_b,
@@ -222,6 +232,9 @@ class SaleOrder(orm.Model):
                     }, context=context)
 
             self.write(cr, uid, order.id, {
+                'delivery_amount_b': order_amount_b,
+                'delivery_amount_s': order_amount_s,
+
                 'delivery_ml_total': order_ml_tot,
                 'delivery_ml_partial': order_ml_part,
                 'delivery_vol_total': order_volume_tot,
@@ -248,6 +261,9 @@ class SaleOrder(orm.Model):
         'print': fields.boolean('To Print'),
 
         # Total:
+        'delivery_amount_b': fields.float('Amount B', digits=(16, 2)),             
+        'delivery_amount_s': fields.float('Amount S', digits=(16, 2)),
+
         'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
         'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
         'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),
