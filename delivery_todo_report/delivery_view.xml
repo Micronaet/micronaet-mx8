@@ -75,7 +75,7 @@
                             </group>    
                             <group colspan="2" col="2" name="fido_box">
                                 <separator string="FIDO" colspan="2"/>
-                                <field name="fido_detailed_info" readonly="1" />
+                                <field name="fido_detailed_info" readonly="1" nolabel="1"/>
                             </group>    
                             <group colspan="2" col="2" name="amount_box">                            
                                 <separator string="Total" colspan="2"/>
