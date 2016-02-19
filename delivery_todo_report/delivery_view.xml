@@ -53,6 +53,7 @@
                             </group>    
                             <field name="state" invisible="1"/>
                             <field name="all_produced" invisible="1"/>
+                            <button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />
                         </group>    
                         <notebook colspan="4">
                           <page string="Delivery lines">
@@ -137,7 +138,6 @@
                         <field name="name" />
                         <filter string="Not closed" name="not_closed" domain="[('mx_closed', '=', False)]" />
                         <filter name="all_produced" string="all produced" domain="[('all_produced', '=', True)]"/>
-                        <button name="force_parameter_for_delivery" string="Update delivery parameter" type="object" />
                         <!--
                         <separator orientation="vertical" />
                         <filter string="Italia" name="italia" icon="terp-personal" domain="[('property_account_position','=','Italia')]" help="Consegne in Italia"/>
@@ -182,6 +182,7 @@
                     <field name="print" invisible="1"/>
                     <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
                     <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
+                    <button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />
                     <!--<field name="date" />
                     <tree string="Statistic Order header tree" colors="green:complete!=False">
                     <field name="deadline"/>

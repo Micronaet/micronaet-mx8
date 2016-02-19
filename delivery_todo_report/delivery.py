@@ -65,15 +65,15 @@ class SaleOrder(orm.Model):
             # Order counter:
             order_ml_part = 0.0
             order_ml_tot = 0.0
-            order_volume_part = 0.0
+            order_volume_tot = 0.0
             order_volume_part = 0.0
             
             for line in order.order_line:
                 delivery_oc = line.product_uom_qty - line.delivered_qty
-                if line.product_uom_maked_sync > line.delivered_qty: 
+                if line.product_uom_maked_sync_qty > line.delivered_qty: 
                     # MRP:
                     delivery_b = \
-                        line.product_uom_maked_sync - line.delivered_qty
+                        line.product_uom_maked_sync_qty - line.delivered_qty
                     delivery_s = delivery_oc - delivery_b
                 else:    
                     # STOCK:
@@ -92,7 +92,7 @@ class SaleOrder(orm.Model):
                 order_ml_part += delivery_ml_partial
                 order_volume_tot += delivery_vol_total
                 order_volume_part += delivery_vol_partial
-                sol.pool.write(cr, uid, line.id, {
+                sol_pool.write(cr, uid, line.id, {
                     'delivery_oc': delivery_oc,
                     'delivery_b': delivery_b,
                     'delivery_s': delivery_s,
@@ -102,7 +102,7 @@ class SaleOrder(orm.Model):
                     'delivery_vol_partial': delivery_vol_partial,
                     }, context=context)
 
-            sol.pool.write(cr, uid, line.id, {
+            sol_pool.write(cr, uid, line.id, {
                 'delivery_ml_total': order_ml_tot,
                 'delivery_ml_partial': order_ml_part,
                 'delivery_vol_total': order_volume_tot,
