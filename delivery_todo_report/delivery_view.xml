@@ -26,6 +26,68 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_sale_order_delivery_form">
+            <field name="name">sale.order.delivery.tree</field>
+            <field name="priority" eval="50" />
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <form string="Delivery order">
+                    <sheet>
+                        <h1>
+                            <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group colspan="4" col="4">
+                           <field name="print" invisible="1"/> 
+                           <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
+                           <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
+
+                            <group colspan="2" col="2">
+                                <field name="partner_id" readonly="1" />
+                                <field name="destination_partner_id" readonly="1" />                            
+                            </group>    
+                            <group colspan="2" col="2">
+                                <field name="date_order" readonly="1" />
+                                <field name="client_order_ref" readonly="1" />
+                            </group>    
+                            <field name="state" invisible="1"/>
+                            <field name="all_produced" invisible="1"/>
+                        </group>    
+                        <notebook colspan="4">
+                          <page string="Delivery lines">
+                              <field name="order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">
+                                  <tree string="Line:" colors="grey:mrp_production_state=='delivered';blue:mrp_production_state=='partial';green:mrp_production_state=='produced';black:mrp_production_state=='no'">
+                                      <field name="name" />
+                                      <field name="product_id" />
+                                      <field name="product_uom_qty" />
+                                      <field name="product_uom_maked_sync_qty" />
+                                      <field name="delivered_qty" />
+                                      <field name="mx_closed" invisible="1" />
+                                      
+                                      <field name="delivery_s" />
+                                      <field name="delivery_b" />
+                                      <field name="delivery_oc" />
+                                      <field name="delivery_ml_total" />
+                                      <field name="delivery_ml_partial" />
+                                      <field name="delivery_vol_total" />
+                                      <field name="delivery_vol_partial" />
+                                      
+                                      <field name="mrp_production_state" invisible="1"/>
+                                      <field name="state" invisible="1"/>
+                                  </tree>
+                              </field>
+                          </page>                      
+                        </notebook>                    
+                        <field name="note" readonly="1"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="view_sale_order_to_delivery_form">
             <field name="name">sale.order.delivery.tree</field>
@@ -37,7 +99,129 @@
                        <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
                        <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
                   </field>
+                  
+                  <!--<xpath expr="//notebook/page//field[@name='order_line']/tree/field[@name='name']" position="after">                  
+                      <field name="mx_closed" invisible="1" />
+                      <field name="all_produced" invisible="1" />
+                  </xpath>                  
+                  <xpath expr="//notebook/page//field[@name='order_line']/tree" position="attributes">
+                      <attribute name="colors">black:mx_closed==True;green:all_produced==True</attribute>
+                  </xpath>-->
+                  <!--<xpath expr="//notebook/page[1]" position="after">
+                      <page string="Delivery lines" invisible="context.get('layout_delivery',True)">
+                          <field name="order_line" readonly="1">
+                              <tree string="Line:" colors="black:mx_closed==True;green:all_produced==True">
+                                  <field name="name" />
+                                  <field name="product_id" />
+                                  <field name="product_uom_qty" />
+                                  <field name="delivered_qty" />
+                                  <field name="mx_closed" invisible="1" />
+                                  <field name="all_produced" invisible="1" />
+                                  <field name="state" />
+                              </tree>
+                          </field>
+                      </page>                      
+                  </xpath>-->
             </field>
         </record>
+
+        <!--sale.order view for delivery: -->        
+        <record model="ir.ui.view" id="view_sale_order_delivery_search">
+            <field name="name">Sale order delivery</field>
+            <field name="model">sale.order</field>
+            <field name="priority" eval="50" />
+            <field name="arch" type="xml">
+                <search string="Delivery order">
+                    <group>
+                        <field name="partner_id" />
+                        <field name="name" />
+                        <filter string="Not closed" name="not_closed" domain="[('mx_closed', '=', False)]" />
+                        <filter name="all_produced" string="all produced" domain="[('all_produced', '=', True)]"/>
+                        <button name="force_parameter_for_delivery" string="Update delivery parameter" type="object" />
+                        <!--
+                        <separator orientation="vertical" />
+                        <filter string="Italia" name="italia" icon="terp-personal" domain="[('property_account_position','=','Italia')]" help="Consegne in Italia"/>
+                        <filter string="Estero" name="estero" icon="terp-personal" domain="[('property_account_position','!=','Italia')]" help="Consegne all'estero"/>
+                            <field name="name" string="Order"/>
+                            <field name="partner_id"/>
+                            <field name="deadline"/>
+                            <field name="zone_id" widget="selection" />-->
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="14">
+                        <filter string="Partner" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Date" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter string="Deadline" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'date_deadline'}"/>
+                        <filter string="Fiscal position" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'fiscal_position'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sale_order_delivery_tree">
+            <field name="name">Sale order delivery</field>
+            <field name="model">sale.order</field>
+            <field name="priority" eval="50" />
+            <field name="arch" type="xml">
+                <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">
+                    <field name="name" />
+                    <field name="partner_id"/>
+                    <field name="partner_id"/>
+                    <field name="date_order"/>
+                    <field name="date_deadline"/>
+                    <field name="note" />
+                    <field name="all_produced" invisible="1"/>
+                    <field name="mx_closed" invisible="1"/>
+                    
+                    <field name="delivery_ml_total" />
+                    <field name="delivery_ml_partial" />
+                    <field name="delivery_vol_total" />
+                    <field name="delivery_vol_partial" />
+                    
+                    <field name="state" />                    
+                    <field name="print" invisible="1"/>
+                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
+                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
+                    <!--<field name="date" />
+                    <tree string="Statistic Order header tree" colors="green:complete!=False">
+                    <field name="deadline"/>
+                    <field name="partner_id"/>
+                    <field name="destination"/>
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="zone_id"/>
+                    <field name="property_account_position" />                
+                    <field name="note" string="Num. ord."/>
+                    <field name="extra_note" string="Note"/>                    
+                    <field name="complete" />
+                    <field name="total_item_complete" sum="Completi" />
+                    <field name="total_item" sum="Totali" />
+                    <field name="total_linear_meter_ready" sum="m/l (pronti)" />
+                    <field name="total_linear_meter" sum="m/l" />
+                    <field name="total_volume_ready" sum="Volume (pronti)"/>
+                    <field name="total_volume" sum="Volume"/>
+                    <field name="line_type" invisi/>
+                    <field name="total_weight" sum="Peso" />-->
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_sale_order_to_deliver_form">
+            <field name="name">Delivery manage</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_sale_order_delivery_tree"/>
+            <field name="search_view_id" ref="view_sale_order_delivery_search"/>
+            <field name="context">{'form_view_ref':'delivery_todo_report.view_sale_order_delivery_form','search_default_not_closed':True}</field>
+            <field name="domain">[('forecasted_production_id','=',False),('state', 'not in', ('cancel', 'sent', 'draft'))]</field>
+        </record>
+            
+        <menuitem
+            name="Manage delivery" 
+            parent="sale.menu_sale_order" 
+            id="menu_sale_order_deliver_manage_form" 
+            action="action_sale_order_to_deliver_form" 
+            sequence="60"
+            />
     </data>
 </openerp>

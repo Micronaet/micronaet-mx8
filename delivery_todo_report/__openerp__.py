@@ -31,7 +31,10 @@
     'depends': [
         'base',
         'sale',
+        'sale_delivery_partial',
         'mx_agent',
+        'mx_close_order',
+        'production_accounting_external',
         ],
     'init_xml': [],
     'demo': [],

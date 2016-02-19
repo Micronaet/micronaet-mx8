@@ -41,6 +41,7 @@ class Parser(report_sxw.rml_parse):
             'bank': self.get_company_bank,
             'get_partic_description': self.get_partic_description,
             'get_tax_line_invoice':self.get_tax_line_invoice,
+            'get_language':self.get_language,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
@@ -174,5 +175,60 @@ class Parser(report_sxw.rml_parse):
         '''
         self.counters[name] = value
         return "" # empty so no write in module
+        
+    def get_language(self, key, lang):
+        ''' Get correct language
+        '''
+
+        lang_dict = {
+            'en_US': {
+                'CLIENTE': 'CUSTOMER',
+                'PARTITA IVA': 'VAT N.',
+                'DOCUMENTO': 'DOCUMENT',
+                'CONDIZIONI DI PAGAMENTO': 'PAYMENT TERMS',
+                'NUMERO': 'NUMBER',
+                'APPOGGIO BANCARIO': 'BANK DETAILS',
+                'DATA': 'DATE',
+                'SPETT.LE': 'MESSRS',
+                'DESTINATARIO': 'CONSIGNEE',
+                'CODICE ARTICOLO': 'ITEM',
+                'DESCRIZIONE ARTICOLO': 'ITEM DESCRIPTION',
+                'COLORE': 'COLOR',
+                'Q.TÀ': 'Q.TY',
+                'PREZZO UNIT.': 'UNIT PRICE',
+                'SCONTO': 'DISCOUNT',
+                'IMPORTO': 'AMOUNT',
+                'ALIQ': 'RATE',
+                'IMPONIBILE': 'TAXABLE',
+                'IMPOSTA': 'TAX',
+                'VALUTA': 'CURRENCY',
+                'SPESE BANCA': 'BANK CHARGES',
+                'TOTALE IMPONIBILE': 'TAXABLE TOTAL',
+                'TOTALE IMPOSTA': 'TOTAL TAX',
+                'TOTALE FATTURA': 'TOTAL INVOICE',
+                'CAUSALE TRASPORTO': 'TRANSPORT REASON',
+                'DATA INIZIO TRASPORTO': 'START DATE TRANSPORT',
+                'FIRMA': 'SIGNATURE',
+                'INCARICATO DEL TRASPORTO': 'CARRIER',
+                'FIRMA DEL DESTINATARIO': 'RECIPIENT SIGNATURE',
+                'NOTE': 'NOTES',
+                'MEZZO': 'BY',
+                'RIF. ORDINE CLIENTE': 'CUSTOMER ORDER REF.',
+                'CONSEGNA (SALVO IMPREVISTI)': 'EXPECTED DELIVERY DATE',
+                'AGENTE': 'AGENT',
+                                
+                },
+            'fr_FR': {
+                'CLIENTE': 'CLIENT',
+                
+                }
+            }
+        
+        if key in lang_dict or lang == 'it_IT':
+            return key
+        
+        return lang_dict[lang].get(key, '??')
+            
+        return self.counters[name]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
