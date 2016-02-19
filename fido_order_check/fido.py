@@ -43,6 +43,23 @@ class SaleOrder(orm.Model):
     '''
     _inherit = 'sale.order'
     
+    def _get_fido_detailed_info(self, cr, uid, ids, fields, args, 
+            context=None):
+        ''' Fields function for calculate 
+        '''
+        assert len(ids)==1, 'Only one by one'
+        res = {}
+        partner_proxy = self.browse(
+            cr, uid, ids, context=context)[0].partner_id
+        res[ids[0]] = _('FIDO: %s\nDate: %s\nState: %s\nUncovered: %s\n%s') % (
+            partner_proxy.fido_total or 0,
+            partner_proxy.fido_date or '',
+            partner_proxy.uncovered_state or '',
+            partner_proxy.uncovered_amount or 0,
+            _('REMOVED!!!') if partner_proxy.fido_ko else ''
+            )
+        return res    
+        
     def _get_uncovered_amount_total(self, cr, uid, ids, fields, args, 
             context=None):
         ''' Fields function for calculate 
@@ -56,6 +73,11 @@ class SaleOrder(orm.Model):
         return res        
 
     _columns = {
+        'fido_detailed_info': fields.function(
+            _get_fido_detailed_info, method=True, 
+            type='text', string='FIDO info', 
+            store=False), 
+                        
         'empty': fields.char(' '),
         'uncovered_state': fields.function(
             _get_uncovered_amount_total, method=True, 

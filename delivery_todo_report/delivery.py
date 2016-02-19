@@ -43,6 +43,10 @@ class SaleOrder(orm.Model):
     """
     _inherit = 'sale.order'
 
+    def reset_print(self, cr, uid, ids, context=None):
+        ''' TODO reset printer '''
+        return True
+        
     # Procedure to update
     def force_parameter_for_delivery(self, cr, uid, ids, context=None):
         ''' Compute all not closed order for delivery
