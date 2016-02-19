@@ -61,7 +61,13 @@ class SaleOrder(orm.Model):
             ('mx_closed', '=', False),
             ], context=context)
         
+        _logger.info('Update %s order...' % len(order_ids))
+        i = 0
         for order in self.browse(cr, uid, order_ids, context=context):
+            i += 1
+            if i % 20 == 0:
+                _logger.info('%s order updated...' % i)
+                
             # Order counter:
             order_ml_part = 0.0
             order_ml_tot = 0.0
@@ -110,7 +116,7 @@ class SaleOrder(orm.Model):
                 }, context=context)
                 
         # Update totale in order
-        _logger.info('Total order')
+        _logger.info('Total order updated')
         return
 
     # -----------------
