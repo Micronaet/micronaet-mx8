@@ -1,38 +1,62 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="view_fast_vector_form" model="ir.ui.view">
+        <!--<record id="view_fast_vector_form" model="ir.ui.view">
             <field name="name">Manual vector</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="delivery.view_order_withcarrier_form"/>
             <field name="arch" type="xml">
-                <label for="carrier_id" position="before">
-                    <group colspan="4" col="4">
-                        <field name="fast_vector" />
+                <field name="carrier_id" position="after">
+                        <field name="force_vector" nolabel="1" placeholder="Force vector description..."/>
+                </field>
+                <field name="carrier_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('force_vector','!=',False)]}</attribute>
+                </field>
+            </field>
+        </record>-->
+                        <!--<field name="fast_vector" />
                         <newline />
                         <group colspan="4" col="4" attrs="{'invisible':[('fast_vector','=',False)]}">
                             <field name="vector_name"/>
                             <newline />
                             <field name="vector_street"/>
                             <field name="vector_street2"/>
-
                             <field name="vector_zip"/>
                             <field name="vector_city"/>
-
-                            <!--<field name="vector_state_id"/>-->
                             <field name="vector_country_id"/>
-                        </group>
+                    <group colspan="4" col="4">
                     </group>
-                </label>
-                <field name="carrier_id" position="attributes">
-                    <attribute name="attrs">{'invisible':[('fast_vector','=',True)]}</attribute>
+                        </group>-->
+        
+        <record model="ir.ui.view" id="view_ddt_force_vector_form">
+            <field name="name">stock.ddt.force.vector.form</field>
+            <field name="model">stock.ddt</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+            <field name="arch" type="xml">
+                <field name="carrier_id" position="before">                
+                    <field name="force_vector" placeholder="Force carrier description..."/>
                 </field>
-                <label for="carrier_id" position="attributes">
-                    <attribute name="attrs">{'invisible':[('fast_vector','=',True)]}</attribute>
-                </label>
+                <!--<field name="default_carrier_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('force_vector','!=',False)]}</attribute>
+                </field>                -->
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_ddt_force_vector_form">
+            <field name="name">account.invoice.form.vector.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="mexal_invoice.account_mx_invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="default_carrier_id" position="after">
+                    <newline />
+                    <field name="force_vector" placeholder="Force carrier description..."/>
+                </field>
+                <!--<field name="default_carrier_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('force_vector','!=',False)]}</attribute>
+                </field>                -->
+            </field>
+        </record>
+        
     </data>
 </openerp>
 

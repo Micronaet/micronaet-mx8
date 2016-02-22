@@ -44,17 +44,18 @@ class SaleOrder(orm.Model):
     _inherit = 'sale.order'
     
     _columns = {
-        'fast_vector': fields.boolean('Fast Vector', 
-            help='Add fast vector for report and not the one in carrier'),
-        'vector_name': fields.char('Vector name'),
-        'vector_street': fields.char('Street'),
-        'vector_street2': fields.char('Street2'),
-        'vector_zip': fields.char('Zip', size=24),
-        'vector_city': fields.char('City'),
-        'vector_state_id': fields.many2one('res.country.state', 'State', 
-            ondelete='restrict'),
-        'vector_country_id': fields.many2one('res.country', 'Country', 
-            ondelete='restrict'),
+        'force_vector': fields.text('Force vector'),    
+        #'fast_vector': fields.boolean('Fast Vector', 
+        #    help='Add fast vector for report and not the one in carrier'),
+        #'vector_name': fields.char('Vector name'),
+        #'vector_street': fields.char('Street'),
+        #'vector_street2': fields.char('Street2'),
+        #'vector_zip': fields.char('Zip', size=24),
+        #'vector_city': fields.char('City'),
+        #'vector_state_id': fields.many2one('res.country.state', 'State', 
+        #    ondelete='restrict'),
+        #'vector_country_id': fields.many2one('res.country', 'Country', 
+        #    ondelete='restrict'),
         }    
 
 class AccountInvoice(orm.Model):
@@ -63,17 +64,7 @@ class AccountInvoice(orm.Model):
     _inherit = 'account.invoice'
     
     _columns = {
-        'fast_vector': fields.boolean('Fast Vector', 
-            help='Add fast vector for report and not the one in carrier'),
-        'vector_name': fields.char('Vector name'),
-        'vector_street': fields.char('Street'),
-        'vector_street2': fields.char('Street2'),
-        'vector_zip': fields.char('Zip', size=24),
-        'vector_city': fields.char('City'),
-        'vector_state_id': fields.many2one('res.country.state', 'State', 
-            ondelete='restrict'),
-        'vector_country_id': fields.many2one('res.country', 'Country', 
-            ondelete='restrict'),
+        'force_vector': fields.text('Force vector'),    
         }
 
 class StockDdt(orm.Model):
@@ -82,18 +73,7 @@ class StockDdt(orm.Model):
     _inherit = 'stock.ddt'
     
     _columns = {
-        'fast_vector': fields.boolean('Fast Vector', 
-            help='Add fast vector for report and not the one in carrier'),
-        'vector_name': fields.char('Vector name'),
-        'vector_street': fields.char('Street'),
-        'vector_street2': fields.char('Street2'),
-        'vector_zip': fields.char('Zip', size=24),
-        'vector_city': fields.char('City'),
-        'vector_state_id': fields.many2one('res.country.state', 'State', 
-            ondelete='restrict'),
-        'vector_country_id': fields.many2one('res.country', 'Country', 
-            ondelete='restrict'),
+        'force_vector': fields.text('Force vector'),    
         }
-
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
