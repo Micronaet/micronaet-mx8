@@ -194,7 +194,7 @@ class Parser(report_sxw.rml_parse):
                 'CODICE ARTICOLO': 'ITEM',
                 'DESCRIZIONE ARTICOLO': 'ITEM DESCRIPTION',
                 'COLORE': 'COLOR',
-                'Q.TÀ': 'Q.TY',
+                'Q.TA\'': 'Q.TY',
                 'PREZZO UNIT.': 'UNIT PRICE',
                 'SCONTO': 'DISCOUNT',
                 'IMPORTO': 'AMOUNT',
