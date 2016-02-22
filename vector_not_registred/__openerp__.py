@@ -37,6 +37,7 @@
         'account',
         'l10n_it_ddt',
         'mexal_invoice',
+        'mexal_ddt',
         ],
     'init_xml': [],
     'demo': [],

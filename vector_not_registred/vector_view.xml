@@ -27,18 +27,20 @@
                     <group colspan="4" col="4">
                     </group>
                         </group>-->
-        
+      
+        <!--l10n_it_ddt.stock_ddt_form-->  
         <record model="ir.ui.view" id="view_ddt_force_vector_form">
             <field name="name">stock.ddt.force.vector.form</field>
             <field name="model">stock.ddt</field>
-            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+            <field name="inherit_id" ref="mexal_ddt.view_stock_ddt_mx_form"/>
             <field name="arch" type="xml">
-                <field name="carrier_id" position="before">                
+                <field name="default_carrier_id" position="after">                
+                    <newline />
                     <field name="force_vector" placeholder="Force carrier description..."/>
                 </field>
                 <!--<field name="default_carrier_id" position="attributes">
                     <attribute name="attrs">{'invisible':[('force_vector','!=',False)]}</attribute>
-                </field>                -->
+                </field>-->
             </field>
         </record>
 
