@@ -44,7 +44,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_ddt_force_vector_form">
+        <record model="ir.ui.view" id="view_invoice_force_vector_form">
             <field name="name">account.invoice.form.vector.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="mexal_invoice.account_mx_invoice_form"/>
