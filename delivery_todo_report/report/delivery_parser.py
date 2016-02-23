@@ -112,15 +112,18 @@ class Parser(report_sxw.rml_parse):
         '''
         res = []
 
-        if l.product_uom_maked_sync_qty >= l.delivered_qty:
-            remain = l.product_uom_qty - l.product_uom_maked_sync_qty
-            ready = l.product_uom_maked_sync_qty - l.delivered_qty
-        else: # delivered > maked
-            remain = l.product_uom_qty - l.delivered_qty
-            ready = 0 #l.product_uom_qty - l.delivered_qty
-            # TODO manage quants !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! <<<<<<<
+        #if l.product_uom_maked_sync_qty >= l.delivered_qty:
+        #    remain = l.product_uom_qty - l.product_uom_maked_sync_qty
+        #    ready = l.product_uom_maked_sync_qty - l.delivered_qty
+        #else: # delivered > maked
+        #    remain = l.product_uom_qty - l.delivered_qty
+        #    ready = 0 #l.product_uom_qty - l.delivered_qty
+        #    # TODO manage quants !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! <<<<<<<
 
-        elements = {'S': remain, 'B': ready}
+        elements = {
+            'S': delivery_s, #remain, 
+            'B': delivery_b,
+            }
                 
         for key, v in elements.iteritems():
             product = l.product_id

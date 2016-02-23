@@ -74,7 +74,7 @@ class SaleOrder(orm.Model):
         # Pricelist order are set to closed:        
         order_ids = self.search(cr, uid, [
             ('state', 'not in', ('cancel', 'sent', 'draft')),
-            ('mx_closed', '=', False),
+            ('mx_closed', '=', False), # TODO parametrize???
             ], context=context)
 
         if not order_ids:
@@ -109,7 +109,6 @@ class SaleOrder(orm.Model):
                         else:
                             update_line['partial'].append(line.id)
                             all_produced = False
-
                     else:
                         # ----
                         # mrp:
