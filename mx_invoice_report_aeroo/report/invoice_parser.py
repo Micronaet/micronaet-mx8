@@ -42,6 +42,7 @@ class Parser(report_sxw.rml_parse):
             'get_partic_description': self.get_partic_description,
             'get_tax_line_invoice':self.get_tax_line_invoice,
             'get_language':self.get_language,
+            'get_vector_data': self.get_vector_data,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
@@ -53,6 +54,28 @@ class Parser(report_sxw.rml_parse):
             'write_reference': self.write_reference,
         })
         self.last_picking = False # TODO is reset all reports?
+
+    def get_vector_data(self, o): 
+        ''' Reset parameter used in report 
+        '''
+        # TODO keep in a common place with DDT one's
+        if o.force_vector:
+            return o.force_vector or '/'
+        elif o.default_carrier_id and o.default_carrier_id.partner_id:
+            partner = o.default_carrier_id.partner_id
+            return '''%s\n%s\n%s %s %s\nP.IVA: %s Tel.: %s\nN. Albo Trasp.: %s''' % (
+                    partner.name or '',
+                    partner.street or '',
+                    partner.zip or '',
+                    partner.city or '',
+                    partner.state_id.code or '',
+                    partner.vat or '',
+                    partner.phone or '',                
+                    (partner.transport_number or '/') if \
+                        partner.is_vector else '/',
+                    )                
+        else:
+            return '/'            
         
     def check_pick_change(self, l):
         ''' Check if this line has different picking value
@@ -216,7 +239,6 @@ class Parser(report_sxw.rml_parse):
                 'RIF. ORDINE CLIENTE': 'CUSTOMER ORDER REF.',
                 'CONSEGNA (SALVO IMPREVISTI)': 'EXPECTED DELIVERY DATE',
                 'AGENTE': 'AGENT',
-                                
                 },
             'fr_FR': {
                 'CLIENTE': 'CLIENT',

@@ -55,11 +55,12 @@ class Parser(report_sxw.rml_parse):
     def get_vector_data(self, o): 
         ''' Reset parameter used in report 
         '''
+        # TODO keep in a common place with DDT one's
         if o.force_vector:
-            return 'VETTORE: %s' % o.force_vector
+            return o.force_vector or ''
         elif o.default_carrier_id and o.default_carrier_id.partner_id:
             partner = o.default_carrier_id.partner_id
-            return '''VETTORE: %s\n%s\n%s %s %s\nP.IVA: %s Tel.: %s\nN. Albo Trasp.: %s''' % (
+            return '''%s\n%s\n%s %s %s\nP.IVA: %s Tel.: %s\nN. Albo Trasp.: %s''' % (
                     partner.name or '',
                     partner.street or '',
                     partner.zip or '',
