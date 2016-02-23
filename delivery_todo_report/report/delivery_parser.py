@@ -121,8 +121,8 @@ class Parser(report_sxw.rml_parse):
         #    # TODO manage quants !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! <<<<<<<
 
         elements = {
-            'S': delivery_s, #remain, 
-            'B': delivery_b,
+            'S': l.delivery_s, #remain, 
+            'B': l.delivery_b,
             }
                 
         for key, v in elements.iteritems():
