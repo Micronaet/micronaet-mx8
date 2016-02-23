@@ -41,6 +41,7 @@ class Parser(report_sxw.rml_parse):
             'get_address': self.get_address,
             'get_extra_data': self.get_extra_data,
             'get_partner_list': self.get_partner_list,
+            'get_vector_data': self.get_vector_data,
             'theres_partner_ref': self.theres_partner_ref,
             'get_headers': self.get_headers,
             
@@ -51,6 +52,26 @@ class Parser(report_sxw.rml_parse):
             'get_partic_description': self.get_partic_description,
         })
         
+    def get_vector_data(self, o): 
+        ''' Reset parameter used in report 
+        '''
+        if o.force_vector:
+            return 'VETTORE: %s' % o.force_vector
+        elif o.default_carrier_id and o.default_carrier_id.partner_id:
+            partner = o.default_carrier_id.partner_id
+            return '''VETTORE: %s\n%s\n%s %s %s\nP.IVA: %s Tel.: %s\nN. Albo Trasp.: %s''' % (
+                    partner.name or '',
+                    partner.street or '',
+                    partner.zip or '',
+                    partner.city or '',
+                    partner.state_id.code or '',
+                    partner.vat or '',
+                    partner.phone or '',                
+                    (partner.transport_number or '/') if \
+                        partner.is_vector else '/',
+                    )                
+        else:
+            return '/'            
         
     def report_init_reset(self): 
         ''' Reset parameter used in report 
