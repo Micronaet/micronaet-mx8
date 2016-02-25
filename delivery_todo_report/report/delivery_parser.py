@@ -105,7 +105,7 @@ class Parser(report_sxw.rml_parse):
                 res = 'SC. %s x %s =' % (int(parcel), int(q_x_pack))
         return res
 
-    def get_parcels_table(self, l):#product, qty):
+    def get_parcels_table(self, l): #product, qty):
         ''' Get text for parcels totals:
             product: proxy obj for product
             qty: total to parcels
@@ -118,7 +118,7 @@ class Parser(report_sxw.rml_parse):
         #else: # delivered > maked
         #    remain = l.product_uom_qty - l.delivered_qty
         #    ready = 0 #l.product_uom_qty - l.delivered_qty
-        #    # TODO manage quants !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! <<<<<<<
+        #    # TODO manage quants !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! <<<<<<
 
         elements = {
             'S': l.delivery_s, #remain, 
