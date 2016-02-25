@@ -235,6 +235,16 @@ class SaleOrder(orm.Model):
             'print': False}, context=context)
         return True
 
+    def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = [
+                line.id for line in order.order_line if line.delivery_oc > 0]
+                #if line.product_uom_qty > line.delivered_qty
+        return res
+
     _columns = {
         'all_produced': fields.boolean('All produced'),
         'print': fields.boolean('To Print'),
@@ -247,6 +257,10 @@ class SaleOrder(orm.Model):
         'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
         'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),
         'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),             
+        
+        'remain_order_line': fields.function(_function_get_remain_order, 
+            method=True, type='one2many', string='Residual order line', 
+            relation='sale.order.line', store=False), 
         }
 
 class SaleOrderLine(orm.Model):

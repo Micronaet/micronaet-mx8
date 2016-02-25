@@ -133,7 +133,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         sale_ids = context.get('active_ids', False)
         partner_id = False
         for sale in sale_pool.browse(cr, uid, sale_ids, context=context):
-            if not partner_id:
+            if partner_id == False:
                 partner_id = sale.partner_id.id
             if partner_id != sale.partner_id.id:
                 return 'Delivery order must have order with same partner'                

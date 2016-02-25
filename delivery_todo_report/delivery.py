@@ -266,7 +266,8 @@ class SaleOrder(orm.Model):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = [
-                line.id for line in order.order_line if line.delivery_oc == 0]        
+                line.id for line in order.order_line if line.delivery_oc > 0]
+                #if line.product_uom_qty > line.delivered_qty
         return res
 
     _columns = {
@@ -307,9 +308,7 @@ class SaleOrderLine(orm.Model):
         'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
         'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
         'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),             
-        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),             
-
-                        
+        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),
         }
 
     _defaults = {
