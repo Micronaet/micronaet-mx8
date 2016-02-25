@@ -49,4 +49,15 @@ class AccountTax(orm.Model):
         'report_description': fields.char(
             'Report description', size=12), 
     }
+
+class AccountTaxCode(orm.Model):
+    """ Model name: AccountTax
+    """
+    
+    _inherit = 'account.tax.code'
+    
+    _columns = {
+        'report_description': fields.char(
+            'Report description', size=12), 
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

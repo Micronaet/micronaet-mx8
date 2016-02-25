@@ -21,6 +21,28 @@
                 </field>
             </field>
         </record>
+
+
+        <record model="ir.ui.view" id="view_var_report_description_code_form">
+            <field name="name">account.tax.report.code.form</field>
+            <field name="model">account.tax.code</field>
+            <field name="inherit_id" ref="account.view_tax_code_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="report_description" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_var_report_description_code_tree">
+            <field name="name">account.tax.report.code.form</field>
+            <field name="model">account.tax.code</field>
+            <field name="inherit_id" ref="account.view_tax_code_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="report_description" />
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>
 
