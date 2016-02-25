@@ -235,7 +235,8 @@ class SaleOrder(orm.Model):
             'print': False}, context=context)
         return True
 
-    def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
+    def _function_get_remain_order(self, cr, uid, ids, fields, args, 
+            context=None):
         ''' Fields function for calculate 
         '''
         res = {}
@@ -267,6 +268,11 @@ class SaleOrderLine(orm.Model):
     """ Model name: SaleOrderLine
     """
     _inherit = 'sale.order.line'
+
+    def nothing(self, cr, uid, ids, context=None):
+        '''  do nothing
+        '''
+        return True
 
     _columns = {
         'mrp_production_state': fields.selection([

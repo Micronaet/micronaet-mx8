@@ -38,6 +38,7 @@
         'mx_partner_zone',
         'fido_order_check',
         'mx_agent', # agent filter
+        'inventory_status_on_delivery',
         #'base_accounting_program', # res.partner.zone TODO move in module!
         ],
     'init_xml': [],

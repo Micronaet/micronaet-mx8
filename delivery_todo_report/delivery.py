@@ -292,6 +292,11 @@ class SaleOrderLine(orm.Model):
     """ Model name: SaleOrderLine
     """
     _inherit = 'sale.order.line'
+    
+    def nothing(self, cr, uid, ids, context=None):
+        '''  do nothing
+        '''
+        return True
 
     _columns = {
         'mrp_production_state': fields.selection([
