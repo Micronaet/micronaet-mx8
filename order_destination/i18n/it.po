@@ -1,0 +1,76 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* order_destination
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-17 15:00+0000\n"
+"PO-Revision-Date: 2016-02-17 16:01+0100\n"
+"Last-Translator: Anna <anna@micronaet.it>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: order_destination
+#: model:ir.model,name:order_destination.model_stock_ddt
+msgid "DdT"
+msgstr "DdT"
+
+#. module: order_destination
+#: field:account.invoice,destination_partner_id:0
+#: field:purchase.order,destination_partner_id:0
+#: field:stock.ddt,destination_partner_id:0
+#: field:stock.picking,destination_partner_id:0
+msgid "Destination"
+msgstr "Destinazione"
+
+#. module: order_destination
+#: field:account.invoice,invoice_partner_id:0
+#: model:ir.model,name:order_destination.model_account_invoice
+#: field:purchase.order,invoice_partner_id:0
+#: field:sale.order,invoice_partner_id:0 field:stock.ddt,invoice_partner_id:0
+#: field:stock.picking,invoice_partner_id:0
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: order_destination
+#: model:ir.model,name:order_destination.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: order_destination
+#: model:ir.model,name:order_destination.model_stock_picking
+msgid "Picking List"
+msgstr "Picking List"
+
+#. module: order_destination
+#: model:ir.model,name:order_destination.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ordine Acquisto"
+
+#. module: order_destination
+#: model:ir.model,name:order_destination.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: order_destination
+#: view:account.invoice:order_destination.view_invoice_form_partner_form
+#: view:sale.order:order_destination.view_order_form_destination_fields
+#: view:stock.ddt:order_destination.view_stock_ddt_partner_form
+#: view:stock.picking:order_destination.view_stock_picking_partner_form
+msgid ""
+"[('customer','=',True),('is_company','=',True),('is_address','=',False)]"
+msgstr ""
+"[('customer','=',True),('is_company','=',True),('is_address','=',False)]"
+
+#. module: order_destination
+#: view:purchase.order:order_destination.view_purchase_order_form
+msgid ""
+"[('supplier','=',True),('is_company','=',True),('is_address','=',False)]"
+msgstr ""
+"[('supplier','=',True),('is_company','=',True),('is_address','=',False)]"

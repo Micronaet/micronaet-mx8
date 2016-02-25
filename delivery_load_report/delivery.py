@@ -44,7 +44,12 @@ class SaleOrder(orm.Model):
     _inherit = 'sale.order'
 
     def reset_print(self, cr, uid, ids, context=None):
-        ''' TODO reset printer '''
+        ''' Called at the end of report to reset print check
+        '''
+        sale_ids = self.search(
+            cr, uid, [('print', '=', True)], context=context)
+        self.write(
+            cr, uid, sale_ids, {'print': False})     
         return True
         
     # Procedure to update

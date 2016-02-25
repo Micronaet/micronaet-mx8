@@ -213,10 +213,7 @@ class Parser(report_sxw.rml_parse):
         ''' Called at the end of report to reset print check
         '''
         sale_pool = self.pool.get('sale.order')
-        sale_ids = sale_pool.search(
-            self.cr, self.uid, [('print', '=', True)])
-        sale_pool.write(
-            self.cr, self.uid, sale_ids, {'print': False})     
+        sale_pool.reset_print(self.cr, self.uid, False)
         return ''
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
