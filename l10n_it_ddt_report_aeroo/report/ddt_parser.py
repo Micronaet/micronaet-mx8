@@ -44,6 +44,7 @@ class Parser(report_sxw.rml_parse):
             'get_vector_data': self.get_vector_data,
             'theres_partner_ref': self.theres_partner_ref,
             'get_headers': self.get_headers,
+            'get_language':self.get_language,
             
             # Utility:
             'get_counter': self.get_counter,
@@ -68,11 +69,11 @@ class Parser(report_sxw.rml_parse):
                     partner.state_id.code or '',
                     partner.vat or '',
                     partner.phone or '',                
-                    (partner.transport_number or '/') if \
-                        partner.is_vector else '/',
+                    (partner.transport_number or '') if \
+                        partner.is_vector else '',
                     )                
         else:
-            return '/'            
+            return ''            
         
     def report_init_reset(self): 
         ''' Reset parameter used in report 
@@ -158,7 +159,74 @@ class Parser(report_sxw.rml_parse):
                 "C.F.: %s" % (
                     partner_proxy.fiscalcode if partner_proxy.fiscalcode else ""), )
             )
+
+    def get_language(self, key, lang):
+        ''' Get correct language
+        '''
+
+        lang_dict = {
+            'en_US': {
+                'CLIENTE': 'CUSTOMER',
+                'PARTITA IVA': 'VAT N.',
+                'DOCUMENTO': 'DOCUMENT',
+                'CONDIZIONI DI PAGAMENTO': 'PAYMENT TERMS',
+                'NUMERO': 'NUMBER',
+                'APPOGGIO BANCARIO': 'BANK DETAILS',
+                'DATA': 'DATE',
+                'SPETT.LE': 'MESSRS',
+                'DESTINATARIO': 'CONSIGNEE',
+                'CODICE ARTICOLO': 'ITEM',
+                'DESCRIZIONE ARTICOLO': 'DESCRIPTION',
+                'COLORE': 'COLOR',
+                'Q.TA\'': 'Q.TY',
+                'CAUSALE TRASPORTO': 'REASON OF TRANSPORT',
+                'DATA INIZIO TRASPORTO': 'DATE OF TAKING OVER',
+                'FIRMA CONDUCENTE': "CARRIER'S SIGNATURE",
+                'INCARICATO DEL TRASPORTO': 'TRANSPORT BY',
+                'FIRMA DESTINATARIO': "CONSIGNEE'S SIGNATURE",
+                'NOTE': 'NOTES',
+                'MEZZO': 'BY',
+                'TELEFONO': 'PHONE',
+                'ASPETTO DEI BENI': 'PACKAGE DESCRIPTION',
+                'PORTO': 'PORT',
+                'N.COLLI': 'PACKAGES',
+                },
+            'fr_FR': {
+                'CLIENTE': 'CLIENT',
+                'PARTITA IVA': 'NUMÉRO DE TVA',
+                'DOCUMENTO': 'DOCUMENT',
+                'CONDIZIONI DI PAGAMENTO': 'CONDITIONS DE PAIEMENT',
+                'NUMERO': 'NUMÉRO',
+                'APPOGGIO BANCARIO': 'BANCAIRE',
+                'DATA': 'DATE',
+                'SPETT.LE': 'CHER',
+                'DESTINATARIO': 'DESTINATAIRE',
+                'CODICE ARTICOLO': "CODE D'ARTICLE",
+                'DESCRIZIONE ARTICOLO': 'DESCRIPTION',
+                'COLORE': 'COULEUR',
+                'Q.TA\'': 'QTÉ',
+                'CAUSALE TRASPORTO': 'CAUSAL TRANSPORT',
+                'DATA INIZIO TRASPORTO': 'DATE DÉBUT TRANSPORT',
+                'FIRMA CONDUCENTE': 'SIGNATURE CONDUCTEUR',
+                'INCARICATO DEL TRASPORTO': 'ENGAGÉÈ DU TRANSPORT',
+                'FIRMA DESTINATARIO': 'SIGNATURE ALLOCUTAIRE',
+                'NOTE': 'NOTES',
+                'MEZZO': 'MOYEN',
+                'TELEFONO': 'TÉLÉPHONE',
+                'ASPETTO DEI BENI': 'APPARENCE DES MARCHANDISES',
+                'PORTO': 'PORT',
+                'N.COLLI': 'N.PALETTE',
+                }
+            }
+
             
+        if key in lang_dict or lang == 'it_IT':
+            return key
+        
+        return lang_dict[lang].get(key, '??')
+            
+        return self.counters[name]
+
     def get_partic_description(self, partner_id, product_id):
         ''' Check if partner has partic description
         '''
@@ -173,7 +241,7 @@ class Parser(report_sxw.rml_parse):
             return res
             
         partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
-        res = '\n%s %s' % (
+        res = '%s %s' % (
             partic_proxy.partner_code or '', 
             partic_proxy.partner_description or '',
             )
