@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_order_virtual_quantity
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-17 14:28+0000\n"
+"PO-Revision-Date: 2016-02-17 15:33+0100\n"
+"Last-Translator: Anna <anna@micronaet.it>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: mx_order_virtual_quantity
+#: model:ir.model,name:mx_order_virtual_quantity.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Riga Ordine d'Acquisto"
+
+#. module: mx_order_virtual_quantity
+#: help:stock.move,virtual_purchase_id:0
+msgid "Purchase order line linked (for virtual availability calc)"
+msgstr ""
+"Linea di ordine d'acquisto collegato (per la disponibilità virtuale "
+"calcolata)"
+
+#. module: mx_order_virtual_quantity
+#: field:purchase.order.line,remain_move_id:0
+#: field:sale.order.line,remain_move_id:0
+msgid "Remain move"
+msgstr "Movimenti rimanenti"
+
+#. module: mx_order_virtual_quantity
+#: help:stock.move,virtual_sale_id:0
+msgid "Sale order line linked (for virtual availability calc)"
+msgstr ""
+"Linea di ordine di vendita collegato (per la disponibilità virtuale "
+"calcolata)"
+
+#. module: mx_order_virtual_quantity
+#: model:ir.model,name:mx_order_virtual_quantity.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: mx_order_virtual_quantity
+#: model:ir.model,name:mx_order_virtual_quantity.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
+
+#. module: mx_order_virtual_quantity
+#: model:ir.model,name:mx_order_virtual_quantity.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento di magazzino"
+
+#. module: mx_order_virtual_quantity
+#: field:stock.move,virtual_move:0
+msgid "Virtual move"
+msgstr "Movimento virtuale"
+
+#. module: mx_order_virtual_quantity
+#: field:stock.move,virtual_purchase_id:0
+msgid "Virtual purchase line"
+msgstr "Linea acquisto virtuale"
+
+#. module: mx_order_virtual_quantity
+#: field:stock.move,virtual_sale_id:0
+msgid "Virtual sale line"
+msgstr "Linea vendita virtuale"
+
+#. module: mx_order_virtual_quantity
+#: help:stock.move,virtual_move:0
+msgid "used for keep virtual quantity correctly indicated"
+msgstr "Utilizzato per mantenere la quantità virtuale correttamente indicata"

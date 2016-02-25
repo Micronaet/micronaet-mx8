@@ -1,0 +1,155 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fido_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-17 12:12+0000\n"
+"PO-Revision-Date: 2016-02-17 13:15+0100\n"
+"Last-Translator: Anna <anna@micronaet.it>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: fido_management
+#: selection:res.partner,uncovered_state:0
+msgid "> 85% FIDO"
+msgstr "> 85% FIDO"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Entrate"
+msgstr "Entrate"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "FIDO"
+msgstr "FIDO"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_res_partner_fido_filter
+msgid "FIDO assignement"
+msgstr "FIDO assegnato"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_res_partner_fido_filter
+msgid "FIDO present"
+msgstr "FIDO presente"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_res_partner_fido_filter
+#: selection:res.partner,uncovered_state:0
+msgid "FIDO removed"
+msgstr "FIDO rimosso"
+
+#. module: fido_management
+#: selection:res.partner,uncovered_state:0
+msgid "FIDO uncovered or no FIDO"
+msgstr "FIDO scoperto o nessun FIDO"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Fido"
+msgstr "Fido"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Import IN"
+msgstr "Import IN"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Import OUT"
+msgstr "Import OUT"
+
+#. module: fido_management
+#: selection:res.partner,uncovered_state:0
+msgid "OK FIDO"
+msgstr "FIDO OK"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Open"
+msgstr "Apri"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+#: field:res.partner,open_picking_ids:0
+msgid "Open DDT"
+msgstr "Apri DDT"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Open DDT:"
+msgstr "Apri DDT:"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Open Order"
+msgstr "Apri Ordine"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Open Payment:"
+msgstr "Opri Pagamento:"
+
+#. module: fido_management
+#: field:sale.order,open_amount_total:0
+#: field:stock.picking,open_amount_total:0
+msgid "Open amount"
+msgstr "Apri quantità"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Open order"
+msgstr "Apri ordine"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Open payment"
+msgstr "Apri pagamento"
+
+#. module: fido_management
+#: field:res.partner,open_order_ids:0
+msgid "Order open"
+msgstr "Ordine aperto"
+
+#. module: fido_management
+#: model:ir.model,name:fido_management.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: fido_management
+#: model:ir.model,name:fido_management.model_stock_picking
+msgid "Picking List"
+msgstr "Lista Picking"
+
+#. module: fido_management
+#: model:ir.model,name:fido_management.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_res_partner_fido_filter
+msgid "Salesperson"
+msgstr "Commerciale"
+
+#. module: fido_management
+#: field:res.partner,uncovered_amount:0
+msgid "Uncovered amount"
+msgstr "Valore scoperto"
+
+#. module: fido_management
+#: field:res.partner,uncovered_state:0
+msgid "Uncovered state"
+msgstr "State scoperto"
+
+#. module: fido_management
+#: view:res.partner:fido_management.view_partner_fido_field
+msgid "Uscite"
+msgstr "Uscite"

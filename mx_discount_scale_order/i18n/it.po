@@ -1,0 +1,27 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_discount_scale_base
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-17 14:26+0000\n"
+"PO-Revision-Date: 2016-02-17 15:26+0100\n"
+"Last-Translator: Anna <anna@micronaet.it>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: mx_discount_scale_base
+#: view:res.partner:mx_discount_scale_base.view_partner_add_custom_fields
+msgid "Discount granted:"
+msgstr "Sconto concesso:"
+
+#. module: mx_discount_scale_base
+#: model:ir.model,name:mx_discount_scale_base.model_res_partner
+msgid "Partner"
+msgstr "Partner"

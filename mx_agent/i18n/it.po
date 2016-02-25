@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_agent
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-17 13:37+0000\n"
+"PO-Revision-Date: 2016-02-17 14:38+0100\n"
+"Last-Translator: Anna <anna@micronaet.it>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. module: mx_agent
+#: field:account.invoice,mx_agent_id:0 field:sale.order,mx_agent_id:0
+#: field:stock.ddt,mx_agent_id:0 field:stock.picking,mx_agent_id:0
+msgid "Agent"
+msgstr "Agente"
+
+#. module: mx_agent
+#: model:ir.model,name:mx_agent.model_stock_ddt
+msgid "DdT"
+msgstr "DdT"
+
+#. module: mx_agent
+#: model:ir.model,name:mx_agent.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: mx_agent
+#: field:sale.order.line,mx_agent_id:0
+msgid "Mx Agent"
+msgstr "Agente Mx"
+
+#. module: mx_agent
+#: model:ir.model,name:mx_agent.model_stock_picking
+msgid "Picking List"
+msgstr "Lista Picking"
+
+#. module: mx_agent
+#: model:ir.model,name:mx_agent.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: mx_agent
+#: model:ir.model,name:mx_agent.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
