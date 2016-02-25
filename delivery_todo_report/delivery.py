@@ -266,8 +266,7 @@ class SaleOrder(orm.Model):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = [
-                line.id for line in order.order_line if line.delivery_oc == 0]
-        
+                line.id for line in order.order_line if line.delivery_oc == 0]        
         return res
 
     _columns = {
