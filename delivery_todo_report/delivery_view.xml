@@ -98,8 +98,8 @@
                         
                         <notebook colspan="4">
                           <page string="Delivery lines">
-                              <!--<field name="order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">-->
-                              <field name="remain_order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">
+                              <field name="order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">
+                              <!--<field name="remain_order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">-->
                                   <tree string="Line:" colors="grey:mrp_production_state=='delivered';green:mrp_production_state=='produced';blue:delivery_b>0.0;black:mrp_production_state=='no'">
                                       <field name="product_id" />
                                       <field name="name" />
