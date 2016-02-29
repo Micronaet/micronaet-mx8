@@ -141,7 +141,7 @@ class SaleOrder(orm.Model):
                         # ------
                         if line.product_uom_qty < line.delivered_qty:
                             update_line['delivered'].append(line.id) # TODO over
-                        elif line.product_uom_qty = line.delivered_qty:
+                        elif line.product_uom_qty == line.delivered_qty:
                             update_line['delivered'].append(line.id)
                         else:
                             update_line['partial'].append(line.id)
