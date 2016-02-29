@@ -33,6 +33,11 @@
             <field name="arch" type="xml">
                 <form string="Delivery order">
                     <head>
+                          <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
+                          <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
+                          <button name="reset_print" string="Reset" icon="gtk-refresh" type="object" />                      
+                          <field name="print" invisible="1"/>
+
                           <field name="uncovered_state" invisible="1"/>
                           <div style="background-color: red;text-align: center;font-weight:bold;color:white;">
                               <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'red')]}" class="oe_color_red" />
@@ -52,6 +57,7 @@
                             <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
                             <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                             <field name="name" class="oe_inline" readonly="1"/>
+                            <button name="open_original" string="Order" icon="gtk-goto-first" type="object" />
                         </h1>
                         <group colspan="4" col="10">
                             <group colspan="2" col="2" name="order_box">
@@ -85,12 +91,6 @@
                                 <field name="delivery_amount_s" readonly="1" />
                                 <field name="amount_untaxed" readonly="1" />
                             </group>    
-                            <group colspan="2" col="6" name="total_box">
-                               <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                               <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
-                               <button name="reset_print" string="Reset" icon="gtk-refresh" type="object" />                      
-                               <field name="print" invisible="1"/>
-                            </group>    
                             <field name="state" invisible="1"/>
                             <field name="all_produced" invisible="1"/>
                             <button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />
@@ -101,8 +101,9 @@
                               <!--<field name="order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">-->
                               <field name="remain_order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">
                                   <tree string="Line:" colors="grey:mrp_production_state=='delivered';green:mrp_production_state=='produced';blue:delivery_b>0.0;black:mrp_production_state=='no'">
+                                      <button name="nothing" string="All deliverable" type="object" icon="gtk-yes" attrs="{'invisible': [('delivery_s','!=',0)]}"/>
                                       <field name="product_id" />
-                                      <field name="name" />
+                                      <!--<field name="name" />--> <!--TODO showable?? -->
                                       <field name="date_deadline" />
 
                                       <!--TODO remove:-->                                      
@@ -136,8 +137,6 @@
                                       <field name="mrp_status_info" />
                                       <field name="mrp_id" invisible="1" />
                                       <button name="open_production_form" string="Open production" type="object" icon="gtk-goto-first" attrs="{'invisible': [('mrp_id','=',False)]}"/>
-                                      
-                                      <button name="nothing" string="All deliverable" type="object" icon="gtk-yes" attrs="{'invisible': [('delivery_s','=',0)]}"/>
                                       
                                       <field name="mrp_production_state" invisible="1"/>
                                       <field name="state" invisible="1"/>
