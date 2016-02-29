@@ -135,7 +135,7 @@
                                       <field name="is_manufactured" invisible="1"/>
                                       <button name="nothing" string="Is manufactured" type="object" icon="terp-product" attrs="{'invisible': [('is_manufactured', '=', False)]}" />            
                                       
-                                      <!--<field name="mrp_status_info" />-->
+                                      <field name="mrp_status_info" />
                                       <field name="mrp_id" invisible="1" />
                                       <button name="open_production_form" string="Open production" type="object" icon="gtk-goto-first" attrs="{'invisible': [('mrp_id','=',False)]}"/>
                                       
