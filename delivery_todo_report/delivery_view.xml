@@ -93,7 +93,8 @@
                             </group>    
                             <field name="state" invisible="1"/>
                             <field name="all_produced" invisible="1"/>
-                            <button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />
+                            <button name="force_parameter_for_delivery" string="Load all data" icon="gtk-refresh" type="object" />
+                            <button name="force_parameter_for_delivery_one" string="Load this order" icon="gtk-refresh" type="object" />
                         </group> 
                         
                         <notebook colspan="4">

@@ -74,6 +74,13 @@ class SaleOrder(orm.Model):
         '''
         return self.scheduled_check_close_order(cr, uid, context=context)
 
+    def force_parameter_for_delivery_one(self, cr, uid, ids, context=None):
+        ''' Compute all not closed order for delivery
+        '''        
+        context = context or {}
+        context['force_one'] = ids[0]
+        return self.scheduled_check_close_order(cr, uid, context=context)
+
     # -----------------
     # Scheduled events:
     # -----------------
@@ -87,16 +94,22 @@ class SaleOrder(orm.Model):
         super(SaleOrder, self).scheduled_check_close_order(
             cr, uid, context=context)
   
+        context = context or {}
+        force_one = context.get('force_one', False)
+        
         # --------------------------------
         # All closed are produced in view:
         # --------------------------------
         sol_pool = self.pool.get('sale.order.line')
         
-        # Pricelist order are set to closed:        
-        order_ids = self.search(cr, uid, [
-            ('state', 'not in', ('cancel', 'sent', 'draft')),
-            ('mx_closed', '=', False),
-            ], context=context)
+        # Pricelist order are set to closed:
+        if force_one:
+            order_ids = [force_one]
+        else:    
+            order_ids = self.search(cr, uid, [
+                ('state', 'not in', ('cancel', 'sent', 'draft')),
+                ('mx_closed', '=', False),
+                ], context=context)
 
         if not order_ids:
             return True
@@ -159,10 +172,13 @@ class SaleOrder(orm.Model):
         sol_pool = self.pool.get('sale.order.line')
         
         # Pricelist order are set to closed:        
-        order_ids = self.search(cr, uid, [
-            ('state', 'not in', ('cancel', 'sent', 'draft')),
-            ('mx_closed', '=', False),
-            ], context=context)
+        if force_one:
+            order_ids = [force_one]
+        else:        
+            order_ids = self.search(cr, uid, [
+                ('state', 'not in', ('cancel', 'sent', 'draft')),
+                ('mx_closed', '=', False),
+                ], context=context)
         
         _logger.info('Update %s order...' % len(order_ids))
         i = 0
@@ -194,7 +210,7 @@ class SaleOrder(orm.Model):
                 delivery_oc = line.product_uom_qty - line.delivered_qty
                 # STOCK:
                 delivery_b = 0.0
-                delivery_s = delivery_oc - line.delivered_qty
+                delivery_s = delivery_oc
                 
                 ml = line.product_id.linear_length or 0.0
                 volume = line.product_id.volume or 0.0
