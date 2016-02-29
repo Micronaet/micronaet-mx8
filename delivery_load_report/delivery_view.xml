@@ -57,6 +57,7 @@
                             <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
                             <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                             <field name="name" class="oe_inline" readonly="1"/>
+                            <button name="open_original" string="Order" icon="gtk-goto-first" type="object" />
                         </h1>
                         <group colspan="4" col="10">
                             <group colspan="2" col="2" name="order_box">

@@ -43,6 +43,22 @@ class SaleOrder(orm.Model):
     """
     _inherit = 'sale.order'
 
+    def open_original(self, cr, uid, ids, context=None):
+        ''' Open original order
+        '''
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Order',
+            'res_model': 'sale.order',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            #'view_id': view_id,
+            #'target': 'new',
+            #'nodestroy': True,
+            #'domain': [('product_id', 'in', ids)],
+            }
+
     def reset_print(self, cr, uid, ids, context=None):
         ''' Called at the end of report to reset print check
         '''
