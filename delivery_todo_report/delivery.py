@@ -121,6 +121,7 @@ class SaleOrder(orm.Model):
 
         # 4 states:        
         update_line = {
+            'over': [],
             'delivered': [],
             'produced': [],
             'partial': [],
@@ -138,7 +139,9 @@ class SaleOrder(orm.Model):
                         # ------
                         # stock:
                         # ------
-                        if line.product_uom_qty <= line.delivered_qty:
+                        if line.product_uom_qty < line.delivered_qty:
+                            update_line['delivered'].append(line.id) # TODO over
+                        elif line.product_uom_qty = line.delivered_qty:
                             update_line['delivered'].append(line.id)
                         else:
                             update_line['partial'].append(line.id)
@@ -161,7 +164,7 @@ class SaleOrder(orm.Model):
             if all_produced:
                 produced_ids.append(order.id)
 
-        closed_state = ('delivered', )
+        closed_state = ('delivered', 'over')
         for key in update_line:
             if update_line[key]:
                 data = {
@@ -226,6 +229,8 @@ class SaleOrder(orm.Model):
                         'delivery_vol_partial': 0,
                         }, context=context)
                     continue
+
+                # TODO manage over delivery!!!!
                 delivery_oc = line.product_uom_qty - line.delivered_qty
                 if line.product_uom_maked_sync_qty > line.delivered_qty: 
                     # MRP:
@@ -276,7 +281,7 @@ class SaleOrder(orm.Model):
                 'delivery_vol_total': order_volume_tot,
                 'delivery_vol_partial': order_volume_part,
                 }, context=context)
-                
+
         # Update totale in order
         _logger.info('Total order updated')
         return
@@ -332,6 +337,7 @@ class SaleOrderLine(orm.Model):
 
     _columns = {
         'mrp_production_state': fields.selection([
+            ('over', 'Over delivered'),
             ('delivered', 'Delivered'),
             ('produced', 'All produced'),
             ('partial', 'Partial deliver'),
