@@ -116,12 +116,11 @@
                                       <field name="mx_net_qty" readonly="1"/>
                                       <field name="mx_lord_qty" readonly="1"/>
 
-                                      <field name="mx_of_in" readonly="1"/>
-                                      <field name="mx_of_date" readonly="1"/>                                      
-                                      <button name="get_movements_of" string="OF in" type="object" icon="gtk-goto-first" colspan="1" class="oe_link" attrs="{'invisible': [('mx_of_in', '=', 0)]}" />
-
                                       <field name="mx_oc_out" readonly="1"/>
                                       <button name="get_movements_oc" string="OC out" type="object" icon="gtk-goto-first" colspan="1" class="oe_link" attrs="{'invisible': [('mx_oc_out', '=', 0)]}" />
+                                      <field name="mx_of_in" readonly="1"/>
+                                      <button name="get_movements_of" string="OF in" type="object" icon="gtk-goto-first" colspan="1" class="oe_link" attrs="{'invisible': [('mx_of_in', '=', 0)]}" />
+                                      <field name="mx_of_date" readonly="1"/>                                      
                                       
                                       
                                       <field name="delivery_ml_total" sum='ml_total'/>
