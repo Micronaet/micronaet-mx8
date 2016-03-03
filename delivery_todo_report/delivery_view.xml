@@ -240,6 +240,7 @@
             <field name="arch" type="xml">
                 <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">
                     <button name="nothing" string="All deliverable" type="object" icon="gtk-yes" attrs="{'invisible': ['|',('mx_closed', '=',True),('all_produced','=',False)]}"/>
+                    <button name="open_detailed_order" string="Open" icon="gtk-goto-last" type="object" />
                     <field name="name" />
                     <field name="zone_id" readonly="1" />
                     <field name="partner_id"/>

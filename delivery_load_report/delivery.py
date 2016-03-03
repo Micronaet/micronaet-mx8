@@ -35,7 +35,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
     DATETIME_FORMATS_MAP, 
     float_compare)
 
-
 _logger = logging.getLogger(__name__)
 
 class SaleOrder(orm.Model):
@@ -43,16 +42,15 @@ class SaleOrder(orm.Model):
     """
     _inherit = 'sale.order'
 
-    """def open_detailed_order(self, cr, uid, ids, context=None):
+    def open_detailed_order(self, cr, uid, ids, context=None):
         ''' Open detailed order popup
         '''
         # Choose form:
-
         try:        
             model_pool = self.pool.get('ir.model.data')
-            tree_view = model_pool.get_object_reference(
-                cr, uid, 'inventory_status', 
-                'view_stock_move_ref_form')[1]
+            form_view = model_pool.get_object_reference(
+                cr, uid, 'delivery_load_report', 
+                'view_sale_order_delivery_form')[1]
         except:
             tree_view = False        
 
@@ -64,11 +62,11 @@ class SaleOrder(orm.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'views': [
-                (tree_view or False, 'tree'), 
+                (form_view or False, 'form'), 
                 ],
             #'domain': [('id', 'in', item_ids)],
             'target': 'new',
-            }"""
+            }
            
     def open_original(self, cr, uid, ids, context=None):
         ''' Open original order
