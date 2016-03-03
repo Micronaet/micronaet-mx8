@@ -200,7 +200,7 @@
             <field name="priority" eval="50" />
             <field name="arch" type="xml">
                 <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">                    
-                    <button name="open_detailed_order" string="Open" icon="gtk-goto-last" type="object" />
+                    <button name="open_detailed_order" string="Open" icon="gtk-goto-last32" type="object" />
                     <field name="name" />
                     <field name="zone_id" readonly="1" />
                     <field name="partner_id"/>
