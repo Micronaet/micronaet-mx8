@@ -67,6 +67,7 @@ class SaleOrder(orm.Model):
                 ],
             #'domain': [('id', 'in', item_ids)],
             'target': 'new',
+            'context': {'minimal_view': True},
             }
             
     def open_original(self, cr, uid, ids, context=None):

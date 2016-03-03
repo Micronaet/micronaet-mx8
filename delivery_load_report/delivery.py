@@ -45,6 +45,7 @@ class SaleOrder(orm.Model):
     def open_detailed_order(self, cr, uid, ids, context=None):
         ''' Open detailed order popup
         '''
+        context = context or {}
         # Choose form:
         try:        
             model_pool = self.pool.get('ir.model.data')
@@ -66,6 +67,7 @@ class SaleOrder(orm.Model):
                 ],
             #'domain': [('id', 'in', item_ids)],
             'target': 'new',
+            'context': {'minimal_view': True},
             }
            
     def open_original(self, cr, uid, ids, context=None):
