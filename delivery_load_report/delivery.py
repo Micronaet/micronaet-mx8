@@ -43,6 +43,33 @@ class SaleOrder(orm.Model):
     """
     _inherit = 'sale.order'
 
+    """def open_detailed_order(self, cr, uid, ids, context=None):
+        ''' Open detailed order popup
+        '''
+        # Choose form:
+
+        try:        
+            model_pool = self.pool.get('ir.model.data')
+            tree_view = model_pool.get_object_reference(
+                cr, uid, 'inventory_status', 
+                'view_stock_move_ref_form')[1]
+        except:
+            tree_view = False        
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Order',
+            'res_model': 'sale.order',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [
+                (tree_view or False, 'tree'), 
+                ],
+            #'domain': [('id', 'in', item_ids)],
+            'target': 'new',
+            }"""
+           
     def open_original(self, cr, uid, ids, context=None):
         ''' Open original order
         '''

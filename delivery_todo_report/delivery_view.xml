@@ -35,7 +35,6 @@
                     <head>
                           <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
                           <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
-                          <button name="reset_print" string="Reset" icon="gtk-refresh" type="object"  confirm="Reset all print selection?"/>                      
                           <field name="print" invisible="1"/>
 
                           <field name="uncovered_state" invisible="1"/>
@@ -146,6 +145,7 @@
                           </page>                      
                         </notebook>                    
                         <field name="note" readonly="1"/>
+                        <button name="reset_print" string="Reset" icon="gtk-refresh" type="object"  confirm="Reset all print selection?"/>                      
                         <button name="force_parameter_for_delivery" string="Load all data" icon="gtk-refresh" type="object" />
                         <button name="force_parameter_for_delivery_one" string="Load this order" icon="gtk-refresh" type="object" />
                     </sheet>
