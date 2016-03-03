@@ -10,7 +10,7 @@
                     <field name="print" invisible="1"/>
                     <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
                     <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
-                </field>    
+                </field>
             </field>
         </record>
         <record model="ir.ui.view" id="view_sale_order_to_delivery_production_tree">
@@ -35,7 +35,7 @@
                     <head>
                           <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
                           <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
-                          <button name="reset_print" string="Reset" icon="gtk-refresh" type="object" />
+                          <button name="reset_print" string="Reset" icon="gtk-refresh" type="object"  confirm="Reset all print selection?"/>
                           <field name="print" invisible="1"/>
                           
                           <field name="uncovered_state" invisible="1"/>
@@ -87,7 +87,7 @@
                             </group>    
                             <group colspan="2" col="2" name="amount_box">                            
                                 <separator string="Total" colspan="2"/>
-                                <field name="delivery_amount_b" readonly="1" />
+                                <!--<field name="delivery_amount_b" readonly="1" />-->
                                 <field name="delivery_amount_s" readonly="1" />
                                 <field name="amount_untaxed" readonly="1" />
                             </group>    
@@ -200,7 +200,6 @@
             <field name="priority" eval="50" />
             <field name="arch" type="xml">
                 <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">
-                    <button name="nothing" string="All deliverable" type="object" icon="gtk-yes" attrs="{'invisible': ['|',('mx_closed', '=',True),('all_produced','=',False)]}"/>
                     <field name="name" />
                     <field name="zone_id" readonly="1" />
                     <field name="partner_id"/>
