@@ -239,6 +239,7 @@
             <field name="priority" eval="50" />
             <field name="arch" type="xml">
                 <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">
+                    <button name="nothing" string="All deliverable" type="object" icon="gtk-yes" attrs="{'invisible': ['|',('mx_closed', '=',True),('all_produced','=',False)]}"/>
                     <field name="name" />
                     <field name="zone_id" readonly="1" />
                     <field name="partner_id"/>
@@ -255,6 +256,9 @@
 
                     <field name="delivery_ml_partial" sum='ml_partial' />
                     <field name="delivery_vol_partial" sum='vol_partial' />
+
+                    <field name="delivery_amount_b" />
+                    <field name="delivery_amount_s" />
                     
                     <field name="state" />                    
                     <field name="print" invisible="1"/>
