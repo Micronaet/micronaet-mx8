@@ -150,8 +150,8 @@
                         <button name="force_parameter_for_delivery_one" string="Load this order" icon="gtk-refresh" type="object" />
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" invisible="context.get('minimal_view',False)"/>
+                        <field name="message_ids" widget="mail_thread" invisible="context.get('minimal_view',False)"/>
                     </div>
                 </form>
             </field>

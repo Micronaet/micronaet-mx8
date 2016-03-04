@@ -142,8 +142,8 @@
                         <button name="reset_print" string="Reset" icon="gtk-refresh" type="object"  confirm="Reset all print selection?"/>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" invisible="context.get('minimal_view',False)"/>
+                        <field name="message_ids" widget="mail_thread" invisible="context.get('minimal_view',False)"/>
                     </div>
                 </form>
             </field>
