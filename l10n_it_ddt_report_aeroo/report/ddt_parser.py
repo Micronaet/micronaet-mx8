@@ -186,7 +186,7 @@ class Parser(report_sxw.rml_parse):
                 'FIRMA DESTINATARIO': "CONSIGNEE'S SIGNATURE",
                 'NOTE': 'NOTES',
                 'MEZZO': 'BY',
-                'TELEFONO': 'PHONE',
+                'TELEFONO DESTINATARIO': "PHONE CONSIGNEE'S",
                 'ASPETTO DEI BENI': 'PACKAGE DESCRIPTION',
                 'PORTO': 'PORT',
                 'N.COLLI': 'PACKAGES',

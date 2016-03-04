@@ -60,7 +60,7 @@ class Parser(report_sxw.rml_parse):
         '''
         # TODO keep in a common place with DDT one's
         if o.force_vector:
-            return o.force_vector or '/'
+            return o.force_vector or ''
         elif o.default_carrier_id and o.default_carrier_id.partner_id:
             partner = o.default_carrier_id.partner_id
             return '''%s\n%s\n%s %s %s\nP.IVA: %s Tel.: %s\nN. Albo Trasp.: %s''' % (
@@ -71,11 +71,11 @@ class Parser(report_sxw.rml_parse):
                     partner.state_id.code or '',
                     partner.vat or '',
                     partner.phone or '',                
-                    (partner.transport_number or '/') if \
-                        partner.is_vector else '/',
+                    (partner.transport_number or '') if \
+                        partner.is_vector else '',
                     )                
         else:
-            return '/'            
+            return ''            
         
     def check_pick_change(self, l):
         ''' Check if this line has different picking value
@@ -239,6 +239,7 @@ class Parser(report_sxw.rml_parse):
                 'RIF. ORDINE CLIENTE': 'CUSTOMER ORDER REF.',
                 'CONSEGNA (SALVO IMPREVISTI)': 'EXPECTED DELIVERY DATE',
                 'AGENTE': 'AGENT',
+                'COD. CLIENTE': 'CUSTOM. REF',
                 },
             'fr_FR': {
                 'CLIENTE': 'CLIENT',
