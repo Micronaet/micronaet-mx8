@@ -60,6 +60,53 @@ class AccountInvoice(orm.Model):
     
     _inherit = 'account.invoice'
     
+    def create_update_refunt(self, cr, uid, invoice_proxy, context=None):
+        ''' Function called by create and update procedure.
+            Generate line with refund value
+        '''        
+        res_id = invoice_proxy.id
+        refund = invoice_proxy.payment_term # readability
+        line_pool = self.pool.get('account.invoice.line')
+        line_ids = line_pool.search(cr, uid, [
+            ('invoice_id', '=', res_id),
+            ('refund_line', '=', True),
+            ], context=context)
+
+        # Get data:
+        product_id = refund.refund_product_id.id
+        uos_id = refund.refund_product_id.uom_id.id # XXX uom!
+        quantity = 1
+        name = refund.refund_product_id.name
+        price_unit = refund.refund_cost
+        
+        # On change function:
+        data = line_pool.product_id_change(cr, uid, False, product_id,
+            uos_id, quantity, name, invoice_proxy.type, 
+            invoice_proxy.partner_id.id, invoice_proxy.fiscal_position.id, 
+            price_unit, invoice_proxy.currency_id.id, 
+            invoice_proxy.company_id.id, context=context).get('value', {})
+        
+        if 'invoice_line_tax_id' in data:
+            data['invoice_line_tax_id'] = [(6, 0, data['invoice_line_tax_id'])]
+        data.update({
+            'account_id': refund.refund_account_id.id,
+            'sequence': 100000,
+            'invoice_id': res_id,
+            'price_unit': price_unit,
+            'uos_id': uos_id,
+            'discount': 0.0,
+            'product_id': product_id,
+            'quantity': quantity,
+            'name': name,
+            'refund_line': True
+            })
+            
+        if line_ids:
+            line_pool.write(cr, uid, line_ids[0], data, context=context)
+        else:
+            line_pool.create(cr, uid, data, context=context)
+        return True    
+        
     # Override function to create
     def create(self, cr, uid, vals, context=None):
         """ Create a new record for a model AccountInvoice
@@ -78,34 +125,27 @@ class AccountInvoice(orm.Model):
         invoice_proxy = self.browse(cr, uid, res_id, context=context)
         if not invoice_proxy.payment_term.has_refund:
             return res_id
-        import pdb; pdb.set_trace()
-        # Generate line with refund value:
-        refund = invoice_proxy.payment_term # readability
-        line_pool = self.pool.get('account.invoice.line')
-        line_ids = line_pool.search(cr, uid, [
-            ('invoice_id', '=', res_id),
-            ('refund_line', '=', True),
-            ], context=context)
             
-        data = {
-            'account_id': refund.refund_account_id.id,
-            'sequence': 100000,
-            'invoice_id': res_id,
-            'price_unit': refund.refund_cost,
-            'uos_id': refund.refund_product_id.uom_id.id,
-            'discount': 0.0,
-            'product_id': refund.refund_product_id.id,
-            'quantity': refund.refund_cost,
-            'name': refund.refund_product_id.name,
-            'refund_line': True
-            }
-            
-        if line_ids:
-            line_pool.write(cr, uid, line_ids[0], data, context=context)
-        else:
-            line_pool.create(cr, uid, data, context=context)
-            
+        self.create_update_refunt(cr, uid, invoice_proxy, context=context)            
         return res_id
+        
+    ''' TODO write also for modiication in payment!!
+    def write(self, cr, uid, ids, vals, context=None):
+        """ Update redord(s) comes in {ids}, with new value comes as {vals}
+            return True on success, False otherwise
+            @param cr: cursor to database
+            @param uid: id of current user
+            @param ids: list of record ids to be update
+            @param vals: dict of new values to be set
+            @param context: context arguments, like lang, time zone
+            
+            @return: True on success, False otherwise
+        """
+    
+        #TODO: process before updating resource
+        res = super(AccountInvoice, self).write(
+            cr, uid, ids, vals, context=context)
+        return res'''
     
 
 class AccountInvoiceLine(orm.Model):

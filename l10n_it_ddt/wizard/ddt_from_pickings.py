@@ -140,7 +140,7 @@ class DdTFromPickings(models.TransientModel):
                         _('Selected Pickings have'
                           ' different payment terms'))
                 payment_term_id = picking.sale_id.payment_term
-                values['payment_term_id'] = payment_term.id
+                values['payment_term_id'] = payment_term_id.id
 
         used_bank_id = False
         for picking in self.picking_ids:
