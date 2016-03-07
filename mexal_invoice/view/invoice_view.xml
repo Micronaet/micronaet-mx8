@@ -32,7 +32,6 @@
                         <field name="used_bank_id" domain="[('partner_id','=',partner_id)]"/>
                         <newline />
                         <field name="default_carrier_id"/>
-                        <field name="payment_term" readonly="1"/> <!--TODO-->
                         <newline />
                     </group>
 			    </field>
