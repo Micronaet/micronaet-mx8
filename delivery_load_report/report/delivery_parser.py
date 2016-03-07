@@ -24,6 +24,11 @@
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from datetime import datetime, timedelta
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
+    DEFAULT_SERVER_DATETIME_FORMAT, 
+    DATETIME_FORMATS_MAP, 
+    float_compare)
+
 
 
 class Parser(report_sxw.rml_parse):
@@ -42,6 +47,7 @@ class Parser(report_sxw.rml_parse):
 
             'get_object_line': self.get_object_line,
             'get_datetime': self.get_datetime,
+            'get_datetime_now': self.get_datetime_now,
             'get_partic': self.get_partic,
             'get_parcels': self.get_parcels,
             'get_parcels_table': self.get_parcels_table,
@@ -160,6 +166,11 @@ class Parser(report_sxw.rml_parse):
         ''' Return datetime obj
         '''
         return datetime
+
+    def get_datetime_now(self):
+        ''' Return datetime now text
+        '''
+        return datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _get_fully_list(self, objects):
         ''' Return list of object browse id list merged with no replication 
