@@ -19,6 +19,7 @@
                     <attribute name="attrs">{'readonly':[('state', '=', 'done')]}</attribute>
                 </field>
 
+                <!--TODO doesn' work vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
                 <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
                     <attribute name="attrs">{'readonly':[('state', 'in', ('done', 'approved'))]}</attribute>
                 </xpath>
@@ -28,6 +29,7 @@
                 <xpath expr="/form/sheet//field[@name='order_line']/tree/field[@name='product_qty']" position="attributes">
                     <attribute name="attrs">{'readonly':[('state', 'in', ('done', 'approved'))]}</attribute>
                 </xpath>
+                <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
 
                 <!--<xpath expr="/form/sheet/notebook/page//field[@name='order_line']/form//field[@name='product_id']" position="attributes">
                     <attribute name="attrs">{'readonly': [('state','in',('invoice_except', 'done'))]}</attribute>
