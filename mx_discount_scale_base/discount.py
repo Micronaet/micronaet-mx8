@@ -51,7 +51,7 @@ class ResPartner(orm.Model):
         # TODO create in necessary this function!!!!!! <<<<<<<<<<<<<<<<<<<<<<<<
         res = self.pool.get('res.partner').format_multi_discount(
              discount_rates)
-             
+
         return {
             'value': {
                 'discount_value': res.get('value', 0.0),

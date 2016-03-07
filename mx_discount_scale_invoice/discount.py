@@ -39,6 +39,53 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
+class AccountInvoiceLine(orm.Model):
+    """ Model name: AccountInvoiceLine
+    """    
+    _inherit = 'account.invoice.line'
+    
+    """def create(self, cr, uid, vals, context=None):
+        ''' Correct multi discount description and calculare if discount
+            not present
+        '''        
+        multi_discount_rates = vals.get('multi_discount_rates', False)
+        if not vals.get('discount', 0.0) and multi_discount_rates:
+            res = self.pool.get(
+                'res.partner').format_multi_discount(multi_discount_rates)
+
+            vals['discount'] = res.get('value', 0.0)
+            vals['multi_discount_rates'] = res.get('text', 0.0)
+            
+        return super(SaleOrderLine, self).create(
+            cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        ''' Update discount if text is present
+        '''
+        multi_discount_rates = vals.get('multi_discount_rates', False)
+        if multi_discount_rates:
+            res = self.pool.get(
+                'res.partner').format_multi_discount(
+                    multi_discount_rates)
+                
+            vals['discount'] = res.get('value', 0.0)
+            vals['multi_discount_rates'] = res.get('text', 0.0)
+        return super(SaleOrderLine, self).write(
+            cr, uid, ids, vals, context=context)"""
+
+    def on_change_multi_discount(self, cr, uid, ids, multi_discount_rates, 
+            context=None):
+        ''' Change multi_discount_rates and value
+        '''
+        res = self.pool.get('res.partner').format_multi_discount(
+             multi_discount_rates)
+
+        return {
+            'value': {
+                'discount': res.get('value', 0.0),
+                #'multi_discount_rates': res.get('text', ''),
+                }}           
+
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
     """    
