@@ -129,20 +129,18 @@ class DdTFromPickings(models.TransientModel):
                 values['transportation_method_id'] = (
                     transportation_method_id.id)
 
-        payment_term_id = False
+        # XXX payment_term for sale is used!!!
+        payment_term_id = False # XXX Note: save object!!!
         for picking in self.picking_ids:
-            if picking.sale_id and (
-                    picking.sale_id.payment_term_id):
+            if picking.sale_id and picking.sale_id.payment_term:
                 if payment_term_id and (
                     payment_term_id != (
-                        picking.sale_id.payment_term_id)):
+                        picking.sale_id.payment_term)):
                     raise Warning(
                         _('Selected Pickings have'
                           ' different payment terms'))
-                payment_term_id = (
-                    picking.sale_id.payment_term_id)
-                values['payment_term_id'] = (
-                    payment_term_id.id)
+                payment_term_id = picking.sale_id.payment_term
+                values['payment_term_id'] = payment_term.id
 
         used_bank_id = False
         for picking in self.picking_ids:
