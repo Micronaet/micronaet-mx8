@@ -216,7 +216,9 @@ class SaleOrder(orm.Model):
                 'carriage_condition_id': False,
                 'goods_description_id': False,
                 'transportation_reason_id': False,
+                # TODO remove:
                 'payment_term_id': False,
+                'payment_term': False,
                 'bank_account_id': False,
                 })
             return res
@@ -232,7 +234,10 @@ class SaleOrder(orm.Model):
             'goods_description_id': partner_proxy.goods_description_id.id,
             'transportation_reason_id': 
                 partner_proxy.transportation_reason_id.id,
+                
+            # TODO remove:    
             'payment_term_id': partner_proxy.property_payment_term.id,            
+            'payment_term': partner_proxy.property_payment_term.id,            
             })
         # Set default account for partner    
         if partner_proxy.bank_ids:
@@ -282,6 +287,7 @@ class SaleOrder(orm.Model):
             'stock.picking.goods_description', 'Goods description'),
         'transportation_reason_id': fields.many2one(
             'stock.picking.transportation_reason', 'Transportation reason'),
+        # TODO remove:    
         'payment_term_id': fields.many2one(
             'account.payment.term', 'Payment term'),            
         'bank_account_id': fields.many2one(
