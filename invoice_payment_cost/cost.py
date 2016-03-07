@@ -78,7 +78,7 @@ class AccountInvoice(orm.Model):
         invoice_proxy = self.browse(cr, uid, res_id, context=context)
         if not invoice_proxy.payment_term.has_refund:
             return res_id
-            
+        import pdb; pdb.set_trace()
         # Generate line with refund value:
         refund = invoice_proxy.payment_term # readability
         line_pool = self.pool.get('account.invoice.line')
@@ -92,7 +92,7 @@ class AccountInvoice(orm.Model):
             'sequence': 100000,
             'invoice_id': res_id,
             'price_unit': refund.refund_cost,
-            'uos_id': refund.refund_product_id.uos_id.id,
+            'uos_id': refund.refund_product_id.uom_id.id,
             'discount': 0.0,
             'product_id': refund.refund_product_id.id,
             'quantity': refund.refund_cost,

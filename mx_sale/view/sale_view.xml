@@ -116,20 +116,22 @@
                         </tree>
                     </field>
                 </field>
-                <xpath expr="/form/sheet/notebook/page" position="after">
-                    <page string="Invoice parameters">
+                <!--<xpath expr="/form/sheet/notebook/page" position="after">-->
+                <field name="payment_term" position="after">
+                    <!--<page string="Invoice parameters">
                         <group colspan="4" col="4">
-                           <separator string="Payment:" colspan="4"/>
+                           <separator string="Payment:" colspan="4"/>-->
                                <!--<field name="default_carrier_id" />-->
                                <!--<field name="carriage_condition_id" />
                                <field name="goods_description_id" />
                                <field name="transportation_reason_id" />-->
-                               <field name="payment_term_id" />
+                               <field name="payment_term_id" invisible="1" /> <!--TODO check if no more used!!!-->
                                <field name="bank_account_id" domain="[('partner_id', '=', partner_id)]"/>                               
                                <field name="bank_account_company_id" domain="[('partner_id', '=', company_id)]"/>                               
-                        </group>     
-                    </page>
-                </xpath>
+                    <!--</group> 
+                    </page>-->
+                </field>    
+                <!--</xpath>-->
 
                 <!--sale.order.line-->
                 <xpath expr="/form/sheet/notebook/page//field[@name='order_line']" position="attributes">
