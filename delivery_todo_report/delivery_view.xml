@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>    
-        <record model="ir.ui.view" id="view_sale_order_to_delivery_tree">
-            <field name="name">sale.order.delivery.tree</field>
-            <field name="inherit_id" ref="sale.view_order_tree"/>
-            <field name="model">sale.order</field>
-            <field name="arch" type="xml">
-                <field name="state" position="after">
-                    <field name="print" invisible="1"/>
-                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
-                </field>    
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_sale_order_to_delivery_production_tree">
-            <field name="name">sale.order.delivery.tree</field>
-            <field name="inherit_id" ref="sale.view_quotation_tree"/>
-            <field name="model">sale.order</field>
-            <field name="arch" type="xml">
-                <field name="state" position="after">
-                    <field name="print" invisible="1"/>
-                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
-                </field>    
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_sale_order_delivery_form">
             <field name="name">sale.order.delivery.tree</field>
             <field name="priority" eval="50" />
@@ -154,42 +129,6 @@
                         <field name="message_ids" widget="mail_thread" invisible="context.get('minimal_view',False)"/>
                     </div>
                 </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_sale_order_to_delivery_form">
-            <field name="name">sale.order.delivery.tree</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="model">sale.order</field>
-            <field name="arch" type="xml">
-                  <field name="name" position="after">
-                       <field name="print" invisible="1"/> 
-                       <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                       <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
-                  </field>
-                  
-                  <!--<xpath expr="//notebook/page//field[@name='order_line']/tree/field[@name='name']" position="after">                  
-                      <field name="mx_closed" invisible="1" />
-                      <field name="all_produced" invisible="1" />
-                  </xpath>                  
-                  <xpath expr="//notebook/page//field[@name='order_line']/tree" position="attributes">
-                      <attribute name="colors">black:mx_closed==True;green:all_produced==True</attribute>
-                  </xpath>-->
-                  <!--<xpath expr="//notebook/page[1]" position="after">
-                      <page string="Delivery lines" invisible="context.get('layout_delivery',True)">
-                          <field name="order_line" readonly="1">
-                              <tree string="Line:" colors="black:mx_closed==True;green:all_produced==True">
-                                  <field name="name" />
-                                  <field name="product_id" />
-                                  <field name="product_uom_qty" />
-                                  <field name="delivered_qty" />
-                                  <field name="mx_closed" invisible="1" />
-                                  <field name="all_produced" invisible="1" />
-                                  <field name="state" />
-                              </tree>
-                          </field>
-                      </page>                      
-                  </xpath>-->
             </field>
         </record>
 

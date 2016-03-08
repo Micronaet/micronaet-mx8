@@ -37,6 +37,7 @@
         'production_accounting_external',
         'mx_partner_zone',
         'fido_order_check',
+        'delivery_internal_common_report', # common part
         'mx_agent', # agent filter
         'inventory_status_on_delivery',
         #'base_accounting_program', # res.partner.zone TODO move in module!

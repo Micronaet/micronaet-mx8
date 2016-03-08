@@ -43,74 +43,11 @@ class SaleOrder(orm.Model):
     """
     _inherit = 'sale.order'
 
-    def open_detailed_order(self, cr, uid, ids, context=None):
-        ''' Open detailed order popup
-        '''
-        # Choose form:
-        try:        
-            model_pool = self.pool.get('ir.model.data')
-            form_view = model_pool.get_object_reference(
-                cr, uid, 'delivery_todo_report', 
-                'view_sale_order_delivery_form')[1]
-        except:
-            tree_view = False        
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Order',
-            'res_model': 'sale.order',
-            'res_id': ids[0],
-            'view_type': 'form',
-            'view_mode': 'form',
-            'views': [
-                (form_view or False, 'form'), 
-                ],
-            #'domain': [('id', 'in', item_ids)],
-            'target': 'new',
-            'context': {'minimal_view': True},
-            }
-            
-    def open_original(self, cr, uid, ids, context=None):
-        ''' Open original order
-        '''
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Order',
-            'res_model': 'sale.order',
-            'res_id': ids[0],
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            #'view_id': view_id,
-            #'target': 'new',
-            #'nodestroy': True,
-            #'domain': [('product_id', 'in', ids)],
-            }
-        
-    def reset_print(self, cr, uid, ids, context=None):
-        ''' Called at the end of report to reset print check
-        '''
-        sale_ids = self.search(
-            cr, uid, [('print', '=', True)], context=context)
-        self.write(
-            cr, uid, sale_ids, {'print': False})     
-        return True
-        
-    # Procedure to update
-    def force_parameter_for_delivery(self, cr, uid, ids, context=None):
-        ''' Compute all not closed order for delivery
-        '''        
-        return self.scheduled_check_close_order(cr, uid, context=context)
-
-    def force_parameter_for_delivery_one(self, cr, uid, ids, context=None):
-        ''' Compute all not closed order for delivery
-        '''        
-        context = context or {}
-        context['force_one'] = ids[0]
-        return self.scheduled_check_close_order(cr, uid, context=context)
 
     # -----------------
     # Scheduled events:
     # -----------------
+    # Override function:
     def scheduled_check_close_order(self, cr, uid, context=None):
         ''' Override original procedure for write all producted
         '''
@@ -148,7 +85,6 @@ class SaleOrder(orm.Model):
 
         # 4 states:        
         update_line = {
-            'over': [],
             'delivered': [],
             'produced': [],
             'partial': [],
@@ -313,75 +249,4 @@ class SaleOrder(orm.Model):
         _logger.info('Total order updated')
         return
     
-    # Button event:
-    def to_print(self, cr, uid, ids, context=None):
-        header_mod = self.write(cr, uid, ids, {
-            'print': True}, context=context)
-        return True
-
-    def no_print(self, cr, uid, ids, context = None):
-        header_mod = self.write(cr, uid, ids, {
-            'print': False}, context=context)
-        return True
-
-    def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
-        ''' Fields function for calculate 
-        '''
-        res = {}
-        for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = [
-                line.id for line in order.order_line if line.delivery_oc > 0]
-                #if line.product_uom_qty > line.delivered_qty
-        return res
-
-    _columns = {
-        'all_produced': fields.boolean('All produced'),
-        'print': fields.boolean('To Print'),
-
-        # Total:
-        'delivery_amount_b': fields.float('Amount B', digits=(16, 2)),             
-        'delivery_amount_s': fields.float('Amount S', digits=(16, 2)),
-
-        'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
-        'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
-        'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),
-        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),             
-
-        'remain_order_line': fields.function(_function_get_remain_order, 
-            method=True, type='one2many', string='Residual order line', 
-            relation='sale.order.line', store=False), 
-        }
-
-class SaleOrderLine(orm.Model):
-    """ Model name: SaleOrderLine
-    """
-    _inherit = 'sale.order.line'
-    
-    def nothing(self, cr, uid, ids, context=None):
-        '''  do nothing
-        '''
-        return True
-
-    _columns = {
-        'mrp_production_state': fields.selection([
-            ('over', 'Over delivered'),
-            ('delivered', 'Delivered'),
-            ('produced', 'All produced'),
-            ('partial', 'Partial deliver'),
-            ('no', 'Nothing to deliver'),
-            ], 'Production state', readonly=False),
-        
-        'delivery_oc': fields.float('OC remain', digits=(16, 2)),     
-        'delivery_b': fields.float('B(lock)', digits=(16, 2)),     
-        'delivery_s': fields.float('S(uspend)', digits=(16, 2)),             
-        
-        'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
-        'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
-        'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),             
-        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),
-        }
-
-    _defaults = {
-        'mrp_production_state': lambda *x: 'no',            
-        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
