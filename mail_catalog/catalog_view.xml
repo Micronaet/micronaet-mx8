@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_partner_form_catelog" model="ir.ui.view">
+            <field name="name">res.partner.form.catalog</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="comment" position="before">
+                    <group colspan="4">
+                        <separator string="Catalog:" colspan="4"/>
+                        <field name="mail_catalog" />
+                        <newline />
+                        <field name="mail_catalog_note" colspan="4" nolabel="1"  placeholder="Info about catalog..."/>
+                    </group>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+

@@ -29,8 +29,8 @@
                           <newline />
                           <field name='fido_date' attrs="{'invisible':[('fido_ko', '=', True)]}"/>
                           <field name='fido_total' attrs="{'invisible':[('fido_ko', '=', True)]}" />
-                          <field name='uncovered_amount' />
                           <field name='uncovered_state' />
+                          <field name='uncovered_amount' />
                           
                           <separator string="Open payment" colspan="4" />
                           <field name="open_payment_ids" readonly="1" nolabel="1" colspan="4"> 
