@@ -21,6 +21,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import logging
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from datetime import datetime, timedelta
@@ -28,6 +29,8 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT, 
     DATETIME_FORMATS_MAP, 
     float_compare)
+
+_logger = logging.getLogger(__name__)
 
 class Parser(report_sxw.rml_parse):
     counters = {}
@@ -65,6 +68,7 @@ class Parser(report_sxw.rml_parse):
     #                              COUNTER MANAGE
     # -------------------------------------------------------------------------
     def reset_counter(self):
+        _logger.info('Counter reset for company 2 load report')
         # reset counters:
         self.counters = {
             'total_parcel': 0.0,
@@ -120,6 +124,10 @@ class Parser(report_sxw.rml_parse):
             'B': l.delivery_b,
             }
                 
+        _logger.info('Element for company 2 load report %s: %s' % (
+            elements,
+            l.product_id.default_code,
+            ))        
         for key, v in elements.iteritems():
             product = l.product_id
             if v:
@@ -143,6 +151,10 @@ class Parser(report_sxw.rml_parse):
                             int(parcel), int(q_x_pack))
                         self.counters['total_parcel'] += parcel
                 res.append((key, parcel_text, v))
+                _logger.info('Counters: %s, %s' % (
+                    product.default_code,
+                    self.counters, 
+                    ))
         return res
 
     def get_partic(self, line):
@@ -221,6 +233,7 @@ class Parser(report_sxw.rml_parse):
         '''
         sale_pool = self.pool.get('sale.order')
         sale_pool.reset_print(self.cr, self.uid, False)
+        _logger.info('Reset selection')
         return ''
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
