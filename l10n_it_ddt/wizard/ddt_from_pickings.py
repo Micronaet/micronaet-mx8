@@ -62,16 +62,6 @@ class DdTFromPickings(models.TransientModel):
             partner = picking.partner_id
             values['partner_id'] = partner.id
             
-        #parcels = 0
-        #for picking in self.picking_ids:
-        #    if picking.sale_id and picking.sale_id.parcels:
-        #        if parcels and parcels != picking.sale_id.parcels:
-        #            raise Warning(
-        #                _('Selected Pickings have different parcels'))
-        #        parcels = picking.sale_id.parcels
-        #        # TODO sum al parcels?
-        #        values['parcels'] = parcels
-                
         carriage_condition_id = False
         for picking in self.picking_ids:
             if picking.sale_id and picking.sale_id.carriage_condition_id:

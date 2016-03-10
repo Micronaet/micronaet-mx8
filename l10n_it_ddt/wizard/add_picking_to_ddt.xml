@@ -36,6 +36,5 @@
             <field name="key">action</field>
             <field name="model">stock.picking</field>
         </record>
-
     </data>
 </openerp>

@@ -45,29 +45,36 @@ class AddPickingToDdt(models.TransientModel):
             elif picking.partner_id != self.ddt_id.partner_id:
                 raise Warning(
                     _("Selected Pickings have different Partner"))
+            elif picking.partner_id != self.ddt_id.partner_id:
+                raise Warning(
+                    _("Selected Pickings have different Partner"))
+            elif picking.destination_partner_id != \
+                    self.ddt_id.destination_partner_id:
+                raise Warning(
+                    _("Selected Pickings have different Destination"))
             #elif picking.sale_id.parcels != self.ddt_id.parcels:
             #    raise Warning(
             #        _("Selected Pickings have different parcels"))
-            elif picking.sale_id.carriage_condition_id != (
-                    self.ddt_id.carriage_condition_id):
-                raise Warning(
-                    _("Selected Pickings have"
-                      " different carriage condition"))
-            elif picking.sale_id.goods_description_id != (
-                    self.ddt_id.goods_description_id):
-                raise Warning(
-                    _("Selected Pickings have "
-                      "different goods description"))
-            elif picking.sale_id.transportation_reason_id != (
-                    self.ddt_id.transportation_reason_id):
-                raise Warning(
-                    _("Selected Pickings have"
-                      " different transportation reason"))
-            elif picking.sale_id.transportation_method_id != (
-                    self.ddt_id.transportation_method_id):
-                raise Warning(
-                    _("Selected Pickings have"
-                      " different transportation reason"))
+            #elif picking.sale_id.carriage_condition_id != (
+            #        self.ddt_id.carriage_condition_id):
+            #    raise Warning(
+            #        _("Selected Pickings have"
+            #          " different carriage condition"))
+            #elif picking.sale_id.goods_description_id != (
+            #        self.ddt_id.goods_description_id):
+            #    raise Warning(
+            #        _("Selected Pickings have "
+            #          "different goods description"))
+            #elif picking.sale_id.transportation_reason_id != (
+            #        self.ddt_id.transportation_reason_id):
+            #    raise Warning(
+            #        _("Selected Pickings have"
+            #          " different transportation reason"))
+            #elif picking.sale_id.transportation_method_id != (
+            #        self.ddt_id.transportation_method_id):
+            #    raise Warning(
+            #        _("Selected Pickings have"
+            #          " different transportation reason"))
             picking.ddt_id = self.ddt_id
         ir_model_data = self.env['ir.model.data']
         form_res = ir_model_data.get_object_reference(
