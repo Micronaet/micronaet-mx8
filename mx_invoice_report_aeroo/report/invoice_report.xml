@@ -15,6 +15,18 @@
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
+
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="['account.invoice']" name="models"/>
+            <field name="name">action_custom_mx_invoice</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_invoice_report_id)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>
+        </ir_set>
+        
+        <!--PDF-->
         <record id="aeroo_mx_invoice_report_PDF_id" model="ir.actions.report.xml">
             <field name="name">Mx invoice PDF report</field>
             <field name="type">ir.actions.report.xml</field>
@@ -28,13 +40,12 @@
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
-
         <ir_set>
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['account.invoice']" name="models"/>
-            <field name="name">action_custom_mx_invoice</field>
-            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_invoice_report_id)" name="value"/>
+            <field name="name">action_custom_mx_pdf_invoice</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_invoice_report_PDF_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
@@ -52,6 +63,16 @@
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="['sale.order']" name="models"/>
+            <field name="name">action_custom_mx_proforma_invoice</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_proforma_invoice_report_id)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>        
+        </ir_set>
+
         <record id="aeroo_mx_proforma_invoice_report_PDF_id" model="ir.actions.report.xml">
             <field name="name">Mx proforma invoice PDF report</field>
             <field name="type">ir.actions.report.xml</field>
@@ -64,16 +85,16 @@
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
-
         <ir_set>
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['sale.order']" name="models"/>
-            <field name="name">action_custom_mx_proforma_invoice</field>
-            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_proforma_invoice_report_id)" name="value"/>
+            <field name="name">action_custom_mx_proforma_pdf_invoice</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_proforma_invoice_report_PDF_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>        
         </ir_set>
+
     </data>
 </openerp>
 
