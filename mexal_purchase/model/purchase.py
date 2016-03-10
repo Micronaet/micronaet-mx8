@@ -48,6 +48,22 @@ class StockPicking(orm.Model):
     '''
     _inherit = 'stock.picking'
     
+    def force_date_expected_from_header(self, cr, uid, ids, context=None):
+        ''' Force defauil date from header
+        '''
+        assert len(ids), 'Parsed one by one!'
+        
+        order_proxy = self.browse(cr, uid, ids, context=context)[0]
+        min_date = order_proxy.min_date or datetime.now().sfrtfime(
+            DEFAULT_SERVER_DATETIME_FORMAT)
+        sol_pool = self.pool.get('sale.order.line')    
+        sol_ids = sol_pool.search(cr, uid, [
+            ('order_id', '=', ids[0])], context=context)
+        sol_pool.write(cr, uid, sol_ids, {
+            'date_expected': min_date,
+            }, context=context)    
+        return True
+
     _columns = {
         'bf_number': fields.char('BF number', size=64), 
         'ff_number': fields.char('FF number', size=64), 

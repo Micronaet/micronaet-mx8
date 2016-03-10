@@ -30,6 +30,9 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
+                <field name="min_date" position="after">
+                    <button name="force_date_expected_from_header" string="Force" type="object" colspan="2"/>
+                </field>
                  <field name="priority" position="after">
                      <group colspan="4" col="2">
                          <separator string="Document IN info:" colspan="2"/>
