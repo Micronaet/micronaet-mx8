@@ -15,6 +15,19 @@
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
+        <record id="aeroo_mx_invoice_report_PDF_id" model="ir.actions.report.xml">
+            <field name="name">Mx invoice PDF report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">account.invoice</field>
+            <field name="report_name">custom_mx_invoice_pdf_report</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-odt</field>
+            <!--<field name="out_format" eval="ref('report_aeroo_ooo.report_mimetypes_pdf_odt')" />-->
+            <field name="parser_loc">mx_invoice_report_aeroo/report/invoice_parser.py</field>
+            <field name="report_rml">mx_invoice_report_aeroo/report/invoice.odt</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+        </record>
 
         <ir_set>
             <field eval="'action'" name="key"/>
@@ -32,6 +45,18 @@
             <field name="type">ir.actions.report.xml</field>
             <field name="model">sale.order</field>
             <field name="report_name">custom_mx_profora_invoice_report</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-odt</field>
+            <field name="parser_loc">mx_invoice_report_aeroo/report/invoice_parser.py</field>
+            <field name="report_rml">mx_invoice_report_aeroo/report/proforma_invoice.odt</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+        </record>
+        <record id="aeroo_mx_proforma_invoice_report_PDF_id" model="ir.actions.report.xml">
+            <field name="name">Mx proforma invoice PDF report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">sale.order</field>
+            <field name="report_name">custom_mx_profora_invoice_pdf_report</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-odt</field>
             <field name="parser_loc">mx_invoice_report_aeroo/report/invoice_parser.py</field>
