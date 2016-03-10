@@ -45,9 +45,9 @@ class AddPickingToDdt(models.TransientModel):
             elif picking.partner_id != self.ddt_id.partner_id:
                 raise Warning(
                     _("Selected Pickings have different Partner"))
-            elif picking.sale_id.parcels != self.ddt_id.parcels:
-                raise Warning(
-                    _("Selected Pickings have different parcels"))
+            #elif picking.sale_id.parcels != self.ddt_id.parcels:
+            #    raise Warning(
+            #        _("Selected Pickings have different parcels"))
             elif picking.sale_id.carriage_condition_id != (
                     self.ddt_id.carriage_condition_id):
                 raise Warning(
