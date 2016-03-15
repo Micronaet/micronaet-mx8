@@ -32,8 +32,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-
-
 class Parser(report_sxw.rml_parse):
     counters = {}
     last_record = 0
@@ -47,6 +45,7 @@ class Parser(report_sxw.rml_parse):
             'reset_counter': self.reset_counter,
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
+            'get_last_record_id': self.get_last_record_id,
 
             'get_object_line': self.get_object_line,
             'get_datetime': self.get_datetime,
@@ -66,6 +65,9 @@ class Parser(report_sxw.rml_parse):
         # TODO remove        
         self.total_parcel = 0.0
 
+    def get_last_record_id(self):
+        return self.last_record_id
+
     # -------------------------------------------------------------------------
     #                              COUNTER MANAGE
     # -------------------------------------------------------------------------
@@ -79,6 +81,8 @@ class Parser(report_sxw.rml_parse):
             'length': 0.0,
             'weight': 0.0,
             }
+        _logger.info('Counter: %s' % self.counters)            
+        return ''    
             
     def get_counter(self, name):
         ''' Get counter with name passed (else create an empty)
@@ -198,13 +202,22 @@ class Parser(report_sxw.rml_parse):
             ('print', '=', True),])
 
         active_ids.extend(print_ids)    
-        return list(set(active_ids))
+        res = list(set(active_ids))
+        
+        # Order per deadline:
+        return sale_pool.search(self.cr, self.uid, [
+            ('id', 'in', res)], order='date_deadline')
 
     def get_order_selected(self, objects):
         sale_pool = self.pool.get('sale.order')
         
-        return sale_pool.browse(
+        res = sale_pool.browse(
             self.cr, self.uid, self._get_fully_list(objects))
+        try:
+            self.last_record_id = res[-1].id
+        except:
+            self.last_record_id = 0
+        return res    
 
     def get_object_line(self, objects):
         ''' Selected object + print object
