@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data> <!--noupdate="1"-->
         <!--TODO Delivery internal document-->
-        <record id="aeroo_mx_load_list_report_id" model="ir.actions.report.xml">
-            <field name="name">Delivery internal document</field>
+        <record id="aeroo_mx1_todo_list_report_id" model="ir.actions.report.xml">
+            <field name="name">Ordine di carico</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">sale.order</field>
-            <field name="report_name">custom_mx_load_list_report</field>
+            <field name="report_name">custom_mx1_todo_list_report</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-odt</field>
-            <field name="parser_loc">delivery_todo_report/report/delivery_parser.py</field>
-            <field name="report_rml">delivery_todo_report/report/load_list.odt</field>
+            <field name="parser_loc">delivery_todo_report/report/delivery_parser_todo.py</field>
+            <field name="report_rml">delivery_todo_report/report/todo_list.odt</field>
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
@@ -18,22 +18,22 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['sale.order']" name="models"/>
-            <field name="name">action_custom_mx_load_list</field>
-            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_load_list_report_id)" name="value"/>
+            <field name="name">action_custom_mx1_todo_list</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx1_todo_list_report_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
 
         <!--TODO Delivery internal summary-->
-        <record id="aeroo_mx_load_summary_internal_report_id" model="ir.actions.report.xml">
-            <field name="name">Delivery internal summary</field>
+        <record id="aeroo_mx1_todo_summary_internal_report_id" model="ir.actions.report.xml">
+            <field name="name">Riepilogo ordine di carico</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">sale.order</field>
-            <field name="report_name">custom_mx_load_internal_summary_report</field>
+            <field name="report_name">custom_mx1_todo_internal_summary_report</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-ods</field>
-            <field name="parser_loc">delivery_todo_report/report/delivery_parser.py</field>
-            <field name="report_rml">delivery_todo_report/report/load_summary.odt</field>
+            <field name="parser_loc">delivery_todo_report/report/delivery_parser_todo.py</field>
+            <field name="report_rml">delivery_todo_report/report/todo_summary.odt</field>
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
@@ -41,22 +41,22 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['sale.order']" name="models"/>
-            <field name="name">action_custom_mx_load_internal_summary</field>
-            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_load_summary_internal_report_id)" name="value"/>
+            <field name="name">action_custom_mx1_todo_internal_summary</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx1_todo_summary_internal_report_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
 
         <!--TODO Delivery supplier XLS-->
-        <record id="aeroo_mx_load_summary_report_id" model="ir.actions.report.xml">
+        <record id="aeroo_mx1_todo_summary_report_id" model="ir.actions.report.xml">
             <field name="name">Delivery supplier XLS</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">sale.order</field>
-            <field name="report_name">custom_mx_load_summary_report</field>
+            <field name="report_name">custom_mx1_todo_summary_report</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-ods</field>
-            <field name="parser_loc">delivery_todo_report/report/delivery_parser.py</field>
-            <field name="report_rml">delivery_todo_report/report/load_summary.ods</field>
+            <field name="parser_loc">delivery_todo_report/report/delivery_parser_todo.py</field>
+            <field name="report_rml">delivery_todo_report/report/todo_summary.ods</field>
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
@@ -64,21 +64,21 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['sale.order']" name="models"/>
-            <field name="name">action_custom_mx_load_summary</field>
-            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_load_summary_report_id)" name="value"/>
+            <field name="name">action_custom_mx1_todo_summary</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx1_todo_summary_report_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
 
         <!--TODO Purchase-->
-        <record id="aeroo_mx_purchase_report_id" model="ir.actions.report.xml">
+        <record id="aeroo_mx1_purchase_report_id" model="ir.actions.report.xml">
             <field name="name">Purchase internal unload</field>
             <field name="type">ir.actions.report.xml</field>
             <field name="model">purchase.order</field>
-            <field name="report_name">custom_mx_purchase_report</field>
+            <field name="report_name">custom_mx1_purchase_report</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-odt</field>
-            <field name="parser_loc">delivery_todo_report/report/delivery_parser.py</field>
+            <field name="parser_loc">delivery_todo_report/report/delivery_parser_todo.py</field>
             <field name="report_rml">delivery_todo_report/report/purchase.odt</field>
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
@@ -87,8 +87,8 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['purchase.order']" name="models"/>
-            <field name="name">action_custom_mx_purchase</field>
-            <field eval="'ir.actions.report.xml,'+str(aeroo_mx_purchase_report_id)" name="value"/>
+            <field name="name">action_custom_mx1_purchase</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_mx1_purchase_report_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
