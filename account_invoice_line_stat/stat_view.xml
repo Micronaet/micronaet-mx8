@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_invoice_line_search">
+             <field name="name">account.invoice.line.search</field>
+             <field name="model">account.invoice.line</field>
+            <field name="arch" type="xml">
+                <search string="Invoice line" version="7.0">        
+                        <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
+                        <field name="invoice_id" filter_domain="[('order_id.name','ilike',self)]"/>
+                        <field name="account_id" filter_domain="[('account_id.name','ilike',self)]"/>
+                        <field name="fiscal_position" filter_domain="[('fiscal_position','=',self)]"/>
+                        <field name="product_id" filter_domain="['|',('product_id.name','ilike',self),('product_id.default_code','ilike',self)]"/>
+                        <field name="date_invoice" string="Date from &gt;=" filter_domain="[('date_deadline','&gt;=',self)]"/> 
+                        <field name="date_invoice" string="Date to &lt;=" filter_domain="[('date_deadline','&lt;=',self)]"/>
+                        <group expand="0" string="Group By">
+                            <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                            <filter name="group_invoice" string="Invoice" context="{'group_by': 'invoice_id'}"/>
+                            <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
+                            <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>
+                            <filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'fiscal_position'}"/>
+                            <filter name="group_date" string="Date" context="{'group_by': 'date_invoice'}"/>
+                        </group>                          
+                </search>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="view_account_invoice_line_tree">
+             <field name="name">account.invoice.line.tree</field>
+             <field name="model">account.invoice.line</field>
+             <field name="arch" type="xml">
+                 <tree string="Invoice line stat" editable="bottom">        
+                     <field name="type" invisible="1"/>
+                     <field name="date_invoice" readonly="1"/>                  
+                     <field name="invoice_id" readonly="1"/>
+                     <field name="partner_id" readonly="1"/>
+                     <field name="fiscal_position" readonly="1"/>
+                     <field name="account_id" readonly="1"/>
+                     <field name="product_id" readonly="1"/>
+                     <field name="name" readonly="1"/>                  
+                     <field name="quantity" readonly="1"/>
+                     <field name="price_unit" readonly="1"/>
+                     <field name="discount" readonly="1" />
+                     <field name="multi_discount_rates" readonly="1" />
+                     <field name="price_subtotal" readonly="1" />                     
+                 </tree>
+             </field>
+         </record>
+         <record model="ir.actions.act_window" id="action_account_invoice_line">
+             <field name="name">Invoice line analysis</field>
+             <field name="res_model">account.invoice.line</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form,graph</field>
+             <field name="view_id" ref="view_account_invoice_line_tree"/>
+             <field name="search_view_id" ref="view_account_invoice_line_search"/>             
+             <field name="context">{}</field>
+             <field name="domain">[('type','=','out_invoice')]</field>
+         </record>
+         <record model="ir.ui.view" id="view_account_invoice_graph">
+             <field name="name">account.invoice.line.graph</field>
+             <field name="model">account.invoice.line</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Invoice line" type="pie">
+                     <field name="account_id"/>
+                     <field name="price_subtotal" operator="+"/>
+                 </graph>
+             </field>
+         </record>
+         <menuitem 
+             parent="account.menu_action_invoice_tree1" 
+             id="menu_invoice_line_stat" 
+             action="action_account_invoice_line"/>
+
+    </data>
+</openerp>
+
