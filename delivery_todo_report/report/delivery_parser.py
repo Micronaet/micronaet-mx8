@@ -52,7 +52,7 @@ class Parser(report_sxw.rml_parse):
             'get_datetime_now': self.get_datetime_now,
             'get_partic': self.get_partic,
             'get_parcels': self.get_parcels,
-            'get_parcels_table': self.get_parcels_table,
+            'get_parcels_table_load': self.get_parcels_table_load,
 
             'set_total_parcel': self.set_total_parcel,
             'get_total_parcel': self.get_total_parcel,
@@ -120,7 +120,7 @@ class Parser(report_sxw.rml_parse):
                 res = 'SC. %s x %s =' % (int(parcel), int(q_x_pack))
         return res
 
-    def get_parcels_table(self, l): #product, qty):
+    def get_parcels_table_load(self, l): #product, qty):
         ''' Get text for parcels totals:
             product: proxy obj for product
             qty: total to parcels

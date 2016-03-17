@@ -88,6 +88,7 @@ class AccountInvoiceLine(orm.Model):
                 ('out_refund','Customer Refund'),
                 ('in_refund','Supplier Refund'),
                 ], store=True),
+                
         'date': fields.related(
             'invoice_id', 'date_invoice', 'Date', type='date',
             readonly=True, store=True),
