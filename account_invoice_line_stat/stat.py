@@ -40,8 +40,7 @@ _logger = logging.getLogger(__name__)
 
 class AccountInvoiceLine(orm.Model):
     """ Model name: Account invoice line
-    """
-    
+    """    
     _inherit = 'account.invoice.line'
     
     """def _get_date_order_from_order(self, cr, uid, ids, context=None):
@@ -89,14 +88,14 @@ class AccountInvoiceLine(orm.Model):
                 ('out_refund','Customer Refund'),
                 ('in_refund','Supplier Refund'),
                 ], store=True),
-                
-        'date_invoice': fields.related('invoice_id', 'date_invoice', 'Date',
-            type='date', store=True),  # TODO change store
+        'date': fields.related(
+            'invoice_id', 'date_invoice', 'Date', type='date',
+            readonly=True, store=True),
             
-        'fiscal_position': fields.related(
-            'partner_id', 'property_account_position', 
+        'property_fiscal_position': fields.related(
+            'partner_id', 'property_account_position', 'Fiscal position',
             type='many2one', relation='account.fiscal.position', 
-            string='Fiscal position', store=True), 
+            store=True), 
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

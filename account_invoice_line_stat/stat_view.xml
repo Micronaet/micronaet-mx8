@@ -9,17 +9,17 @@
                         <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
                         <field name="invoice_id" filter_domain="[('order_id.name','ilike',self)]"/>
                         <field name="account_id" filter_domain="[('account_id.name','ilike',self)]"/>
-                        <field name="fiscal_position" filter_domain="[('fiscal_position','=',self)]"/>
+                        <field name="property_fiscal_position" filter_domain="[('property_fiscal_position','=',self)]"/>
                         <field name="product_id" filter_domain="['|',('product_id.name','ilike',self),('product_id.default_code','ilike',self)]"/>
-                        <field name="date_invoice" string="Date from &gt;=" filter_domain="[('date_deadline','&gt;=',self)]"/> 
-                        <field name="date_invoice" string="Date to &lt;=" filter_domain="[('date_deadline','&lt;=',self)]"/>
+                        <field name="date" string="Date from &gt;=" filter_domain="[('date','&gt;=',self)]"/> 
+                        <field name="date" string="Date to &lt;=" filter_domain="[('date','&lt;=',self)]"/>
                         <group expand="0" string="Group By">
                             <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
                             <filter name="group_invoice" string="Invoice" context="{'group_by': 'invoice_id'}"/>
                             <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                             <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>
-                            <filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'fiscal_position'}"/>
-                            <filter name="group_date" string="Date" context="{'group_by': 'date_invoice'}"/>
+                            <filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'property_fiscal_position'}"/>
+                            <filter name="group_date" string="Date" context="{'group_by': 'date'}"/>
                         </group>                          
                 </search>
             </field>
@@ -30,10 +30,10 @@
              <field name="arch" type="xml">
                  <tree string="Invoice line stat" editable="bottom">        
                      <field name="type" invisible="1"/>
-                     <field name="date_invoice" readonly="1"/>                  
+                     <field name="date" readonly="1"/>                  
                      <field name="invoice_id" readonly="1"/>
                      <field name="partner_id" readonly="1"/>
-                     <field name="fiscal_position" readonly="1"/>
+                     <field name="property_fiscal_position" readonly="1"/>
                      <field name="account_id" readonly="1"/>
                      <field name="product_id" readonly="1"/>
                      <field name="name" readonly="1"/>                  

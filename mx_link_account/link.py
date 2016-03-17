@@ -43,6 +43,32 @@ class AccountAccount(orm.Model):
     """
     _inherit = 'account.account'
     
+    def name_get(self, cr, uid, ids, context=None):
+        """ Return a list of tupples contains id, name.
+            result format : {[(id, name), (id, name), ...]}
+            
+            @param cr: cursor to database
+            @param uid: id of current user
+            @param ids: list of ids for which name should be read
+            @param context: context arguments, like lang, time zone
+            
+            @return: returns a list of tupples contains id, name
+        """
+        
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]            
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            res.append((record.id, '%s%s' % (
+                record.name,
+                (' [%s]' % record.account_ref) if \
+                    record.account_ref else ''
+                )))
+        return res
+        
+    
     _columns = {
         'account_ref': fields.char('Account ref', size=10),
         }
