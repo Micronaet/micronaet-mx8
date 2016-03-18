@@ -9,17 +9,24 @@
                     <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
                     <field name="invoice_id" filter_domain="[('order_id.name','ilike',self)]"/>
                     <field name="account_id" filter_domain="[('account_id.name','ilike',self)]"/>
-                    <field name="property_fiscal_position" filter_domain="[('property_fiscal_position','=',self)]"/>
+                    <field name="zone_id" filter_domain="[('zone_id.name','ilike',self)]"/>
+                    <field name="country_id" filter_domain="[('country_id.name','ilike',self)]"/>
+
+                    <!--<field name="property_account_position" filter_domain="[('property_account_position','=',self)]"/>-->
+                    <field name="date_invoice" string="Date from &gt;=" filter_domain="[('date_invoice','&gt;=',self)]"/> 
+                    <field name="date_invoice" string="Date to &lt;=" filter_domain="[('date_invoice','&lt;=',self)]"/>
+
                     <field name="product_id" filter_domain="['|',('product_id.name','ilike',self),('product_id.default_code','ilike',self)]"/>
-                    <field name="date" string="Date from &gt;=" filter_domain="[('date','&gt;=',self)]"/> 
-                    <field name="date" string="Date to &lt;=" filter_domain="[('date','&lt;=',self)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
                         <filter name="group_invoice" string="Invoice" context="{'group_by': 'invoice_id'}"/>
                         <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                         <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>
-                        <filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'property_fiscal_position'}"/>
-                        <filter name="group_date" string="Date" context="{'group_by': 'date'}"/>
+
+                        <!--<filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'property_account_position'}"/>-->
+                        <filter name="group_zone" string="Zone" context="{'group_by': 'zone_id'}"/>
+                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                        <filter name="group_date" string="Date" context="{'group_by': 'date_invoice'}"/>
                     </group>                          
                 </search>
             </field>
@@ -28,12 +35,16 @@
              <field name="name">account.invoice.line.tree</field>
              <field name="model">account.invoice.line</field>
              <field name="arch" type="xml">
-                 <tree string="Invoice line stat" editable="bottom">        
-                     <field name="type" invisible="1"/>
-                     <field name="date" readonly="1"/>                  
-                     <field name="invoice_id" readonly="1"/>
+                 <tree string="Invoice line stat" editable="bottom">
+                     <field name="type" invisible="1"/>        
+                     <field name="invoice_id" readonly="1" string="Ref."/>
                      <field name="partner_id" readonly="1"/>
-                     <field name="property_fiscal_position" readonly="1"/>
+
+                     <field name="date_invoice" readonly="1"/>                  
+                     <!--field name="property_fiscal_position" readonly="1"/-->
+
+                     <field name="zone_id" readonly="1"/>
+                     <field name="country_id" readonly="1"/>
                      <field name="account_id" readonly="1"/>
                      <field name="product_id" readonly="1"/>
                      <field name="name" readonly="1"/>                  

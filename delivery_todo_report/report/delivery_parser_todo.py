@@ -73,7 +73,7 @@ class Parser(report_sxw.rml_parse):
     # -------------------------------------------------------------------------
     
     def reset_counter(self):
-        _logger.info('Counter reset for company 2 load report')
+        _logger.info('Counter reset for company 1 load report')
         # reset counters:
         self.counters = {
             'total_parcel': 0.0,
@@ -131,7 +131,7 @@ class Parser(report_sxw.rml_parse):
             'B': l.delivery_b,
             }
                 
-        _logger.info('Element for company 2 load report %s: %s' % (
+        _logger.info('Element for company 1 load report %s: %s' % (
             elements,
             l.product_id.default_code,
             ))        

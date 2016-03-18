@@ -35,7 +35,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
     DATETIME_FORMATS_MAP, 
     float_compare)
 
-
 _logger = logging.getLogger(__name__)
 
 class AccountInvoiceLine(orm.Model):
@@ -80,23 +79,30 @@ class AccountInvoiceLine(orm.Model):
             )
     """
     _columns = {
+        'date_invoice': fields.related(
+            'invoice_id', 'date_invoice', 
+            type='date', string='Date', store=True),             
+        
         'type': fields.related(
-            'invoice_id', 'type', 'Type', type='selection',
-            readonly=True, selection=[
+            'invoice_id', 'type', 
+            type='selection', selection=[
                 ('out_invoice','Customer Invoice'),
                 ('in_invoice','Supplier Invoice'),
                 ('out_refund','Customer Refund'),
                 ('in_refund','Supplier Refund'),
-                ], store=True),
-                
-        'date': fields.related(
-            'invoice_id', 'date_invoice', 'Date', type='date',
-            readonly=True, store=True),
-            
-        'property_fiscal_position': fields.related(
-            'partner_id', 'property_account_position', 'Fiscal position',
-            type='many2one', relation='account.fiscal.position', 
-            store=True), 
+                ], string='Type', store=True),
+        'zone_id': fields.related(
+            'partner_id', 'zone_id', 
+            type='many2one', relation='res.partner.zone', 
+            string='Zone', store=True),
+        'country_id': fields.related(
+            'partner_id', 'country_id', 
+            type='many2one', relation='res.country', 
+            string='Country', store=True),
+        #'property_account_position': fields.related(
+        #    'partner_id', 'property_account_position', 
+        #    type='many2one', relation='account.fiscal.position', 
+        #    string='Fiscal position', store=True),
         }
-    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
