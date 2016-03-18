@@ -134,7 +134,8 @@ class Parser(report_sxw.rml_parse):
         _logger.info('Element for company 1 load report %s: %s' % (
             elements,
             l.product_id.default_code,
-            ))        
+            ))  
+        parcel_text = ''          
         for key, v in elements.iteritems():
             product = l.product_id
             if v:
