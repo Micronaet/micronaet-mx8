@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1"/>
+    <data noupdate="1">
         <!--TODO Delivery internal document-->
         <record id="aeroo_mx1_todo_list_report_id" model="ir.actions.report.xml">
             <field name="name">Ordine di carico</field>
