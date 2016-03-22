@@ -81,6 +81,7 @@ class StockDdt(orm.Model):
                 pack.dimension_h,
                 pack.dimension_s,
                 )
+        volume /= 1000000.0
         
         # Create print text:
         print_volume = ddt_proxy.print_volume
@@ -89,9 +90,10 @@ class StockDdt(orm.Model):
             print_volume_text += _('Number of pallet: %s\n') % total
         if print_volume in ('pallet', 'all'):           
             print_volume_text += pallet_text
+            print_volume_text += _('Volume %5.2f CBM') % volume            
             
         return self.write(cr, uid, ids, {
-            'volume_total': volume / 1000000.0,
+            'volume_total': volume,
             'pallet_total': total,
             'print_volume_text': print_volume_text,
             }, context=context)

@@ -41,16 +41,16 @@
                         <group colspan="4" col="4">                                
                             <separator string="Pallet:" colspan="4" />
                             <field name="volume_ids" colspan="4"/>
-
                             <group colspan="2" col="4">
-                                <field name="volume_total" /> 
-                                <field name="pallet_total" /> 
+                                <separator string="Total info:" colspan="4"/>
+                                <field name="volume_total" readonly="1" /> 
+                                <field name="pallet_total" readonly="1" /> 
                                 <field name="print_volume" /> 
                                 <button name="compute_volume_total" string="Total volume" type="object" />
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Print text" />
-                                <field name="print_volume_text" nolabel="1"/>
+                                <separator string="DDT text:" colspan="4"/>
+                                <field name="print_volume_text" nolabel="1" colspan="4"/>
                             </group>
                         </group>
                     </page>
