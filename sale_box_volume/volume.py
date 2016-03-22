@@ -47,9 +47,9 @@ class StockDdtVolume(orm.Model):
     
     _columns = {
         'total': fields.integer('Total', required=True), 
-        'dimension_l': fields.float('L (cm.)', digits=(16, 2)),
-        'dimension_h': fields.float('H (cm.)', digits=(16, 2)),
-        'dimension_s': fields.float('S (cm.)', digits=(16, 2)),        
+        'dimension_l': fields.integer('L (cm.)'),#, digits=(16, 2)),
+        'dimension_h': fields.integer('H (cm.)'),
+        'dimension_s': fields.integer('S (cm.)'),
         'ddt_id': fields.many2one('stock.ddt', 'DDT'),
         }
         
