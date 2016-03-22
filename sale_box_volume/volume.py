@@ -68,7 +68,7 @@ class StockDdt(orm.Model):
         '''
         assert len(ids) == 1, 'Once a time!'
         ddt_proxy = self.browse(cr, uid, ids, context=context)[0]
-        total = 0.0
+        total = 0
         volume = 0.0
         
         pallet_text = '' # dimension in print text
