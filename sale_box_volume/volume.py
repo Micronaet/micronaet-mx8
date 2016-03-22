@@ -43,12 +43,12 @@ class StockDdtVolume(orm.Model):
     """    
     _name = 'stock.ddt.volume'
     _description = 'Volume box'
-    _rec_name = 'dimention_l'
+    _rec_name = 'dimension_l'
     
     _columns = {
-        'dimension_l': fields.float('L', digits=(16, 2)),
-        'dimension_h': fields.float('H', digits=(16, 2)),
-        'dimension_s': fields.float('S', digits=(16, 2)),        
+        'dimension_l': fields.float('L (cm.)', digits=(16, 2)),
+        'dimension_h': fields.float('H (cm.)', digits=(16, 2)),
+        'dimension_s': fields.float('S (cm.)', digits=(16, 2)),        
         'ddt_id': fields.many2one('stock.ddt', 'DDT'),
         }
 
@@ -67,11 +67,11 @@ class StockDdt(orm.Model):
             total += pack.dimension_l * pack.dimension_h * pack.dimension_s
             
         return self.write(cr, uid, ids, {
-            'volume_total': total}, context=context)
+            'volume_total': total / 1000000.0}, context=context)
         
     _columns = {
         'volume_ids': fields.one2many(
-            'stock.ddt.volume', 'ddt_id', 'Volume'), 
+            'stock.ddt.volume', 'ddt_id', 'Volume (m3)'), 
         'volume_total': fields.float('Tot. volume', digits=(16, 2)),     
         }
 

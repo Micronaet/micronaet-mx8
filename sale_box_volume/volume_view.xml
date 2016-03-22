@@ -12,7 +12,7 @@
                            <field name="dimension_h" />
                            <field name="dimension_s" />                            
                         </group>
-                    <sheet>        
+                    </sheet>        
                 </form>
             </field>
         </record>
@@ -35,7 +35,7 @@
             <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[2]" position="after">
-                    <page sting="Volume">                        
+                    <page string="Volume">                        
                         <group colspan="4">
                             <field name="volume_total" /> 
                             <button name="compute_volume_total" string="Total volume" type="object" />
