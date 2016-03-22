@@ -43,36 +43,76 @@ class StockDdtVolume(orm.Model):
     """    
     _name = 'stock.ddt.volume'
     _description = 'Volume box'
-    _rec_name = 'dimension_l'
+    _rec_name = 'total'
     
     _columns = {
+        'total': fields.integer('Total', required=True), 
         'dimension_l': fields.float('L (cm.)', digits=(16, 2)),
         'dimension_h': fields.float('H (cm.)', digits=(16, 2)),
         'dimension_s': fields.float('S (cm.)', digits=(16, 2)),        
         'ddt_id': fields.many2one('stock.ddt', 'DDT'),
         }
+        
+    _defaults = {
+        'total': lambda *x: 1,
+        }    
 
 class StockDdt(orm.Model):
     """ Model name: StockDdt
     """    
     _inherit = 'stock.ddt'
     
+    # Button events:        
     def compute_volume_total(self, cr, uid, ids, context=None):
         ''' Compute volume total
         '''
         assert len(ids) == 1, 'Once a time!'
         ddt_proxy = self.browse(cr, uid, ids, context=context)[0]
         total = 0.0
+        volume = 0.0
+        
+        pallet_text = '' # dimension in print text
         for pack in ddt_proxy.volume_ids:
-            total += pack.dimension_l * pack.dimension_h * pack.dimension_s
+            total += pack.total
+            volume += pack.dimension_l * pack.dimension_h * pack.dimension_s
+            pallet_text += 'N.: %s pallet %s x %s x %s\n' % (
+                pack.total,
+                pack.dimension_l,
+                pack.dimension_h,
+                pack.dimension_s,
+                )
+        
+        # Create print text:
+        print_volume = ddt_proxy.print_volume
+        print_volume_text = ''
+        if print_volume in ('number', 'all'):
+            print_volume_text += _('Number of pallet: %s\n') % total
+        if print_volume in ('pallet', 'all'):           
+            print_volume_text += pallet_text
             
         return self.write(cr, uid, ids, {
-            'volume_total': total / 1000000.0}, context=context)
+            'volume_total': volume / 1000000.0,
+            'pallet_total': total,
+            'print_volume_text': print_volume_text,
+            }, context=context)
         
     _columns = {
         'volume_ids': fields.one2many(
             'stock.ddt.volume', 'ddt_id', 'Volume (m3)'), 
         'volume_total': fields.float('Tot. volume', digits=(16, 2)),     
+        'pallet_total': fields.integer('Tot. pallet'),
+        'only_pallet': fields.boolean('Only pallet'),
+        'print_volume': fields.selection([
+            ('none', 'Nothing'),
+            ('number', 'Number of pallet'),
+            ('pallet', 'Pallet info'),
+            ('all', 'All (number and pallet info)'),
+            ], 'Print info', help='Print report info on DDT'),
+        'print_volume_text': fields.text('Print volume text'),    
+        }
+
+    _default = {
+        'print_volume': lambda *x: 'all',
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

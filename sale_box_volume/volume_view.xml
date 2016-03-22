@@ -8,6 +8,7 @@
                 <form string="String" version="7.0">        
                     <sheet>
                         <group col="6" colspan="4">
+                           <field name="total" />
                            <field name="dimension_l" />
                            <field name="dimension_h" />
                            <field name="dimension_s" />                            
@@ -22,6 +23,7 @@
             <field name="model">stock.ddt.volume</field>
             <field name="arch" type="xml">
                 <tree string="String" editable="bottom">        
+                    <field name="total" />
                     <field name="dimension_l" />
                     <field name="dimension_h" />
                     <field name="dimension_s" />                      
@@ -36,11 +38,20 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[2]" position="after">
                     <page string="Volume">                        
-                        <group colspan="4">
-                            <field name="volume_total" /> 
-                            <button name="compute_volume_total" string="Total volume" type="object" />
+                        <group colspan="4" col="4">                                
                             <separator string="Pallet:" colspan="4" />
                             <field name="volume_ids" colspan="4"/>
+
+                            <group colspan="2" col="4">
+                                <field name="volume_total" /> 
+                                <field name="pallet_total" /> 
+                                <field name="print_volume" /> 
+                                <button name="compute_volume_total" string="Total volume" type="object" />
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Print text" />
+                                <field name="print_volume_text" nolabel="1"/>
+                            </group>
                         </group>
                     </page>
                 </xpath>
