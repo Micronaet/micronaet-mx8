@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_stock_ddt_volume_form">
+            <field name="name">stock.ddt.volume.form</field>
+            <field name="model">stock.ddt.volume</field>
+            <field name="arch" type="xml">
+                <form string="String" version="7.0">        
+                    <sheet>
+                        <group col="6" colspan="4">
+                           <field name="dimension_l" />
+                           <field name="dimension_h" />
+                           <field name="dimension_s" />                            
+                        </group>
+                    <sheet>        
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_stock_ddt_volume_tree">
+            <field name="name">stock.ddt.volume.form</field>
+            <field name="model">stock.ddt.volume</field>
+            <field name="arch" type="xml">
+                <tree string="String" editable="bottom">        
+                    <field name="dimension_l" />
+                    <field name="dimension_h" />
+                    <field name="dimension_s" />                      
+                </tree>
+            </field>
+        </record>
+    
+        <record model="ir.ui.view" id="view_stock_ddt_volume_box_form">
+            <field name="name">stock.ddt.volume.form</field>
+            <field name="model">stock.ddt</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[2]" position="after">
+                    <page sting="Volume">                        
+                        <group colspan="4">
+                            <field name="volume_total" /> 
+                            <button name="compute_volume_total" string="Total volume" type="object" />
+                            <separator string="Pallet:" colspan="4" />
+                            <field name="volume_ids" colspan="4"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+

@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_stock_ddt_volume_user,stock.ddt.volume,model_stock_ddt_volume,base.group_user,1,1,1,1
+
+
