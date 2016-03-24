@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_sale_order_debug_form">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">        
+            <xpath expr="//notebook" position="before">
+                <button name="log_sort_id" string="Log" type="object"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</openerp>
+

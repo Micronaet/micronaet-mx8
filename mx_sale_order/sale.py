@@ -39,10 +39,35 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
+class SaleOrder(orm.Model):
+    """ Model name: Sale order
+    """
+    _inherit = 'sale.order'
+    
+    def log_sort_id(self, cr, uid, ids, context=None):
+        '''
+        '''
+        order_proxy = self.browse(cr, uid, ids, context=context)[0]
+        _logger.info('>>> Order: %s' % self.pool.get('sale.order.line')._order)
+        for line in order_proxy.order_line:
+            try:
+                mrp = line.mrp_sequence
+            except:
+                mrp = ''
+            _logger.warning('mrp: %s id: %s sequence: %s code: %s qty: %s'  % (
+                mrp,
+                line.id,
+                line.sequence, 
+                line.product_id.default_code,
+                line.product_uom_qty,
+                ))
+        return True
+
 class SaleOrderLine(orm.Model):
     """ Model name: Sale order lne
     """
-    
     _inherit = 'sale.order.line'
-    _order = 'order_id, id'
+    _order = 'order_id desc, id'
+
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

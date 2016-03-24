@@ -174,9 +174,16 @@ class SaleOrder(orm.Model):
         move_pool = self.pool.get('stock.move')
         picking_pool = self.pool.get('stock.picking')
 
+        # Set order for create document:
+        sol_ids = order_line_ids.keys()
+        #_logger.warning('Current order before: %s' % (sol_ids))
+        #sol_ids.sort
+        #_logger.warning('Current order after:  %s' % (sol_ids))
+        #line_pool.search(cr, uid, [], order='id', context=context)
+        #_logger.warning('Current order after:  %s' % (sol_ids))
+        
         # Browse obj used:
-        order_line = line_pool.browse(cr, uid, order_line_ids.keys(), 
-            context=context)
+        order_line = line_pool.browse(cr, uid, sol_ids, context=context)
         
         # ---------------------------------------------------------------------
         # Picking creation:

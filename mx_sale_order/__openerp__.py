@@ -34,7 +34,9 @@
         ],
     'init_xml': [],
     'demo': [],
-    'data': [],
+    'data': [
+        'order_view.xml',
+        ],
     'active': False,
     'installable': True,
     'auto_install': False,

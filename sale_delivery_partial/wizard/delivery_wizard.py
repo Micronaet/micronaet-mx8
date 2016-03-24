@@ -111,13 +111,28 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
             if line.all_qty: # checked delivery remain:
                 pick_line_ids[
                     line.order_line_id.id] = line.product_remain_qty            
+                # TODO REMOVE LOG    
+                #_logger.warning('prod: %s seq.: %s id: %s q.: %s' % (
+                #    line.order_line_id.product_id.default_code,                    
+                #    line.order_line_id.sequence,
+                #    line.order_line_id.id,
+                #    pick_line_ids[line.order_line_id.id],
+                #    ))
             else:    
                 pick_line_ids[
                     line.order_line_id.id] = line.delivery_uom_qty
+                # TODO REMOVE LOG    
+                #_logger.warning('prod: %s seq.: %s id: %s q.: %s' % (
+                #    line.order_line_id.product_id.default_code,                    
+                #    line.order_line_id.sequence,
+                #    line.order_line_id.id,
+                #    pick_line_ids[line.order_line_id.id],
+                #    ))
         
         # Create pick out with new procedure (not standard):
         context['force_date_deadline'] = wiz_browse.date_deadline or False
         
+        _logger.warning('Create pick with this order: %s' % (pick_line_ids))
         picking_id = sale_pool._create_pickings_from_wizard(
             cr, uid, wiz_browse.order_id, pick_line_ids, 
             context=context)
