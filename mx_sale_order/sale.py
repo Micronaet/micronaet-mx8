@@ -45,11 +45,15 @@ class SaleOrder(orm.Model):
     _inherit = 'sale.order'
     
     def log_sort_id(self, cr, uid, ids, context=None):
-        '''
+        ''' Log message to test ID order
         '''
         order_proxy = self.browse(cr, uid, ids, context=context)[0]
         _logger.info('>>> Order: %s' % self.pool.get('sale.order.line')._order)
+        first = True
         for line in order_proxy.order_line:
+            if first:
+                first = False
+                _logger.warning('\n\n\n*** Order: %s' % line._order)
             try:
                 mrp = line.mrp_sequence
             except:

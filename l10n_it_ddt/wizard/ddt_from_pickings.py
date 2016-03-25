@@ -51,7 +51,7 @@ class DdTFromPickings(models.TransientModel):
             'default_carrier_id': False,
             'destination_partner_id': False,
             'invoice_partner_id': False,
-            'mx_invoice_id': False,
+            #'mx_invoice_id': False, # TODO raise warning!!! remove?
             }
             
         partner = False        
