@@ -46,4 +46,15 @@ class AccountTax(orm.Model):
     _columns = {
         'account_ref': fields.char('Account Ref.', size=10),
         }
+
+
+class AccountFiscalPosition(orm.Model):
+    """ Model name: AccountTax
+    """
+    _inherit = 'account.fiscal.position'
+    
+    _columns = {
+        'cei_ref': fields.char('CEI Ref.', size=1),
+        'esention_ref': fields.char('Esention ref', size=5),
+        }        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
