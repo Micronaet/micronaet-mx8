@@ -39,6 +39,39 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+"""class StockDdt(orm.Model):
+    ''' Add alternative method for picking creation
+    '''
+    _inherit = 'stock.ddt'
+    
+    # Override function filelds for order:
+    def _get_ddt_lines(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        import pdb; pdb.set_trace()
+        for ddt in self.browse(cr, uid, ids, context=context):
+            res[ddt.id] = []
+            for picking in ddt.picking_ids:
+                res[ddt.id].extend([item.id for item in picking.move_lines])        
+        return res
+        
+    _columns = {
+        # Override:
+        'ddt_lines': fields.function(
+            _get_ddt_lines, method=True, type='one2many', 
+            relation='stock.move', string='Lines', 
+            store=False),                        
+        }
+"""
+
+# TODO check if not break something else!!!
+class StockMove(orm.Model):
+    ''' Add alternative method for picking creation
+    '''
+    _inherit = 'stock.move'
+    _order = 'id'
+
 class SaleOrder(orm.Model):
     ''' Add alternative method for picking creation
     '''
@@ -174,17 +207,6 @@ class SaleOrder(orm.Model):
         move_pool = self.pool.get('stock.move')
         picking_pool = self.pool.get('stock.picking')
 
-        # Set order for create document:
-        sol_ids = order_line_ids.keys()
-        #_logger.warning('Current order before: %s' % (sol_ids))
-        #sol_ids.sort
-        #_logger.warning('Current order after:  %s' % (sol_ids))
-        #line_pool.search(cr, uid, [], order='id', context=context)
-        #_logger.warning('Current order after:  %s' % (sol_ids))
-        
-        # Browse obj used:
-        order_line = line_pool.browse(cr, uid, sol_ids, context=context)
-        
         # ---------------------------------------------------------------------
         # Picking creation:
         # ---------------------------------------------------------------------
@@ -225,7 +247,12 @@ class SaleOrder(orm.Model):
         #                    TODO Split depend on deadline date
         # ---------------------------------------------------------------------
         # TODO update virtual availability after create picking
-        for line in order_line:
+        # Sort per order_id, id:
+        order_line = line_pool.browse(
+            cr, uid, order_line_ids.keys(), context=context)
+        sort_order_line = sorted(order_line, key=lambda sol: (
+            sol.order_id.id, sol.id))
+        for line in sort_order_line:
             #if line.state == 'done':
             #    continue
             if line.product_id:
@@ -255,6 +282,7 @@ class SaleOrder(orm.Model):
                         continue
                     move_id = move_pool.create(
                         cr, uid, move_data, context=context)
+                    _logger.warning('ID: %s > move: %s' % (line.id, move_id))    
                 else:
                     # a service has no stock move
                     move_id = False

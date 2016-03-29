@@ -20,11 +20,16 @@
 #
 ##############################################################################
 
+import logging
 from openerp import fields
+#from openerp.osv import orm
 from openerp import models
 from openerp import api
 from openerp import _
 from openerp.exceptions import Warning
+
+
+_logger = logging.getLogger(__name__)
 
 
 class StockPickingCarriageCondition(models.Model):
@@ -121,11 +126,22 @@ class StockDdT(models.Model):
         default='draft'
     )
 
+    '''def _get_lines(self):
+        move_ids = []
+        for ddt in self:
+            for picking in ddt.picking_ids:
+                move_ids.extend([item.id for item in picking.move_lines])
+                #ddt.ddt_lines |= picking.move_lines
+        #ddt.ddt_lines = sorted(ddt.ddt_lines, key=lambda move: move.id)
+        _logger.error(move_ids)
+        move_pool = self.pool['stock.move']        
+        ddt.ddt_lines = move_pool.browse(self.cr, self.uid, move_ids)'''
+
     def _get_lines(self):
         for ddt in self:
             for picking in ddt.picking_ids:
                 ddt.ddt_lines |= picking.move_lines
-
+        
     @api.multi
     def set_number(self):
         for ddt in self:

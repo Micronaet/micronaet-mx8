@@ -107,6 +107,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         
         # Generate line to pick out:
         pick_line_ids = {}
+        _logger.info(wiz_browse.line_ids)
         for line in wiz_browse.line_ids:
             if line.all_qty: # checked delivery remain:
                 pick_line_ids[

@@ -61,7 +61,7 @@ class SaleOrder(orm.Model):
             _logger.warning('mrp: %s id: %s sequence: %s code: %s qty: %s'  % (
                 mrp,
                 line.id,
-                line.sequence, 
+                line.sequence,
                 line.product_id.default_code,
                 line.product_uom_qty,
                 ))
