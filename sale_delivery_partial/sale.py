@@ -39,32 +39,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-"""class StockDdt(orm.Model):
-    ''' Add alternative method for picking creation
-    '''
-    _inherit = 'stock.ddt'
-    
-    # Override function filelds for order:
-    def _get_ddt_lines(self, cr, uid, ids, fields, args, context=None):
-        ''' Fields function for calculate 
-        '''
-        res = {}
-        import pdb; pdb.set_trace()
-        for ddt in self.browse(cr, uid, ids, context=context):
-            res[ddt.id] = []
-            for picking in ddt.picking_ids:
-                res[ddt.id].extend([item.id for item in picking.move_lines])        
-        return res
-        
-    _columns = {
-        # Override:
-        'ddt_lines': fields.function(
-            _get_ddt_lines, method=True, type='one2many', 
-            relation='stock.move', string='Lines', 
-            store=False),                        
-        }
-"""
-
 # TODO check if not break something else!!!
 class StockMove(orm.Model):
     ''' Add alternative method for picking creation
