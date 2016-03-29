@@ -140,7 +140,7 @@ class StockDdT(models.Model):
     def _get_lines(self):
         for ddt in self:
             for picking in ddt.picking_ids:
-                ddt.ddt_lines |= picking.move_lines
+                ddt.ddt_lines += picking.move_lines
         
     @api.multi
     def set_number(self):
