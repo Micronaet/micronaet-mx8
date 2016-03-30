@@ -59,13 +59,13 @@ class Parser(report_sxw.rml_parse):
     def relink_order(self, o):
         ''' Force for all invoice picking relink to sale order if present
         '''
-        pick_ids = o.invoice_picking_ids
+        pick_ids = [item.id for item in o.invoiced_picking_ids]
         if pick_ids:
-            _logger.info('Relink order')
+            _logger.warning('Relink order')
             self.pool.get('stock.picking').link_sale_id(
                 self.cr, self.uid, pick_ids)
         else:
-            _logger.info('No picking to relink')
+            _logger.warning('No picking to relink')
                 
         return ''
 
