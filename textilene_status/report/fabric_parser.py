@@ -82,9 +82,9 @@ class Parser(report_sxw.rml_parse):
             # january = 4    
             return month + 3    
             
-        # XXX DEBUG:
-        debug_f = '/home/administrator/photo/xls/textilene_status.txt'
-        debug_f_mm = '/home/administrator/photo/xls/textilene_mm.csv'
+        # Debug files:
+        debug_f = '/home/administrator/photo/log/textilene_status.txt'
+        debug_f_mm = '/home/administrator/photo/log/textilene_mm.csv'
         debug_file = open(debug_f, 'w')
         debug_mm = open(debug_f_mm, 'w')
 
@@ -95,7 +95,7 @@ class Parser(report_sxw.rml_parse):
         bom_pool = self.pool.get('mrp.bom')
         
         product_ids = product_pool.search(self.cr, self.uid, [
-            ('default_code', '=ilike', 'T%'),
+            ('default_code', '=ilike', 'T%'), # TODO change when generic report
             ('not_in_report', '=', False),
             ])
 
@@ -118,7 +118,7 @@ class Parser(report_sxw.rml_parse):
                 ]
 
         debug_file.write('\n\nProduct fabric selected:\n%s\n\n'% (
-            products.keys())) # XXX DEBUG
+            products.keys()))
 
         # =====================================================================
         # Get parameters for search:
@@ -147,6 +147,7 @@ class Parser(report_sxw.rml_parse):
             period_from = '%s-09-01' % (year - 1)
             period_to = '%s-08-31' % year
             
+        #XXX removed to see all extra data:    
         #from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
         #to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
 
@@ -167,7 +168,6 @@ class Parser(report_sxw.rml_parse):
                  len(bom.bom_line_ids),
                  )) # XXX DEBUG
 
-        # XXX debug
         debug_mm.write(
             'Block|State|Doc.|Origin|Date|Pos.|Prod.|MP|Calc.|MM|OC|OF|Note\n')
         mask = '%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s\n'    
