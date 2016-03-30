@@ -67,7 +67,7 @@ class StockPicking(orm.Model):
             sale_ids = order_pool.search(cr, uid, [
                 ('name', '=', origin)], context=context)
             if sale_ids and len(sale_ids) == 1:
-                self.write(cr, uid, ids, {
+                self.write(cr, uid, [picking.id], {
                     'sale_id': sale_ids[0],
                     }, context=context)    
         return True
