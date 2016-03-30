@@ -152,12 +152,13 @@ class Parser(report_sxw.rml_parse):
         #to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
 
         debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
-            exclude_partner_ids,)) # XXX DEBUG
+            exclude_partner_ids,))
 
+        # Note: Bom used for OC product test (OC product theorical)
         # Load bom first:
         boms = {} # key default code
         # TODO Change filter_
-        debug_file.write('\n\nBOM list\n') # XXX DEBUG
+        debug_file.write('\n\nBOM list\n')
 
         bom_ids = bom_pool.search(self.cr, self.uid, [
             ('sql_import', '=', True)])
@@ -166,7 +167,7 @@ class Parser(report_sxw.rml_parse):
             debug_file.write('\nProduct: %s [%s]' % (
                  bom.product_id.default_code,
                  len(bom.bom_line_ids),
-                 )) # XXX DEBUG
+                 ))
 
         debug_mm.write(
             'Block|State|Doc.|Origin|Date|Pos.|Prod.|MP|Calc.|MM|OC|OF|Note\n')
@@ -185,7 +186,9 @@ class Parser(report_sxw.rml_parse):
             # type pick filter   
             ('picking_type_id', 'in', out_picking_type_ids),
             # Partner exclusion
-            ('partner_id', 'not in', exclude_partner_ids), # only company
+            ('partner_id', 'not in', exclude_partner_ids),#only current company
+            
+            # TODO check current company picking if present
             
             # TODO check data date
             #('date', '>=', from_date), 
@@ -257,13 +260,20 @@ class Parser(report_sxw.rml_parse):
                         0,
                         0,
                         0,
-                        'Warn. product not in BOM',
+                        'Warn. product without BOM (jumped)',
                         ))                      
                     continue
                 
+                
+                # =============================================================
+                # =============================================================
+                # =============================================================
+                #                      BOMS PART:
+                # =============================================================
+                # =============================================================
+                # =============================================================
                 bom = boms[product_code]
                 # Loop on all elements:
-                
                 bom_product = []
                 for fabric in bom.bom_line_ids:                                                  
                     default_code = fabric.product_id.default_code                
@@ -509,6 +519,7 @@ class Parser(report_sxw.rml_parse):
                     
                 # TODO manage forecast order ...     
                 remain = line.product_uom_qty - line.delivered_qty
+                # TODO error for negative?
                 if remain <= 0:
                     debug_mm.write(mask % (
                         block,
@@ -603,6 +614,7 @@ class Parser(report_sxw.rml_parse):
                     continue
                 
                 # Check ordered    
+                # XXX mettere il solito test (forse no) ???????????????????????
                 if line.product_uom_maked_sync_qty: # Remain order to produce:
                     move_qty = line.product_uom_qty - \
                         line.product_uom_maked_sync_qty
@@ -612,9 +624,12 @@ class Parser(report_sxw.rml_parse):
                         line.delivered_qty    
                     note = 'Remain order without production (OC - Delivered)'
                     
+                # -----------------------------------------
+                # Compute theorical unload bom materials:
+                # -----------------------------------------
                 # same as previous    
-                #date = line.date_deadline or order.date_order
-                #pos = get_position_season(date) 
+                # date = line.date_deadline or order.date_order
+                # pos = get_position_season(date) 
                 if move_qty: # Remain order >> =C
                     # Loop on all elements:
                     i = 0        
