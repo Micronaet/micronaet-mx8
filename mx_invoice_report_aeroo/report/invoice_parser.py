@@ -43,6 +43,7 @@ class Parser(report_sxw.rml_parse):
             'get_tax_line_invoice':self.get_tax_line_invoice,
             'get_language':self.get_language,
             'get_vector_data': self.get_vector_data,
+            'relink_order': self.relink_order,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
@@ -54,6 +55,15 @@ class Parser(report_sxw.rml_parse):
             'write_reference': self.write_reference,
         })
         self.last_picking = False # TODO is reset all reports?
+
+    def relink_order(self, o):
+        ''' Force for all invoice picking relink to sale order if present
+        '''
+        pick_ids = o.invoice_picking_ids
+        if pick_ids:
+            self.pool.get('stock.picking').link_sale_id(
+                self.cr, self.uid, pick_ids)
+        return ''
 
     def get_vector_data(self, o): 
         ''' Reset parameter used in report 
