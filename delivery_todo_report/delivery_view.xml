@@ -148,6 +148,9 @@
                         <button name="reset_print" string="Reset" icon="gtk-refresh" type="object"  confirm="Reset all print selection?"/>                      
                         <button name="force_parameter_for_delivery" string="Load all data" icon="gtk-refresh" type="object" />
                         <button name="force_parameter_for_delivery_one" string="Load this order" icon="gtk-refresh" type="object" />
+                        <field name="mx_closed" invisible="1"/>
+                        <button name="force_close_residual_order" icon="gtk-no" string="Close residual!" type="object" 
+                             attrs="{'invisible': ['|',('state', 'in', ('draft','cancel','sent')),('mx_closed', '=', True)]}" confirm="Close residual hide order from list, confirm?"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" invisible="context.get('minimal_view',False)"/>

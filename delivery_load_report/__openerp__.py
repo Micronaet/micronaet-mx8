@@ -34,6 +34,7 @@
         'sale_delivery_partial',
         'mx_agent',
         'mx_close_order',
+        'close_residual_order',
         #'production_accounting_external',
         'mx_partner_zone',
         'fido_order_check',

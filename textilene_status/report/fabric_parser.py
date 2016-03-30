@@ -262,8 +262,7 @@ class Parser(report_sxw.rml_parse):
                         0,
                         'Warn. product without BOM (jumped)',
                         ))                      
-                    continue
-                
+                    continue                
                 
                 # =============================================================
                 # =============================================================
