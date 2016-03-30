@@ -61,8 +61,12 @@ class Parser(report_sxw.rml_parse):
         '''
         pick_ids = o.invoice_picking_ids
         if pick_ids:
+            _logger.info('Relink order')
             self.pool.get('stock.picking').link_sale_id(
                 self.cr, self.uid, pick_ids)
+        else:
+            _logger.info('No picking to relink')
+                
         return ''
 
     def get_vector_data(self, o): 
