@@ -24,15 +24,15 @@
                                 <field name="sequence" invisible="1"/>
                                 <field name="product_id" />
                                 <field name="date_deadline" />
-                                <field name="price_unit" />
+                                <field name="price_unit" string="Price"/>
                                 <field name="product_uom" string="UM"/>
-                                <field name="product_uom_qty" />
+                                <field name="product_uom_qty" string="Q."/>
 
-                                <field name="product_delivered_qty" />
-                                <field name="product_remain_qty" />
+                                <field name="product_delivered_qty" string="Del."/>
+                                <field name="product_remain_qty" sting="Rim."/>
                                 <field name="all_qty" />
 
-                                <field name="delivery_uom_qty" on_change="onchange_delivery_qty(delivery_uom_qty,product_remain_qty,context)"/>
+                                <field name="delivery_uom_qty" on_change="onchange_delivery_qty(delivery_uom_qty,product_remain_qty,context)" string="Out"/>
                             </tree>
                         </field>
                    </group>
