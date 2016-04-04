@@ -66,8 +66,8 @@ class StockDdt(orm.Model):
             move_pool.write(cr, uid, move_ids, {
                 'state': 'draft'}, context=context)            
             # Delete:
-            move_pool.unlink(cr, uid, move_ids, context=context)                
             _logger.warning('Remove move: %s' % (move_ids, ))
+            move_pool.unlink(cr, uid, move_ids, context=context)                
                 
             # ------------------------
             # TODO Log event in order:
@@ -77,14 +77,14 @@ class StockDdt(orm.Model):
             # ---------------
             # Remove picking:
             # ---------------
-            picking_pool.unlink(cr, uid, [picking.id], context=context)
             _logger.warning('Remove picking: %s' % picking.name)
+            picking_pool.unlink(cr, uid, [picking.id], context=context)
 
         # ---------------------------------------------------------------------
         #                           Remove DDT element:
         # ---------------------------------------------------------------------
-        self.unlink(cr, uid, ids, context=context)        
         _logger.warning('Remove DDT: %s' % ddt_proxy.name)
+        self.unlink(cr, uid, ids, context=context)        
         # TODO restore counter for get same number (user operation!)
         return True
     
