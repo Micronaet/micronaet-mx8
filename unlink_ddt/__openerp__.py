@@ -40,6 +40,7 @@
     'init_xml': [],
     'demo': [],
     'data': [
+        'security/ddt_security.xml',
         'ddt_view.xml',
         ],
     'active': False,

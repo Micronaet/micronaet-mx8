@@ -56,7 +56,8 @@ class StockDdt(orm.Model):
         # ---------------------------------------------------------------------
         #                             Remove picking
         # ---------------------------------------------------------------------
-        for picking in self.browse(cr, uid, ids, context=context)[0]:
+        ddt_proxy = self.browse(cr, uid, ids, context=context)[0]
+        for picking in ddt_proxy.picking_ids:
             # -------------------------------
             # Remove stock move lines before:
             # -------------------------------
@@ -66,6 +67,7 @@ class StockDdt(orm.Model):
                 'state': 'draft'}, context=context)            
             # Delete:
             move_pool.unlink(cr, uid, move_ids, context=context)                
+            _logger.warning('Remove move: %s' % (move_ids, ))
                 
             # ------------------------
             # TODO Log event in order:
@@ -76,11 +78,13 @@ class StockDdt(orm.Model):
             # Remove picking:
             # ---------------
             picking_pool.unlink(cr, uid, [picking.id], context=context)
+            _logger.warning('Remove picking: %s' % picking.name)
 
         # ---------------------------------------------------------------------
         #                           Remove DDT element:
         # ---------------------------------------------------------------------
         self.unlink(cr, uid, ids, context=context)        
+        _logger.warning('Remove DDT: %s' % ddt_proxy.name)
         # TODO restore counter for get same number (user operation!)
         return True
     

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data>
- 
+    <data> 
+        <record model="ir.ui.view" id="view_stock_ddt_delete_form">
+            <field name="name">stock.ddt.form</field>
+            <field name="model">stock.ddt</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_ddt_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form//notebook" position="after">
+                    <button name="unlink_ddt_elements" groups="unlink_ddt.group_ddt_delete" attrs="{'invisible': [('invoice_id', '!=', False)]}" string="Delete DDT" type="object" confirm="Delete will remove DDT, remove stock and remove moves, confirm? (remember next DDT to change counters and restore)"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
