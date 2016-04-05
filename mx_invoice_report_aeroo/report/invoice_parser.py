@@ -254,6 +254,7 @@ class Parser(report_sxw.rml_parse):
                 'CONSEGNA (SALVO IMPREVISTI)': 'EXPECTED DELIVERY DATE',
                 'AGENTE': 'AGENT',
                 'COD. CLIENTE': 'CUSTOM. REF',
+                'PORTO': 'PORT',
                 },
             'fr_FR': {
                 'CLIENTE': 'CLIENT',
@@ -290,7 +291,8 @@ class Parser(report_sxw.rml_parse):
                 'RIF. ORDINE CLIENTE': 'RÉF. COMMANDE CLIENT',
                 'CONSEGNA (SALVO IMPREVISTI)': 'LIVRAISON (SAUF IMPRÉVU)',
                 'AGENTE': 'AGENT',
-                
+                'COD. CLIENTE': 'CODE CLIENT',
+                'PORTO': 'PORT',                
                 }
             }
         
