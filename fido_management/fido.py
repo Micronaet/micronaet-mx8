@@ -54,7 +54,7 @@ class SaleOrder(orm.Model):
             res[order.id] = 0.0
             for line in order.order_line:
                 remain = line.product_uom_qty - line.delivered_qty
-                if remain:
+                if remain and line.product_uom_qty:
                     res[order.id] += \
                         line.price_subtotal * remain / line.product_uom_qty
         return res
