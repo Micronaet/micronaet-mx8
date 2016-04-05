@@ -44,7 +44,7 @@ class ResPartner(orm.Model):
     _inherit = 'res.partner'
     
     _columns = {
-        'is_private': fields.boolean('Private'),
+        'is_private': fields.boolean('Is Private'),
         'private_name': fields.char('Name', size=64), 
         'private_surname': fields.char('Surname', size=64), 
         }

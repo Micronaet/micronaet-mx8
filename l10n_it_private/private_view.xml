@@ -11,8 +11,8 @@
                     <group name="private">
                         <field name="is_private" />
                         <newline />
-                        <field name="private_name" />
-                        <field name="private_surname" />
+                        <field name="private_name" attrs="{'required':[('is_private','=',True)]}"/>
+                        <field name="private_surname" attrs="{'required':[('is_private','=',True)]}" />
                     </group>    
                 </field>
             </field>
