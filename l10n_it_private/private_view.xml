@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_res_partner_private_form">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <!--<field name="inherit_id" ref="base.view_partner_form"/>-->
+            <field name="inherit_id" ref="l10n_it_fiscalcode.view_partner_form_fiscalcode_data"/>
+            <field name="arch" type="xml">
+                <field name="individual" position="after">
+                    <group name="private">
+                        <field name="is_private" />
+                        <newline />
+                        <field name="private_name" />
+                        <field name="private_surname" />
+                    </group>    
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
