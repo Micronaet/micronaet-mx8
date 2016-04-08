@@ -40,6 +40,7 @@ _logger = logging.getLogger(__name__)
 
 class StockDdT(orm.Model):
     ''' Override data to change default parameter
+        Double forced, create and default!
     '''
     _inherit = 'stock.ddt'
 
@@ -52,13 +53,12 @@ class StockDdT(orm.Model):
             
             @return: returns a id of new record
         """
-        import pdb; pdb.set_trace()
-        vals['date'] = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
+        vals['date'] = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(StockDdT, self).create(
             cr, uid, vals, context=context)
         
     _columns = {
-        'date': fields.date('Date', required=True), 
+        'date': fields.datetime('Date', required=True), 
         }
         
     _defaults = {
