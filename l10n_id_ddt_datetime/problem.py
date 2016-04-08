@@ -44,6 +44,22 @@ class StockDdT(orm.Model):
     '''
     _inherit = 'stock.ddt'
 
+    def write(self, cr, uid, ids, vals, context=None):
+        """ Update redord(s) comes in {ids}, with new value comes as {vals}
+            return True on success, False otherwise
+            @param cr: cursor to database
+            @param uid: id of current user
+            @param ids: list of record ids to be update
+            @param vals: dict of new values to be set
+            @param context: context arguments, like lang, time zone
+            
+            @return: True on success, False otherwise
+        """
+        print vals
+        res = super(StockDdT, self).write(
+            cr, uid, ids, vals, context=context)
+        return res
+    
     def create(self, cr, uid, vals, context=None):
         """ Create a new record for a model ClassName
             @param cr: cursor to database
@@ -53,6 +69,7 @@ class StockDdT(orm.Model):
             
             @return: returns a id of new record
         """
+        print vals
         vals['date'] = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(StockDdT, self).create(
             cr, uid, vals, context=context)
@@ -62,6 +79,7 @@ class StockDdT(orm.Model):
         }
         
     _defaults = {
-        'date': lambda *x: datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
+        'date': lambda *x: datetime.now().strftime(
+            DEFAULT_SERVER_DATETIME_FORMAT)
         }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
