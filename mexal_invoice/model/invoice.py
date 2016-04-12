@@ -102,6 +102,22 @@ class AccountInvoice(orm.Model):
     '''
     _inherit = 'account.invoice'
     
+    def action_invoice_sent(self, cr, uid, ids, context=None):
+        ''' Override action to save all message to partner
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        invoice_proxy = self.browse(cr, uid, ids, context=context)[0]
+        partner_id = invoice_proxy.partner_id.id
+        if partner_id:
+            _logger.warning('Force all mail for partner invoice: %s' % (
+                invoice_proxy.number))
+            self.pool.get('res.partner').write(cr, uid, [partner_id], {
+                'notify_email': 'always',
+                }, context=context)
+                
+        return super(AccountInvoice, self).action_invoice_sent(
+            cr, uid, ids, context=context)
+    
     def link_pickout_document(self, cr, uid, ids, context=None):
         ''' Link pick out depend on origin text
         '''
