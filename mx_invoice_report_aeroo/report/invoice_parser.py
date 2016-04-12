@@ -255,7 +255,7 @@ class Parser(report_sxw.rml_parse):
                 'AGENTE': 'AGENT',
                 'COD. CLIENTE': 'CUSTOM. REF',
                 'PORTO': 'PORT',
-                'COLLI': 'PARCELS',
+                'COLLI': 'CARTOONS',
                 },
             'fr_FR': {
                 'CLIENTE': 'CLIENT',
@@ -294,7 +294,7 @@ class Parser(report_sxw.rml_parse):
                 'AGENTE': 'AGENT',
                 'COD. CLIENTE': 'CODE CLIENT',
                 'PORTO': 'PORT',                
-                'COLLI': 'EMBALLAGES',
+                'COLLI': 'CARTOONS',
                 }
             }
         
