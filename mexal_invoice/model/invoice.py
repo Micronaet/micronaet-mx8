@@ -114,7 +114,7 @@ class AccountInvoice(orm.Model):
             self.pool.get('res.partner').write(cr, uid, [partner_id], {
                 'notify_email': 'always',
                 }, context=context)
-                
+
         return super(AccountInvoice, self).action_invoice_sent(
             cr, uid, ids, context=context)
     

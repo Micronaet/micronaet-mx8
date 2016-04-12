@@ -73,8 +73,10 @@ class StockDdt(orm.Model):
         
         pallet_text = '' # dimension in print text
         for pack in ddt_proxy.volume_ids:
-            total += pack.total
-            volume += pack.dimension_l * pack.dimension_h * pack.dimension_s
+            total += pack.total or 1
+            volume += pack.total * \
+                pack.dimension_l * pack.dimension_h * pack.dimension_s
+                 
             pallet_text += 'N.: %s pallet %s x %s x %s\n' % (
                 pack.total,
                 pack.dimension_l,
