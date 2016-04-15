@@ -129,7 +129,7 @@ class Parser(report_sxw.rml_parse):
         try:
             note = note.strip()
             if note:
-                return '\n\n%s' % note                 
+                return '%s' % note
         except:
             return ''   
     

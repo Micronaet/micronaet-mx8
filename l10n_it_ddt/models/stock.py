@@ -27,6 +27,8 @@ from openerp import api
 from openerp import _
 from openerp.exceptions import Warning
 
+from openerp.osv import osv
+
 
 _logger = logging.getLogger(__name__)
 
@@ -201,6 +203,7 @@ class StockPicking(models.Model):
         note_pre_list = []
         note_post = ''
         note_post_list = []
+        destination_partner_id = False
         for picking in self.browse(cr, uid, ids, context=context):
             # Pre pick + DDT (if exist)
             pre_all = (picking.ddt_text_note_pre or '').strip() or (
@@ -218,8 +221,16 @@ class StockPicking(models.Model):
 
             # TODO remove from middle of the loop and check that are all
             # equals!!!    
-            invoice_obj.write(cr, uid, res, {
+            if not destination_partner_id and picking.destination_partner_id:
+                destination_partner_id = picking.destination_partner_id.id
+            if destination_partner_id != picking.destination_partner_id.id:
+                raise osv.except_osv(_('Error'), _('Different destination!'))
+            invoice_obj.write(cr, uid, res, {                
                 # DDT fields:
+                'destination_partner_id':
+                picking.destination_partner_id and
+                picking.destination_partner_id.id, 
+                #TODO invoice?!?!             
                 'carriage_condition_id':
                 picking.carriage_condition_id and
                 picking.carriage_condition_id.id,
