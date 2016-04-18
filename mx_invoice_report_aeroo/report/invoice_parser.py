@@ -111,7 +111,12 @@ class Parser(report_sxw.rml_parse):
 
             res = ''
             if self.last_picking.ddt_id:
-                res += ' DDT: %s ' % self.last_picking.ddt_id.name
+                res += ' DDT: %s (%s/%s/%s) ' % (
+                    self.last_picking.ddt_id.name,
+                    self.last_picking.ddt_id.date[8:10],
+                    self.last_picking.ddt_id.date[5:7],
+                    self.last_picking.ddt_id.date[0:4],
+                    )
             if self.last_picking.sale_id:
                 res += _(' Order: %s%s ') % (
                     self.last_picking.sale_id.name,

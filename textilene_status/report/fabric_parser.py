@@ -503,7 +503,7 @@ class Parser(report_sxw.rml_parse):
                     continue
             
                 # USE order data:
-                if date > period_to: # over range
+                if date > period_to or date < period_from: # extra range
                     debug_mm.write(mask % (
                         block,
                         'NOT USED',
@@ -517,25 +517,7 @@ class Parser(report_sxw.rml_parse):
                         0, # +MM
                         0,
                         0,
-                        'OVER RANGE, qty: %s' % remain,
-                        ))                      
-                    continue
-
-                if date < period_from: # under range
-                    debug_mm.write(mask % (
-                        block,
-                        'NOT USED',
-                        order.name,
-                        '',
-                        date,
-                        pos,
-                        product_code,
-                        '', # MP
-                        '',
-                        0, # +MM
-                        0,
-                        0,
-                        'UNDER RANGE, qty: %s' % remain,
+                        'EXTRA RANGE, qty: %s' % remain,
                         ))                      
                     continue
 
