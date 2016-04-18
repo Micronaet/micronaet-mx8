@@ -265,11 +265,7 @@ class Parser(report_sxw.rml_parse):
                     continue                
                 
                 # =============================================================
-                # =============================================================
-                # =============================================================
                 #                      BOMS PART:
-                # =============================================================
-                # =============================================================
                 # =============================================================
                 bom = boms[product_code]
                 # Loop on all elements:
@@ -460,7 +456,7 @@ class Parser(report_sxw.rml_parse):
                     continue
 
         # =====================================================================
-        # UNLOAD ORDER (NON DELIVERED)
+        #                  UNLOAD ORDER (NON DELIVERED)
         # =====================================================================
         block = 'OC (not delivered)'
         order_ids = sale_pool.search(self.cr, self.uid, [
@@ -559,6 +555,9 @@ class Parser(report_sxw.rml_parse):
                         ))                      
                     continue
                 
+                # -------------------------------------------------------------
+                #                  REMAIN ORDER TO PRODUCE:
+                # -------------------------------------------------------------
                 # Check ordered    
                 # XXX mettere il solito test (forse no) ???????????????????????
                 if line.product_uom_maked_sync_qty: # Remain order to produce:
@@ -609,9 +608,28 @@ class Parser(report_sxw.rml_parse):
                                 'ERROR FABRIC NOT IN DATABASE!',
                                 ))                      
                             continue
-                        
+                            
+                        # Jump closed line:
+                        #if line.mx_closed:
+                        #    debug_mm.write(mask % (
+                        #        block,
+                        #        'NOT USED',
+                        #        order.name,
+                        #        '',
+                        #        date,
+                        #        pos,
+                        #        product_code,
+                        #        default_code, # MP
+                        #        '',
+                        #        0, # +MM
+                        #        0, # -OC
+                        #        0,
+                        #        'CLOSED LINE NO REMAIN ORDER!',
+                        #        ))                      
+                        #    continue # XXX ??
+                            
                         qty = move_qty * fabric.product_qty
-                        products[default_code][4][pos] -= qty # OC block # XXX was -
+                        products[default_code][4][pos] -= qty # OC block
                         
                         debug_mm.write(mask % (
                             block,
@@ -637,6 +655,9 @@ class Parser(report_sxw.rml_parse):
                         continue
 
                 # Check production: >> MM
+                # -------------------------------------------------------------
+                #                  PRODUCED TO DELIVERY:
+                # -------------------------------------------------------------
                 if line.product_uom_maked_sync_qty:
                     move_qty = line.product_uom_maked_sync_qty - \
                         line.delivered_qty                  
