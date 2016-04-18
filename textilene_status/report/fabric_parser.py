@@ -375,7 +375,8 @@ class Parser(report_sxw.rml_parse):
                 if line.state == 'assigned': # virtual
                     # USE deadline data:
                     # Before check date:
-                    if line.date_expected > period_to: # over range
+                    if line.date_expected > period_to or \
+                            line.date_expected < period_from: # extra range
                         debug_mm.write(mask % (
                             block,
                             'NOT USED',
@@ -389,25 +390,7 @@ class Parser(report_sxw.rml_parse):
                             0,
                             0,
                             0,
-                            'OF date expected over range!!: Q.: %s' % qty,
-                            ))                      
-                        continue
-
-                    if line.date_expected < period_from: # under range
-                        debug_mm.write(mask % (
-                            block,
-                            'NOT USED',
-                            pick.name,
-                            pick.origin,
-                            line.date_expected,
-                            '', # POS
-                            '', # product_code                                
-                            default_code,
-                            '',
-                            0,
-                            0,
-                            0,
-                            'OF date expected under range!!: Q.: %s' % qty,
+                            'OF date expected extra range!: Q.: %s' % qty,
                             ))                      
                         continue
 
@@ -439,7 +422,7 @@ class Parser(report_sxw.rml_parse):
                     pos = get_position_season(date)
                 
                     # USE order data:
-                    if date > period_to: # over range
+                    if date > period_to or date < period_from: # extra range
                         debug_mm.write(mask % (
                             block,
                             'NOT USED',
@@ -453,25 +436,7 @@ class Parser(report_sxw.rml_parse):
                             0,
                             0,
                             0,
-                            'BF date doc over range!!: Q.: %s' % qty,
-                            ))                      
-                        continue
-
-                    if date < period_from: # under range
-                        debug_mm.write(mask % (
-                            block,
-                            'NOT USED',
-                            pick.name,
-                            pick.origin,
-                            date,
-                            pos,
-                            '', # product_code                                
-                            default_code,
-                            '',
-                            0,
-                            0,
-                            0,
-                            'BF date doc under range!!: Q.: %s' % qty,
+                            'BF date doc extra range!!: Q.: %s' % qty,
                             ))                      
                         continue
                     
