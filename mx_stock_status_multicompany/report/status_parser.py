@@ -98,7 +98,7 @@ class Parser(report_sxw.rml_parse):
                 self.cr, self.uid, supplierinfo_ids):
             product_tmpl_ids.append(supplier.product_tmpl_id.id) 
         
-        debug_file.write('\nTemplate selected:\n%s\n' % (product_tmpl_ids)) # XXX DEBUG
+        debug_file.write('\nTemplate selected:\n%s\n' % (product_tmpl_ids))
 
         # ---------------------------------------------------------------------
         # B. Get product supplier by partner (field: first_supplier_id
@@ -107,7 +107,7 @@ class Parser(report_sxw.rml_parse):
             ('first_supplier_id', '=', partner_id)])
             
         debug_file.write('\nFirst supplier product:\n%s\n' % (
-            first_supplier_product_ids)) # XXX DEBUG
+            first_supplier_product_ids))
 
         # ---------------------------------------------------------------------
         # Get product form template:
@@ -128,8 +128,8 @@ class Parser(report_sxw.rml_parse):
         if not product_ids:
             raise osv.except_osv(
                 _('Report error'),
-                _('No data for this partner (no first suppl. or in product)',
-                ))
+                _('No data for this partner (no first suppl. or in product)'),
+                )
 
         products = {}
         product_mask = company_proxy.product_mask or ''
