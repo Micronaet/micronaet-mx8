@@ -58,7 +58,7 @@ class ResPartner(orm.Model):
 
     _columns = {
         'group_tag_id': fields.many2one(
-            'res.partner.category', 'Tag group'),
+            'res.partner.category', 'Group tag'),
         }
 
 
