@@ -145,7 +145,7 @@ class ResPartner(orm.Model):
         sol_pool = self.pool.get('sale.order.line') # XXX maybe not used 
         # procurements in stock.picking
 
-        if remote:
+        if remote:            
             product_ids = product_pool.search(cr, uid, [
                 ('default_code', 'in', product_ids)], context=context)
             remote_default_code = []                    
@@ -178,7 +178,7 @@ class ResPartner(orm.Model):
             exclude_partner_ids,)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
-        # Get unload picking
+        # Get unload picking BC
         # ---------------------------------------------------------------------
         out_picking_type_ids = []
         if not remote:
@@ -214,7 +214,7 @@ class ResPartner(orm.Model):
         # Get load picking
         # ---------------------------------------------------------------------
         in_picking_type_ids = []
-        if not remote:
+        if not remote: # XXX No BF for remote
             for item in company_proxy.stock_report_load_ids:
                 in_picking_type_ids.append(item.id)
                 
@@ -228,6 +228,7 @@ class ResPartner(orm.Model):
                 #('date', '<=', to_date),            
                 # TODO state filter
                 ])
+                
             debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n')
             for pick in pick_pool.browse(cr, uid, pick_ids):
                 for line in pick.move_lines:
@@ -245,7 +246,6 @@ class ResPartner(orm.Model):
                             debug_file.write('\nOF;%s;%s;%s;%s' % (
                                 pick.name, pick.origin, default_code, 
                                 line.product_uom_qty)) # XXX DEBUG
-
                         elif line.state == 'done':
                             if default_code not in loads:
                                 loads[default_code] = line.product_uom_qty
@@ -255,9 +255,9 @@ class ResPartner(orm.Model):
                             debug_file.write('\nBF;%s;%s;%s;%s' % (
                                 pick.name, pick.origin, default_code, 
                                 line.product_uom_qty)) # XXX DEBUG
-        
+            
         # ---------------------------------------------------------------------
-        # Get order to delivery
+        # Get order to delivery: OC remain
         # ---------------------------------------------------------------------
         sol_ids = sol_pool.search(cr, uid, [
             ('product_id', 'in', product_ids)])
@@ -267,8 +267,8 @@ class ResPartner(orm.Model):
             # -------
             # Header:
             # -------            
-            # check state:
-            if line.order_id.state in ('cancel', 'draft', 'sent'): #done?
+            # check state (line closed or order not confirmed:            
+            if line.order_id.state in ('cancel', 'draft', 'sent') or mx_closed:
                 continue
             
             # ------
