@@ -271,7 +271,8 @@ class ResPartner(orm.Model):
             if line.order_id.state in (
                     'cancel', 'draft', 'sent') or line.mx_closed:
                 debug_file.write('%s;%s;%s\n' % (
-                    line.order_id.name, default_code, 'FORCED CLOSE')) 
+                    line.order_id.name, line.product_id.default_code, 
+                    'FORCED CLOSE')) 
                 continue
             
             # ------
