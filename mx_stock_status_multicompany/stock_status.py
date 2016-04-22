@@ -181,76 +181,80 @@ class ResPartner(orm.Model):
         # Get unload picking
         # ---------------------------------------------------------------------
         out_picking_type_ids = []
-        for item in company_proxy.stock_report_unload_ids:
-            out_picking_type_ids.append(item.id)
-            
-        pick_ids = pick_pool.search(cr, uid, [     
-            # type pick filter   
-            ('picking_type_id', 'in', out_picking_type_ids),
-            # Partner exclusion
-            ('partner_id', 'not in', exclude_partner_ids), 
-            # TODO check data date
-            #('date', '>=', from_date), 
-            #('date', '<=', to_date), 
-            # TODO state filter
-            ])
-        debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n') # XXX DEBUG           
-        for pick in pick_pool.browse(cr, uid, pick_ids):
-            for line in pick.move_lines:
-                default_code = line.product_id.default_code
-                if line.product_id.id in product_ids: # only supplier prod.
-                    # TODO check state of line??
-                    if default_code not in unloads:
-                        unloads[default_code] = line.product_uom_qty
-                    else:    
-                        unloads[default_code] += line.product_uom_qty
-                        
-                    debug_file.write('\n%s;%s;%s;%s' % (
-                        pick.name, pick.origin, default_code, 
-                        line.product_uom_qty)) # XXX DEBUG
+        if not remote:
+            for item in company_proxy.stock_report_unload_ids:
+                out_picking_type_ids.append(item.id)
+                
+            pick_ids = pick_pool.search(cr, uid, [     
+                # type pick filter   
+                ('picking_type_id', 'in', out_picking_type_ids),
+                # Partner exclusion
+                ('partner_id', 'not in', exclude_partner_ids), 
+                # TODO check data date
+                #('date', '>=', from_date), 
+                #('date', '<=', to_date), 
+                # TODO state filter
+                ])
+            debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n')
+            for pick in pick_pool.browse(cr, uid, pick_ids):
+                for line in pick.move_lines:
+                    default_code = line.product_id.default_code
+                    if line.product_id.id in product_ids: # only supplier prod.
+                        # TODO check state of line??
+                        if default_code not in unloads:
+                            unloads[default_code] = line.product_uom_qty
+                        else:    
+                            unloads[default_code] += line.product_uom_qty
+                            
+                        debug_file.write('\n%s;%s;%s;%s' % (
+                            pick.name, pick.origin, default_code, 
+                            line.product_uom_qty)) # XXX DEBUG
 
         # ---------------------------------------------------------------------
         # Get load picking
         # ---------------------------------------------------------------------
         in_picking_type_ids = []
-        for item in company_proxy.stock_report_load_ids:
-            in_picking_type_ids.append(item.id)
-            
-        pick_ids = pick_pool.search(cr, uid, [     
-            # type pick filter   
-            ('picking_type_id', 'in', in_picking_type_ids),            
-            # Partner exclusion
-            ('partner_id', 'not in', exclude_partner_ids),            
-            # check data date
-            #('date', '>=', from_date), # XXX correct for virtual?
-            #('date', '<=', to_date),            
-            # TODO state filter
-            ])
-        debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n') # XXX DEBUG           
-        for pick in pick_pool.browse(cr, uid, pick_ids):
-            for line in pick.move_lines:
-                if line.product_id.id in product_ids: # only supplier prod.
-                    # TODO check state of line??                    
-                    default_code = line.product_id.default_code
-                    if line.state == 'assigned': # virtual
-                        if default_code not in virtual_loads:
-                            virtual_loads[default_code] = line.product_uom_qty
-                        else:    
-                            virtual_loads[default_code] += line.product_uom_qty
+        if not remote:
+            for item in company_proxy.stock_report_load_ids:
+                in_picking_type_ids.append(item.id)
+                
+            pick_ids = pick_pool.search(cr, uid, [     
+                # type pick filter   
+                ('picking_type_id', 'in', in_picking_type_ids),            
+                # Partner exclusion
+                ('partner_id', 'not in', exclude_partner_ids),            
+                # check data date
+                #('date', '>=', from_date), # XXX correct for virtual?
+                #('date', '<=', to_date),            
+                # TODO state filter
+                ])
+            debug_file.write('\n\nLoad picking:\nType;Pick;Origin;Code;Q.\n')
+            for pick in pick_pool.browse(cr, uid, pick_ids):
+                for line in pick.move_lines:
+                    if line.product_id.id in product_ids: # only supplier prod.
+                        # TODO check state of line??                    
+                        default_code = line.product_id.default_code
+                        if line.state == 'assigned': # virtual
+                            if default_code not in virtual_loads:
+                                virtual_loads[default_code] = \
+                                    line.product_uom_qty
+                            else:    
+                                virtual_loads[default_code] += \
+                                    line.product_uom_qty
 
-                        debug_file.write('\nOF;%s;%s;%s;%s' % (
-                            pick.name, pick.origin, default_code, 
-                            line.product_uom_qty)) # XXX DEBUG
+                            debug_file.write('\nOF;%s;%s;%s;%s' % (
+                                pick.name, pick.origin, default_code, 
+                                line.product_uom_qty)) # XXX DEBUG
 
-                    elif line.state == 'done':
-                        if default_code not in loads:
-                            loads[default_code] = line.product_uom_qty
-                        else:    
-                            loads[default_code] += line.product_uom_qty
+                        elif line.state == 'done':
+                            if default_code not in loads:
+                                loads[default_code] = line.product_uom_qty
+                            else:    
+                                loads[default_code] += line.product_uom_qty
 
-                        debug_file.write('\nBF;%s;%s;%s;%s' % (
-                            pick.name, pick.origin, default_code, 
-                            line.product_uom_qty)) # XXX DEBUG
+                            debug_file.write('\nBF;%s;%s;%s;%s' % (
+                                pick.name, pick.origin, default_code, 
+                                line.product_uom_qty)) # XXX DEBUG
         
         # ---------------------------------------------------------------------
         # Get order to delivery
