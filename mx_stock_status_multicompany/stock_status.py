@@ -268,7 +268,10 @@ class ResPartner(orm.Model):
             # Header:
             # -------            
             # check state (line closed or order not confirmed:            
-            if line.order_id.state in ('cancel', 'draft', 'sent') or mx_closed:
+            if line.order_id.state in (
+                    'cancel', 'draft', 'sent') or line.mx_closed:
+                debug_file.write('%s;%s;%s\n' % (
+                    line.order_id.name, default_code, 'FORCED CLOSE')) 
                 continue
             
             # ------
