@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+       <record model="ir.ui.view" id="view_res_partner_tag_search_form">
+           <field name="name">res.partner.tag.search</field>
+           <field name="model">res.partner</field>
+           <field name="inherit_id" ref="base.view_res_partner_filter"/>
+           <field name="arch" type="xml">
+               <field name="name" position="after">
+                    <field name="group_tag_id" />
+               </field>
+           </field>
+       </record>
        <record model="ir.ui.view" id="view_res_partner_group_tags_form">
            <field name="name">res.partner.form</field>
            <field name="model">res.partner</field>
@@ -12,6 +22,8 @@
                </field>
            </field>
        </record>
+       
+       
     </data>
 </openerp>
 
