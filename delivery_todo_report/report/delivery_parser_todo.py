@@ -184,7 +184,7 @@ class Parser(report_sxw.rml_parse):
         if partic_ids: 
             partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
             return partic_proxy.partner_code or '/'
-        return '???'
+        return ''#'???'
 
     def get_datetime(self):
         ''' Return datetime obj
