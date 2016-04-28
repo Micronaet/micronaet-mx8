@@ -150,15 +150,23 @@ class Parser(report_sxw.rml_parse):
                         product.weight_net or 0.0))
 
                 q_x_pack = l.product_id.q_x_pack
+                partial = False                    
                 if q_x_pack:
-                    parcel = v / q_x_pack
-                    if not parcel:
-                        parcel_text = ''
-                    else:
+                    parcel = v / q_x_pack # truncated
+                    if v % q_x_pack != 0:
+                        partial = True
+                        parcel += 1
+                    
+                    if parcel:
                         parcel_text = 'SC. %sx%s=' % (
-                            int(parcel), int(q_x_pack))
+                            ('[*%s*]' % int(parcel)) if partial else int(
+                                parcel), 
+                            int(q_x_pack),
+                            )
                         self.counters['total_parcel'] += parcel
-                res.append((key, parcel_text, v))
+                    else:
+                        parcel_text = ''
+                res.append((key, parcel_text, v, partial))
                 _logger.info('Counters: %s, %s' % (
                     product.default_code,
                     self.counters, 
@@ -176,7 +184,7 @@ class Parser(report_sxw.rml_parse):
         if partic_ids: 
             partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
             return partic_proxy.partner_code or '/'
-        return ''
+        return '???'
 
     def get_datetime(self):
         ''' Return datetime obj
