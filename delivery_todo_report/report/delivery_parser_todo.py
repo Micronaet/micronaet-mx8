@@ -159,11 +159,12 @@ class Parser(report_sxw.rml_parse):
                     
                     if parcel:
                         parcel_text = 'SC. %sx%s=' % (
-                            ('[*%s*]' % int(parcel)) if partial else int(
+                            '??' if partial else int(
                                 parcel), 
                             int(q_x_pack),
                             )
-                        self.counters['total_parcel'] += parcel
+                        if not partial:    
+                            self.counters['total_parcel'] += parcel
                     else:
                         parcel_text = ''
                 res.append((key, parcel_text, v, partial))
