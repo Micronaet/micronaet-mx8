@@ -44,11 +44,11 @@ class ResCompany(orm.Model):
     _inherit = 'res.company'
     
     _columns = {
-        'header_rea': fields.char('REA', size=15),
-        'header_capital': fields.float('Capital', size=40),
-        'header_mecc': fields.char('Mecc. code', size=12),
-        'header2': fields.text('Sub slogan'),
-        'header3': fields.text('Order slogan'),
-        'footer_note': fields.text('Footer note'),
+        'header_rea': fields.char('REA', size=15, translate=True),
+        'header_capital': fields.float('Capital', size=40, translate=True),
+        'header_mecc': fields.char('Mecc. code', size=12, translate=True),
+        'header2': fields.text('Sub slogan', translate=True),
+        'header3': fields.text('Order slogan', translate=True),
+        'footer_note': fields.text('Footer note', translate=True),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
