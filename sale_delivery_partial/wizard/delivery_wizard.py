@@ -218,6 +218,8 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
     def _load_default_line_ids(self, cr, uid, context=None):
         ''' Load order line as default values
         '''
+        context = context or {}
+        all_qty = context.get('all_qty', False)
         sale_pool = self.pool.get('sale.order')
         order_id = context.get('active_id', False)
         if not order_id:
@@ -253,6 +255,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 'product_uom_qty': line.product_uom_qty,
                 'product_uom': line.product_uom.id,
                 'date_deadline': line.date_deadline,
+                'all_qty': all_qty,
                 
                 # Calculated:
                 'product_delivered_qty': product_delivered_qty,
