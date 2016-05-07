@@ -57,7 +57,7 @@
           <field name="arch" type="xml">
               <field name="pricelist_id" position="after">
                   <button name="%(action_sale_delivery_partial_wizard)d" 
-                      string="Delivery wizard" type="action" colspan="1" 
+                      string="Delivery" type="action" colspan="1" 
                       context="{'default_order_id': active_id}" 
                       attrs="{'invisible':[('state', 'in', ('draft', 'sent', 'cancel'))]}"/> 
                   <button name="%(action_sale_delivery_partial_wizard)d" 
