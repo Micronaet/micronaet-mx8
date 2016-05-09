@@ -47,5 +47,8 @@ class ResPartner(orm.Model):
         'mail_catalog': fields.boolean('Catalog'),
         'mail_catalog_note': fields.text(
             'Catalog note') ,
+        'mail_banner': fields.boolean('Banner'),
+        'mail_banner_note': fields.text(
+            'Banner note') ,
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
