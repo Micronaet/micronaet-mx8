@@ -30,6 +30,16 @@
             </field>
         </record>
         
+        <record model="ir.ui.view" id="view_account_invoice_force_form">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line']/tree/field[@name='name']" position="before">
+                    <field name="use_text_description" string="Use &gt;&gt;"/>
+                </xpath>
+            </field>
+        </record>
         <!--<record model="ir.ui.view" id="view_order_form_destination_fields_tree">
             <field name="name">sale.order.destination.tree</field>
             <field name="model">sale.order</field>
