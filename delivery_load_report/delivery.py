@@ -156,7 +156,10 @@ class SaleOrder(orm.Model):
                         update_line['delivered'].append(line.id)
                     else:
                         update_line['partial'].append(line.id)
-                        all_produced = False
+                        all_produced = False                        
+                # TODO remove no production line:
+                #if not line.product_id.internal_manufacture:                    
+
             if all_produced:
                 produced_ids.append(order.id)
 
