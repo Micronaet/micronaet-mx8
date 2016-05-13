@@ -86,15 +86,15 @@ class SaleOrder(orm.Model):
             #'domain': [('product_id', 'in', ids)],
             }
         
-    def reset_print(self, cr, uid, ids, context=None):
+    """def reset_print(self, cr, uid, ids, context=None):
         ''' Called at the end of report to reset print check
         '''
         sale_ids = self.search(
             cr, uid, [('print', '=', True)], context=context)
         self.write(
             cr, uid, sale_ids, {'print': False})     
-        return True
-        
+        return True"""
+
     # Procedure to update
     def force_parameter_for_delivery(self, cr, uid, ids, context=None):
         ''' Compute all not closed order for delivery
@@ -314,7 +314,7 @@ class SaleOrder(orm.Model):
         return
     
     # Button event:
-    def to_print(self, cr, uid, ids, context=None):
+    '''def to_print(self, cr, uid, ids, context=None):
         header_mod = self.write(cr, uid, ids, {
             'print': True}, context=context)
         return True
@@ -322,7 +322,7 @@ class SaleOrder(orm.Model):
     def no_print(self, cr, uid, ids, context = None):
         header_mod = self.write(cr, uid, ids, {
             'print': False}, context=context)
-        return True
+        return True'''
 
     def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
         ''' Fields function for calculate 
@@ -336,7 +336,7 @@ class SaleOrder(orm.Model):
 
     _columns = {
         'all_produced': fields.boolean('All produced'),
-        'print': fields.boolean('To Print'),
+        #'print': fields.boolean('To Print'),
 
         # Total:
         'delivery_amount_b': fields.float('Amount B', digits=(16, 2)),             

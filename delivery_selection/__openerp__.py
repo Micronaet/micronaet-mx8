@@ -18,12 +18,11 @@
 ###############################################################################
 
 {
-    'name': 'Delivery todo report',
+    'name': 'Selection for order to user',
     'version': '0.1',
-    'category': 'Report',
-    'description': ''' 
-        Add print button to sale order for print a list of delivery 
-        (and a sort of order for stock user)       
+    'category': 'Sale',
+    'description': '''
+        Select order for the used not on boolean in order 
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
@@ -31,24 +30,12 @@
     'depends': [
         'base',
         'sale',
-        'sale_delivery_partial',
-        'mx_agent',
-        'mx_close_order',
-        'close_residual_order',
-        'production_accounting_external',
-        'mx_partner_zone',
-        'fido_order_check',
-        'mx_agent', # agent filter
-        'inventory_status_on_delivery',
-        'delivery_selection', # Add dep for manage selection to print
-        #'base_accounting_program', # res.partner.zone TODO move in module!
         ],
     'init_xml': [],
     'demo': [],
     'data': [
         #'security/ir.model.access.csv',    
-        'delivery_view.xml',
-        'report/delivery_report.xml',
+        'selection_view.xml',
         ],
     'active': False,
     'installable': True,

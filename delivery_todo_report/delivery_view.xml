@@ -7,9 +7,12 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <field name="state" position="after">
+                    <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
+                    <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
+                    <!--<field name="print" invisible="1"/>
                     <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
+                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />-->
                 </field>    
             </field>
         </record>
@@ -19,9 +22,12 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <field name="state" position="after">
+                    <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
+                    <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
+                    <!--<field name="print" invisible="1"/>
                     <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
+                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />-->
                 </field>    
             </field>
         </record>
@@ -33,8 +39,8 @@
             <field name="arch" type="xml">
                 <form string="Delivery order">
                     <head>
-                          <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                          <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
+                          <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" /><!-- attrs="{'invisible':[('print','=', True)]}"-->
+                          <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" /><!-- attrs="{'invisible':[('print','=', False)]}"-->
                           <field name="print" invisible="1"/>
 
                           <field name="uncovered_state" invisible="1"/>
@@ -166,33 +172,14 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                   <field name="name" position="after">
-                       <field name="print" invisible="1"/> 
-                       <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                       <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
+                      <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
+                      <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
+                      <field name="print" invisible="1"/>
+                      <!-- <field name="print" invisible="1"/> 
+                      <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
+                      <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
+                      -->
                   </field>
-                  
-                  <!--<xpath expr="//notebook/page//field[@name='order_line']/tree/field[@name='name']" position="after">                  
-                      <field name="mx_closed" invisible="1" />
-                      <field name="all_produced" invisible="1" />
-                  </xpath>                  
-                  <xpath expr="//notebook/page//field[@name='order_line']/tree" position="attributes">
-                      <attribute name="colors">black:mx_closed==True;green:all_produced==True</attribute>
-                  </xpath>-->
-                  <!--<xpath expr="//notebook/page[1]" position="after">
-                      <page string="Delivery lines" invisible="context.get('layout_delivery',True)">
-                          <field name="order_line" readonly="1">
-                              <tree string="Line:" colors="black:mx_closed==True;green:all_produced==True">
-                                  <field name="name" />
-                                  <field name="product_id" />
-                                  <field name="product_uom_qty" />
-                                  <field name="delivered_qty" />
-                                  <field name="mx_closed" invisible="1" />
-                                  <field name="all_produced" invisible="1" />
-                                  <field name="state" />
-                              </tree>
-                          </field>
-                      </page>                      
-                  </xpath>-->
             </field>
         </record>
 
@@ -265,9 +252,13 @@
                     <field name="delivery_amount_s" />
                     
                     <field name="state" />                    
-                    <field name="print" invisible="1"/>
+                    <!--<field name="print" invisible="1"/>
                     <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />
+                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />-->
+                    <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
+                    <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
+                    <field name="print" invisible="1"/>
+                    
                     <button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />
                     <!--<field name="date" />
                     <tree string="Statistic Order header tree" colors="green:complete!=False">
