@@ -218,7 +218,7 @@
             <field name="model">sale.order</field>
             <field name="priority" eval="50" />
             <field name="arch" type="xml">
-                <tree string="Statistic Order Tree" colors="black:mx_closed==True;green:all_produced==True">
+                <tree string="Statistic Order Tree" fonts="bold:print==True" colors="black:mx_closed==True;green:all_produced==True">
                     <button name="nothing" string="All deliverable" type="object" icon="gtk-yes" attrs="{'invisible': ['|',('mx_closed', '=',True),('all_produced','=',False)]}"/>
                     <button name="open_detailed_order" string="Open" icon="gtk-goto-last32" type="object" />
                     <field name="name" />
@@ -246,7 +246,7 @@
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
                     
-                    <button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />
+                    <!--<button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />-->
                     <!--<field name="date" />
                     <tree string="Statistic Order header tree" colors="green:complete!=False">
                     <field name="deadline"/>
