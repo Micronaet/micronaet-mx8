@@ -10,9 +10,6 @@
                     <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
-                    <!--<field name="print" invisible="1"/>
-                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />-->
                 </field>    
             </field>
         </record>
@@ -25,9 +22,6 @@
                     <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
-                    <!--<field name="print" invisible="1"/>
-                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />-->
                 </field>    
             </field>
         </record>
@@ -39,8 +33,8 @@
             <field name="arch" type="xml">
                 <form string="Delivery order">
                     <head>
-                          <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" /><!-- attrs="{'invisible':[('print','=', True)]}"-->
-                          <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" /><!-- attrs="{'invisible':[('print','=', False)]}"-->
+                          <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
+                          <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                           <field name="print" invisible="1"/>
 
                           <field name="uncovered_state" invisible="1"/>
@@ -175,10 +169,6 @@
                       <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
                       <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                       <field name="print" invisible="1"/>
-                      <!-- <field name="print" invisible="1"/> 
-                      <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                      <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />                      
-                      -->
                   </field>
             </field>
         </record>
@@ -252,9 +242,6 @@
                     <field name="delivery_amount_s" />
                     
                     <field name="state" />                    
-                    <!--<field name="print" invisible="1"/>
-                    <button name="to_print" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print','=', True)]}" />
-                    <button name="no_print" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print','=', False)]}" />-->
                     <button name="print_on_set_user_order" string="To print" icon="gtk-print" type="object" attrs="{'invisible':[('print', '=', True)]}" />
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
