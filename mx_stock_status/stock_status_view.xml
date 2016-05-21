@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_res_company_pick_type_form">
+        <field name="name">res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="Stock report">
+                    <group colspan="4" col="4">
+                        <separator string="XMLRPC parameters:" colspan="4"/>
+                        <field name="is_remote_stock" />                       
+                        <field name="product_mask"/>
+                        
+                        <field name="remote_name" attrs="{'invisible':[('is_remote_stock','=',True)]}"/>                       
+                        <field name="remote_hostname" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <field name="remote_port" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <field name="remote_username" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <field name="remote_password" attrs="{'invisible':[('is_remote_stock','=',True)]}" />                       
+                        <newline/>
+                        
+                        <separator string="Pick to consider:" colspan="4"/>
+                        <field name="stock_report_unload_ids"/>
+                        <field name="stock_report_load_ids"/>
+
+                        <separator string="MRP to consider:" colspan="4"/>
+                        <field name="stock_report_mrp_out_ids"/>
+                        <field name="stock_report_mrp_in_ids"/>
+
+                        <separator string="Exclude other company:" colspan="4"/>
+                        <field name="stock_explude_partner_ids" colspan="4"/>
+                        <field name="stock_location_id"/>
+                        <field name="stock_mrp_location_id"/>
+                    </group>                     
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+        <record model="ir.ui.view" id="view_res_partner_status_report_form">
+            <field name="name">res.partner.stock.report.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="website" position="after">
+                    <button name="print_stock_status_report" string="Print stock status" help="Status report for stock" type="object" attrs="{'invisible':['|',('is_company', '=', False),('supplier', '=', False)]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+

@@ -294,7 +294,7 @@ class ResPartner(orm.Model):
         
         # result is the dicts!        
         if remote:        
-            return remote_default_code # for hignlight both product
+            return remote_default_code # for highlight both product
         else:
             return 
     
