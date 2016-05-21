@@ -36,6 +36,7 @@
         'product_image_base', # for image in report
         'inventory_status', # stock dispo
         'csv_import_campaign', # campaign dispo        
+        'catalog_management', # some categorization
         ],
     'init_xml': [],
     'demo': [],

@@ -77,6 +77,10 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         partner_id = data.get('partner_id', False)        
         default_code = data.get('default_code', False)        
+        categ_id = data.get('categ_id', False)
+        catalog_id = data.get('catalog_id', False)
+        status = data.get('status', False)
+        sortable = data.get('sortable', False)
         
         if partner_id:
             # -----------------------------------------------------------------
@@ -104,14 +108,19 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         # PRODUCT FILTER:
         # ---------------------------------------------------------------------
+        domain = []
+        if product_ids: # filtered for partner
+            domain.append(('id', 'in', product_ids))
+
         if default_code: 
-            domain = [
-                ('default_code', 'ilike', default_code),
-                ]
-            if product_ids: # filtered for partner
-                domain.append(('id', 'in', product_ids))
-            # Update product_id:        
-            product_ids = product_pool.search(self.cr, self.uid, domain)
+            domain.append(('default_code', 'ilike', default_code))
+        
+        if status:
+            domain.append(('status', '=', status))
+        # TODO ADD other (and filter=    
+                
+
+        product_ids = product_pool.search(self.cr, self.uid, domain)
         products = product_pool.browse(self.cr, self.uid, product_ids)
         return products
         '''

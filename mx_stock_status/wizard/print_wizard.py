@@ -60,6 +60,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         datas['wizard'] = True # started from wizard
         datas['partner_id'] = wiz_proxy.partner_id.id
         datas['default_code'] = wiz_proxy.default_code or False
+        datas['categ_id'] = wiz_proxy.categ_id.id or False
+        datas['catalog_id'] = wiz_proxy.catalog_id.id or False
+        datas['status'] = wiz_proxy.status or False
+        datas['sortable'] = wiz_proxy.sortable or False
                        
         return {
             'type': 'ir.actions.report.xml',
@@ -75,6 +79,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ('is_address', '=', False),
                 ]), 
         'default_code': fields.char('Partial code', size=30), 
+        'categ_id': fields.many2one(
+            'product.category', 'Category'), 
+        'catalog_id': fields.many2one(
+            'product.product.catalog', 'Catalog'), 
+        'status': fields.selection([
+            ('catalog', 'Catalog'),
+            ('out', 'Out catalog'),
+            ('stock', 'Stock'),
+            ('obsolete', 'Obsolete'),
+            ('sample', 'Sample'),
+            ('todo', 'Todo'),
+            ], 'Gamma'),
+        'sortable': fields.boolean('Sortable'),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
