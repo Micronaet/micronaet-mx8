@@ -48,23 +48,22 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
     # -------------------------------------------------------------------------
     #                             Wizard button event
     # -------------------------------------------------------------------------
-
     def print_report(self, cr, uid, ids, context=None):
         ''' Print report product
         '''
         if context is None: 
             context = {}
-            
+
         wiz_proxy = self.browse(cr, uid, ids)[0]
             
         datas = {}
         datas['wizard'] = True # started from wizard
         datas['partner_id'] = wiz_proxy.partner_id.id
-        datas['partner_name'] = wiz_proxy.partner_id.name
+        datas['default_code'] = wiz_proxy.default_code or False
                        
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'stock_status_multicompany_report',
+            'report_name': 'stock_status_report',
             'datas': datas,
             }
 
@@ -73,7 +72,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             domain=[
                 ('supplier', '=', True), 
                 ('is_company', '=', True),
+                ('is_address', '=', False),
                 ]), 
+        'default_code': fields.char('Partial code', size=30), 
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

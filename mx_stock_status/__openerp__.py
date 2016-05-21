@@ -18,7 +18,7 @@
 ###############################################################################
 
 {
-    'name': 'Stock inventory status multicompany',
+    'name': 'Stock inventory status',
     'version': '0.1',
     'category': 'Report',
     'description': '''        
