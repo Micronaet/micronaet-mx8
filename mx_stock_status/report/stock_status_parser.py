@@ -70,22 +70,28 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         #                            GENERATE FILTER:
         # =====================================================================
+        product_ids = []
 
         # ---------------------------------------------------------------------
         # SUPPLIER FILTER:
         # ---------------------------------------------------------------------
         partner_id = data.get('partner_id', False)        
+        default_code = data.get('default_code', False)        
+        
         if partner_id:
-            supplierinfo_ids = supplier_pool.search(self.cr, self.uid, [
-                ('name', '=', partner_id)])           
-
             # -----------------------------------------------------------------
             # A. Get template product supplier by partner (supplier in product)
             # -----------------------------------------------------------------
+            supplierinfo_ids = supplier_pool.search(self.cr, self.uid, [
+                ('name', '=', partner_id)])
             product_tmpl_ids = []
             for supplier in supplier_pool.browse(
                     self.cr, self.uid, supplierinfo_ids):
                 product_tmpl_ids.append(supplier.product_tmpl_id.id) 
+            # Get product form template:
+            tmpl_product_ids = product_pool.search(self.cr, self.uid, [
+                ('product_tmpl_id', 'in', product_tmpl_ids)])
+            product_ids.extend(tmpl_product_ids)
 
             # -----------------------------------------------------------------
             # B. Get product supplier by partner (field: first_supplier_id
@@ -93,23 +99,19 @@ class Parser(report_sxw.rml_parse):
             first_supplier_product_ids = product_pool.search(
                 self.cr, self.uid, [
                     ('first_supplier_id', '=', partner_id)])
-
-            # -----------------------------------------------------------------
-            # Get product form template:
-            # -----------------------------------------------------------------
-            product_ids = product_pool.search(self.cr, self.uid, [
-                ('product_tmpl_id', 'in', product_tmpl_ids)])
-    
-            # Extend list:
             product_ids.extend(first_supplier_product_ids)
-        else:
-            product_ids = [] # no product         
 
         # ---------------------------------------------------------------------
         # PRODUCT FILTER:
         # ---------------------------------------------------------------------
-        
-            
+        if default_code: 
+            domain = [
+                ('default_code', 'ilike', default_code),
+                ]
+            if product_ids: # filtered for partner
+                domain.append(('id', 'in', product_ids))
+            # Update product_id:        
+            product_ids = product_pool.search(self.cr, self.uid, domain)
         products = product_pool.browse(self.cr, self.uid, product_ids)
         return products
         '''

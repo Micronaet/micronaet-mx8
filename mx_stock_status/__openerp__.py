@@ -33,6 +33,9 @@
         'stock',
         'product',
         'close_residual_order',
+        'product_image_base', # for image in report
+        'inventory_status', # stock dispo
+        'csv_import_campaign', # campaign dispo        
         ],
     'init_xml': [],
     'demo': [],
