@@ -56,22 +56,24 @@ class StockStatusPrintReportWizard(orm.TransientModel):
             context = {}
             
         wiz_proxy = self.browse(cr, uid, ids)[0]
-        report_name = 'mx_procurement_report' 
             
         datas = {}
         datas['wizard'] = True # started from wizard
         datas['partner_id'] = wiz_proxy.partner_id.id
+        datas['partner_name'] = wiz_proxy.partner_id.name
                        
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': report_name,
+            'report_name': 'stock_status_multicompany_report',
             'datas': datas,
             }
 
     _columns = { 
         'partner_id': fields.many2one('res.partner', 'Supplier', 
-            required=True, domain=[
-                ('supplier', '=', True), ('is_company', '=', True)]), 
+            domain=[
+                ('supplier', '=', True), 
+                ('is_company', '=', True),
+                ]), 
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

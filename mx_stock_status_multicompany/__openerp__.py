@@ -31,6 +31,7 @@
     'depends': [
         'base',
         'stock',
+        'product',
         'close_residual_order',
         ],
     'init_xml': [],

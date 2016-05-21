@@ -28,7 +28,7 @@
       </record>     
       
       <menuitem 
-          parent="stock.menu_product_variant_config_stock" 
+          parent="product.menu_products" 
           id="menu_stock_status_print_report_wizard" 
           action="action_stock_status_print_report_wizard"/>
          
