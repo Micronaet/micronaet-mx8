@@ -25,6 +25,12 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
           <field name="view_id" ref="stock_status_print_report_wizard_form_view"/>
-      </record>        
+      </record>     
+      
+      <menuitem 
+          parent="stock.menu_product_variant_config_stock" 
+          id="menu_stock_status_print_report_wizard" 
+          action="action_stock_status_print_report_wizard"/>
+         
     </data>
 </openerp>
