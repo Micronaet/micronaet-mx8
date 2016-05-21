@@ -40,10 +40,10 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-class StockStatusPrintReportWizard(orm.TransientModel):
+class StockStatusPrintImageReportWizard(orm.TransientModel):
     ''' Wizard for print stock status
     '''
-    _name = 'stock.status.print.report.wizard'
+    _name = 'stock.status.print.image.report.wizard'
 
     # -------------------------------------------------------------------------
     #                             Wizard button event

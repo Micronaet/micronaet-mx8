@@ -38,7 +38,6 @@
     'demo': [],
     'data': [
         #'security/ir.model.access.csv',    
-        'stock_status_view.xml',
         'report/status_report.xml',
         'wizard/print_wizard_view.xml',
         ],
