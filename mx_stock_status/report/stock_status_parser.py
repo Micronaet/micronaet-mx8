@@ -67,8 +67,11 @@ class Parser(report_sxw.rml_parse):
         sortable = data.get('sortable', False)
         with_photo = data.get('with_photo', False)
         
+        # Partner:
         if partner_name:
             res += _('Supplier: %s; ') % partner_name
+        
+        # Product:    
         if default_code:
             res += _('Code: %s; ') % default_code
         if statistic_category:
@@ -81,6 +84,8 @@ class Parser(report_sxw.rml_parse):
             res += _('Status: %s; ') % status
         if sortable:
             res += _('Sortable product; ')
+            
+        # Photo:    
         if with_photo:
             res += _('With photo; ')
         else:    
@@ -107,8 +112,8 @@ class Parser(report_sxw.rml_parse):
         partner_id = data.get('partner_id', False)        
         default_code = data.get('default_code', False)        
         statistic_category = data.get('statistic_category', False)        
-        categ_id = data.get('categ_id', False)
-        catalog_id = data.get('catalog_id', False)
+        categ_ids = data.get('categ_ids', False)
+        catalog_ids = data.get('catalog_ids', False)
         status = data.get('status', False)
         sortable = data.get('sortable', False)
         
@@ -147,10 +152,21 @@ class Parser(report_sxw.rml_parse):
 
         if statistic_category: 
             domain.append(('statistic_category', 'ilike', statistic_category))
-        
+
+        if categ_ids:
+            domain.append(('categ_id', '=', categ_ids))
+
+        if catalog_ids:
+            domain.append(('catalog_id', '=', catalog_ids))
+
         if status:
             domain.append(('status', '=', status))
-        # TODO ADD other (and filter=    
+
+        if sortable:
+            domain.append(('sortable', '=', True))
+            
+        # TODO ADD other (and filter=
+         
                 
 
         product_ids = product_pool.search(self.cr, self.uid, domain)

@@ -61,10 +61,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         datas['partner_id'] = wiz_proxy.partner_id.id
         datas['partner_name'] = wiz_proxy.partner_id.name
         datas['default_code'] = wiz_proxy.default_code or False
-        datas['categ_id'] = wiz_proxy.categ_id.id or False
-        datas['categ_name'] = wiz_proxy.categ_id.name or False
-        datas['catalog_id'] = wiz_proxy.catalog_id.id or False
-        datas['catalog_name'] = wiz_proxy.catalog_id.name or False
+        datas['categ_ids'] = [item.id for item in wiz_proxy.categ_ids]
+        datas['categ_name'] = [item.name for item in wiz_proxy.categ_ids]
+        datas['catalog_ids'] = [item.id for item in wiz_proxy.category_ids]
+        datas['catalog_name'] = [item.name for item in wiz_proxy.category_ids]
         datas['status'] = wiz_proxy.status or False
         datas['sortable'] = wiz_proxy.sortable or False
         datas['with_photo'] = wiz_proxy.with_photo
@@ -85,10 +85,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ]), 
         'default_code': fields.char('Partial code', size=30), 
         'statistic_category': fields.char('Statistic category', size=10), 
-        'categ_id': fields.many2one(
-            'product.category', 'Category'), 
-        'catalog_id': fields.many2one(
-            'product.product.catalog', 'Catalog'), 
+        'categ_ids': fields.many2many(
+            'product.category', 'product_category_status_rel', 
+            'product_id', 'category_id', 
+            'Category'),
+        'catalog_ids': fields.many2many(
+            'product.product.catelog', 'product_catalog_status_rel', 
+            'product_id', 'catalog_id', 
+            'Catalog'),
         'status': fields.selection([
             ('catalog', 'Catalog'),
             ('out', 'Out catalog'),
