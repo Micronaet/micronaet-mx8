@@ -164,10 +164,7 @@ class Parser(report_sxw.rml_parse):
 
         if sortable:
             domain.append(('sortable', '=', True))
-            
-        # TODO ADD other (and filter=
-         
-                
+        # TODO ADD other (and filter)
 
         product_ids = product_pool.search(self.cr, self.uid, domain)
         products = product_pool.browse(self.cr, self.uid, product_ids)
