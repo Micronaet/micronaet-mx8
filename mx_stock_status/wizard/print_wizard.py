@@ -64,6 +64,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         datas['catalog_id'] = wiz_proxy.catalog_id.id or False
         datas['status'] = wiz_proxy.status or False
         datas['sortable'] = wiz_proxy.sortable or False
+        datas['with_photo'] = wiz_proxy.with_photo
+        datas['statistic_category'] = wiz_proxy.statistic_category
                        
         return {
             'type': 'ir.actions.report.xml',
@@ -79,6 +81,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ('is_address', '=', False),
                 ]), 
         'default_code': fields.char('Partial code', size=30), 
+        'statistic_category': fields.char('Statistic category', size=10), 
         'categ_id': fields.many2one(
             'product.category', 'Category'), 
         'catalog_id': fields.many2one(

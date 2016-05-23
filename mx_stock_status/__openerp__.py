@@ -32,6 +32,7 @@
         'base',
         'stock',
         'product',
+        'sql_product', # for stat. cat.
         'close_residual_order',
         'product_image_base', # for image in report
         'inventory_status', # stock dispo

@@ -77,6 +77,7 @@ class Parser(report_sxw.rml_parse):
         # ---------------------------------------------------------------------
         partner_id = data.get('partner_id', False)        
         default_code = data.get('default_code', False)        
+        statistic_category = data.get('statistic_category', False)        
         categ_id = data.get('categ_id', False)
         catalog_id = data.get('catalog_id', False)
         status = data.get('status', False)
@@ -114,6 +115,9 @@ class Parser(report_sxw.rml_parse):
 
         if default_code: 
             domain.append(('default_code', 'ilike', default_code))
+
+        if statistic_category: 
+            domain.append(('statistic_category', 'ilike', statistic_category))
         
         if status:
             domain.append(('status', '=', status))
