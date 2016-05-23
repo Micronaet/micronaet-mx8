@@ -20,6 +20,7 @@
                         <field name="catalog_id" />
                         <field name="status" />
                         <field name="sortable" />
+                        <field name="with_photo" />
                    </group>                   
                 </form>
             </field>

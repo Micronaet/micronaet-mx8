@@ -92,6 +92,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('todo', 'Todo'),
             ], 'Gamma'),
         'sortable': fields.boolean('Sortable'),
+        'with_photo': fields.boolean('With photo'),
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
