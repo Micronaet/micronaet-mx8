@@ -150,14 +150,14 @@ class Parser(report_sxw.rml_parse):
         if default_code: 
             domain.append(('default_code', 'ilike', default_code))
 
-        if statistic_category: 
-            domain.append(('statistic_category', 'ilike', statistic_category))
+        if statistic_category:            
+            domain.append(('statistic_category', 'in', statistic_category))
 
         if categ_ids:
-            domain.append(('categ_id', '=', categ_ids))
+            domain.append(('categ_id', 'in', categ_ids))
 
-        if catalog_ids:
-            domain.append(('catalog_id', '=', catalog_ids))
+        if catalog_ids: # TODO test
+            domain.append(('catalog_ids', 'in', catalog_ids))
 
         if status:
             domain.append(('status', '=', status))

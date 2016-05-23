@@ -18,10 +18,10 @@
                         <field name="default_code" />
                         <field name="statistic_category" />
                         <field name="categ_ids" widget="many2many_tags" />
-                        <field name="catalog_ids" widget="many2many_tags" />
                         <field name="status" />
                         <field name="sortable" />
                         <field name="with_photo" />
+                        <field name="catalog_ids" widget="many2many_tags" invisible="1"/><!--TODO-->
                    </group>                   
                 </form>
             </field>
