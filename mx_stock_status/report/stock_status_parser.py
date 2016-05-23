@@ -57,7 +57,36 @@ class Parser(report_sxw.rml_parse):
         ''' Get filter selected
         '''
         data = data or {}
-        return data.get('partner_name', '')
+        res = ''
+        partner_name = data.get('partner_name', False)        
+        default_code = data.get('default_code', False)        
+        statistic_category = data.get('statistic_category', False)        
+        categ_name = data.get('categ_id', False)
+        catalog_name = data.get('catalog_id', False)
+        status = data.get('status', False)
+        sortable = data.get('sortable', False)
+        with_photo = data.get('with_photo', False)
+        
+        if partner_name:
+            res += _('Supplier: %s; ') % partner_name
+        if default_code:
+            res += _('Code: %s; ') % default_code
+        if statistic_category:
+            res += _('Statistic category: %s; ') % statistic_category
+        if categ_name:
+            res += _('Category: %s; ') % categ_name
+        if catalog_name:
+            res += _('Catalog: %s; ') % catalog_name
+        if status:
+            res += _('Status: %s; ') % status
+        if sortable:
+            res += _('Sortable product; ')
+        if with_photo:
+            res += _('With photo; ')
+        else:    
+            res += _('Without photo; ')
+            
+        return res
     
     def get_object(self, data):
         ''' Search all product elements

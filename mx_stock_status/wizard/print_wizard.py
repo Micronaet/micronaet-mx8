@@ -59,9 +59,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         datas = {}
         datas['wizard'] = True # started from wizard
         datas['partner_id'] = wiz_proxy.partner_id.id
+        datas['partner_name'] = wiz_proxy.partner_id.name
         datas['default_code'] = wiz_proxy.default_code or False
         datas['categ_id'] = wiz_proxy.categ_id.id or False
+        datas['categ_name'] = wiz_proxy.categ_id.name or False
         datas['catalog_id'] = wiz_proxy.catalog_id.id or False
+        datas['catalog_name'] = wiz_proxy.catalog_id.name or False
         datas['status'] = wiz_proxy.status or False
         datas['sortable'] = wiz_proxy.sortable or False
         datas['with_photo'] = wiz_proxy.with_photo
