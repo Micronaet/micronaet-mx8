@@ -132,13 +132,14 @@ class Parser(report_sxw.rml_parse):
                 )
 
         products = {}
-        product_mask = company_proxy.product_mask or ''
+        product_mask = company_proxy.product_mask or '%s' # if not configured
         products_code = [] # For search in other database
 
         clean_product_ids = []
-        for product in product_pool.browse(self.cr, self.uid, product_ids):                
-            default_code = product.default_code or ''
+        for product in product_pool.browse(self.cr, self.uid, product_ids):
+            default_code = product.default_code # or ''
             products_code.append(product_mask % default_code)
+
             if default_code in products:
                 # Jump bouble (TODO use sets not list!!!)
                 continue
