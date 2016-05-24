@@ -68,9 +68,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         datas['status'] = wiz_proxy.status or False
         datas['sortable'] = wiz_proxy.sortable or False
         datas['with_photo'] = wiz_proxy.with_photo
-        datas['statistic_category'] = [
-            item.strip() for item in (
-                wiz_proxy.statistic_category or '').split('|')]
+        if wiz_proxy.statistic_category:
+            datas['statistic_category'] = [
+                item.strip() for item in (
+                    wiz_proxy.statistic_category or '').split('|')]
+        else:            
+            datas['statistic_category'] = False
+                    
                        
         return {
             'type': 'ir.actions.report.xml',

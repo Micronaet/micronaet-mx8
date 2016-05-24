@@ -78,6 +78,13 @@ class AccountInvoiceLine(orm.Model):
                 }, string='Order date',            
             )
     """
+    def _get_first_supplier_from_product(self, cr, uid, ids, context=None):
+        ''' When change sol line order
+        '''
+        line_pool = self.pool.get('account.invoice.line')
+        return line_pool.search(cr, uid, [
+            ('product_id', 'in', ids)], context=context)
+
     _columns = {
         'date_invoice': fields.related(
             'invoice_id', 'date_invoice', 
@@ -87,6 +94,14 @@ class AccountInvoiceLine(orm.Model):
             'invoice_id', 'destination_partner_id', 
             type='many2one', string='Destination', relation='res.partner',
             store=False),
+        
+        'first_supplier_id': fields.related(
+            'product_id', 'first_supplier_id', 
+            type='many2one', string='First supplier', relation='res.partner',
+            store={
+                'product.product': (_get_first_supplier_from_product, [
+                    'first_supplier_id'], 10),
+                }),
         
         'type': fields.related(
             'invoice_id', 'type', 
