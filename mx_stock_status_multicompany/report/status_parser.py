@@ -137,7 +137,7 @@ class Parser(report_sxw.rml_parse):
 
         clean_product_ids = []
         for product in product_pool.browse(self.cr, self.uid, product_ids):                
-            default_code = product.default_code
+            default_code = product.default_code or ''
             products_code.append(product_mask % default_code)
             if default_code in products:
                 # Jump bouble (TODO use sets not list!!!)
