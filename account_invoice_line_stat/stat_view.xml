@@ -7,6 +7,7 @@
              <field name="arch" type="xml">
                 <search string="Invoice line" version="7.0">        
                     <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
+                    <field name="destination_partner_id" />
                     <field name="invoice_id" filter_domain="[('order_id.name','ilike',self)]"/>
                     <field name="account_id" filter_domain="[('account_id.name','ilike',self)]"/>
                     <field name="zone_id" filter_domain="[('zone_id.name','ilike',self)]"/>
@@ -37,8 +38,9 @@
              <field name="arch" type="xml">
                  <tree string="Invoice line stat" editable="bottom">
                      <field name="type" invisible="1"/>        
-                     <field name="invoice_id" readonly="1" string="Ref."/>
+                     <field name="invoice_id" readonly="1" string="Ref."/>                     
                      <field name="partner_id" readonly="1"/>
+                     <field name="destination_partner_id" readonly="1"/>
 
                      <field name="date_invoice" readonly="1"/>                  
                      <!--field name="property_fiscal_position" readonly="1"/-->

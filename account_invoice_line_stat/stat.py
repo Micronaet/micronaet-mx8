@@ -82,6 +82,11 @@ class AccountInvoiceLine(orm.Model):
         'date_invoice': fields.related(
             'invoice_id', 'date_invoice', 
             type='date', string='Date', store=True),             
+
+        'destination_partner_id': fields.related(
+            'invoice_id', 'destination_partner_id', 
+            type='many2one', string='Destination', relation='res.partner',
+            store=False),
         
         'type': fields.related(
             'invoice_id', 'type', 
