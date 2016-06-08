@@ -38,32 +38,78 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-class AccountPaymentTerm(orm.Model):
-    """ Model name: AccountPaymentTerm
+class ResCompany(orm.Model):
+    """ Model name: Res Company
     """
     
+    _inherit = 'res.company'
+    
+    # Utility:
+    def get_refund_information(self, cr, uid, company_id=0, context=None):
+        ''' Return current company refund paramters        
+        '''
+        if company_id:
+            company_ids = self.search(cr, uid, [
+                ('id', '=', company_id)], context=context)
+        else:    
+            company_ids = self.search(cr, uid, [], context=context)
+        return self.browse(cr, uid, company_ids, context=context)[0]
+        
+    _columns = {
+        'refund_account_id': fields.many2one(
+            'account.account', 'Refund account'),     
+        'refund_product_id': fields.many2one(
+            'product.product', 'Product'),
+        'refund_cost': fields.float('Refund cost', 
+            help='Number of effects to pay',
+            digits=(16, 2)),                    
+        }
+
+class AccountPaymentTerm(orm.Model):
+    """ Model name: AccountPaymentTerm
+    """    
     _inherit = 'account.payment.term'
     
     _columns = {
         'has_refund': fields.boolean('has refund cost'),
-        'refund_cost': fields.float('Refund cost', 
+        'refund_number': fields.float('# effects', 
+            help='Number of effects to pay',
             digits=(16, 2)), 
-        'refund_account_id': fields.many2one(
-            'account.account', 'Refund account'),     
-        'refund_product_id': fields.many2one(
-            'product.product', 'Product'),     
         }
 
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
-    """
-    
+    """    
     _inherit = 'account.invoice'
     
-    def create_update_refunt(self, cr, uid, invoice_proxy, context=None):
+    def create_update_refund(self, cr, uid, invoice_proxy, context=None):
         ''' Function called by create and update procedure.
-            Generate line with refund value
-        '''        
+            Generate line with refund value        
+        '''
+        # ---------------------------------------------------------------------
+        #                        Read parameters:
+        # ---------------------------------------------------------------------
+        # Company:
+        company_param = self.pool.get('res.company').get_refund_information(
+                cr, uid, context=context)
+        refund_account_id = company_param.refund_account_id
+        refund_product_id = company_param.refund_product_id
+        price_unit = company_param.refund_cost
+        
+        # Payment:
+        refund_number = invoice_proxy.payment_term.refund_number or 1
+
+        # Related:
+        product_id = refund_product_id.id
+        uos_id = refund_product_id.uom_id.id # XXX UOM
+        name = refund_product_id.name
+        
+        # Calculated:
+        quantity = refund_number * price_unit
+        
+        # ---------------------------------------------------------------------
+        #                      Update create refund line:
+        # ---------------------------------------------------------------------
         res_id = invoice_proxy.id
         refund = invoice_proxy.payment_term # readability
         line_pool = self.pool.get('account.invoice.line')
@@ -72,13 +118,6 @@ class AccountInvoice(orm.Model):
             ('refund_line', '=', True),
             ], context=context)
 
-        # Get data:
-        product_id = refund.refund_product_id.id
-        uos_id = refund.refund_product_id.uom_id.id # XXX uom!
-        quantity = 1
-        name = refund.refund_product_id.name
-        price_unit = refund.refund_cost
-        
         # On change function:
         data = line_pool.product_id_change(cr, uid, False, product_id,
             uos_id, quantity, name, invoice_proxy.type, 
@@ -88,8 +127,9 @@ class AccountInvoice(orm.Model):
         
         if 'invoice_line_tax_id' in data:
             data['invoice_line_tax_id'] = [(6, 0, data['invoice_line_tax_id'])]
+        
         data.update({
-            'account_id': refund.refund_account_id.id,
+            'account_id': refund_account_id.id,
             'sequence': 100000,
             'invoice_id': res_id,
             'price_unit': price_unit,
@@ -102,6 +142,8 @@ class AccountInvoice(orm.Model):
             })
             
         if line_ids:
+            if len(line_ids) > 1:
+                _logger.error('More than one refund line: %s' % res_id)
             line_pool.write(cr, uid, line_ids[0], data, context=context)
         else:
             line_pool.create(cr, uid, data, context=context)
@@ -126,7 +168,7 @@ class AccountInvoice(orm.Model):
         if not invoice_proxy.payment_term.has_refund:
             return res_id
             
-        self.create_update_refunt(cr, uid, invoice_proxy, context=context)            
+        self.create_update_refund(cr, uid, invoice_proxy, context=context)            
         return res_id
         
     ''' TODO write also for modiication in payment!!
