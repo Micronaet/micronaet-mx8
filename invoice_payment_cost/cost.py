@@ -72,9 +72,8 @@ class AccountPaymentTerm(orm.Model):
     
     _columns = {
         'has_refund': fields.boolean('has refund cost'),
-        'refund_number': fields.float('# effects', 
-            help='Number of effects to pay',
-            digits=(16, 2)), 
+        'refund_number': fields.integer('# effects', 
+            help='Number of effects to pay'), 
         }
 
 class AccountInvoice(orm.Model):
@@ -97,15 +96,12 @@ class AccountInvoice(orm.Model):
         price_unit = company_param.refund_cost
         
         # Payment:
-        refund_number = invoice_proxy.payment_term.refund_number or 1
+        quantity = invoice_proxy.payment_term.refund_number or 1
 
         # Related:
         product_id = refund_product_id.id
         uos_id = refund_product_id.uom_id.id # XXX UOM
         name = refund_product_id.name
-        
-        # Calculated:
-        quantity = refund_number * price_unit
         
         # ---------------------------------------------------------------------
         #                      Update create refund line:
@@ -171,7 +167,8 @@ class AccountInvoice(orm.Model):
         self.create_update_refund(cr, uid, invoice_proxy, context=context)            
         return res_id
         
-    ''' TODO write also for modiication in payment!!
+    #TODO write also for modification in payment!!    
+    ''' 
     def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise

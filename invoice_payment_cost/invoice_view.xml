@@ -8,8 +8,7 @@
             <field name="inherit_id" ref="account.view_payment_term_form"/>
             <field name="arch" type="xml">
                 <field name="note" position="after">
-                    <group cospan="4" name="Refund" col="4">
-                        <separator string="Redund information:" colspan="4"/>
+                    <group cospan="4" name="refund" string="Refund:" col="4">
                         <field name="has_refund" />
                         <field name="refund_number" attrs="{'required':[('has_refund','=',True)],'invisible':[('has_refund','=',False)]}"/>
                         <newline />
@@ -23,8 +22,8 @@
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/sheet/notebook/page/group[1]" position="after">
-                    <group name="Payment configuration:">
+                <xpath expr="/form/sheet/notebook/page[@string='Configuration']/group[1]" position="after">
+                    <group name="redunf_block" string="Refund configuration:" >
                         <field name="refund_account_id" />
                         <field name="refund_product_id" />
                         <field name="refund_cost" />
