@@ -85,16 +85,36 @@ class AccountInvoice(orm.Model):
         ''' Function called by create and update procedure.
             Generate line with refund value        
         '''
+        # Initial check:
+        has_refund = invoice_proxy.payment_term.has_refund
+        
+        # Get refund line:
+        line_pool = self.pool.get('account.invoice.line')
+        line_ids = line_pool.search(cr, uid, [
+            ('invoice_id', '=', res_id),
+            ('refund_line', '=', True),
+            ], context=context)
+            
+        # Remove line if not refund payment    
+        if not has_refund:
+            if line_ids:
+                line_pool.unlink(line_ids) 
+                return True
+            else:
+                return True    
+
         # ---------------------------------------------------------------------
         #                        Read parameters:
         # ---------------------------------------------------------------------
         # Company:
-        company_param = self.pool.get('res.company').get_refund_information(
-                cr, uid, context=context)
+        company_param = invoice_proxy.company_id # Readability
         refund_account_id = company_param.refund_account_id
         refund_product_id = company_param.refund_product_id
         price_unit = company_param.refund_cost
         
+        # Invoice:
+        res_id = invoice_proxy.id
+
         # Payment:
         quantity = invoice_proxy.payment_term.refund_number or 1
 
@@ -106,13 +126,6 @@ class AccountInvoice(orm.Model):
         # ---------------------------------------------------------------------
         #                      Update create refund line:
         # ---------------------------------------------------------------------
-        res_id = invoice_proxy.id
-        refund = invoice_proxy.payment_term # readability
-        line_pool = self.pool.get('account.invoice.line')
-        line_ids = line_pool.search(cr, uid, [
-            ('invoice_id', '=', res_id),
-            ('refund_line', '=', True),
-            ], context=context)
 
         # On change function:
         data = line_pool.product_id_change(cr, uid, False, product_id,
@@ -159,16 +172,11 @@ class AccountInvoice(orm.Model):
         res_id = super(AccountInvoice, self).create(
             cr, uid, vals, context=context)
             
-        # Check refund line:
-        invoice_proxy = self.browse(cr, uid, res_id, context=context)
-        if not invoice_proxy.payment_term.has_refund:
-            return res_id
-            
+        # Check refund line (always for remove operation!):
+        invoice_proxy = self.browse(cr, uid, res_id, context=context)            
         self.create_update_refund(cr, uid, invoice_proxy, context=context)            
         return res_id
         
-    #TODO write also for modification in payment!!    
-    ''' 
     def write(self, cr, uid, ids, vals, context=None):
         """ Update redord(s) comes in {ids}, with new value comes as {vals}
             return True on success, False otherwise
@@ -182,9 +190,14 @@ class AccountInvoice(orm.Model):
         """
     
         #TODO: process before updating resource
+        if 'payment_term' in vals:
+            # Check or update (alse remove if no refund)
+            invoice_proxy = self.browse(cr, uid, res_id, context=context)            
+            self.create_update_refund(cr, uid, invoice_proxy, context=context)
+                       
         res = super(AccountInvoice, self).write(
             cr, uid, ids, vals, context=context)
-        return res'''
+        return res
     
 
 class AccountInvoiceLine(orm.Model):
