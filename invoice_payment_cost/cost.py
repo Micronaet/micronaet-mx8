@@ -57,12 +57,12 @@ class ResCompany(orm.Model):
         
     _columns = {
         'refund_account_id': fields.many2one(
-            'account.account', 'Refund account'),     
+            'account.account', 'Refund account', required=True),     
         'refund_product_id': fields.many2one(
-            'product.product', 'Product'),
+            'product.product', 'Product', required=True),
         'refund_cost': fields.float('Refund cost', 
             help='Number of effects to pay',
-            digits=(16, 2)),                    
+            digits=(16, 2), required=True),
         }
 
 class AccountPaymentTerm(orm.Model):

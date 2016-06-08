@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!--account.payment.term-->
         <record model="ir.ui.view" id="view_view_payment_refund_form">
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>
@@ -10,12 +11,25 @@
                     <group cospan="4" name="Refund" col="4">
                         <separator string="Redund information:" colspan="4"/>
                         <field name="has_refund" />
+                        <field name="refund_number" attrs="{'required':[('has_refund','=',True)],'invisible':[('has_refund','=',False)]}"/>
                         <newline />
-                        <field name="refund_account_id" attrs="{'required':[('has_refund','=',True)],'invisible':[('has_refund','=',False)]}"/> <!--TODO domain filter?-->
-                        <field name="refund_product_id" attrs="{'required':[('has_refund','=',True)],'invisible':[('has_refund','=',False)]}"/> <!--TODO domain filter?-->
-                        <field name="refund_cost" attrs="{'required':[('has_refund','=',True)],'invisible':[('has_refund','=',False)]}"/>
                     </group>
                 </field>
+            </field>
+        </record>
+        <!--res.company-->        
+        <record model="ir.ui.view" id="view_res_company_paymeny_form">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/group[1]" position="after">
+                    <group name="Payment configuration:">
+                        <field name="refund_account_id" />
+                        <field name="refund_product_id" />
+                        <field name="refund_cost" />
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>
