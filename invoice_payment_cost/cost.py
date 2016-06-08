@@ -87,6 +87,7 @@ class AccountInvoice(orm.Model):
         '''
         # Initial check:
         has_refund = invoice_proxy.payment_term.has_refund
+        res_id = invoice_proxy.id
         
         # Get refund line:
         line_pool = self.pool.get('account.invoice.line')
@@ -98,7 +99,8 @@ class AccountInvoice(orm.Model):
         # Remove line if not refund payment    
         if not has_refund:
             if line_ids:
-                line_pool.unlink(line_ids) 
+                line_pool.unlink(cr, uid, line_ids, context=context) 
+                _logger.warning('Delete refund line: %s' % res_id)
                 return True
             else:
                 return True    
@@ -112,9 +114,6 @@ class AccountInvoice(orm.Model):
         refund_product_id = company_param.refund_product_id
         price_unit = company_param.refund_cost
         
-        # Invoice:
-        res_id = invoice_proxy.id
-
         # Payment:
         quantity = invoice_proxy.payment_term.refund_number or 1
 
@@ -154,8 +153,10 @@ class AccountInvoice(orm.Model):
             if len(line_ids) > 1:
                 _logger.error('More than one refund line: %s' % res_id)
             line_pool.write(cr, uid, line_ids[0], data, context=context)
+            _logger.warning('Update refund line: %s' % res_id)
         else:
             line_pool.create(cr, uid, data, context=context)
+            _logger.warning('Create refund line: %s' % res_id)
         return True    
         
     # Override function to create
@@ -188,15 +189,14 @@ class AccountInvoice(orm.Model):
             
             @return: True on success, False otherwise
         """
-    
-        #TODO: process before updating resource
-        if 'payment_term' in vals:
-            # Check or update (alse remove if no refund)
-            invoice_proxy = self.browse(cr, uid, res_id, context=context)            
-            self.create_update_refund(cr, uid, invoice_proxy, context=context)
-                       
         res = super(AccountInvoice, self).write(
             cr, uid, ids, vals, context=context)
+
+        # process after updating resource (else there's wrong payment)
+        if 'payment_term' in vals:
+            # Check or update (alse remove if no refund)
+            invoice_proxy = self.browse(cr, uid, ids, context=context)[0]
+            self.create_update_refund(cr, uid, invoice_proxy, context=context)
         return res
     
 
