@@ -24,6 +24,7 @@
                         <filter name="group_invoice" string="Invoice" context="{'group_by': 'invoice_id'}"/>
                         <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                         <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>
+                        <filter name="group_account" string="First supplier" context="{'group_by': 'first_supplier_id'}"/>
 
                         <!--<filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'property_account_position'}"/>-->
                         <filter name="group_zone" string="Zone" context="{'group_by': 'zone_id'}"/>

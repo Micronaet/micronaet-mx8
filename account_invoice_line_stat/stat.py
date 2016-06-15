@@ -100,7 +100,8 @@ class AccountInvoiceLine(orm.Model):
             type='many2one', string='First supplier', relation='res.partner',
             store={
                 'product.product': (_get_first_supplier_from_product, [
-                    'first_supplier_id'], 10),
+                    'first_supplier_id'], 10),    
+                 # TODO add product_id                    
                 }),
         
         'type': fields.related(
