@@ -107,10 +107,10 @@ class AccountInvoiceLine(orm.Model):
         'type': fields.related(
             'invoice_id', 'type', 
             type='selection', selection=[
-                ('out_invoice','Customer Invoice'),
-                ('in_invoice','Supplier Invoice'),
-                ('out_refund','Customer Refund'),
-                ('in_refund','Supplier Refund'),
+                ('out_invoice', 'Customer Invoice'),
+                ('in_invoice', 'Supplier Invoice'),
+                ('out_refund', 'Customer Refund'),
+                ('in_refund', 'Supplier Refund'),
                 ], string='Type', store=True),
         'zone_id': fields.related(
             'partner_id', 'zone_id', 

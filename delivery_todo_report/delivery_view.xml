@@ -65,6 +65,7 @@
                                 <field name="destination_partner_id" readonly="1" />                            
                                 <field name="mx_agent_id" readonly="1"/>
                                 <field name="zone_id" readonly="1" />
+                                <field name="payment_term" string="Payment" readonly="1"/>
                             </group>    
                             <group colspan="2" col="2" name="customer_box">
                                 <separator string="Customer" colspan="2"/>
