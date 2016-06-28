@@ -93,8 +93,11 @@
                             </group>    
                             <field name="state" invisible="1"/>
                             <field name="all_produced" invisible="1"/>
+                        </group>                         
+                        <group colspan="4" col="4">
+                           <field name="text_note_pre" readonly="1" attrs="{'invisible':[('text_note_pre','=',False)]}"/>
+                           <field name="text_note_post" readonly="1" attrs="{'invisible':[('text_note_post','=',False)]}"/>
                         </group> 
-                        
                         <notebook colspan="4">
                           <page string="Delivery lines">
                               <field name="remain_order_line" readonly="1" domain="[('mrp_production_state','!=','delivered')]">
@@ -136,7 +139,7 @@
                                   </tree>
                               </field>
                           </page>
-                          <page string="Note">
+                          <!--<page string="Note">
                                <group colspan="4" col="4">
                                    <separator string="Note (pre sale line)" colspan="2" />
                                    <separator string="Note (post sale line)" colspan="2" />
@@ -144,7 +147,7 @@
                                    <field name="text_note_pre" colspan="2" nolabel="1" readonly="1"/>
                                    <field name="text_note_post" colspan="2" nolabel="1" readonly="1"/>
                                </group> 
-                          </page>
+                          </page>-->
               
                         </notebook>                    
                         <field name="note" readonly="1"/>
