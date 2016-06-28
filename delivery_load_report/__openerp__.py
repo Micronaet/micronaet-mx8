@@ -40,6 +40,7 @@
         'fido_order_check',
         'inventory_status_on_delivery',
         'delivery_selection', # Add dep for manage selection to print
+        'note_manage_sale', # For extra note
         #'base_accounting_program', # res.partner.zone TODO move in module!
         ],
     'init_xml': [],
