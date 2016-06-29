@@ -314,7 +314,22 @@ class SaleOrder(orm.Model):
                 #if line.product_uom_qty > line.delivered_qty
         return res
 
+    def mark_as_delivering(self, cr, uid, ids, context=None):
+        ''' Set as delivering
+        '''
+        return self.write(cr, uid, ids, {
+            'delivering_status': True,
+            }, context=None)
+
+    def mark_as_no_delivering(self, cr, uid, ids, context=None):
+        ''' Set as no delivering
+        '''
+        return self.write(cr, uid, ids, {
+            'delivering_status': False,
+            }, context=None)
+        
     _columns = {
+        'delivering_status': fields.boolean('Delivering status'),
         'all_produced': fields.boolean('All produced'),
         
         # Total:
