@@ -1,0 +1,92 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_partner_move_deadline
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-11 15:33+0000\n"
+"PO-Revision-Date: 2016-07-11 17:36+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mx_partner_move_deadline
+#: help:res.partner,pay_days_m1_days:0
+msgid "Extra days for month 1 (+ or - days)"
+msgstr "Giorni extra mese 1 (giorni in + o - )"
+
+#. module: mx_partner_move_deadline
+#: help:res.partner,pay_days_m2_days:0
+msgid "Extra days for month 2 (+ or - days)"
+msgstr "Giorni extra mese 2 (giorni in + o - )"
+
+#. module: mx_partner_move_deadline
+#: field:res.partner,pay_days_fix_delivery:0
+msgid "Fix delivery"
+msgstr "Giorni consegna fissi"
+
+#. module: mx_partner_move_deadline
+#: field:res.partner,pay_days_fix_delivery_extra:0
+msgid "Fix delivery extra"
+msgstr "Consegna fissa + gg.:"
+
+#. module: mx_partner_move_deadline
+#: help:res.partner,pay_days_fix_delivery_extra:0
+msgid "Fixed delivery extra days add days to delivery"
+msgstr "Giorni fissi extra aggiunti alla scadenza fissa forzata"
+
+#. module: mx_partner_move_deadline
+#: help:res.partner,pay_days_fix_delivery:0
+msgid ""
+"Fixed delivery, override payment data, ex.:\n"
+"                1: start, 31: end name, 10: 10 days of month"
+msgstr ""
+"Scadenza fissa, sovrascrive la data di pagamento, es.:     1: inizio mese, "
+"31: fine mese, 10: 10 gg. del mese"
+
+#. module: mx_partner_move_deadline
+#: field:res.partner,pay_days_m1_days:0
+msgid "Month 1 days"
+msgstr "Giorni mese 1"
+
+#. module: mx_partner_move_deadline
+#: field:res.partner,pay_days_m2_days:0
+msgid "Month 2 days"
+msgstr "Giorni mese 2"
+
+#. module: mx_partner_move_deadline
+#: field:res.partner,pay_days_m1:0
+msgid "Number of month 1"
+msgstr "Numero mese 1"
+
+#. module: mx_partner_move_deadline
+#: field:res.partner,pay_days_m2:0
+msgid "Number of month 2"
+msgstr "Numero mese 2"
+
+#. module: mx_partner_move_deadline
+#: help:res.partner,pay_days_m1:0
+msgid "Particular month 1"
+msgstr "Particolarità mese 1"
+
+#. module: mx_partner_move_deadline
+#: help:res.partner,pay_days_m2:0
+msgid "Particular month 2"
+msgstr "Particolarità mese 2"
+
+#. module: mx_partner_move_deadline
+#: model:ir.model,name:mx_partner_move_deadline.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mx_partner_move_deadline
+#: view:res.partner:mx_partner_move_deadline.view_res_partner_form
+msgid "Payment days part."
+msgstr "Particolarità giorni pagamento"
