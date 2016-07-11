@@ -7,13 +7,15 @@
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <field name="property_payment_term" position="after">
-                    <separator string="Payment days part." colspan="2"/>
-                    <field name="pay_days_fix_delivery"/>
-                    <field name="pay_days_fix_delivery_extra" attrs="{'invisible':[('pay_days_fix_delivery','=',False)]}"/>
-                    <field name="pay_days_m1"/>
-                    <field name="pay_days_m1_days"/>
-                    <field name="pay_days_m2"/>
-                    <field name="pay_days_m2_days"/>
+                    <group colspan="4" col="4">
+                        <separator string="Payment days part." colspan="4"/>
+                        <field name="pay_days_fix_delivery"/>
+                        <field name="pay_days_fix_delivery_extra" attrs="{'invisible':[('pay_days_fix_delivery','=',0)]}"/>
+                        <field name="pay_days_m1"/>
+                        <field name="pay_days_m1_days"/>
+                        <field name="pay_days_m2"/>
+                        <field name="pay_days_m2_days"/>
+                    </group>
                 </field>
             </field>
         </record>
