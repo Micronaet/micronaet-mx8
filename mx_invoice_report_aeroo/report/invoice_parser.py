@@ -205,6 +205,17 @@ class Parser(report_sxw.rml_parse):
         except:
             return ''   
 
+    def reset_counter(self):
+        _logger.info('Counter reset for company 1 load report')
+        # reset counters:
+        self.counters = {
+            'volume': 0.0,
+            'length': 0.0,
+            'weight': 0.0,
+            }
+        _logger.info('Counter: %s' % self.counters)
+        return ''
+
     def get_counter(self, name):
         ''' Get counter with name passed (else create an empty)
         '''
@@ -217,7 +228,9 @@ class Parser(report_sxw.rml_parse):
         '''
         self.counters[name] = value
         return "" # empty so no write in module
-        
+
+
+
     def get_language(self, key, lang):
         ''' Get correct language
         '''
@@ -261,6 +274,8 @@ class Parser(report_sxw.rml_parse):
                 'COD. CLIENTE': 'CUSTOM. REF',
                 'PORTO': 'PORT',
                 'COLLI': 'CARTONS',
+                'LUNGHEZZA (LMT)': 'LENGHT (LMT)',
+                'PESO': 'WEIGHT',
                 'I NOSTRI PRODOTTI SONO STUDIATI E PREVISTI PER USO DOMESTICO. EVENTUALI VENDITE EFFETTUATE AD UTENTI PROFESSIONISTI (ES. BAR, RISTORANTI, DISCOTECHE, PISCINE, ECC.) COMPORTANO LA DECADENZA DI QUALSIASI GARANZIA SUL PRODOTTO.': 'OUR PRODUCTS ARE STUDIED AND DEVELOPED FOR DOMESTIC USE. ANY SALE TO PROFESSIONALS (EX. BARS, RESTAURANTS, CLUBS, SWIMMING POOLS, ETC.) WILL RESULT IN THE DECLINE OF ANY PRODUCT WARRANTY.',
                 },
             'fr_FR': {
