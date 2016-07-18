@@ -8,17 +8,19 @@
             <field name="arch" type="xml">             
                 <xpath expr="//notebook/page[1]" position="after">
                     <page string="Textilene report">
-                        <separator string="Movement from stock:" colspan="4"/>
-                        <field name="stock_report_tx_load_in_ids"/>
-                        <field name="stock_report_tx_load_out_ids"/>
+                        <group colspan="4" col="4">
+                            <separator string="Movement from stock:" colspan="4"/>
+                            <field name="stock_report_tx_load_in_ids"/>
+                            <field name="stock_report_tx_load_out_ids"/>
 
-                        <separator string="Correction document:" colspan="4"/>
-                        <field name="stock_report_tx_doc_in_ids"/>
-                        <field name="stock_report_tx_doc_out_ids"/>
+                            <separator string="Correction document:" colspan="4"/>
+                            <field name="stock_report_tx_doc_in_ids"/>
+                            <field name="stock_report_tx_doc_out_ids"/>
 
-                        <separator string="Production document:" colspan="4"/>
-                        <field name="stock_report_tx_mrp_in_ids"/>
-                        <field name="stock_report_tx_mrp_out_ids"/>
+                            <separator string="Production document:" colspan="4"/>
+                            <field name="stock_report_tx_mrp_in_ids"/>
+                            <field name="stock_report_tx_mrp_out_ids"/>
+                         </group>    
                     </page>
                 </xpath>
             </field>    

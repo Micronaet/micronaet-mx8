@@ -61,7 +61,7 @@ class ResPartner(orm.Model):
         }
     
     _defaults = {
-       'pay_days_m1': lambda *a: 8,
-       'pay_days_m2': lambda *a: 12,
+        #'pay_days_m1': lambda *a: 8,
+        #'pay_days_m2': lambda *a: 12,
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
