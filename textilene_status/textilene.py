@@ -118,5 +118,22 @@ class MrpBomLine(orm.Model):
             'product_id', 'in_report', type='boolean', 
             string='Product in report', store=False),
         }    
+
+class ResCompany(orm.Model):
+    """ Model name: ResCompany
+    """    
+    _inherit = 'res.company'
+    
+    _columns = {
+        # Document for extra load / unload:
+        'stock_report_doc_in_ids': fields.many2many(
+            'stock.picking.type', 'company_doc_in_rel', 
+            'company_id', 'type_id',
+            'Doc. in type'),             
+        'stock_report_doc_out_ids': fields.many2many(
+            'stock.picking.type', 'company_doc_out_rel', 
+            'company_id', 'type_id', 
+            'Doc. out type'),
+        }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

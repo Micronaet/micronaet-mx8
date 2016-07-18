@@ -46,12 +46,14 @@ class ResCompany(orm.Model):
     _inherit = 'res.company'
     
     _columns = {
+        # Default stock locations:
         'stock_location_id': fields.many2one(
             'stock.location', 'Default stock'), 
         'stock_mrp_location_id': fields.many2one(
             'stock.location', 'Default production', 
             help='From movement in/out in production'), 
 
+        # Document for load / unload:
         'stock_report_unload_ids': fields.many2many(
             'stock.picking.type', 'company_picking_out_rel', 
             'company_id', 'type_id', 
@@ -61,6 +63,7 @@ class ResCompany(orm.Model):
             'company_id', 'type_id', 
             'Pick in type'),
             
+        # Document for production in / out:    
         'stock_report_mrp_in_ids': fields.many2many(
             'stock.picking.type', 'company_mrp_in_rel', 
             'company_id', 'type_id', 
@@ -70,6 +73,7 @@ class ResCompany(orm.Model):
             'company_id', 'type_id', 
             'MRP out type'),
 
+        # Exclude partner list:
         'stock_explude_partner_ids': fields.many2many(
             'res.partner', 'company_picking_exclude_partner_rel', 
             'company_id', 'partner_id', 
@@ -79,6 +83,7 @@ class ResCompany(orm.Model):
         'product_mask': fields.char(
             'Mask', size=64, help='Mask for product in other DB'),
         
+        # Connection data:
         'is_remote_stock': fields.boolean('Is remote company', 
             help='If is remote company no XMLRPC connection'),
         'remote_name': fields.char('XMLRPC DB name', size=80),
