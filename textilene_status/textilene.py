@@ -125,15 +125,35 @@ class ResCompany(orm.Model):
     _inherit = 'res.company'
     
     _columns = {
-        # Document for extra load / unload:
-        'stock_report_doc_in_ids': fields.many2many(
-            'stock.picking.type', 'company_doc_in_rel', 
+        # Load unload normal:
+        'stock_report_tx_load_in_ids': fields.many2many(
+            'stock.picking.type', 'company_tx_load_in_rel', 
             'company_id', 'type_id',
-            'Doc. in type'),             
-        'stock_report_doc_out_ids': fields.many2many(
-            'stock.picking.type', 'company_doc_out_rel', 
+            'Load TX in type'),             
+        'stock_report_tx_load_out_ids': fields.many2many(
+            'stock.picking.type', 'company_tx_load_out_rel', 
             'company_id', 'type_id', 
-            'Doc. out type'),
+            'Load TX out type'),
+
+        # Document for extra load / unload:
+        'stock_report_tx_doc_in_ids': fields.many2many(
+            'stock.picking.type', 'company_tx_doc_in_rel', 
+            'company_id', 'type_id',
+            'Doc. TX in type'),             
+        'stock_report_tx_doc_out_ids': fields.many2many(
+            'stock.picking.type', 'company_tx_doc_out_rel', 
+            'company_id', 'type_id', 
+            'Doc. TX out type'),
+
+        # Document for load unload production:    
+        'stock_report_tx_mrp_in_ids': fields.many2many(
+            'stock.picking.type', 'company_tx_mrp_in_rel', 
+            'company_id', 'type_id',
+            'MRP. TX in type'),             
+        'stock_report_tx_mrp_out_ids': fields.many2many(
+            'stock.picking.type', 'company_tx_mrp_out_rel', 
+            'company_id', 'type_id', 
+            'MRP. TX out type'),
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
