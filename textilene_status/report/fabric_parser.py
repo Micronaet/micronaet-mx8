@@ -553,7 +553,7 @@ class Parser(report_sxw.rml_parse):
                         0, # +MM
                         0, # -OC
                         0,
-                        'PRODUCT WITHOUT BOM, Q.: %s' % qty,
+                        'PRODUCT WITHOUT BOM, Q.: %s' % remain,
                         ))                      
                     continue
                 
