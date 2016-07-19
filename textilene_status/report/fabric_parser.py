@@ -179,7 +179,8 @@ class Parser(report_sxw.rml_parse):
             
         # Better with OC?
         out_picking_type_ids = []
-        for item in company_proxy.stock_report_unload_ids:
+        for item in company_proxy.stock_report_tx_load_out_ids: 
+            #stock_report_unload_ids:
             out_picking_type_ids.append(item.id)
             
         pick_ids = pick_pool.search(self.cr, self.uid, [     
@@ -326,7 +327,8 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         block = 'OF and BF'
         in_picking_type_ids = []
-        for item in company_proxy.stock_report_load_ids:
+        for item in company_proxy.stock_report_tx_load_in_ids:
+            #stock_report_load_ids:
             in_picking_type_ids.append(item.id)
             
         pick_ids = pick_pool.search(self.cr, self.uid, [     

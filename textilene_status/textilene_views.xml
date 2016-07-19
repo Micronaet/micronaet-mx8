@@ -13,9 +13,9 @@
                             <field name="stock_report_tx_load_in_ids"/>
                             <field name="stock_report_tx_load_out_ids"/>
 
-                            <separator string="Correction document:" colspan="4"/>
+                            <!--<separator string="Correction document:" colspan="4"/>
                             <field name="stock_report_tx_doc_in_ids"/>
-                            <field name="stock_report_tx_doc_out_ids"/>
+                            <field name="stock_report_tx_doc_out_ids"/>-->
 
                             <separator string="Production document:" colspan="4"/>
                             <field name="stock_report_tx_mrp_in_ids"/>
