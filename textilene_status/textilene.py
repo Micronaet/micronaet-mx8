@@ -135,16 +135,6 @@ class ResCompany(orm.Model):
             'company_id', 'type_id', 
             'Load TX out type'),
 
-        # Document for extra load / unload:
-        #'stock_report_tx_doc_in_ids': fields.many2many(
-        #    'stock.picking.type', 'company_tx_doc_in_rel', 
-        #    'company_id', 'type_id',
-        #    'Doc. TX in type'),             
-        #'stock_report_tx_doc_out_ids': fields.many2many(
-        #    'stock.picking.type', 'company_tx_doc_out_rel', 
-        #    'company_id', 'type_id', 
-        #    'Doc. TX out type'),
-
         # Document for load unload production:    
         'stock_report_tx_mrp_in_ids': fields.many2many(
             'stock.picking.type', 'company_tx_mrp_in_rel', 
