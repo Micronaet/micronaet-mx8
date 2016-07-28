@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!--invoice_tree view_account_invoice_filter -->
+        <record id="account_mx_invoice_supplier_search" model="ir.ui.view">
+            <field name="name">account.invoice.mx.search</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Salesperson" position="after">
+                    <filter string="Payment" context="{'group_by':'payment_term'}"/>
+                </filter>
+            </field>
+        </record>
+
         <record id="account_mx_invoice_supplier_form" model="ir.ui.view">
             <field name="name">account.invoice.mx.form</field>
             <field name="model">account.invoice</field>
