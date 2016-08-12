@@ -63,7 +63,7 @@ class AccountInvoice(orm.Model):
                 self.browse(cr, uid, ids, context=context)[0].invoice_line):
             raise osv.except_osv(
                 _('VAT check!'), 
-                _('One or more line with VAT not present!')            
+                _('One or more line with VAT not present!')    )        
         return res    
         
     
