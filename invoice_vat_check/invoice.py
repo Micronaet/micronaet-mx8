@@ -48,7 +48,8 @@ class AccountInvoice(orm.Model):
         '''
         no_tax = 0
         for line in lines:
-            if not line.invoice_line_tax_id:
+            if not line.invoice_line_tax_id or len(
+                    line.invoice_line_tax_id) > 1: 
                 no_tax += 1                    
         return no_tax
 
@@ -63,7 +64,7 @@ class AccountInvoice(orm.Model):
                 self.browse(cr, uid, ids, context=context)[0].invoice_line):
             raise osv.except_osv(
                 _('VAT check!'), 
-                _('One or more line with VAT not present!')    )        
+                _('One or more line with VAT not present (or more than 1)!'))
         return res    
         
     
