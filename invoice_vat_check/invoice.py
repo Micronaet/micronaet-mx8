@@ -52,5 +52,19 @@ class AccountInvoice(orm.Model):
                 no_tax += 1                    
         return no_tax
 
+    def action_date_assign(self, cr, uid, ids, context=None):
+        ''' Override state action for trigger invoice_open
+        '''
+        res = super(AccountInvoice, self).action_date_assign(
+            cr, uid, ids, context=context)
+        
+        # Check vat
+        if self.check_invoice(
+                self.browse(cr, uid, ids, context=context)[0].invoice_line):
+            raise osv.except_osv(
+                _('VAT check!'), 
+                _('One or more line with VAT not present!')            
+        return res    
+        
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
