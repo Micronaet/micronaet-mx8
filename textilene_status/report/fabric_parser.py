@@ -341,9 +341,14 @@ class Parser(report_sxw.rml_parse):
             ('picking_type_id', 'in', in_picking_type_ids),            
             # Partner exclusion
             ('partner_id', 'not in', exclude_partner_ids),            
-            # check data date
+            # check data date (old method
             #('date', '>=', from_date), # XXX correct for virtual?
-            #('date', '<=', to_date),            
+            #('date', '<=', to_date),    
+
+            # Only in period # TODO remove if check extra data
+            ('date', '>=', period_from), 
+            ('date', '<=', period_to), 
+                    
             # TODO state filter
             ])
             
