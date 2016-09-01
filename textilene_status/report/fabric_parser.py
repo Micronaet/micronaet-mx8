@@ -147,10 +147,6 @@ class Parser(report_sxw.rml_parse):
             period_from = '%s-09-01' % (year - 1)
             period_to = '%s-08-31' % year
             
-        #XXX removed to see all extra data:    
-        #from_date = datetime.now().strftime('%Y-01-01 00:00:00')    
-        #to_date = datetime.now().strftime('%Y-12-31 23:59:59')    
-
         debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
             exclude_partner_ids,))
 
@@ -771,7 +767,8 @@ class Parser(report_sxw.rml_parse):
                 #if i == inv_pos:
                 #    TODO remove from TCAR inventory!!!
                 #    products[default_code][2] -= round(current[0], 0)# TCAR
-                # Removed from august to september (no previous month position)
+                
+                # TODO Restore from january to agoust (no prev. month position)
                 #if i == inv_pos:
                 #    total += round(current[0], 0) # add inv.
                 
