@@ -346,8 +346,8 @@ class Parser(report_sxw.rml_parse):
             #('date', '<=', to_date),    
 
             # Only in period # TODO remove if check extra data
-            ('date', '>=', period_from), 
-            ('date', '<=', period_to), 
+            #('date', '>=', period_from), 
+            #('date', '<=', period_to), 
                     
             # TODO state filter
             ])
@@ -760,7 +760,7 @@ class Parser(report_sxw.rml_parse):
                 current[4][i] = int(round(current[4][i], 0))
                 current[5][i] = int(round(current[5][i], 0))
                 
-                # XXX What is this test?
+                # Empty block test:
                 if not(any(current[3]) or any(current[4]) or \
                         any(current[5]) or current[0]> 0.0):
                     #_logger.warning('Jumped: %s %s %s' % current
