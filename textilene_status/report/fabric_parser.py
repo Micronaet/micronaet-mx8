@@ -764,9 +764,9 @@ class Parser(report_sxw.rml_parse):
                     jumped = True
                     continue    
                 
-                #if i == inv_pos:
+                if i == inv_pos:
                 #    TODO remove from TCAR inventory!!!
-                #    products[default_code][2] -= round(current[0], 0)# TCAR
+                    products[default_code][2] -= round(current[0], 0)# TCAR
                 
                 # TODO Restore from january to agoust (no prev. month position)
                 #if i == inv_pos:
