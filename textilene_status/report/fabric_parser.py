@@ -191,9 +191,14 @@ class Parser(report_sxw.rml_parse):
             
             # TODO check current company picking if present
             
-            # TODO check data date
+            # TODO check data date (old method)
             #('date', '>=', from_date), 
             #('date', '<=', to_date), 
+
+            # Only in period # TODO remove if check extra data
+            ('date', '>=', period_from), 
+            ('date', '<=', period_to), 
+            
             # TODO state filter
             ])
             
@@ -740,7 +745,8 @@ class Parser(report_sxw.rml_parse):
             total = 0.0 # INV 0.0
             
             # NOTE: INV now is 31/12 next put Sept.
-            inv_pos = 3 # December
+            #inv_pos = 3 # December
+            inv_pos = 0 # September
             jumped = False
             for i in range(0, 12):
                 #if i == inv_pos:
@@ -749,6 +755,7 @@ class Parser(report_sxw.rml_parse):
                 current[4][i] = int(round(current[4][i], 0))
                 current[5][i] = int(round(current[5][i], 0))
                 
+                # XXX What is this test?
                 if not(any(current[3]) or any(current[4]) or \
                         any(current[5]) or current[0]> 0.0):
                     #_logger.warning('Jumped: %s %s %s' % current
@@ -756,8 +763,13 @@ class Parser(report_sxw.rml_parse):
                     jumped = True
                     continue    
                 
-                if i == inv_pos:
-                    total += round(current[0], 0) # add inv.
+                #if i == inv_pos:
+                #    TODO remove from TCAR inventory!!!
+                #    products[default_code][2] -= round(current[0], 0)# TCAR
+                # Removed from august to september (no previous month position)
+                #if i == inv_pos:
+                #    total += round(current[0], 0) # add inv.
+                
                 total += round(
                     current[3][i] + current[4][i] + current[5][i], 0)
                 current[6][i] = int(total)
