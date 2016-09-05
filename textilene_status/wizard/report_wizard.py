@@ -19,25 +19,77 @@
 #
 ##############################################################################
 
-
+import os
+import sys
+import logging
+import openerp
+import base64
+import openerp.netsvc as netsvc
+import openerp.addons.decimal_precision as dp
 from openerp import models, api, fields
+from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.exceptions import Warning
-
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round as round
+from openerp import SUPERUSER_ID#, api
 from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
     DEFAULT_SERVER_DATETIME_FORMAT, 
     DATETIME_FORMATS_MAP, 
     float_compare)
 
+_logger = logging.getLogger(__name__)
 
 
 class ProductProductFabricReportWizard(models.TransientModel):
     ''' Wizard report
     '''
     _name = 'product.product.fabric.report.wizard'
+    
+    #def send_by_email(self, cr, uid, ids, context=None):
+    def save_report(self, cr, uid, ids, context=None):
+        ''' Export as file report and send by email
+        '''
+        # Utility:
+        def clean(filename):
+            remove = '/\'\\&"!;,?=)(%$£'
+            for c in remove:
+                if ord(c) > 127:
+                    continue # jump not ascii char
+                filename = filename.replace(c, '_')           
+            return filename
+            
+        # attachment_obj = self.pool.get('ir.attachment')
+        partner_pool = self.pool.get('res.partner') # non necessary
+        action_pool = self.pool.get('ir.actions.report.xml')
 
+        # Parameter:
+        report_name = 'stock_status_fabric_report'
+        
+        report_service = 'report.%s' % report_name
+        service = netsvc.LocalService(report_service)
+        
+        # Call report:            
+        (result, extension) = service.create(
+            cr, uid, [1], {'model': 'res.partner'}, context=context)
+            
+        # Generate file:    
+        #string_pdf = base64.decodestring(result)
+        filename = '/tmp/tx_status_%s.%s' % (
+            datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            extension,
+            )
+        file_pdf = open(filename, 'w')
+        file_pdf.write(result)
+        file_pdf.close()
+        
+        # Send mail with attachment:
+                                
+        return True
+        
     def open_report(self, cr, uid, ids, context=None):
         ''' Open fabric report
         '''
