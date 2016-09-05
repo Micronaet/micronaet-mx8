@@ -55,7 +55,7 @@ class ProductProductFabricReportWizard(models.TransientModel):
         '''
         # Utility:
         def clean(filename):
-            remove = '/\'\\&"!;,?=)(%$£'
+            remove = '/\'\\&"!;,?=:-) (%$£'
             for c in remove:
                 if ord(c) > 127:
                     continue # jump not ascii char
