@@ -41,9 +41,11 @@
     'data': [
         'security/xml_groups.xml',
         #'security/ir.model.access.csv',        
+        
         'textilene_views.xml',
         'report/fabric_report.xml',
         'wizard/report_wizard_view.xml',
+        'scheduler.xml',
         ],
     'active': False,
     'installable': True,

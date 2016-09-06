@@ -49,65 +49,6 @@ class ProductProductFabricReportWizard(models.TransientModel):
     '''
     _name = 'product.product.fabric.report.wizard'
     
-    #def send_by_email(self, cr, uid, ids, context=None):
-    def save_report(self, cr, uid, ids, context=None):
-        ''' Export as file report and send by email
-        '''
-        # Utility:
-        def clean(filename):
-            remove = '/\'\\&"!;,?=:-) (%$£'
-            for c in remove:
-                if ord(c) > 127:
-                    continue # jump not ascii char
-                filename = filename.replace(c, '_')           
-            return filename
-            
-        # attachment_obj = self.pool.get('ir.attachment')
-        partner_pool = self.pool.get('res.partner') # non necessary
-        action_pool = self.pool.get('ir.actions.report.xml')
-        date = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        # Parameter:
-        report_name = 'stock_status_fabric_report'
-        
-        report_service = 'report.%s' % report_name
-        service = netsvc.LocalService(report_service)
-        
-        # Call report:            
-        (result, extension) = service.create(
-            cr, uid, [1], {'model': 'res.partner'}, context=context)
-            
-        # Generate file:    
-        filename = '/tmp/tx_status_%s.%s' % (
-            date,
-            extension,
-            )
-        file_pdf = open(filename, 'w')
-        file_pdf.write(result)
-        file_pdf.close()
-        
-        # Send mail with attachment:
-        group_pool = self.pool.get('res.groups')
-        model_pool = self.pool.get('ir.model.data')
-        thread_pool = self.pool.get('mail.thread')
-        group_id = model_pool.get_object_reference(
-            cr, uid, 'textilene_status', 'group_textilene_admin')[1]    
-        partner_ids = []
-        for user in group_pool.browse(
-                cr, uid, group_id, context=context).users:
-            partner_ids.append(user.partner_id.id)
-            
-        thread_pool = self.pool.get('mail.thread')
-        thread_pool.message_post(cr, uid, False, 
-            type='email', 
-            body='Textilente status', 
-            subject='TX Report: %s' % date,
-            partner_ids=[(6, 0, partner_ids)],
-            attachments=[
-                ('Report_%s.%s' % (date, extension), result)], context=context
-            )
-        return True
-        
     def open_report(self, cr, uid, ids, context=None):
         ''' Open fabric report
         '''
