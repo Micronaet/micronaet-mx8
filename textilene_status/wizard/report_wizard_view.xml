@@ -15,8 +15,6 @@
                         <button name="open_report" string="Print" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-
-                        <button name="save_report" string="Save" type="object" class="oe_highlight"/>
                     </footer>
               </form>
             </field>
