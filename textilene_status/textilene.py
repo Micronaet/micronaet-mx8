@@ -47,7 +47,7 @@ class ProductProduct(orm.Model):
     # -----------------
     # Scheduled action:
     # -----------------
-    def send_textilene_report(self, cr, uid, ids, context=None):
+    def send_textilene_report(self, cr, uid, context=None):
         ''' Export as file report and send by email
         '''
         # Utility:
