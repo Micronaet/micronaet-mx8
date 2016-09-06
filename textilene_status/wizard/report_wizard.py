@@ -65,21 +65,23 @@ class ProductProductFabricReportWizard(models.TransientModel):
         # attachment_obj = self.pool.get('ir.attachment')
         partner_pool = self.pool.get('res.partner') # non necessary
         action_pool = self.pool.get('ir.actions.report.xml')
+        date = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         # Parameter:
-        report_name = 'stock_status_fabric_report'
+        report_name = 'custom_mx_invoice_report' #'stock_status_fabric_report'
         
         report_service = 'report.%s' % report_name
         service = netsvc.LocalService(report_service)
         
         # Call report:            
         (result, extension) = service.create(
-            cr, uid, [1], {'model': 'res.partner'}, context=context)
+            cr, uid, [1], {'model': 'account.invoice'}, context=context)
+            #cr, uid, [1], {'model': 'res.partner'}, context=context)
             
         # Generate file:    
         #string_pdf = base64.decodestring(result)
         filename = '/tmp/tx_status_%s.%s' % (
-            datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            date,
             extension,
             )
         file_pdf = open(filename, 'w')
@@ -87,7 +89,25 @@ class ProductProductFabricReportWizard(models.TransientModel):
         file_pdf.close()
         
         # Send mail with attachment:
-                                
+        group_pool = self.pool.get('res.groups')
+        model_pool = self.pool.get('ir.model.data')
+        thread_pool = self.pool.get('mail.thread')
+        group_id = model_pool.get_object_reference(
+            cr, uid, 'textilene_status', 'group_textilene_admin')[1]    
+        partner_ids = []
+        for user in group_pool.browse(
+                cr, uid, group_id, context=context).users:
+            partner_ids.append(user.partner_id.id)
+        import pdb; pdb.set_trace()
+        thread_pool = self.pool.get('res.partner')
+        thread_pool.message_post(cr, uid, recipient_partners, 
+            type='notification', subtype='mt_comment',
+            #type='email',
+            body='Textilente status', subject='TX Report: %s' % date,
+            partner_ids=[(6, 0, partner_ids)],
+            attachments=[('Report.odt', result)], context=context
+            )
+        #You could pass the argument attachments=[('filename', 'file raw data not encoded with base64')] to message_post                                
         return True
         
     def open_report(self, cr, uid, ids, context=None):

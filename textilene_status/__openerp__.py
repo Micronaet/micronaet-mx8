@@ -39,6 +39,7 @@
     'init_xml': [],
     'demo': [],
     'data': [
+        'security/xml_groups.xml',
         #'security/ir.model.access.csv',        
         'textilene_views.xml',
         'report/fabric_report.xml',
