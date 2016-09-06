@@ -68,18 +68,16 @@ class ProductProductFabricReportWizard(models.TransientModel):
         date = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         # Parameter:
-        report_name = 'custom_mx_invoice_report' #'stock_status_fabric_report'
+        report_name = 'stock_status_fabric_report'
         
         report_service = 'report.%s' % report_name
         service = netsvc.LocalService(report_service)
         
         # Call report:            
         (result, extension) = service.create(
-            cr, uid, [1], {'model': 'account.invoice'}, context=context)
-            #cr, uid, [1], {'model': 'res.partner'}, context=context)
+            cr, uid, [1], {'model': 'res.partner'}, context=context)
             
         # Generate file:    
-        #string_pdf = base64.decodestring(result)
         filename = '/tmp/tx_status_%s.%s' % (
             date,
             extension,
@@ -98,16 +96,16 @@ class ProductProductFabricReportWizard(models.TransientModel):
         for user in group_pool.browse(
                 cr, uid, group_id, context=context).users:
             partner_ids.append(user.partner_id.id)
-        import pdb; pdb.set_trace()
-        thread_pool = self.pool.get('res.partner')
-        thread_pool.message_post(cr, uid, recipient_partners, 
-            type='notification', subtype='mt_comment',
-            #type='email',
-            body='Textilente status', subject='TX Report: %s' % date,
+            
+        thread_pool = self.pool.get('mail.thread')
+        thread_pool.message_post(cr, uid, False, 
+            type='email', 
+            body='Textilente status', 
+            subject='TX Report: %s' % date,
             partner_ids=[(6, 0, partner_ids)],
-            attachments=[('Report.odt', result)], context=context
+            attachments=[
+                ('Report_%s.%s' % (date, extension), result)], context=context
             )
-        #You could pass the argument attachments=[('filename', 'file raw data not encoded with base64')] to message_post                                
         return True
         
     def open_report(self, cr, uid, ids, context=None):
