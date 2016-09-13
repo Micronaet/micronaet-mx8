@@ -35,8 +35,26 @@ class Parser(report_sxw.rml_parse):
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
             'bank': self.get_company_bank,
-        })
+            'get_supplier_info': self.get_supplier_info,
+            })
 
+    def get_supplier_info(self, product_proxy, supplier_id):
+        ''' Search if supplier is in product supplier list and return 
+            code - description used from that partner
+            self: instanse of class
+            product_proxy product.product browse object
+            supplier_id: ID (int) of supplier header document
+        '''
+        for supplier in product_proxy.seller_ids:
+            if supplier_id != supplier.name.id:
+                continue 
+            return '\n%s%s' % (
+                ('%s - ' % supplier.product_code) if supplier.product_code \
+                    else '',
+                supplier.product_name or '',
+                )        
+        return ''
+        
     def get_company_bank(self, obj, field):
         ''' Short function for readability
         '''
