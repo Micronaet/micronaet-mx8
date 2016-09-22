@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_product_product_no_parcel_form">
+            <field name="name">product.product.no.parcels.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <field name="purchase_ok" position="after"> 
+                    <field name="exclude_parcels" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+

@@ -38,46 +38,13 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
-class PurchaseOrder(orm.Model):
-    ''' Model name: SaleOrder
-    '''    
-    _inherit = 'purchase.order'
-
-    # BUtton event:    
-    def update_parcels_event(self, cr, uid, ids, context=None):
-        ''' Get total of parcels
-        '''
-        assert len(ids) == 1, 'Only one element a time'
-        
-        parcels = 0
-        parcels_note = ''
-        for line in self.browse(cr, uid, ids, context=context)[0].order_line:
-            if line.product_id.exclude_parcels:
-                continue # jump no parcels element
-            qty = line.product_qty 
-            q_x_pack = line.product_id.q_x_pack
-            if q_x_pack > 0:
-                if qty % q_x_pack > 0:
-                    parcels_note += _('%s not correct q x pack\n') % (
-                        line.product_id.default_code)
-                else:
-                    parcel = int(qty / q_x_pack)
-                    parcels += parcel 
-                    parcels_note += _('%s: parcels [%s x] %s \n') % (
-                        line.product_id.default_code, q_x_pack, parcel)
-            else:
-                parcels_note += _(
-                    '%s no q x pack\n') % line.product_id.default_code    
-
-        self.write(cr, uid, ids, {
-            'parcels': parcels,
-            'parcels_note': parcels_note,
-            }, context=context)            
-                
+class ProductTemplate(orm.Model):
+    """ Model name: ProductTemplate
+    """    
+    _inherit = 'product.template'
+    
     _columns = {
-        'parcels': fields.integer('Parcels'), # TODO here?
-        'parcels_note': fields.text(
-            'Parcel note', help='Calculation procedure note') ,
-        }            
-            
+        'exclude_parcels': fields.boolean('No parcel', 
+            help='The product not create a parcels in total for document.'),
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -32,6 +32,7 @@
         'base_accounting_program', # q x pack fields
         'account',
         'l10n_it_ddt',
+        'no_parcels_count',
         ],
     'init_xml': [],
     'demo': [],

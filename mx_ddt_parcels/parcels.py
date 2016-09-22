@@ -52,6 +52,8 @@ class StockDdt(orm.Model):
         parcels = 0
         parcels_note = ''
         for line in self.browse(cr, uid, ids, context=context)[0].ddt_lines:
+            if line.product_id.exclude_parcels:
+                continue # jump no parcels element
             qty = line.product_uom_qty 
             q_x_pack = line.product_id.q_x_pack
             if q_x_pack > 0:
@@ -91,6 +93,8 @@ class StockPicking(orm.Model):
         parcels = 0
         parcels_note = ''
         for line in self.browse(cr, uid, ids, context=context)[0].move_lines:
+            if line.product_id.exclude_parcels:
+                continue # jump no parcels element
             qty = line.product_uom_qty 
             q_x_pack = line.product_id.q_x_pack
             if q_x_pack > 0:
