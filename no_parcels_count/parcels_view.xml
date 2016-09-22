@@ -4,9 +4,11 @@
         <record model="ir.ui.view" id="view_product_product_no_parcel_form">
             <field name="name">product.product.no.parcels.form</field>
             <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="purchase_ok" position="after"> 
+                <field name="sale_ok" position="before"> 
                     <field name="exclude_parcels" />
+                    <label for="exclude_parcels"/>
                 </field>
             </field>
         </record>
