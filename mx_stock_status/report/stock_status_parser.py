@@ -128,8 +128,8 @@ class Parser(report_sxw.rml_parse):
         catalog_ids = data.get('catalog_ids', False)
         status = data.get('status', False)
         sortable = data.get('sortable', False)
-        mode = data.get('mode', False)
-        with_stock = data.get('with_stock', False)
+        #mode = data.get('mode', False)
+        #with_stock = data.get('with_stock', False)
                 
         if partner_id:
             # -----------------------------------------------------------------
@@ -180,8 +180,8 @@ class Parser(report_sxw.rml_parse):
             domain.append(('sortable', '=', True))
         # TODO ADD other (and filter)
         
-        if mode == 'simple' and with_stock: 
-            domain.append(('mx_net_qty', '>', 0))
+        #if mode == 'simple' and with_stock: 
+        #    domain.append(('mx_net_qty', '>', 0))
             
 
         product_ids = product_pool.search(self.cr, self.uid, domain)
