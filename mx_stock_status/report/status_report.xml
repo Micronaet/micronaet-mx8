@@ -13,13 +13,34 @@
             <field name="parser_state">loc</field>
             <field name="tml_source">file</field>
         </record>
-
         <ir_set>
             <field eval="'action'" name="key"/>
             <field eval="'client_print_multi'" name="key2"/>
             <field eval="['product.product']" name="models"/>
             <field name="name">action_stock_status_report</field>
             <field eval="'ir.actions.report.xml,'+str(aeroo_stock_status_image_report_id)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>
+        </ir_set>
+
+        <record id="aeroo_stock_status_simple_report_id" model="ir.actions.report.xml">
+            <field name="name">Stock status simple</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">product.product</field>
+            <field name="report_name">stock_status_simple_report</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-odt</field>
+            <field name="parser_loc">mx_stock_status/report/stock_status_parser.py</field>
+            <field name="report_rml">mx_stock_status/report/stock_simple.ods</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+        </record>
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="['product.product']" name="models"/>
+            <field name="name">action_stock_status_simple_report</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_stock_status_simple_report_id)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>

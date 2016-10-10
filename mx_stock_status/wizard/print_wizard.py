@@ -67,18 +67,25 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         datas['catalog_name'] = [item.name for item in wiz_proxy.catalog_ids]
         datas['status'] = wiz_proxy.status or False
         datas['sortable'] = wiz_proxy.sortable or False
-        datas['with_photo'] = wiz_proxy.with_photo
+        datas['mode'] = wiz_proxy.mode or False
+        
+        if datas['mode'] == 'status':
+            report_name = 'stock_status_report'
+            datas['with_photo'] = wiz_proxy.with_photo
+        else: # 'simple'    
+            report_name = 'stock_status_simple_report'
+            datas['with_stock'] = wiz_proxy.with_stock
+            
         if wiz_proxy.statistic_category:
             datas['statistic_category'] = [
                 item.strip() for item in (
                     wiz_proxy.statistic_category or '').split('|')]
         else:            
             datas['statistic_category'] = False
-                    
                        
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'stock_status_report',
+            'report_name': report_name,
             'datas': datas,
             }
 
@@ -110,10 +117,16 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ], 'Gamma'),
         'sortable': fields.boolean('Sortable'),
         'with_photo': fields.boolean('With photo'),
+        'with_stock': fields.boolean('With stock'),
+        'mode': fields.selection([
+            ('status', 'Stock status'),
+            ('simple', 'Simple status'),
+            ], 'Mode', required=True)
         }
         
     _defaults = {
         'with_photo': lambda *x: True,
+        'mode': lambda *x: 'status',
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

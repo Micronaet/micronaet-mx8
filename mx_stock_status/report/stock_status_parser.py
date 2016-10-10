@@ -66,6 +66,11 @@ class Parser(report_sxw.rml_parse):
         status = data.get('status', False)
         sortable = data.get('sortable', False)
         with_photo = data.get('with_photo', False)
+        with_stock = data.get('with_stock', False)
+        mode = data.get('mode', False)
+        
+        # Mode: 
+        res += _('Mode: %s; ') % mode
         
         # Partner:
         if partner_name:
@@ -85,11 +90,18 @@ class Parser(report_sxw.rml_parse):
         if sortable:
             res += _('Sortable product; ')
             
-        # Photo:    
-        if with_photo:
-            res += _('With photo; ')
-        else:    
-            res += _('Without photo; ')
+        if mode == 'status':            
+            # Photo:            
+            if with_photo:
+                res += _('With photo; ')
+            else:    
+                res += _('Without photo; ')
+        else: # simple
+            # Stock:            
+            if with_stock:
+                res += _('Only present; ')
+            else:    
+                res += _('All esistence; ')
             
         return res
     
