@@ -69,6 +69,7 @@ class PurchaseOrder(orm.Model):
             'datas': datas, 
             'nodestroy': True,
             }
+            
     _columns = {
         'printed_time': fields.boolean('Printed time'),
         'quotation_mode': fields.selection([

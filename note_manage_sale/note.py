@@ -59,8 +59,10 @@ class SaleOder(orm.Model):
             'Set post'), 
         'text_note_pre': fields.text('Pre text'),    
         'text_note_post': fields.text('Post text'),    
+
+        'text_delivery_note': fields.text('Delivery note'),
         }
-        
+
 class SaleOderLine(orm.Model):
     """ Sale order line note
     """    
@@ -84,29 +86,4 @@ class SaleOderLine(orm.Model):
         'text_note_post': fields.text('Post text'),    
         }
 
-# TODO ?        
-'''class ResNoteTemplate(orm.Model):
-    """ Add field name
-    """
-    
-    _inherit = 'res.note.template'
-    
-    def add_object_element(self, cr, uid, context=None):
-        """ Add object element for sale order (and line)
-        """
-        #import pdb; pdb.set_trace()
-        object_list = self._columns['object']
-        element = ('sale.order', 'Sale Order')
-        if element not in object_list:
-            object_list.append(element)
-        element = ('sale.order.line', 'Sale Order Line')
-        if element not in object_list:
-            object_list.append(element)
-        return
-        
-    _columns = {
-        'object': fields.selection(
-            lambda s, cr, uid, context: s.add_object_element(cr, uid, context
-            ), 'Object'),
-        }'''
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
