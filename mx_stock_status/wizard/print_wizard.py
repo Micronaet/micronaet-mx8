@@ -56,25 +56,28 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         wiz_proxy = self.browse(cr, uid, ids)[0]
             
-        datas = {}
-        datas['wizard'] = True # started from wizard
-        datas['partner_id'] = wiz_proxy.partner_id.id
-        datas['partner_name'] = wiz_proxy.partner_id.name
-        datas['default_code'] = wiz_proxy.default_code or False
-        datas['categ_ids'] = [item.id for item in wiz_proxy.categ_ids]
-        datas['categ_name'] = [item.name for item in wiz_proxy.categ_ids]
-        datas['catalog_ids'] = [item.id for item in wiz_proxy.catalog_ids]
-        datas['catalog_name'] = [item.name for item in wiz_proxy.catalog_ids]
-        datas['status'] = wiz_proxy.status or False
-        datas['sortable'] = wiz_proxy.sortable or False
-        datas['mode'] = wiz_proxy.mode or False
+        datas = {
+            'wizard': True, # started from wizard
+            'partner_id': wiz_proxy.partner_id.id,
+            'partner_name': wiz_proxy.partner_id.name,
+            'default_code': wiz_proxy.default_code or False,
+            'categ_ids': [item.id for item in wiz_proxy.categ_ids],
+            'categ_name': [item.name for item in wiz_proxy.categ_ids],
+            'catalog_ids': [item.id for item in wiz_proxy.catalog_ids],
+            'catalog_name': [item.name for item in wiz_proxy.catalog_ids],
+            'status': wiz_proxy.status or False,
+            'sortable': wiz_proxy.sortable or False,
+            'mode': wiz_proxy.mode or False,
+            'with_photo': wiz_proxy.with_photo,
+            'with_stock': wiz_proxy.with_stock,
+            }
         
         if datas['mode'] == 'status':
             report_name = 'stock_status_report'
-            datas['with_photo'] = wiz_proxy.with_photo
-        else: # 'simple'    
+        elif datas['mode'] == 'simple':
             report_name = 'stock_status_simple_report'
-            datas['with_stock'] = wiz_proxy.with_stock
+        else: # inventory
+            report_name = 'stock_status_inventory_report'
             
         if wiz_proxy.statistic_category:
             datas['statistic_category'] = [
@@ -121,6 +124,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         'mode': fields.selection([
             ('status', 'Stock status'),
             ('simple', 'Simple status'),
+            ('inventory', 'Inventory'),
             ], 'Mode', required=True)
         }
         
