@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <!--Fido state-->
+        <record id="aeroo_res_partner_fido_state_id" model="ir.actions.report.xml">
+            <field name="name">Fido State</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">res.partner</field>
+            <field name="report_name">res_partner_fido_status_report</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-odt</field>
+            <field name="parser_loc">fido_management/report/fido_parser.py</field>
+            <field name="report_rml">fido_management/report/fido_summary.odt</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+        </record>
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="['res.partner']" name="models"/>
+            <field name="name">action_es_partner_fido_status_report</field>
+            <field eval="'ir.actions.report.xml,'+str(aeroo_res_partner_fido_state_id)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>
+        </ir_set>        
+    </data>
+</openerp>
+

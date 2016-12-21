@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Copyright (C) 2001-2014 Micronaet SRL (<http://www.micronaet.it>).
@@ -16,34 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
+from . import fido_parser
 
-{
-    'name': 'FIDO Management',
-    'version': '0.1',
-    'category': '',
-    'description': '''
-        Manage FIDO and check payment and order / DDT  
-        ''',
-    'author': 'Micronaet S.r.l. - Nicola Riolini',
-    'website': 'http://www.micronaet.it',
-    'license': 'AGPL-3',
-    'depends': [
-        'base',
-        'accounting_statistic_deadline', # for payment
-        'sale',
-        'mx_close_order', # close filter
-        'sale_delivery_partial',
-        'sale_delivery_partial_data',
-        'stock',
-        'account',
-        ],
-    'init_xml': [],
-    'demo': [],
-    'data': [
-        'fido_view.xml',
-        'report/fido_report.xml',
-        ],
-    'active': False,
-    'installable': True,
-    'auto_install': False,
-    }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
