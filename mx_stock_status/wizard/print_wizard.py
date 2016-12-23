@@ -20,7 +20,6 @@
 #
 ###############################################################################
 
-
 import os
 import sys
 import logging
@@ -45,6 +44,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
     '''
     _name = 'stock.status.print.image.report.wizard'
 
+    def extract_xls_inventory_file(self, cr, uid, ids, context=None):
+        ''' Extract inventory as XLS extranal files every category in different
+            page
+        '''
+        
+        return True
     # -------------------------------------------------------------------------
     #                             Wizard button event
     # -------------------------------------------------------------------------
@@ -76,8 +81,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             report_name = 'stock_status_report'
         elif datas['mode'] == 'simple':
             report_name = 'stock_status_simple_report'
-        else: # inventory
+        elif data['mode'] == 'inventory':
             report_name = 'stock_status_inventory_report'
+        else: # inventory_xls
+            return self.extract_xls_inventory_file(
+                cr, uid, ids, context=context)
+            
             
         if wiz_proxy.statistic_category:
             datas['statistic_category'] = [
@@ -125,6 +134,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('status', 'Stock status'),
             ('simple', 'Simple status'),
             ('inventory', 'Inventory'),
+            ('inventory_xls', 'Inventory XLS (exported file not report)'),
             ], 'Mode', required=True)
         }
         

@@ -36,6 +36,7 @@
         'close_residual_order',
         'product_image_base', # for image in report
         'inventory_status', # stock dispo
+        'inventory_field', # for category
         'csv_import_campaign', # campaign dispo        
         'catalog_management', # some categorization
         ],

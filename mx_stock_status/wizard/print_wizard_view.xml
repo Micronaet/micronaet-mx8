@@ -22,7 +22,7 @@
                         <field name="status" />
                         <field name="sortable" />
                         <field name="with_photo" attrs="{'invisible': [('mode','!=','status')]}"/>
-                        <field name="with_stock" attrs="{'invisible': [('mode','!=','simple')]}" />
+                        <field name="with_stock" attrs="{'invisible': [('mode','not in',('simple','inventory'))]}" />
                         <field name="catalog_ids" widget="many2many_tags" invisible="1"/><!--TODO-->
                    </group>                   
                 </form>

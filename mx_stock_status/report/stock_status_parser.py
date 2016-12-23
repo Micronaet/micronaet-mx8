@@ -38,6 +38,96 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ProductProdcut(orm.Model):
+    """ Model name: ProductProdcut
+    """
+    
+    _inherit = 'product.product'
+    
+    def stock_status_report_get_object(self, cr, uid, data=None, context=None):
+        ''' Keep function here for call extra parser
+        '''
+        if data is None:
+            data = {}
+            
+        # Pool used:
+        partner_pool = self.pool.get('res.partner')
+        product_pool = self.pool.get('product.product')
+        supplier_pool = self.pool.get('product.supplierinfo')
+
+        # =====================================================================
+        #                            GENERATE FILTER:
+        # =====================================================================
+        product_ids = []
+
+        # ---------------------------------------------------------------------
+        # SUPPLIER FILTER:
+        # ---------------------------------------------------------------------
+        partner_id = data.get('partner_id', False)        
+        default_code = data.get('default_code', False)        
+        statistic_category = data.get('statistic_category', False)        
+        categ_ids = data.get('categ_ids', False)
+        catalog_ids = data.get('catalog_ids', False)
+        status = data.get('status', False)
+        sortable = data.get('sortable', False)
+        #mode = data.get('mode', False)
+        #with_stock = data.get('with_stock', False)
+                
+        if partner_id:
+            # -----------------------------------------------------------------
+            # A. Get template product supplier by partner (supplier in product)
+            # -----------------------------------------------------------------
+            supplierinfo_ids = supplier_pool.search(cr, uid, [
+                ('name', '=', partner_id)], context=context)
+            product_tmpl_ids = []
+            for supplier in supplier_pool.browse(
+                    cr, uid, supplierinfo_ids, context=context):
+                product_tmpl_ids.append(supplier.product_tmpl_id.id) 
+            # Get product form template:
+            tmpl_product_ids = product_pool.search(cr, uid, [
+                ('product_tmpl_id', 'in', product_tmpl_ids)], context=context)
+            product_ids.extend(tmpl_product_ids)
+
+            # -----------------------------------------------------------------
+            # B. Get product supplier by partner (field: first_supplier_id
+            # -----------------------------------------------------------------
+            first_supplier_product_ids = product_pool.search(
+                cr, uid, [
+                    ('first_supplier_id', '=', partner_id)], context=context)
+            product_ids.extend(first_supplier_product_ids)
+
+        # ---------------------------------------------------------------------
+        # PRODUCT FILTER:
+        # ---------------------------------------------------------------------
+        domain = []
+        if product_ids: # filtered for partner
+            domain.append(('id', 'in', product_ids))
+
+        if default_code: 
+            domain.append(('default_code', 'ilike', default_code))
+
+        if statistic_category:            
+            domain.append(('statistic_category', 'in', statistic_category))
+
+        if categ_ids:
+            domain.append(('categ_id', 'in', categ_ids))
+
+        if catalog_ids: # TODO test
+            domain.append(('catalog_ids', 'in', catalog_ids))
+
+        if status:
+            domain.append(('status', '=', status))
+
+        if sortable:
+            domain.append(('sortable', '=', True))
+        # TODO ADD other (and filter)
+        
+        #if mode == 'simple' and with_stock: 
+        #    domain.append(('mx_net_qty', '>', 0))
+
+        product_ids = product_pool.search(cr, uid, domain, context=context)
+        products = product_pool.browse(cr, uid, product_ids, context=context)
+        return products
 
 class Parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):        
@@ -108,85 +198,8 @@ class Parser(report_sxw.rml_parse):
     def get_object(self, data):
         ''' Search all product elements
         '''
-        # pool used:
-        partner_pool = self.pool.get('res.partner')
-        product_pool = self.pool.get('product.product')
-        supplier_pool = self.pool.get('product.supplierinfo')
-
-        # =====================================================================
-        #                            GENERATE FILTER:
-        # =====================================================================
-        product_ids = []
-
-        # ---------------------------------------------------------------------
-        # SUPPLIER FILTER:
-        # ---------------------------------------------------------------------
-        partner_id = data.get('partner_id', False)        
-        default_code = data.get('default_code', False)        
-        statistic_category = data.get('statistic_category', False)        
-        categ_ids = data.get('categ_ids', False)
-        catalog_ids = data.get('catalog_ids', False)
-        status = data.get('status', False)
-        sortable = data.get('sortable', False)
-        #mode = data.get('mode', False)
-        #with_stock = data.get('with_stock', False)
-                
-        if partner_id:
-            # -----------------------------------------------------------------
-            # A. Get template product supplier by partner (supplier in product)
-            # -----------------------------------------------------------------
-            supplierinfo_ids = supplier_pool.search(self.cr, self.uid, [
-                ('name', '=', partner_id)])
-            product_tmpl_ids = []
-            for supplier in supplier_pool.browse(
-                    self.cr, self.uid, supplierinfo_ids):
-                product_tmpl_ids.append(supplier.product_tmpl_id.id) 
-            # Get product form template:
-            tmpl_product_ids = product_pool.search(self.cr, self.uid, [
-                ('product_tmpl_id', 'in', product_tmpl_ids)])
-            product_ids.extend(tmpl_product_ids)
-
-            # -----------------------------------------------------------------
-            # B. Get product supplier by partner (field: first_supplier_id
-            # -----------------------------------------------------------------
-            first_supplier_product_ids = product_pool.search(
-                self.cr, self.uid, [
-                    ('first_supplier_id', '=', partner_id)])
-            product_ids.extend(first_supplier_product_ids)
-
-        # ---------------------------------------------------------------------
-        # PRODUCT FILTER:
-        # ---------------------------------------------------------------------
-        domain = []
-        if product_ids: # filtered for partner
-            domain.append(('id', 'in', product_ids))
-
-        if default_code: 
-            domain.append(('default_code', 'ilike', default_code))
-
-        if statistic_category:            
-            domain.append(('statistic_category', 'in', statistic_category))
-
-        if categ_ids:
-            domain.append(('categ_id', 'in', categ_ids))
-
-        if catalog_ids: # TODO test
-            domain.append(('catalog_ids', 'in', catalog_ids))
-
-        if status:
-            domain.append(('status', '=', status))
-
-        if sortable:
-            domain.append(('sortable', '=', True))
-        # TODO ADD other (and filter)
-        
-        #if mode == 'simple' and with_stock: 
-        #    domain.append(('mx_net_qty', '>', 0))
-            
-
-        product_ids = product_pool.search(self.cr, self.uid, domain)
-        products = product_pool.browse(self.cr, self.uid, product_ids)
-        return products
+        return self.pool.get('product.product').stock_status_report_get_object(
+            self.cr, self.uid, data=data)#, context=context)
         '''
         # ---------------------------------------------------------------------
         # Transform in iteritems for report:
