@@ -65,7 +65,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         #                        XLS log export:        
         # ---------------------------------------------------------------------
-        filename = '/home/administrator/photo/xls/inventory_table.xlsx'
+        filename = '/home/administrator/photo/output/inventory_table.xlsx'
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
