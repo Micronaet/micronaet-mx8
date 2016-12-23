@@ -24,6 +24,7 @@ import os
 import sys
 import logging
 import openerp
+import xlsxwriter # XLSX export
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
@@ -44,11 +45,73 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
     '''
     _name = 'stock.status.print.image.report.wizard'
 
-    def extract_xls_inventory_file(self, cr, uid, ids, context=None):
+    def extract_xls_inventory_file(self, cr, uid, ids, data=None, 
+            context=None):
         ''' Extract inventory as XLS extranal files every category in different
             page
-        '''
+        '''        
+        # ---------------------------------------------------------------------
+        # Utility: 
+        # ---------------------------------------------------------------------
+        def write_header(current_WS, header):
+            ''' Write header in first line:            
+            '''
+            col = 0
+            for title in header:
+                current_WS.write(0, col, title)
+                col += 1
+            return     
+            
+        # ---------------------------------------------------------------------
+        # XLS log export:        
+        # ---------------------------------------------------------------------
+        filename = '/home/administrator/photo/xls/inventory_table.xlsx'
+        WB = xlsxwriter.Workbook(filename)
+
+        # Search all inventory category:
+        inv_pool = self.pool.get('product.product.inventory.category')
+        inv_ids = inv_pool.search(cr, uid, [], context=context)
+
+        # Create work sheet:
+        header = ['DB', 'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
+            'CATEGORIA', 'FORNITORE', 'ESISTENZA']
         
+        # Create elemnt for empty category:
+        WS = {
+            #ID: worksheet, counter
+            0: [WB.add_worksheet('Non assegnati'), 1],
+            }
+        write_header(WS[0][0], header)
+            
+        # Create all others category:    
+        for category in inv_pool.browse(
+                cr, uid, inv_ids, context=context):
+            WS[category.id] = [WB.add_worksheet(category.name), 1]
+            write_header(WS[category.id][0], header)
+            
+        # Populate product in correct page
+        for product in self.pool.get(
+                'product.product').stock_status_report_get_object(
+                    cr, uid, data=data, context=context):
+            if product.inventory_category_id.id in WS:
+                record = WS[product.inventory_category_id.id]
+            else:
+                record = WS[0]
+            
+            # Write data in correct WS:
+            record[0].write(record[1], 0, '') # In DB
+            record[0].write(record[1], 1, product.default_code)
+            record[0].write(record[1], 2, product.name)
+            record[0].write(record[1], 3, product.uom_id.name or '')
+            record[0].write(record[1], 4, product.statistic_category or '')            
+            record[0].write(record[1], 5, product.categ_id.name or '')
+            record[0].write(record[1], 6, 
+                product.seller_ids[0].name.name if product.seller_ids else (
+                    product.first_supplier_id.name or ''))
+            if data.get('with_stock', False): 
+                record[0].write(record[1], 7, product.mx_net_qty or '')
+            record[1] += 1
+                    
         return True
     # -------------------------------------------------------------------------
     #                             Wizard button event
@@ -76,24 +139,22 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'with_photo': wiz_proxy.with_photo,
             'with_stock': wiz_proxy.with_stock,
             }
-        
-        if datas['mode'] == 'status':
-            report_name = 'stock_status_report'
-        elif datas['mode'] == 'simple':
-            report_name = 'stock_status_simple_report'
-        elif data['mode'] == 'inventory':
-            report_name = 'stock_status_inventory_report'
-        else: # inventory_xls
-            return self.extract_xls_inventory_file(
-                cr, uid, ids, context=context)
-            
-            
         if wiz_proxy.statistic_category:
             datas['statistic_category'] = [
                 item.strip() for item in (
                     wiz_proxy.statistic_category or '').split('|')]
         else:            
             datas['statistic_category'] = False
+        
+        if datas['mode'] == 'status':
+            report_name = 'stock_status_report'
+        elif datas['mode'] == 'simple':
+            report_name = 'stock_status_simple_report'
+        elif datas['mode'] == 'inventory':
+            report_name = 'stock_status_inventory_report'
+        else: # inventory_xls
+            return self.extract_xls_inventory_file(
+                cr, uid, ids, datas, context=context)
                        
         return {
             'type': 'ir.actions.report.xml',
