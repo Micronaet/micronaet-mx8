@@ -63,16 +63,20 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             return     
             
         # ---------------------------------------------------------------------
-        # XLS log export:        
+        #                        XLS log export:        
         # ---------------------------------------------------------------------
         filename = '/home/administrator/photo/xls/inventory_table.xlsx'
         WB = xlsxwriter.Workbook(filename)
 
+        # ---------------------------------------------------------------------
         # Search all inventory category:
+        # ---------------------------------------------------------------------
         inv_pool = self.pool.get('product.product.inventory.category')
         inv_ids = inv_pool.search(cr, uid, [], context=context)
 
+        # ---------------------------------------------------------------------
         # Create work sheet:
+        # ---------------------------------------------------------------------
         header = ['DB', 'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
             'CATEGORIA', 'FORNITORE', 'ESISTENZA']
         
@@ -89,7 +93,20 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS[category.id] = [WB.add_worksheet(category.name), 1]
             write_header(WS[category.id][0], header)
             
+        # ---------------------------------------------------------------------
+        # Prepare BOM check
+        # ---------------------------------------------------------------------
+        line_pool = self.pool.get('mrp.bom.line')
+        line_ids = line_pool.search(cr, uid, [
+            ('bom_id.bom_category', 'in', ('parent', 'dynamic', 'half')),
+            ], context=context)
+
+        in_bom_ids = [item.product_id.id for item in line_pool.browse(
+            cr, uid, line_ids, context=context)]
+                
+        # ---------------------------------------------------------------------
         # Populate product in correct page
+        # ---------------------------------------------------------------------
         for product in self.pool.get(
                 'product.product').stock_status_report_get_object(
                     cr, uid, data=data, context=context):
@@ -99,7 +116,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 record = WS[0]
             
             # Write data in correct WS:
-            record[0].write(record[1], 0, '') # In DB
+            record[0].write(record[1], 0, 
+                'X' if product.id in in_bom_ids else '')
             record[0].write(record[1], 1, product.default_code)
             record[0].write(record[1], 2, product.name)
             record[0].write(record[1], 3, product.uom_id.name or '')
