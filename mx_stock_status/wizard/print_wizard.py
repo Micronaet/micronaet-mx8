@@ -105,7 +105,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             cr, uid, line_ids, context=context)]
 
         # TODO remove after print:
-        with_parent_bom = True
+        with_parent_bom = False
         linked_bom = {}
         if with_parent_bom:         
             linked_bom_ids = line_pool.search(cr, uid, [
@@ -146,7 +146,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 record[0].write(record[1], 10, net_qty or '')
                 
             # TODO remove after print:    
-            record[0].write(record[1], 11, linked_bom.get(product.id, ''))
+            if with_parent_bom:         
+                record[0].write(record[1], 11, linked_bom.get(product.id, ''))
                 
             record[1] += 1
                     
