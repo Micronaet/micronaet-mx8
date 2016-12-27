@@ -103,6 +103,15 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         in_bom_ids = [item.product_id.id for item in line_pool.browse(
             cr, uid, line_ids, context=context)]
+
+        # TODO remove after print:
+        linked_bom_ids = line_pool.search(cr, uid, [
+            ('bom_id.bom_category', '=', 'parent'),
+            ], context=context)
+        linked_bom = {}
+        for line in line_pool.browse(cr, uid, linked_bom_ids, context=context):
+            linked_bom[
+                line.product_id.id] = line.bom_id.product_id.default_code
                 
         # ---------------------------------------------------------------------
         # Populate product in correct page
@@ -132,6 +141,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 record[0].write(record[1], 8, product.inventory_delta or '')
                 record[0].write(record[1], 9, product.mx_mrp_out or '')
                 record[0].write(record[1], 10, net_qty or '')
+                
+            # TODO remove after print:    
+            record[0].write(record[1], 11, linked_bom.get(product.id, ''))
                 
             record[1] += 1
                     
