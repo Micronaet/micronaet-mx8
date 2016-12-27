@@ -70,6 +70,7 @@ class ProductProdcut(orm.Model):
         catalog_ids = data.get('catalog_ids', False)
         status = data.get('status', False)
         sortable = data.get('sortable', False)
+        inventory_category_id = data.get('inventory_category_id', False)
         #mode = data.get('mode', False)
         #with_stock = data.get('with_stock', False)
                 
@@ -120,6 +121,11 @@ class ProductProdcut(orm.Model):
 
         if sortable:
             domain.append(('sortable', '=', True))
+            
+        if inventory_category_id:
+            domain.append(
+                ('inventory_category_id', '=', inventory_category_id))
+                
         # TODO ADD other (and filter)
         
         #if mode == 'simple' and with_stock: 
