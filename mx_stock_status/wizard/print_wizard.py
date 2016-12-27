@@ -105,20 +105,23 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             cr, uid, line_ids, context=context)]
 
         # TODO remove after print:
-        linked_bom_ids = line_pool.search(cr, uid, [
-            ('bom_id.bom_category', '=', 'parent'),
-            ], context=context)
+        with_parent_bom = True
         linked_bom = {}
-        for line in line_pool.browse(cr, uid, linked_bom_ids, context=context):
-            linked_bom[
-                line.product_id.id] = line.bom_id.product_id.default_code
+        if with_parent_bom:         
+            linked_bom_ids = line_pool.search(cr, uid, [
+                ('bom_id.bom_category', '=', 'parent'),
+                ], context=context)
+            for line in line_pool.browse(cr, uid, linked_bom_ids, 
+                    context=context):
+                linked_bom[
+                    line.product_id.id] = line.bom_id.product_id.default_code
                 
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
         for product in self.pool.get(
                 'product.product').stock_status_report_get_object(
-                    cr, uid, data=data, context=context):
+                    cr, uid, data=data, context=context):                    
             if product.inventory_category_id.id in WS:
                 record = WS[product.inventory_category_id.id]
             else:
