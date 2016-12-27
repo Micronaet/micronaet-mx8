@@ -161,6 +161,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'mode': wiz_proxy.mode or False,
             'with_photo': wiz_proxy.with_photo,
             'with_stock': wiz_proxy.with_stock,
+            'inventory_category_id': wiz_proxy.inventory_category_id.id,
             }
         if wiz_proxy.statistic_category:
             datas['statistic_category'] = [
@@ -203,6 +204,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'product.product.catalog', 'product_catalog_status_rel', 
             'product_id', 'catalog_id', 
             'Catalog'),
+        'inventory_category_id': fields.many2one(
+            'product.product.inventory.category', 'Inventory category'),    
         'status': fields.selection([
             ('catalog', 'Catalog'),
             ('out', 'Out catalog'),
