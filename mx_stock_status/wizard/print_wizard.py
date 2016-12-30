@@ -45,49 +45,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
     '''
     _name = 'stock.status.print.image.report.wizard'
 
-    def extract_web_inventory_file(self, cr, uid, ids, data=None,
-            context=None):
-        ''' Extract inventory as XLS extrenal files every category in different
-            page
-        '''        
-        def clean(value):
-            res = ''
-            for c in value:
-                if ord(c) < 127:
-                    res += c
-                else:
-                    res += '#'
-            return res        
-                    
-        # ---------------------------------------------------------------------
-        #                        XLS log export:        
-        # ---------------------------------------------------------------------
-        filename = '/home/administrator/photo/output/magazzino.csv'
-        f_out = open(filename, 'w')
-
-        # ---------------------------------------------------------------------
-        # Populate product in correct page
-        # ---------------------------------------------------------------------
-        for product in self.pool.get(
-                'product.product').stock_status_report_get_object(
-                    cr, uid, data=data, context=context):
-            #if product.inventory_category_id.id not in (): # TODO manage better
-                
-            #    continue
-            f_out.write('%s|%s|%s|%s|%s|%s|%s|%s|%s|###FINERIGA###\n' % (        
-                product.default_code,
-                clean(product.name),
-                product.mx_net_qty,
-                0,
-                0,
-                0,
-                0,
-                product.lst_price,
-                '',
-                ))
-                
-        # Publish via FTP and call import document        
-        return True
         
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
@@ -223,6 +180,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'with_stock': wiz_proxy.with_stock,
             'inventory_category_id': wiz_proxy.inventory_category_id.id,
             }
+
         if wiz_proxy.statistic_category:
             datas['statistic_category'] = [
                 item.strip() for item in (
@@ -239,9 +197,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         elif datas['mode'] == 'inventory_xls':
             return self.extract_xls_inventory_file(
                 cr, uid, ids, datas, context=context)
-        elif datas['mode'] == 'inventory_web':
-            return self.extract_web_inventory_file(
-                cr, uid, ids, datas, context=context)
+        #elif datas['mode'] == 'inventory_web':
+        #    return self.extract_web_inventory_file(
+        #        cr, uid, ids, datas, context=context)
         else:
             raise osv.except_osv(
                 _('No type'), 
@@ -290,7 +248,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('simple', 'Simple status'),
             ('inventory', 'Inventory'),
             ('inventory_xls', 'Inventory XLS (exported file not report)'),
-            ('inventory_web', 'Status web (find.php)'),
+            #('inventory_web', 'Status web (find.php)'),
             ], 'Mode', required=True)
         }
         
