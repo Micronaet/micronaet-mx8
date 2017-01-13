@@ -45,6 +45,115 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
     '''
     _name = 'stock.status.print.image.report.wizard'
 
+    def extract_xls_check_inventory_file(self, cr, uid, ids, data=None,
+            context=None):
+        ''' Extract inventory as XLS extrenal files every category in different
+            page
+            TODO Correct and write better!!!
+        '''
+        # ---------------------------------------------------------------------
+        # Utility: 
+        # ---------------------------------------------------------------------
+        def write_header(current_WS, header):
+            ''' Write header in first line:            
+            '''
+            col = 0
+            for title in header:
+                current_WS.write(0, col, title)
+                col += 1
+            return     
+            
+        # ---------------------------------------------------------------------
+        #                        XLS log export:        
+        # ---------------------------------------------------------------------
+        filename = '/home/administrator/photo/output/post_inventory_table.xlsx'
+        WB = xlsxwriter.Workbook(filename)
+
+        # ---------------------------------------------------------------------
+        # Create work sheet:
+        # ---------------------------------------------------------------------
+        header = ['DB', 'CODICE', 'DESCRIZIONE', 'UM', 
+            'CAT. STAT.', 'CATEGORIA', 'FORNITORE', 'INV', 'INV. DELTA', 'MRP', 
+            'CATEGORIA INVENTARIO',
+            'INVENTARIO 31/12', 'INVENTARIO 1/1', 'COSTO', 'MODIFICA', 
+            'DATA QUOTAZIONE',
+            ]
+        
+        # Create element for empty category:
+        WS = WB.add_worksheet('Controlli inventario')
+        counter = 0
+        write_header(WS, header)
+
+        # ---------------------------------------------------------------------
+        # Prepare price last buy check
+        # ---------------------------------------------------------------------
+        price_pool = self.pool.get('pricelist.partnerinfo')
+        price_ids = price_pool.search(cr, uid, [
+            ('product_id', '!=', False),
+            ], order='write_date DESC', context=context)
+
+        price_db = {}
+        for price in price_pool.browse(cr, uid, price_ids, context=context):
+            if price.product_id.id in price_db:
+                continue
+            price_db[price.product_id.id] = (
+                price, price.write_date, price.date_quotation)
+            
+        # ---------------------------------------------------------------------
+        # Prepare BOM check
+        # ---------------------------------------------------------------------
+        line_pool = self.pool.get('mrp.bom.line')
+        line_ids = line_pool.search(cr, uid, [
+            ('bom_id.bom_category', 'in', ('parent', 'dynamic', 'half')),
+            ], context=context)
+
+        in_bom_ids = [item.product_id.id for item in line_pool.browse(
+            cr, uid, line_ids, context=context)]
+
+        # TODO remove after print:
+        with_parent_bom = False
+        linked_bom = {}
+        if with_parent_bom:         
+            linked_bom_ids = line_pool.search(cr, uid, [
+                ('bom_id.bom_category', '=', 'parent'),
+                ], context=context)
+            for line in line_pool.browse(cr, uid, linked_bom_ids, 
+                    context=context):
+                linked_bom[
+                    line.product_id.id] = line.bom_id.product_id.default_code
+                
+        # ---------------------------------------------------------------------
+        # Populate product in correct page
+        # ---------------------------------------------------------------------
+        counter = 0
+        for product in self.pool.get(
+                'product.product').stock_status_report_get_object(
+                    cr, uid, data=data, context=context):                    
+            counter += 1
+
+            price_item = price_db.get(product.id, ('', '', ''))
+            
+            # Write data in correct WS:
+            WS.write(counter, 0, 'X' if product.id in in_bom_ids else '')
+            WS.write(counter, 1, product.default_code)
+            WS.write(counter, 2, product.name)
+            WS.write(counter, 3, product.uom_id.name or '')
+            WS.write(counter, 4, product.statistic_category or '')            
+            WS.write(counter, 5, product.categ_id.name or '')
+            WS.write(counter, 6, 
+                product.seller_ids[0].name.name if product.seller_ids else (
+                    product.first_supplier_id.name or ''))
+            WS.write(counter, 7, product.inventory_start or '')
+            WS.write(counter, 8, product.inventory_delta or '')
+            WS.write(counter, 9, product.mx_mrp_out or '')
+            WS.write(counter, 10, product.inventory_category_id.name)
+            WS.write(counter, 11, product.mx_history_net_qty or '')                
+            WS.write(counter, 12, product.mx_start_qty or '')                
+            WS.write(counter, 13, price_item[0])
+            WS.write(counter, 13, price_item[1])
+            WS.write(counter, 13, price_item[2])
+                   
+        return True
         
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
@@ -153,6 +262,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[1] += 1
                     
         return True
+
     # -------------------------------------------------------------------------
     #                             Wizard button event
     # -------------------------------------------------------------------------
@@ -196,6 +306,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             report_name = 'stock_status_inventory_report'
         elif datas['mode'] == 'inventory_xls':
             return self.extract_xls_inventory_file(
+                cr, uid, ids, datas, context=context)
+        elif datas['mode'] == 'inventory_check_xls':
+            return self.extract_xls_check_inventory_file(
                 cr, uid, ids, datas, context=context)
         #elif datas['mode'] == 'inventory_web':
         #    return self.extract_web_inventory_file(
@@ -247,8 +360,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('status', 'Stock status'),
             ('simple', 'Simple status'),
             ('inventory', 'Inventory'),
-            ('inventory_xls', 'Inventory XLS (exported file not report)'),
-            #('inventory_web', 'Status web (find.php)'),
+            ('inventory_xls', 'Inventory XLS (exported not report)'),
+            ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
             ], 'Mode', required=True)
         }
         
