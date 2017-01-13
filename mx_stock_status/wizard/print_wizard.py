@@ -88,15 +88,16 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Prepare price last buy check
         # ---------------------------------------------------------------------
         price_pool = self.pool.get('pricelist.partnerinfo')
-        price_ids = price_pool.search(cr, uid, [
-            ('product_id', '!=', False),
-            ], order='write_date DESC', context=context)
+        price_ids = price_pool.search(cr, uid, [], 
+            order='write_date DESC', context=context)
 
         price_db = {}
         for price in price_pool.browse(cr, uid, price_ids, context=context):
-            if price.product_id.id in price_db:
+            product = price.product_id #suppinfo_id.name 
+            # price.suppinfo_id.product_tmpl_id.id
+            if product.id in price_db:
                 continue
-            price_db[price.product_id.id] = (
+            price_db[product.id] = (
                 price.price, price.write_date, price.date_quotation)
             
         # ---------------------------------------------------------------------
