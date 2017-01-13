@@ -149,12 +149,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(counter, 10, product.inventory_category_id.name)
             WS.write(counter, 11, product.mx_history_net_qty or '')                
             WS.write(counter, 12, product.mx_start_qty or '')                
-            try:
-                WS.write(counter, 13, price_item[0])
-                WS.write(counter, 14, price_item[1])
-                WS.write(counter, 15, price_item[2])
-            except:
-                import pdb; pdb.set_trace()    
+            WS.write(counter, 13, price_item[0])
+            WS.write(counter, 14, price_item[1])
+            WS.write(counter, 15, price_item[2])
                    
         return True
         
