@@ -206,32 +206,5 @@ class Parser(report_sxw.rml_parse):
         '''
         return self.pool.get('product.product').stock_status_report_get_object(
             self.cr, self.uid, data=data)#, context=context)
-        '''
-        # ---------------------------------------------------------------------
-        # Transform in iteritems for report:
-        # ---------------------------------------------------------------------
-        res = []        
-        for key in sorted(products):
-            inventory = products[key].inventory_start or 0.0
-            load = loads.get(default_code, 0.0) + \
-                remote_loads.get(remote_code, 0.0) 
-            unload = unloads.get(default_code, 0.0) + \
-                remote_unloads.get(remote_code, 0.0)
-            order = orders.get(default_code, 0.0) + \
-                remote_orders.get(remote_code, 0.0)
-            procurement = virtual_loads.get(default_code, 0.0) + \
-                remote_virtual_loads.get(remote_code, 0.0)
-            dispo = inventory + load - unload
-            virtual = dispo + procurement - order
-            res.append(
-                (products[key],
-                int(inventory),
-                int(load), 
-                int(unload), 
-                int(order), 
-                int(procurement), 
-                int(dispo), 
-                int(virtual),
-                ))
-        return res'''        
+      
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
