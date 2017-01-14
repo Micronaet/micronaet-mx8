@@ -33,6 +33,7 @@
         'stock',
         'product',
         'close_residual_order',
+        'inventory_status',
         ],
     'init_xml': [],
     'demo': [],
