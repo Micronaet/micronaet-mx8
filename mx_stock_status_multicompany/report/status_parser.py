@@ -252,7 +252,7 @@ class Parser(report_sxw.rml_parse):
             default_code = products[key].default_code
             remote_code = product_mask % default_code
             
-            inventory = products[key].inventory_start or 0.0
+            inventory = products[key].mx_start_qty or 0.0 # ex inventory_start
             debug_file.write('%s;%s\n' % (
                 default_code, inventory))
             # XXX NOTE remote not used!
