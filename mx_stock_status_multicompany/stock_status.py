@@ -196,8 +196,8 @@ class ResPartner(orm.Model):
                 # Partner exclusion
                 ('partner_id', 'not in', exclude_partner_ids), 
                 # TODO check data date
-                #('date', '>=', from_date), 
-                #('date', '<=', to_date), 
+                ('date', '>=', from_date), 
+                ('date', '<=', to_date), 
                 # TODO state filter
                 ])
             debug_file.write('\n\nUnload picking:\nPick;Origin;Code;Q.\n')
@@ -229,8 +229,8 @@ class ResPartner(orm.Model):
                 # Partner exclusion
                 ('partner_id', 'not in', exclude_partner_ids),            
                 # check data date
-                #('date', '>=', from_date), # XXX correct for virtual?
-                #('date', '<=', to_date),            
+                ('date', '>=', from_date), # XXX correct for virtual?
+                ('date', '<=', to_date),            
                 # TODO state filter
                 ])
                 
