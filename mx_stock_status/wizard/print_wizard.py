@@ -181,7 +181,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         # ---------------------------------------------------------------------
         # Search all inventory category:
-        # ---------------------------------------------------------------------
+        # ---------------------------------------------------------------------        
         inv_pool = self.pool.get('product.product.inventory.category')
         inv_ids = inv_pool.search(cr, uid, [], context=context)
 
@@ -207,6 +207,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Prepare BOM check
         # ---------------------------------------------------------------------
+        # TODO check if there's production mode:
         line_pool = self.pool.get('mrp.bom.line')
         line_ids = line_pool.search(cr, uid, [
             ('bom_id.bom_category', 'in', ('parent', 'dynamic', 'half')),
