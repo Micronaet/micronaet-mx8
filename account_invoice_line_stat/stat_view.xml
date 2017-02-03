@@ -7,7 +7,7 @@
              <field name="arch" type="xml">
                 <search string="Invoice line" version="7.0">        
                     <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
-                    <field name="destination_partner_id" />
+                    <field name="destination_partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
                     <field name="first_supplier_id" />
                     <field name="invoice_id" filter_domain="[('order_id.name','ilike',self)]"/>
                     <field name="account_id" filter_domain="[('account_id.name','ilike',self)]"/>
@@ -21,6 +21,7 @@
                     <field name="product_id" filter_domain="['|',('product_id.name','ilike',self),('product_id.default_code','ilike',self)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_destination" string="Destination" context="{'group_by': 'destination_partner_id'}"/>
                         <filter name="group_invoice" string="Invoice" context="{'group_by': 'invoice_id'}"/>
                         <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                         <filter name="group_account" string="Account" context="{'group_by': 'account_id'}"/>

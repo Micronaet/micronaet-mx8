@@ -107,7 +107,8 @@ class Parser(report_sxw.rml_parse):
             
             products[product.default_code] = [
                 # Reset counter for this product    
-                product.inventory_start, # inv
+                #product.inventory_start, # inv
+                product.mx_start_qty, 
                 0.0, # tcar
                 0.0, # tscar
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], # MM
@@ -146,6 +147,7 @@ class Parser(report_sxw.rml_parse):
         else:
             period_from = '%s-09-01' % (year - 1)
             period_to = '%s-08-31' % year
+        from_0101 = '%s-12-31' % (year - 1) # Activated 31-03-2017
             
         debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
             exclude_partner_ids,))
@@ -224,6 +226,25 @@ class Parser(report_sxw.rml_parse):
                 # ------------------
                 # check direct sale:
                 # ------------------
+                # No BC before Inventory date 1/1
+                if pick.date < from_0101:
+                    debug_mm.write(mask % (
+                        block,
+                        'NOT USED',
+                        pick.name,
+                        pick.origin,
+                        pick.date,
+                        pos,
+                        product_code,                                
+                        '',
+                        '',
+                        0,
+                        0,
+                        0,
+                        'Before 1/1 inventory (jumped)',
+                        ))
+                    continue    
+                    
                 if product_code in products: # Fabric:
                     qty = line.product_uom_qty # for direct sale            
                     products[product_code][3][pos] -= qty # MM block  
@@ -426,7 +447,9 @@ class Parser(report_sxw.rml_parse):
                     pos = get_position_season(date)
                 
                     # USE order data:
-                    if date > period_to or date < period_from: # extra range
+                    # from 1/1 changedd: 31/01/2017:
+                    #if date > period_to or date < period_from: # extra range
+                    if date < from_0101 or date > period_to:
                         debug_mm.write(mask % (
                             block,
                             'NOT USED',
