@@ -93,6 +93,14 @@ class AccountInvoiceLine(orm.Model):
         return line_pool.search(cr, uid, [
             ('invoice_id', 'in', ids)], context=context)
 
+    def _get_invoice_agent(self, cr, uid, ids, context=None):
+        ''' When change invoice agent
+        '''
+        line_pool = self.pool.get('account.invoice.line')
+        _logger.info('Update account line (change agent in invoice)')
+        return line_pool.search(cr, uid, [
+            ('invoice_id', 'in', ids)], context=context)
+
     _columns = {
         'date_invoice': fields.related(
             'invoice_id', 'date_invoice', 
@@ -104,6 +112,14 @@ class AccountInvoiceLine(orm.Model):
             store={
                 'account.invoice': (_get_invoice_destination, [
                     'destination_partner_id'], 10),    
+                }),
+
+        'mx_agent_id': fields.related(
+            'invoice_id', 'mx_agent_id', 
+            type='many2one', string='Agent', relation='res.partner',
+            store={
+                'account.invoice': (_get_invoice_agent, [
+                    'mx_agent_id'], 10),    
                 }),
         
         'first_supplier_id': fields.related(
