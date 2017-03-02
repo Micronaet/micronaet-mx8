@@ -97,7 +97,7 @@ class ProductProduct(orm.Model):
         thread_pool = self.pool.get('mail.thread')
         thread_pool.message_post(cr, uid, False, 
             type='email', 
-            body='Textilente status', 
+            body='Textilene status', 
             subject='TX Report: %s' % date,
             partner_ids=[(6, 0, partner_ids)],
             attachments=[
