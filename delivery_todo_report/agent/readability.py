@@ -52,20 +52,23 @@ odoo = erppeek.Client(
 order_pool = odoo.model('sale.order')
 
 # Close all order:
+print 'Inizio procedura di aggiornamento ordini:'
 order_pool.scheduled_check_close_order()
+print 'Chiusi gli ordini presenti consegnati'
 
 # Search open order:
 order_ids = order_pool.search([
     ('state', 'not in', ('cancel', 'sent', 'draft')),
     ('mx_closed', '=', False),    
     ])
+print 'Trovati %s ordini da valutare' % len(order_ids)
     
 i = 0
 for item_id in order_ids:
     i += 1
     try:
         order_pool.force_parameter_for_delivery_one([item_id])
-        print '%s. Updated ID: %s' % (i, item_id)
+        print '%s. Ordine aggiornato: %s' % (i, item_id)
     except:
-        print '%s. Error updating: %s' % (i, item_id)
-
+        print '%s. Errore aggiornando: %s' % (i, item_id)
+print 'Procedura terminata'
