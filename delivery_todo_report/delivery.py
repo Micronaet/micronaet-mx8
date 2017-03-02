@@ -118,7 +118,7 @@ class SaleOrder(orm.Model):
         #                       Mark order close and mrp:
         # ---------------------------------------------------------------------
         if force_one:
-             order_ids = [force_one]
+            order_ids = [force_one]
 
             log.append('Force one order: %s' % (force_one, ))
             _logger.info(log[-1])
@@ -341,10 +341,11 @@ class SaleOrder(orm.Model):
         _logger.info(log[-1])
         try:
             log_f = open(logfile, 'a')
+            log_f.write('\n************* INIZIO SCHEDULAZIONE **************')
             log_f.write('\n'.join(log))
             log_f.close()
         except:
-            _logger.error('Error write log file: %s' logfile)
+            _logger.error('Error write log file: %s' % logfile)
         return True
     
     def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
