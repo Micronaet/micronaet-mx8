@@ -110,6 +110,7 @@ class SaleOrder(orm.Model):
             
         force_one = context.get('force_one', False)
         sol_pool = self.pool.get('sale.order.line')
+        esit = True
 
         logfile = '/home/administrator/photo/log/order/readability_todo.log'
         log = []
@@ -304,6 +305,7 @@ class SaleOrder(orm.Model):
                         }, context=context)
                 except:
                     write_error = True
+                    esit = False
                     log.append('Write error line, order %s' % order.name)
                     _logger.info(log[-1])
 
@@ -323,6 +325,7 @@ class SaleOrder(orm.Model):
                         'delivery_vol_partial': order_volume_part,
                         }, context=context)
                 else:
+                    esit = False
                     log.append('>> order not write: %s' % order.name)
                     _logger.info(log[-1])
                 
@@ -331,6 +334,7 @@ class SaleOrder(orm.Model):
                     log.append('Write error order: %s' % order.name)
                     _logger.info(log[-1])
                     write_error_order.append(order.id)
+                    esit = False
                 continue
 
         if write_error_order:
@@ -346,7 +350,7 @@ class SaleOrder(orm.Model):
             log_f.close()
         except:
             _logger.error('Error write log file: %s' % logfile)
-        return True
+        return esit
     
     def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
         ''' Fields function for calculate 
