@@ -51,10 +51,15 @@ odoo = erppeek.Client(
 # Pool used:
 order_pool = odoo.model('sale.order')
 
+# Close all order:
+order_pool.scheduled_check_close_order()
+
+# Search open order:
 order_ids = order_pool.search([
     ('state', 'not in', ('cancel', 'sent', 'draft')),
     ('mx_closed', '=', False),    
     ])
+    
 i = 0
 for item_id in order_ids:
     i += 1
@@ -63,5 +68,4 @@ for item_id in order_ids:
         print '%s. Updated ID: %s' % (i, item_id)
     except:
         print '%s. Error updating: %s' % (i, item_id)
-
 
