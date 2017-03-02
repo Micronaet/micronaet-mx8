@@ -102,6 +102,7 @@ class SaleOrder(orm.Model):
     # -----------------
     # Scheduled events:
     # -----------------
+    # TODO correct procedure as todo report
     def scheduled_check_close_order(self, cr, uid, context=None):
         ''' Override original procedure for write all producted
         '''
