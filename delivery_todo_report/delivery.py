@@ -107,40 +107,45 @@ class SaleOrder(orm.Model):
         '''
         if context is None:
             context = {}
+            
         force_one = context.get('force_one', False)
+        sol_pool = self.pool.get('sale.order.line')
 
-        logfile = self._logfile
+        logfile = '/home/administrator/photo/log/order/readability_todo.log'
         log = []
 
         # ---------------------------------------------------------------------
         #                       Mark order close and mrp:
         # ---------------------------------------------------------------------
-        if not force_one:
+        if force_one:
+             order_ids = [force_one]
+
+            log.append('Force one order: %s' % (force_one, ))
+            _logger.info(log[-1])
+        else:
             # Call original to update closed parameters:
             super(SaleOrder, self).scheduled_check_close_order(
                 cr, uid, context=context)
-        
-        # --------------------------------
-        # All closed are produced in view:
-        # --------------------------------
-        sol_pool = self.pool.get('sale.order.line')
-        
-        # Pricelist order are set to closed:
-        if force_one:
-            order_ids = [force_one]
-        else:    
             order_ids = self.search(cr, uid, [
                 ('state', 'not in', ('cancel', 'sent', 'draft')),
                 ('mx_closed', '=', False),
                 ], context=context)
 
+            log.append('Force one order: all')
+            _logger.info(log[-1])
+        
+        # --------------------------------
+        # All closed are produced in view:
+        # --------------------------------
+        # Pricelist order are yet set to closed:
         if not order_ids:
+            log.append('No order to force!')
+            _logger.info(log[-1])
             return True
 
         log.append('Update production in order (# %s)' % len(order_ids))
         _logger.info(log[-1])
         
-        produced_ids = []
         # 4 states:
         update_line = {
             'over': [],
@@ -149,6 +154,7 @@ class SaleOrder(orm.Model):
             'partial': [],
             'no': [],            
             }
+        produced_ids = []
 
         for order in self.browse(cr, uid, order_ids, context=context):
             all_produced = True
@@ -196,20 +202,24 @@ class SaleOrder(orm.Model):
                     
                 sol_pool.write(
                     cr, uid, update_line[key], data, context=context)
-                _logger.info('Line %s delivered (# %s)' % (
-                    key, len(update_line[key]),
-                    ))
+
+                log.append('Line %s delivered (# %s)' % (
+                    key, len(update_line[key])))
+                _logger.info(log[-1])
                
         if produced_ids:
             self.write(cr, uid, produced_ids, {
                 'all_produced': True,
-                }, context=context)                
-            _logger.info('Order all produced (# %s)' % len(produced_ids))
+                }, context=context)
+            log.append('Order all produced (# %s)' % len(produced_ids))
+            _logger.info(log[-1])
 
         # ---------------------------------------------------------------------
         # Update readability parameter in line
         # ---------------------------------------------------------------------
-        _logger.info('Readability parameter')        
+        log.append('Readability parameter')
+        _logger.info(log[-1])
+
         # Pricelist order are set to closed:        
         if force_one:
             order_ids = [force_one]
@@ -219,11 +229,13 @@ class SaleOrder(orm.Model):
                 ('mx_closed', '=', False),
                 ], context=context)
 
-        _logger.info('Update %s order...' % len(order_ids))
+        log.append('Update %s order...' % len(order_ids))
+        _logger.info(log[-1])
         i = 0
         for order in self.browse(cr, uid, order_ids, context=context):
             i += 1
-            _logger.info('%s order updated...' % i)
+            log.append('%s order update: %s' % (i, order.name))
+            _logger.info(log[-1])
                 
             # Order counter:
             order_ml_part = 0.0
@@ -292,7 +304,9 @@ class SaleOrder(orm.Model):
                         }, context=context)
                 except:
                     write_error = True
-                    _logger.error('Write error line, order ID %s' % order.id)
+                    log.append('Write error line, order %s' % order.name)
+                    _logger.info(log[-1])
+
                     if order.id not in write_error_order:
                         write_error_order.append(order.id)
                     break # stop writing line
@@ -309,19 +323,29 @@ class SaleOrder(orm.Model):
                         'delivery_vol_partial': order_volume_part,
                         }, context=context)
                 else:
-                    _logger.error('So order not write, ID %s' % order.id)
+                    log.append('>> order not write: %s' % order.name)
+                    _logger.info(log[-1])
                 
             except:
                 if order.id not in write_error_order:
-                    _logger.error('Write error order, order ID %s' % order.id)
+                    log.append('Write error order: %s' % order.name)
+                    _logger.info(log[-1])
                     write_error_order.append(order.id)
                 continue
 
-        # Update totale in order
-        _logger.info('Total order updated')
         if write_error_order:
-            _logger.error('Write error order: %s' % (write_error_order, ))
-        return
+            log.append('Write error order: %s' % (write_error_order, ))
+            _logger.info(log[-1])
+
+        log.append('Total order updated')
+        _logger.info(log[-1])
+        try:
+            log_f = open(logfile, 'a')
+            log_f.write('\n'.join(log))
+            log_f.close()
+        except:
+            _logger.error('Error write log file: %s' logfile)
+        return True
     
     def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
         ''' Fields function for calculate 
