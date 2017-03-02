@@ -137,7 +137,7 @@ class SaleOrder(orm.Model):
         if not order_ids:
             return True
 
-        log = log.append('Update production in order (# %s)' % len(order_ids))
+        log.append('Update production in order (# %s)' % len(order_ids))
         _logger.info(log[-1])
         
         produced_ids = []
