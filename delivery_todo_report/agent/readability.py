@@ -53,9 +53,9 @@ order_pool = odoo.model('sale.order')
 
 # Close all order:
 print 'Inizio procedura di aggiornamento ordini:'
-#order_pool.scheduled_check_close_order()
-# TODO svincolarla dalla procedura di aggiornamento completa
+
 print 'Chiusi gli ordini presenti consegnati'
+order_pool.scheduled_check_close_order()
 
 # Search open order:
 order_ids = order_pool.search([

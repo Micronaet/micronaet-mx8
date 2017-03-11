@@ -89,20 +89,29 @@ class SaleOrder(orm.Model):
     # Procedure to update
     def force_parameter_for_delivery(self, cr, uid, ids, context=None):
         ''' Compute all not closed order for delivery
-        '''        
-        return self.scheduled_check_close_order(cr, uid, context=context)
+        '''
+        # Call new function:
+        # Close order:
+        self.scheduled_check_close_order(cr, uid, context=context)
+        return self.scheduled_clean_for_readability_order(
+            cr, uid, context=context)
 
     def force_parameter_for_delivery_one(self, cr, uid, ids, context=None):
         ''' Compute all not closed order for delivery
         '''        
         context = context or {}
         context['force_one'] = ids[0]
-        return self.scheduled_check_close_order(cr, uid, context=context)
+
+        # TODO close order:
+        # Call new function:
+        return self.scheduled_clean_for_readability_order(
+            cr, uid, context=context)
 
     # -----------------
     # Scheduled events:
     # -----------------
-    def scheduled_check_close_order(self, cr, uid, context=None):
+    # XXX change: now doesn't override event:
+    def scheduled_clean_for_readability_order(self, cr, uid, context=None):
         ''' Override original procedure for write all producted
         '''
         if context is None:
@@ -125,8 +134,9 @@ class SaleOrder(orm.Model):
             _logger.info(log[-1])
         else:
             # Call original to update closed parameters:
-            super(SaleOrder, self).scheduled_check_close_order(
-                cr, uid, context=context)
+            #super(SaleOrder, self).scheduled_check_close_order(
+            #    cr, uid, context=context)
+            
             order_ids = self.search(cr, uid, [
                 ('state', 'not in', ('cancel', 'sent', 'draft')),
                 ('mx_closed', '=', False),
