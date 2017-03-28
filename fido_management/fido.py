@@ -111,7 +111,9 @@ class ResPartner(orm.Model):
         fido_yellow = 0.85 # TODO parametrize?
         
         for partner in self.browse(cr, uid, ids, context=context):       
-            res[partner.id] = {}            
+            res[partner.id] = {}
+            #    'uncovered_amount': 0, 'uncovered_state': 'red'}
+            #continue 
             opened = 0.0
             res[partner.id]['uncovered_state'] = 'green'
             
