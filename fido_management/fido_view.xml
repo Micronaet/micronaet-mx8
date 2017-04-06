@@ -1,7 +1,41 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id='view_partner_fido_field' model='ir.ui.view'>
+         <!--NO FIDO management:-->
+         <record model="ir.ui.view" id="view_res_users_form">
+             <field name="name">res.users.no_fido.form</field>
+             <field name="model">res.users</field>
+             <field name="inherit_id" ref="base.view_users_form"/>
+             <field name="arch" type="xml">
+                 <field name="active" position="after">
+                      <field name="no_fido_status" />
+                 </field> 
+             </field>
+         </record>
+         <record model="ir.ui.view" id="view_res_users_fido_modif_form">
+             <field name="name">res.users.no_fido.form</field>
+             <field name="model">res.users</field>
+             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+             <field name="arch" type="xml">
+                 <field name="lang" position="after">
+                      <field name="no_fido_status" />
+                 </field> 
+             </field>
+         </record>
+         <!--TODO move away-->
+         <record model="ir.ui.view" id="view_sale_order_stop_fido_check_form">
+             <field name="name">sale.order.form</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form"/>
+             <field name="arch" type="xml">
+                 <field name="name" position="after">
+                     <button name="set_context_no_fido" string="No FIDO" type="object" />
+                     <button name="set_context_yes_fido" string="Yes FIDO" type="object" />
+                 </field>
+             </field>
+         </record>
+
+         <record id='view_partner_fido_field' model='ir.ui.view'>
             <field name='name'>FIDO Partner</field>
             <field name='model'>res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>

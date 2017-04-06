@@ -67,6 +67,58 @@ class SaleOrder(orm.Model):
         }
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+# -----------------------------------------------------------------------------
+# NO FIDO Management:
+# -----------------------------------------------------------------------------
+class ResUsers(orm.Model):
+    """ Model name: SaleOrder
+    """    
+    _inherit = 'res.users'
+   
+    def set_no_inventory_status(self, cr, uid, value=False, context=None):
+        ''' Set inventory status uid
+            return previous value
+            default is True
+        '''
+        user_proxy = self.browse(cr, uid, uid, context=context)
+        
+        previous = user_proxy.no_inventory_status
+        self.write(cr, uid, uid, {
+            'no_fido_status': value
+            }, context=context)
+        _logger.warning('>>> Set user [%s] No FIDO status: %s > %s' % (
+            user_proxy.login, previous, value))
+        return previous
+            
+    _columns = {
+        'no_fido_status': fields.boolean('No FIDO status'),
+        }
+
+# TODO move away:
+class SaleOrder(orm.Model):
+    """ Model name: SaleOrder
+    """    
+    _inherit = 'sale.order'
+   
+    def set_context_no_fido(self, cr, uid, ids, context=None):
+        ''' Set no inventory in res.users parameter
+        '''
+        _logger.info('Stop fido for user: %s' % uid)
+        self.pool.get('res.users').write(cr, uid, [uid], {
+            'no_fido_status': True,
+            }, context=context)
+        return     
+
+    def set_context_yes_fido(self, cr, uid, ids, context=None):
+        ''' Set no inventory in res.users parameter
+        '''    
+        _logger.info('Start fido for user: %s' % uid)
+        self.pool.get('res.users').write(cr, uid, [uid], {
+            'no_fido_status': False,
+            }, context=context)
+        return            
+# -----------------------------------------------------------------------------
+
 class StockPicking(orm.Model):
     ''' FIDO in ddt 
     '''
@@ -110,10 +162,23 @@ class ResPartner(orm.Model):
         res = {}
         fido_yellow = 0.85 # TODO parametrize?
         
+        # ---------------------------------------------------------------------
+        # Read parameter for FIDO:
+        # ---------------------------------------------------------------------
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        no_fido_status = user.no_fido_status
+        _logger.warning('USER: %s NO FIDO %s' % (uid, no_fido_status))
+        
         for partner in self.browse(cr, uid, ids, context=context):       
-            res[partner.id] = {}
-            #    'uncovered_amount': 0, 'uncovered_state': 'red'}
-            #continue 
+            if no_fido_status:
+                res[partner.id] = {
+                    'uncovered_amount': 0, 
+                    'uncovered_state': 'grey',
+                    }
+                #continue 
+            else:        
+                res[partner.id] = {}
+
             opened = 0.0
             res[partner.id]['uncovered_state'] = 'green'
             
@@ -197,6 +262,7 @@ class ResPartner(orm.Model):
                 ('yellow', '> 85% FIDO'),
                 ('red', 'FIDO uncovered or no FIDO'),
                 ('black', 'FIDO removed'),
+                ('grey', 'No FIDO check'),                
                 ]),
         }
     _defaults = {
