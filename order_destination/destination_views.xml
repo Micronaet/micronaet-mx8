@@ -91,7 +91,17 @@
                  </field>
             </field>
         </record>
-        
+
+        <record id="stock_picking_destination_tree_ddt" model="ir.ui.view">
+            <field name="name">stock.picking.tree.ddt</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="destination_partner_id" />
+                </field>
+            </field>
+        </record>        
     </data>
 </openerp>
 
