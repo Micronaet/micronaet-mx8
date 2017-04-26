@@ -37,7 +37,6 @@ to guarantee compatibility.
     'depends': [
         'sale_stock', 
         'stock_account',
-        #'order_destination',
         ],
     'data': [
         'security/ir.model.access.csv',
