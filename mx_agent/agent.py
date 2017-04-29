@@ -152,7 +152,7 @@ class AccountInvoice(orm.Model):
             partner_proxy = partner_pool.browse(
                 cr, uid, partner_id, context=context)
             res['value'][
-                'mx_agent_id'] = partner_proxy.mx_agent_id.id
+                'mx_agent_id'] = partner_proxy.agent_id.id
         else:
             res['value']['mx_agent_id'] = False
         return res    
