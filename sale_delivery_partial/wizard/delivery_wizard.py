@@ -192,6 +192,9 @@ class SaleDeliveryPartialLineWizard(orm.TransientModel):
         'product_uom_qty': fields.float(
             'Quantity', digits_compute=dp.get_precision('Product UoS'), 
             readonly=True),
+        'product_uom_maked_sync_qty': fields.float(
+            'B', digits_compute=dp.get_precision('Product UoS'), 
+            readonly=True),
         'product_uom': fields.many2one(
             'product.uom', 'Unit of Measure', readonly=True),
         'date_deadline': fields.date('Deadline', readonly=True),        
@@ -221,10 +224,12 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
         context = context or {}
         all_qty = context.get('all_qty', False)
         sale_pool = self.pool.get('sale.order')
+        line_pool = self.pool.get('sale.order.line')
         order_id = context.get('active_id', False)
         if not order_id:
             return False # error
         
+        has_b = 'product_uom_maked_sync_qty' in line_pool._columns
         sale_proxy = sale_pool.browse(cr, uid, order_id, context)
 
         # Read delivered per sale order line (or picked)
@@ -245,7 +250,12 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
             
             if line.product_uom_qty - product_delivered_qty <= 0:
                 continue # Jump all delivered qty!
-            lines += 1    
+            lines += 1
+            if has_b:
+                b_qty = line.product_uom_maked_sync_qty
+            else:
+                b_qty = 0
+
             res.append((0, False, {
                 #'wizard_id': 1,
                 'order_line_id': line.id,
@@ -253,6 +263,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 'product_id': line.product_id.id,
                 'price_unit': line.price_unit,
                 'product_uom_qty': line.product_uom_qty,
+                'product_uom_maked_sync_qty': b_qty, 
                 'product_uom': line.product_uom.id,
                 'date_deadline': line.date_deadline,
                 'all_qty': all_qty,
