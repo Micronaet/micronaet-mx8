@@ -138,7 +138,24 @@ class AccountInvoice(orm.Model):
     """    
     _inherit = 'account.invoice'
     
-    # TODO onchange for setup from partner
+    # Override partner_id onchange for set up carrier_id
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice, 
+            payment_term, partner_bank_id, company_id, context=None):
+        ''' Set also carrier ID and default payment
+        '''    
+        res = super(AccountInvoice, self).onchange_partner_id(
+            cr, uid, ids, type, partner_id, date_invoice, 
+            payment_term, partner_bank_id, company_id, context=context)
+        
+        if partner_id:
+            partner_pool = self.pool.get('res.partner')
+            partner_proxy = partner_pool.browse(
+                cr, uid, partner_id, context=context)
+            res['value'][
+                'mx_agent_id'] = partner_proxy.mx_agent_id.id
+        else:
+            res['value']['mx_agent_id'] = False
+        return res    
     
     _columns = {
         'mx_agent_id': fields.many2one('res.partner', 'Agent', 
