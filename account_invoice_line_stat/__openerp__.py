@@ -37,6 +37,7 @@
     'demo': [],
     'data': [
         'stat_view.xml',
+        'scheduler.xml',
         ],
     'active': False,
     'installable': True,

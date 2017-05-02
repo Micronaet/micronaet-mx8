@@ -78,10 +78,43 @@ class AccountInvoiceLine(orm.Model):
                 }, string='Order date',            
             )
     """
+    # Temporary procedure:
+    def first_populate_date_invoice(self, cr, uid, context=None):
+        ''' First populate of date taked from account invoice
+        '''
+        invoice_pool = self.pool.get('account.invoice')
+        invoice_ids = invoice_pool.search(cr, uid, [
+            #('type', '=', 'out_invoice'),
+            ], context=context)
+        res = []
+        _logger.info('To update invoice: %s' % len(invoice_ids)) 
+
+        i = 0
+
+        for invoice in invoice_pool.browse(
+                cr, uid, invoice_ids, context=context):                
+            i += 1            
+            if i % 100 == 0:
+                _logger.info('... reading invoice: %s' % i)
+            if invoice.date_invoice: # only invoice with date!
+                res.append((invoice.id, invoice.date_invoice))
+            
+        i = 0
+        for invoice_id, date_invoice in res:
+            i += 1
+            if i % 100 == 0:
+                _logger.info('... updating invoice: %s' % i)
+            invoice_pool.write(cr, uid, invoice_id, {
+                'date_invoice': date_invoice,
+                }, context=context)
+            # Will be updated     
+        return True    
+        
     def _get_first_supplier_from_product(self, cr, uid, ids, context=None):
         ''' When change sol line order
         '''
         line_pool = self.pool.get('account.invoice.line')
+        #_logger.info('Update account line (change first supplier)')
         return line_pool.search(cr, uid, [
             ('product_id', 'in', ids)], context=context)
 
@@ -89,7 +122,7 @@ class AccountInvoiceLine(orm.Model):
         ''' When change sol line order
         '''
         line_pool = self.pool.get('account.invoice.line')
-        _logger.info('Update account line (change invoice destination)')
+        #_logger.info('Update account line (change invoice destination)')
         return line_pool.search(cr, uid, [
             ('invoice_id', 'in', ids)], context=context)
 
@@ -97,14 +130,25 @@ class AccountInvoiceLine(orm.Model):
         ''' When change invoice agent
         '''
         line_pool = self.pool.get('account.invoice.line')
-        _logger.info('Update account line (change agent in invoice)')
+        #_logger.info('Update account line (change agent in invoice)')
+        return line_pool.search(cr, uid, [
+            ('invoice_id', 'in', ids)], context=context)
+
+    def _get_invoice_date_change(self, cr, uid, ids, context=None):
+        ''' When change invoice date 
+        '''
+        line_pool = self.pool.get('account.invoice.line')
+        #_logger.info('Update account line (change date invoice)')
         return line_pool.search(cr, uid, [
             ('invoice_id', 'in', ids)], context=context)
 
     _columns = {
         'date_invoice': fields.related(
             'invoice_id', 'date_invoice', 
-            type='date', string='Date', store=True),             
+            type='date', string='Date', store={
+                'account.invoice': (
+                    _get_invoice_date_change, ['date_invoice'], 10),    
+                }),             
 
         'destination_partner_id': fields.related(
             'invoice_id', 'destination_partner_id', 
