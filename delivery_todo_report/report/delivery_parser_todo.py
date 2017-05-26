@@ -76,15 +76,15 @@ class Parser(report_sxw.rml_parse):
     def get_header_string(self, data, col):
         ''' Check report mode and return correct header
             mode: 
-                'full' (OC, B, Del.) *default
-                'clean' (OC, S, B)                
+                'odoo' (OC, B, Del.) *default
+                'mexal' (OC, S, B)                
         ''' 
         if data is None:
            data = {}
 
-        mode = data.get('mode', 'full')   
+        mode = data.get('mode', 'odoo')
         translate = {
-            'full': {
+            'odoo': {
                 'title': 'REQUEST DELIVERY PRODUCT FORM',
                 0: 'ID', # never call
                 1: 'Our ref.',
@@ -101,10 +101,10 @@ class Parser(report_sxw.rml_parse):
                 12: 'Available',
                 13: 'Request',
                 14: 'Bookable',
-                15: 'Note',
-                
-                },                
-            'clean': {
+                15: 'Note',                
+                },
+                       
+            'mexal': {
                 'title': 'CONSEGNE DA FARE',
                 0: 'ID', # never call
                 1: 'Ns. rif.',
@@ -127,18 +127,28 @@ class Parser(report_sxw.rml_parse):
         
         return translate[mode].get(col, _('ERROR'))
 
-    def get_stock_value(self, data, col):
+    def get_stock_value(self, data, line, col):
         ''' Get 3 cols with correct qty data
             mode: 
-                'full' (OC, B, Del.) *default
-                'clean' (OC, S, B)      
+                'odoo' (OC, B, Del.) *default
+                'mexal' (OC, S, B)      
         ''' 
         if data is None:
            data = {}
         
-        mode = data.get('mode', 'full')   
-        # TODO 
-        return ''
+        mode = data.get('mode', 'odoo')   
+        if mode == 'odoo':
+            if col == 0:
+                return int(line.product_uom_qty)
+            elif col == 1:
+                
+        else:
+            if col == 0:
+                return int(
+                    line.product_uom_qty - line.delivered_qty)
+            elif col == 1:
+        return _('ERROR')
+        
     
     def get_last_record_id(self):
         return self.last_record_id

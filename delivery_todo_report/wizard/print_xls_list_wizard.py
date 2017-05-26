@@ -71,14 +71,14 @@ class SaleOrderXLSListReport(orm.TransientModel):
 
     _columns = {
         'mode': fields.selection([
-            ('full', 'ODOO mode [OC, MRP, Deliverd]'),
-            ('clean', 'Mexal mode [OC, S, B]'),
+            ('odoo', 'ODOO mode [OC, MRP, Deliverd]'),
+            ('mexal', 'Mexal mode [OC, S, B]'),
             ], 'Report mode', required=True,
             )
         }
         
     _defaults = {
-        'mode': lambda *x: 'full',
+        'mode': lambda *x: 'odoo',
         }    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
