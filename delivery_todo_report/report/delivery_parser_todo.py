@@ -138,15 +138,24 @@ class Parser(report_sxw.rml_parse):
         
         mode = data.get('mode', 'odoo')   
         if mode == 'odoo':
-            if col == 0:
+            if col == 0: # Total order
                 return int(line.product_uom_qty)
-            elif col == 1:
-                
+            elif col == 1: # Total producer
+                return int(line.product_uom_maked_sync_qty)
+            elif col ==2: # Total deliver
+                return int(line.delivered_qty)
         else:
-            if col == 0:
+            if col == 0: # Remain order
                 return int(
                     line.product_uom_qty - line.delivered_qty)
-            elif col == 1:
+            elif col == 1: # To produce
+                res = int(
+                    line.product_uom_qty - line.product_uom_maked_sync_qty)
+                return res if res > 0 else 0
+            elif col == 2: # To deliver
+                res = int(
+                    line.product_uom_maked_sync_qty - line.delivered_qty)
+                return res if res > 0 else 0    
         return _('ERROR')
         
     
