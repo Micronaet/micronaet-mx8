@@ -43,6 +43,7 @@
         'delivery_selection', # Add dep for manage selection to print
         'note_manage_sale', # For extra note
         #'base_accounting_program', # res.partner.zone TODO move in module!
+        
         ],
     'init_xml': [],
     'demo': [],
@@ -50,6 +51,8 @@
         #'security/ir.model.access.csv',    
         'delivery_view.xml',
         'report/delivery_report.xml',
+
+        'wizard/report_wizard_view.xml',
         ],
     'active': False,
     'installable': True,

@@ -21,7 +21,10 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import os
+import sys
 import logging
+from openerp.tools.translate import _
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from datetime import datetime, timedelta
@@ -29,6 +32,7 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT, 
     DATETIME_FORMATS_MAP, 
     float_compare)
+
 
 _logger = logging.getLogger(__name__)
 
@@ -60,11 +64,82 @@ class Parser(report_sxw.rml_parse):
             'reset_print': self.reset_print,
             
             'get_order_selected': self.get_order_selected,
+            
+            # Wizard mode function:
+            'get_header_string': self.get_header_string,
+            'get_stock_value': self.get_stock_value,
         })
         self.reset_counter()
         # TODO remove        
         self.total_parcel = 0.0
 
+    def get_header_string(self, data, col):
+        ''' Check report mode and return correct header
+            mode: 
+                'full' (OC, B, Del.) *default
+                'clean' (OC, S, B)                
+        ''' 
+        if data is None:
+           data = {}
+
+        mode = data.get('mode', 'full')   
+        translate = {
+            'full': {
+                'title': 'REQUEST DELIVERY PRODUCT FORM',
+                0: 'ID', # never call
+                1: 'Our ref.',
+                2: 'Your ref.',
+                3: 'Date',
+                4: 'Deadline',
+                5: 'Our item',
+                6: 'Your item',
+                7: 'LMU',
+                8: 'Pc.',
+                9: 'Ordered',
+                10: 'Maked',
+                11: 'Delivered',
+                12: 'Available',
+                13: 'Request',
+                14: 'Bookable',
+                15: 'Note',
+                
+                },                
+            'clean': {
+                'title': 'CONSEGNE DA FARE',
+                0: 'ID', # never call
+                1: 'Ns. rif.',
+                2: 'Vs. rif.',
+                3: 'Data',
+                4: 'Scadenza',
+                5: 'Ns. articolo',
+                6: 'Vs. articolo',
+                7: 'LMU',
+                8: 'Pz.',
+                9: 'Ordinati',
+                10: 'Sospesi',
+                11: 'Disponibili',
+                12: 'A disposizione',
+                13: 'Richiesti',
+                14: 'Prenotati',
+                15: 'Note',
+                },   
+            }            
+        
+        return translate[mode].get(col, _('ERROR'))
+
+    def get_stock_value(self, data, col):
+        ''' Get 3 cols with correct qty data
+            mode: 
+                'full' (OC, B, Del.) *default
+                'clean' (OC, S, B)      
+        ''' 
+        if data is None:
+           data = {}
+        
+        mode = data.get('mode', 'full')   
+        # TODO 
+        return ''
+    
     def get_last_record_id(self):
         return self.last_record_id
         

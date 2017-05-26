@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+       <!-- sale.order.xls.list.report -->
+       <record id="sale_order_xls_list_report_wizard_form" model="ir.ui.view">
+            <field name="name">XLS List wizard</field>
+            <field name="model">sale.order.xls.list.report</field>
+            <field name="arch" type="xml">
+                <form string="Wizard" version="7.0">
+                   <header>
+                       <button string="Cancel" special="cancel" />
+                       <button name="action_print" string="Print" type="object" icon="gtk-print" class="oe_highlight" />
+                   </header>
+                   <group colspan="4" col="4">
+                        <field name="mode" />
+                   </group>
+                </form>
+            </field>
+      </record>
+
+      <record model="ir.actions.act_window" id="action_sale_order_xls_list_report_wizard_form">
+          <field name="name">XLS List wizard</field>
+          <field name="res_model">sale.order.xls.list.report</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+          <field name="view_id" ref="sale_order_xls_list_report_wizard_form"/>
+      </record>      
+      <act_window
+          id="act_sale_order_xls_list_report_wizard_form"
+          name="XLS List wizard"
+          res_model="sale.order.xls.list.report"
+          src_model="sale.order"
+          view_mode="form"
+          view_type="form"
+          target="new"/>
+    </data>
+</openerp>
