@@ -52,7 +52,7 @@
         'delivery_view.xml',
         'report/delivery_report.xml',
 
-        'wizard/report_wizard_view.xml',
+        #'wizard/report_wizard_view.xml',
         ],
     'active': False,
     'installable': True,
