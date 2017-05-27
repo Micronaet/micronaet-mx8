@@ -73,6 +73,14 @@ class Parser(report_sxw.rml_parse):
         # TODO remove        
         self.total_parcel = 0.0
 
+    def get_mode(self, ):
+        ''' Utility for check the mode of report depend on name
+        '''
+        if self.name == 'custom_mx1_todo_summary_report':
+            return 'odoo'
+        else: # custom_mx2_todo_internal_summary_report
+            return 'mexal'
+
     def get_header_string(self, data, col):
         ''' Check report mode and return correct header
             mode: 
@@ -82,7 +90,9 @@ class Parser(report_sxw.rml_parse):
         if data is None:
            data = {}
 
-        mode = data.get('mode', 'odoo')
+        mode = self.get_mode()
+        _logger.info('Report run in mode: %s' % mode)
+            
         translate = {
             'odoo': {
                 'title': 'REQUEST DELIVERY PRODUCT FORM',
@@ -136,7 +146,8 @@ class Parser(report_sxw.rml_parse):
         if data is None:
            data = {}
         
-        mode = data.get('mode', 'odoo')   
+        mode = self.get_mode()
+ 
         if mode == 'odoo':
             if col == 0: # Total order
                 return int(line.product_uom_qty)
@@ -144,7 +155,7 @@ class Parser(report_sxw.rml_parse):
                 return int(line.product_uom_maked_sync_qty)
             elif col ==2: # Total deliver
                 return int(line.delivered_qty)
-        else:
+        else: # mexal
             if col == 0: # Remain order
                 return int(
                     line.product_uom_qty - line.delivered_qty)
