@@ -43,31 +43,46 @@ class AccountInvoiceLine(orm.Model):
     """    
     _inherit = 'account.invoice.line'
     
-    def _get_family_id_from_line(self, cr, uid, ids, context=None):
-        ''' When change product in invoice line change family
+    def _get_season_from_date(self, date):
+        ''' Return season from date
         '''
-        _logger.warning('Change product in invoice line, so family')
-        return ids
-        
-    def _get_family_id_from_product(self, cr, uid, ids, context=None):
+        start_month = '09'
+        if not date:
+            return False
+        current_month = date[5:7]
+        year = int(date[2:4])
+        if current_month >= start_month:
+            return '%02d-%02d' % (year, year + 1)
+        else: 
+            return '%02d-%02d' % (year - 1, year)
+                
+    def _get_season_from_invoice_line(self, cr, uid, ids, context=None):
         ''' Change family in product
         '''
         line_pool = self.pool.get('account.invoice.line')
         line_ids = line_pool.search(cr, uid, [
-            ('product_id', 'in', ids),
+            ('invoice_id', 'in', ids),
             ], context=context)
-        _logger.warning('Change family product so family in invoice line')
+        _logger.warning('Change season invoice line as invoice change date')
         return line_ids
         
+    def _get_season_from_invoice_date(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = self._get_season_from_date(
+                line.invoice_id.date_invoice)
+        return res
+
     _columns = {
-        'family_id': fields.related(
-            'product_id', 'family_id', type='many2one', 
-            relation='product.template', 
+        'season_period': fields.function(
+            _get_season_from_invoice_date, method=True, 
+            type='char', size=30, string='Season', 
             store={
-                'account.invoice.line':
-                    (_get_family_id_from_line, ['product_id'], 10),
-                'product.product':
-                     (_get_family_id_from_product, ['family_id'], 10),
-                }, string='Family', )     
+                'account.invoice':
+                    (_get_season_from_invoice_line, ['date_invoice'], 10),
+                }
+            )     
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

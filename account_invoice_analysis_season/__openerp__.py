@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Copyright (C) 2001-2014 Micronaet SRL (<http://www.micronaet.it>).
@@ -17,6 +16,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-from . import analysis
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+{
+    'name': 'Account invoice line statistic season',
+    'version': '0.1',
+    'category': 'Statistic',
+    'description': '''    
+        Add season in invoice line for statistic purpose    
+        ''',
+    'author': 'Micronaet S.r.l. - Nicola Riolini',
+    'website': 'http://www.micronaet.it',
+    'license': 'AGPL-3',
+    'depends': [
+        'base',
+        'product',
+        'account',
+        'account_invoice_line_stat', # module for analysis
+        ],
+    'init_xml': [],
+    'demo': [],
+    'data': [
+        'analysis_view.xml',
+        ],
+    'active': False,
+    'installable': True,
+    'auto_install': False,
+    }
