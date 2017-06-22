@@ -42,7 +42,7 @@
                     <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
                     <field name="invoice_id" filter_domain="[('partner_id','=',self)]"/>
 
-                    <filter name="to_invoice" string="To invoice" domain="[('invoice_id','=',False)]"/>
+                    <filter name="to_invoice" string="To invoice" domain="[('not_invoiced', '=', False),('invoice_id','=',False)]"/>
                     <filter name="Invoiced" string="Invoiced" domain="[('invoice_id','!=',False)]"/>
                     
                     <group expand="0" string="Group By">
@@ -137,7 +137,10 @@
                     <field name="delivery_date"/>
                     <field name="partner_id"/>
                     <field name="invoice_id"/>
+                    <field name="not_invoiced" invisible="1"/>
                     <field name="state"/>
+                    <button name="set_not_invoiced_true" string="Not invoiced" type="object" icon="star-off" attrs="{'invisible': [('not_invoiced','=',True)]}"/>
+                    <button name="set_not_invoiced_false" string="To be invoiced" type="object" icon="star-on" attrs="{'invisible': [('not_invoiced','=',False)]}"/>
                 </tree>
             </field>
         </record>

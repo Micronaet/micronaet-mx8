@@ -82,6 +82,18 @@ class StockDdT(models.Model):
     _name = 'stock.ddt'
     _description = 'DdT'
 
+    # -------------------------------------------------------------------------
+    # Button event:
+    # -------------------------------------------------------------------------
+    @api.one
+    def set_not_invoiced_true(self):
+        self.write({'not_invoiced': True})
+
+    @api.one
+    def set_not_invoiced_false(self):
+        self.write({'not_invoiced': False})
+
+
     @api.multi
     def get_sequence(self):
         # XXX: allow config of default seq per company
@@ -101,6 +113,7 @@ class StockDdT(models.Model):
         compute='_get_lines')
     invoice_id = fields.Many2one(
         'account.invoice', string='Invoice', required=False)
+    not_invoiced = fields.Boolean('Not invoiced')    
     partner_id = fields.Many2one(
         'res.partner', string='Partner', required=True)
     delivery_address_id = fields.Many2one(
