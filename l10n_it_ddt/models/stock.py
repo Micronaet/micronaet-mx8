@@ -26,9 +26,12 @@ from openerp import models
 from openerp import api
 from openerp import _
 from openerp.exceptions import Warning
-
 from openerp.osv import osv
-
+from datetime import datetime, timedelta
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
+    DEFAULT_SERVER_DATETIME_FORMAT, 
+    DATETIME_FORMATS_MAP, 
+    float_compare)
 
 _logger = logging.getLogger(__name__)
 
@@ -101,7 +104,11 @@ class StockDdT(models.Model):
             [('code', '=', 'stock.ddt')])[0].id
 
     name = fields.Char(string='Number')
-    date = fields.Datetime(required=True, default=fields.Datetime.now())
+    date = fields.Datetime(
+        required=True, 
+        #default=fields.Datetime.now(),
+        default=datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        )
     delivery_date = fields.Datetime()
     sequence = fields.Many2one(
         'ir.sequence', string='Sequence',
