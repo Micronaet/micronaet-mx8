@@ -97,6 +97,9 @@ class StockDdT(models.Model):
         self.write({'not_invoiced': False})
 
 
+    # -------------------------------------------------------------------------
+    # Utility:
+    # -------------------------------------------------------------------------
     @api.multi
     def get_sequence(self):
         # XXX: allow config of default seq per company
