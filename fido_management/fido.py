@@ -268,6 +268,7 @@ class ResPartner(orm.Model):
                 ('grey', 'No FIDO check'),                
                 ]),
         }
+        
     _defaults = {
         'empty': lambda *x: ' ',
         }
