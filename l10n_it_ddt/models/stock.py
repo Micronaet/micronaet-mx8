@@ -116,9 +116,10 @@ class StockDdT(models.Model):
     name = fields.Char(string='Number')
     date = fields.Datetime(
         required=True, 
+        default=get_date_now,
+        # XXX DOESN'T WORK!:
         #default=fields.Datetime.now(),
         #default=datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        default=get_date_now,
         )
     delivery_date = fields.Datetime()
     sequence = fields.Many2one(
