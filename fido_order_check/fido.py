@@ -89,6 +89,7 @@ class SaleOrder(orm.Model):
                 ('yellow', '> 85% FIDO'),
                 ('red', 'FIDO uncovered or no FIDO'),
                 ('black', 'FIDO removed'),
+                ('grey', 'No FIDO check'),                
                 ]),
         }
 

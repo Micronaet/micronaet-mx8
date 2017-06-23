@@ -96,10 +96,17 @@ class StockDdT(models.Model):
     def set_not_invoiced_false(self):
         self.write({'not_invoiced': False})
 
-
     # -------------------------------------------------------------------------
     # Utility:
     # -------------------------------------------------------------------------
+    @api.multi
+    def get_date_now(self):
+        ''' 
+        '''
+        now = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        _logger.warning('DDT now: %s' % now)
+        return now
+        
     @api.multi
     def get_sequence(self):
         # XXX: allow config of default seq per company
@@ -110,7 +117,8 @@ class StockDdT(models.Model):
     date = fields.Datetime(
         required=True, 
         #default=fields.Datetime.now(),
-        default=datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        #default=datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        default=get_date_now,
         )
     delivery_date = fields.Datetime()
     sequence = fields.Many2one(
