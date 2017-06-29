@@ -68,7 +68,10 @@
                                     <field name="is_address" modifiers="{}"/>
                                     <label for="is_address" string="E' un indirizzo?"/>
                                     )                                        
-                             </div>
+			                        <h1>
+				                        <field name="name" default_focus="1" placeholder="Nome" modifiers="{'required': true}"/>
+			                        </h1>                             
+			                    </div>
                          </div>
                          <group colspan="4" col="4">
                               <separator string="Fido" colspan="4" />
