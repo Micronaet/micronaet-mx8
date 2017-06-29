@@ -286,55 +286,100 @@ class ResPartner(orm.Model):
     # Scheduled procedure
     # -------------------------------------------------------------------------            
     def schedule_update_fido_information(
-            self, cr, uid, from_date, context=None):
+            self, cr, uid, from_date=False, context=None):
         ''' Refresh partner FIDO
         '''
-        # Search invoice from date
-          
-        invoice_pool = self.pool.get('account.invoice')
-        invoice_ids = invoice_pool.search(cr, uid, [
-            ('date invoice', '>=', from_date),
-            ], context=context)
-        partner_ids = []      
-        for invoice in invoice_pool.browse(
-                cr, uid, invoice_ids, context=context):
-              if invoice.partner_id.id not in partner_ids: 
-                partner_ids.append(invoice.partner_id.id) 
+        # Check open mode:
+        if from_date: # nigthly update
+            daily_update = False
+        else: # daily update:
+            daily_update = True
+            filename = '/tmp/fido.log'
+            now = datetime.now()
+            from_now = now.strftime('%Y-%m-%d %H:%M:%S')
+            if os.path.isfile(filename):
+                f = open(filename, 'r')
+                from_date = f.readline()
+                f.close()
+            else:
+                from_date = now.strftime('%Y-%m-%d 00:00:00')
+                
+            f = open(filename, 'w')
+            f.write(from_now)
+            f.close()
+        
+        partner_ids = []
+        # ---------------------------------------------------------------------
+        # TODO payment update (imported from account)
+        # ---------------------------------------------------------------------
+        if not daily_update:
+            payment_pool = self.pool.get('statistic.deadline')
+            payment_ids = payment_pool.search(cr, uid, [], context=context)
+            for payment in payment_pool.browse(
+                    cr, uid, payment_ids, context=context):
+                if payment.partner_id.id not in partner_ids:
+                    partner_ids.append(payment.partner_id.id)
 
-        # Search DDT from date
-        ddt_pool = self.pool.get('stock.ddt')
-        ddt_ids = ddt_pool.search(cr, uid, [
-            ('date', '>=', from_date),
-            ], context=context)
-        for ddt in ddt_pool.browse(
-                cr, uid, ddt_ids, context=context):
-            if ddt.partner_id.id not in partner_ids:
-                partner_ids.append(ddt.partner_id.id)
-                    
+        # ---------------------------------------------------------------------
         # Search Order from data
+        # ---------------------------------------------------------------------
         order_pool = self.pool.get('sale.order')
-        order_ids = order_pool.search(cr, uid, [
-            ('date_order', '>=', from_date),
-            ], context=context)
+        if daily_update: 
+            domain = [
+                '|',
+                ('create_date', '>=', from_date),
+                ('write_date', '>=', from_date),
+                ] 
+        else: # nightly update
+            domain = [('date_order', '>=', from_date)]
+             
+        order_ids = order_pool.search(cr, uid, domain, context=context)
         for order in order_pool.browse(
                 cr, uid, order_ids, context=context):
             if order.partner_id.id not in partner_ids:
                 partner_ids.append(order.partner_id.id)
-              
-        # TODO payment update (imported from account)
-        payment_pool = self.pool.get('statistic.deadline')
-        payment_ids = payment_pool.search(cr, uid, [], context=context)
-        for payment in payment_pool.browse(
-                cr, uid, payment_ids, context=context):
-            if payment.partner_id.id not in partner_ids:
-                partner_ids.append(payment.partner_id.id)
+
+        # ---------------------------------------------------------------------
+        # Search DDT from date
+        # ---------------------------------------------------------------------
+        ddt_pool = self.pool.get('stock.ddt')
+        if daily_update:
+            domain = [
+                '|',
+                ('create_date', '>=', from_date),
+                ('write_date', '>=', from_date),
+                ]
+        else:
+            domain = [('date', '>=', from_date)]
+        ddt_ids = ddt_pool.search(cr, uid, domain, context=context)
+        for ddt in ddt_pool.browse(
+                cr, uid, ddt_ids, context=context):
+            if ddt.partner_id.id not in partner_ids:
+                partner_ids.append(ddt.partner_id.id)
+
+        # ---------------------------------------------------------------------
+        # Search invoice from date
+        # ---------------------------------------------------------------------
+        invoice_pool = self.pool.get('account.invoice')
+        if daily_update: 
+            domain = [
+                '|',
+                ('create_date', '>=', from_date),
+                ('write_date', '>=', from_date),
+                ] 
+        else: # nightly update
+            domain = [('date_invoice', '>=', from_date)]
+                  
+        invoice_ids = invoice_pool.search(cr, uid, domain, context=context)
+        for invoice in invoice_pool.browse(
+                cr, uid, invoice_ids, context=context):
+              if invoice.partner_id.id not in partner_ids: 
+                partner_ids.append(invoice.partner_id.id) 
         
         # Write fido_update for force update operation
-        self.write(cr, uid, partner_ids, {
+        return self.write(cr, uid, partner_ids, {
             'fido_update': True},
              context=context)
-        
-        return True
         
     _columns = {
         'empty': fields.char(' '),
