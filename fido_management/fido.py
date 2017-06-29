@@ -158,6 +158,13 @@ class ResPartner(orm.Model):
     # -------------------------------------------------------------------------
     # Button event:
     # -------------------------------------------------------------------------
+    def test_refresh_FIDO_button(self, cr, uid, ids, context=None):
+        ''' Test button for refresh fido:
+        '''
+        return self.write(cr, uid, ids, {
+            'fido_update': True,
+            }, context=context)
+            
     def res_partner_return_form_view(self, cr, uid, ids, context=None):
         ''' Open form partner
         '''
@@ -272,43 +279,60 @@ class ResPartner(orm.Model):
         _logger.warning('END FIDO CHECK')
         return res
         
+    def _force_FIDO_refresh(self, cr, uid, ids, context=None):
+        ''' Refresh FIDO information for 
+        '''
+        _logger.warning('Refresh FIDO info: %s' % (ids, ))
+        return ids
+        
     _columns = {
         'empty': fields.char(' '),
         'fido_date': fields.date('FIDO from date'),
         'fido_ko': fields.boolean('FIDO removed'),
         'fido_total': fields.float('Total FIDO', digits=(16, 2)),
+        'fido_update': fields.boolean(
+            'Update FIDO trigger', help='Trigger for update partner FIDO'),
         
         # Open order:
         'open_order_ids': fields.one2many(
             'sale.order', 'partner_id', 
             'Order open', domain=[
-                ('mx_closed', '=', False),
-                ('pricelist_order', '=', False),
-                ('state', 'not in', ('cancel', 'draft', 'sent')),
+                ('mx_closed', '=', False), # still open
+                ('pricelist_order', '=', False), # not pricelist
+                ('state', 'not in', ('cancel', 'draft', 'sent')), # not closed
                 ]), 
             
         # Open order:
         'open_picking_ids': fields.one2many(
             'stock.picking', 'partner_id', 
             'Open DDT', domain=[
-                ('ddt_id', '!=', False), 
-                ('invoice_id', '=', False),
+                ('ddt_id', '!=', False), # is DDT
+                ('invoice_id', '=', False), # not invoiced
                 ]),
 
         'uncovered_amount': fields.function(
             _get_uncovered_amount_total, method=True, 
             type='float', string='Uncovered amount', 
-            store=False, multi=True),
+            multi=True, store={
+                'res.partner': 
+                    (_force_FIDO_refresh, ['fido_update'], 10),
+                    },
+            ),
         'uncovered_state': fields.function(
-            _get_uncovered_amount_total, method=True, 
-            type='selection', string='Uncovered state', 
-            store=False, multi=True, selection=[
+            _get_uncovered_amount_total,
+            selection=[
                 ('green', 'OK FIDO'),
                 ('yellow', '> 85% FIDO'),
                 ('red', 'FIDO uncovered or no FIDO'),
                 ('black', 'FIDO removed'),
                 ('grey', 'No FIDO check'),                
-                ]),
+                ], 
+            type='selection', string='Uncovered state', method=True,
+            multi=True, store={
+                'res.partner': 
+                    (_force_FIDO_refresh, ['fido_update'], 10),
+                    },                
+            ),
         }
         
     _defaults = {

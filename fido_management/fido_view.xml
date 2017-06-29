@@ -43,6 +43,7 @@
                  <form string="String" version="7.0">        
                      <header>
                           <button name="res_partner_return_form_view" string="Partner view" type="object" icon="terp-partner"/>
+                          <button name="test_refresh_FIDO_button" string="Refresh FIDO info" type="object" icon="gtk-refresh"/>
                      </header>
                      <sheet>
                           <div style="background-color: red;text-align: center;font-weight:bold;color:white;">
