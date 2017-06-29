@@ -192,10 +192,7 @@ class ResPartner(orm.Model):
         '''
         model_pool = self.pool.get('ir.model.data')
         view_id = model_pool.get_object_reference(
-            cr, 
-            uid, 
-            'fido_management', 
-            'view_res_partner_fido_details_form',
+            cr, uid, 'fido_management', 'view_res_partner_fido_details_form',
             )[1]
     
         return {
@@ -284,6 +281,28 @@ class ResPartner(orm.Model):
         '''
         _logger.warning('Refresh FIDO info: %s' % (ids, ))
         return ids
+
+    # -------------------------------------------------------------------------        
+    # Scheduled procedure
+    # -------------------------------------------------------------------------            
+    def schedule_update_fido_information(
+            self, cr, uid, from_date, context=None):
+        ''' Refresh partner FIDO
+        '''
+        # Search invoice from date
+        
+        # Search DDT from date
+        
+        # Search Order from data
+        
+        # TODO payment update (imported from account)
+        
+        # Keep list in set and after list for remove duplicate
+        
+        # Write fido_update for force update operation
+        
+        
+        return True
         
     _columns = {
         'empty': fields.char(' '),
