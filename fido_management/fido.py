@@ -155,6 +155,57 @@ class ResPartner(orm.Model):
     '''
     _inherit ='res.partner'
     
+    # -------------------------------------------------------------------------
+    # Button event:
+    # -------------------------------------------------------------------------
+    def res_partner_return_form_view(self, cr, uid, ids, context=None):
+        ''' Open form partner
+        '''
+        model_pool = self.pool.get('ir.model.data')
+        view_id = model_pool.get_object_reference(
+            cr, uid, 'base','view_partner_form')[1]
+    
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('FIDO Detail'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_id': ids[0],
+            'res_model': 'res.partner',
+            'view_id': view_id, # False
+            'views': [(view_id, 'form'), (False, 'tree')],
+            'domain': [],
+            'context': context,
+            'target': 'current', # 'new'
+            'nodestroy': False,
+            }
+
+    def res_partner_fido_detail(self, cr, uid, ids, context=None):
+        ''' Open form FIDO detail
+        '''
+        model_pool = self.pool.get('ir.model.data')
+        view_id = model_pool.get_object_reference(
+            cr, 
+            uid, 
+            'fido_management', 
+            'view_res_partner_fido_details_form',
+            )[1]
+    
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('FIDO Detail'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_id': ids[0],
+            'res_model': 'res.partner',
+            'view_id': view_id, # False
+            'views': [(view_id, 'form'), (False, 'tree')],
+            'domain': [],
+            'context': context,
+            'target': 'current', # 'new'
+            'nodestroy': False,
+            }
+
     def _get_uncovered_amount_total(self, cr, uid, ids, fields, args, 
             context=None):
         ''' Fields function for calculate 
@@ -165,6 +216,7 @@ class ResPartner(orm.Model):
         # ---------------------------------------------------------------------
         # Read parameter for FIDO:
         # ---------------------------------------------------------------------
+        _logger.warning('START FIDO CHECK')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         no_fido_status = user.no_fido_status
         if no_fido_status:
@@ -179,12 +231,9 @@ class ResPartner(orm.Model):
                     'uncovered_state': 'grey',
                     }
                 continue 
-            else:        
-                res[partner.id] = {}
 
-            opened = 0.0
-            res[partner.id]['uncovered_state'] = 'green'
-            
+            res[partner.id] = {}
+            opened = 0.0 # total
             fido_date = partner.fido_date or False
             fido_total = partner.fido_total or 0.0
 
@@ -207,27 +256,20 @@ class ResPartner(orm.Model):
             # DDT not invoice:
             # ----------------
             for ddt in partner.open_picking_ids:
-                opened += ddt.open_amount_total
-                
+                opened += ddt.open_amount_total  
 
             res[partner.id]['uncovered_amount'] = fido_total - opened
 
             # Check black listed:
-            if partner.fido_ko:
-                # No computation partner is black listed!
+            if partner.fido_ko: # No computation partner is black listed!
                 res[partner.id]['uncovered_state'] = 'black'
-                continue
-
-            if not fido_total:
-                # No computation no Fido amount!
-                res[partner.id]['uncovered_state'] = 'red'
-                continue
-
-            if fido_total < opened:
+            elif not fido_total or fido_total < opened: # No Fido amount!
                 res[partner.id]['uncovered_state'] = 'red'
             elif opened / fido_total > fido_yellow:
                 res[partner.id]['uncovered_state'] = 'yellow'
-                
+            else:    
+                res[partner.id]['uncovered_state'] = 'green'                
+        _logger.warning('END FIDO CHECK')
         return res
         
     _columns = {

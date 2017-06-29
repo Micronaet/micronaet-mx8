@@ -34,6 +34,94 @@
                  </field>
              </field>
          </record>
+         
+         <record model="ir.ui.view" id="view_res_partner_fido_details_form">
+             <field name="name">res.partner.fido.details.form</field>
+             <field name="model">res.partner</field>
+             <field name="priority" eval="50" />
+             <field name="arch" type="xml">
+                 <form string="String" version="7.0">        
+                     <header>
+                          <button name="res_partner_return_form_view" string="Partner view" type="object" icon="terp-partner"/>
+                     </header>
+                     <sheet>
+                          <div style="background-color: red;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'red')]}" class="oe_color_red" />
+                          </div>
+                          <div style="background-color: yellow;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'yellow')]}" class="oe_color_red" />
+                          </div>
+                          <div style="background-color: green;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'green')]}" class="oe_color_red" />
+                          </div>
+                          <div style="background-color: black;text-align: center;font-weight:bold;color:white;">
+                              <field name="empty" readonly="1" nolabel="1" attrs="{'invisible': [('uncovered_state', '!=', 'black')]}" class="oe_color_red" />
+                          </div>
+
+                          <field name="image" widget="image" class="oe_left oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}" modifiers="{}"/>
+                          <div class="oe_title oe_left">
+                               <div class="oe_edit_only">
+                                    <label for="name"/>
+                                    (
+                                    <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline" modifiers="{}"/>
+                                    <label for="is_company" string="E' un'Azienda?"/>
+                                    <field name="is_address" modifiers="{}"/>
+                                    <label for="is_address" string="E' un indirizzo?"/>
+                                    )                                        
+                             </div>
+                         </div>
+                         <group colspan="4" col="4">
+                              <separator string="Fido" colspan="4" />
+                              <field name='fido_ko' />   
+                              <newline />
+                              <field name='fido_date' attrs="{'invisible':[('fido_ko', '=', True)]}"/>
+                              <field name='fido_total' attrs="{'invisible':[('fido_ko', '=', True)]}" />
+                              <field name='uncovered_state' />
+                              <field name='uncovered_amount' />
+                              
+                              <separator string="Open payment" colspan="4" />
+                              <field name="open_payment_ids" readonly="1" nolabel="1" colspan="4"> 
+                                  <tree string="Open Payment:" editable="bottom" color="red:out>0">
+                                      <field name="invoice_id" />
+                                      <field name="invoice_date" />
+                                      <field name="deadline"/>
+                                      <field name="type"/>
+                                      <field name="out" sum="Uscite" string="Import OUT"  />
+                                      <field name="in" sum="Entrate" string="Import IN"  />
+                                      <!--<field name="invoice_ref" />-->
+                                      <!--<field name="saldo_c" />
+                                      <field name="saldo_s" />                                    
+                                      <field name="scoperto_c" />-->                                   
+                                      <!--<field name="property_account_position"/>-->
+                                  </tree>
+                              </field>
+                              <separator string="Open order" colspan="4" />
+                              <field name="open_order_ids"  readonly="1" nolabel="1" colspan="4">
+                                  <tree string="Open Order" editable="bottom">
+                                      <field name="name" />
+                                      <field name="date_order" />
+                                      <field name="date_deadline" />
+                                      <field name="amount_total" sum="Uscite"/>
+                                      <field name="open_amount_total" sum="Open"/>                                  
+                                      <field name="state" />
+                                  </tree>
+                              </field>
+                              <separator string="Open DDT" colspan="4" />
+                              <field name="open_picking_ids" readonly="1" nolabel="1" colspan="4">
+                                  <tree string="Open DDT:" editable="bottom">
+                                      <field name="name" />
+                                      <field name="date" />
+                                      <field name="open_amount_total" sum="Open"/>                                  
+                                      <field name="state" />
+                                      <!--<field name="date_deadline" />
+                                      <field name="amount_total" />-->
+                                  </tree>
+                              </field>
+                         </group>
+                     </sheet>        
+                 </form>
+             </field>
+         </record>
 
          <record id='view_partner_fido_field' model='ir.ui.view'>
             <field name='name'>FIDO Partner</field>
@@ -60,13 +148,14 @@
                       <group colspan="4" col="4">
                           <separator string="Fido" colspan="4" />
                           <field name='fido_ko' />   
+                          <button name="res_partner_fido_detail" string="FIDO Detail" type="object" icon="terp-dolar"/>
                           <newline />
-                          <field name='fido_date' attrs="{'invisible':[('fido_ko', '=', True)]}"/>
-                          <field name='fido_total' attrs="{'invisible':[('fido_ko', '=', True)]}" />
+                          <field name='fido_date' attrs="{'invisible': [('fido_ko', '=', True)]}" />
+                          <field name='fido_total' attrs="{'invisible': [('fido_ko', '=', True)]}" />
                           <field name='uncovered_state' />
                           <field name='uncovered_amount' />
                           
-                          <separator string="Open payment" colspan="4" />
+                          <!--<separator string="Open payment" colspan="4" />
                           <field name="open_payment_ids" readonly="1" nolabel="1" colspan="4"> 
                               <tree string="Open Payment:" editable="bottom" color="red:out>0">
                                   <field name="invoice_id" />
@@ -74,12 +163,12 @@
                                   <field name="deadline"/>
                                   <field name="type"/>
                                   <field name="out" sum="Uscite" string="Import OUT"  />
-                                  <field name="in" sum="Entrate" string="Import IN"  />
+                                  <field name="in" sum="Entrate" string="Import IN"  />-->
                                   <!--<field name="invoice_ref" />-->
                                   <!--<field name="saldo_c" />
                                   <field name="saldo_s" />                                    
                                   <field name="scoperto_c" />-->                                   
-                                  <!--<field name="property_account_position"/>-->
+                                  <!--<field name="property_account_position"/>--><!--
                               </tree>
                           </field>
                           <separator string="Open order" colspan="4" />
@@ -99,11 +188,11 @@
                                   <field name="name" />
                                   <field name="date" />
                                   <field name="open_amount_total" sum="Open"/>                                  
-                                  <field name="state" />
+                                  <field name="state" />-->
                                   <!--<field name="date_deadline" />
-                                  <field name="amount_total" />-->
+                                  <field name="amount_total" />--><!--
                               </tree>
-                          </field>
+                          </field>-->
                       </group>
                   </page>
               </xpath>

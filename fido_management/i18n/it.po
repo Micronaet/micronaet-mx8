@@ -92,7 +92,7 @@ msgstr "DDT aperti:"
 #. module: fido_management
 #: view:res.partner:fido_management.view_partner_fido_field
 msgid "Open Order"
-msgstr "Apri Ordine"
+msgstr "Ordini aperti"
 
 #. module: fido_management
 #: view:res.partner:fido_management.view_partner_fido_field
