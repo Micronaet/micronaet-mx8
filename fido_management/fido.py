@@ -290,17 +290,49 @@ class ResPartner(orm.Model):
         ''' Refresh partner FIDO
         '''
         # Search invoice from date
-        
+          
+        invoice_pool = self.pool.get('account.invoice')
+        invoice_ids = invoice_pool.search(cr, uid, [
+            ('date invoice', '>=', from_date),
+            ], context=context)
+        partner_ids = []      
+        for invoice in invoice_pool.browse(
+                cr, uid, invoice_ids, context=context):
+              if invoice.partner_id.id not in partner_ids: 
+                partner_ids.append(invoice.partner_id.id) 
+
         # Search DDT from date
-        
+        ddt_pool = self.pool.get('stock.ddt')
+        ddt_ids = ddt_pool.search(cr, uid, [
+            ('date', '>=', from_date),
+            ], context=context)
+        for ddt in ddt_pool.browse(
+                cr, uid, ddt_ids, context=context):
+            if ddt.partner_id.id not in partner_ids:
+                partner_ids.append(ddt.partner_id.id)
+                    
         # Search Order from data
-        
+        order_pool = self.pool.get('sale.order')
+        order_ids = order_pool.search(cr, uid, [
+            ('date_order', '>=', from_date),
+            ], context=context)
+        for order in order_pool.browse(
+                cr, uid, order_ids, context=context):
+            if order.partner_id.id not in partner_ids:
+                partner_ids.append(order.partner_id.id)
+              
         # TODO payment update (imported from account)
-        
-        # Keep list in set and after list for remove duplicate
+        payment_pool = self.pool.get('statistic.deadline')
+        payment_ids = payment_pool.search(cr, uid, [], context=context)
+        for payment in payment_pool.browse(
+                cr, uid, payment_ids, context=context):
+            if payment.partner_id.id not in partner_ids:
+                partner_ids.append(payment.partner_id.id)
         
         # Write fido_update for force update operation
-        
+        self.write(cr, uid, partner_ids, {
+            'fido_update': True},
+             context=context)
         
         return True
         

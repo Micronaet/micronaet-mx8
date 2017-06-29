@@ -42,6 +42,7 @@
     'data': [
         'fido_view.xml',
         'report/fido_report.xml',
+        'scheduler.xml',
         ],
     'active': False,
     'installable': True,
