@@ -70,6 +70,8 @@ class SaleOrder(orm.Model):
 # -----------------------------------------------------------------------------
 # NO FIDO Management:
 # -----------------------------------------------------------------------------
+# TODO REMOVE (NO FIDO MANAGEMENT NO MORE USED !!!!
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 class ResUsers(orm.Model):
     """ Model name: SaleOrder
     """    
@@ -93,6 +95,7 @@ class ResUsers(orm.Model):
     _columns = {
         'no_fido_status': fields.boolean('No FIDO status'),
         }
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 # TODO move away:
 class SaleOrder(orm.Model):
@@ -421,6 +424,7 @@ class ResPartner(orm.Model):
                 ('yellow', '> 85% FIDO'),
                 ('red', 'FIDO uncovered or no FIDO'),
                 ('black', 'FIDO removed'),
+                
                 ('grey', 'No FIDO check'),                
                 ], 
             type='selection', string='Uncovered state', method=True,
