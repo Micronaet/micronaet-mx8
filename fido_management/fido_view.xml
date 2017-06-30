@@ -2,7 +2,7 @@
 <openerp>
     <data>
          <!--NO FIDO management:-->
-         <record model="ir.ui.view" id="view_res_users_form">
+         <!--<record model="ir.ui.view" id="view_res_users_form">
              <field name="name">res.users.no_fido.form</field>
              <field name="model">res.users</field>
              <field name="inherit_id" ref="base.view_users_form"/>
@@ -21,9 +21,9 @@
                       <field name="no_fido_status" />
                  </field> 
              </field>
-         </record>
+         </record>-->
          <!--TODO move away-->
-         <record model="ir.ui.view" id="view_sale_order_stop_fido_check_form">
+         <!--<record model="ir.ui.view" id="view_sale_order_stop_fido_check_form">
              <field name="name">sale.order.form</field>
              <field name="model">sale.order</field>
              <field name="inherit_id" ref="sale.view_order_form"/>
@@ -33,7 +33,7 @@
                      <button name="set_context_yes_fido" string="Yes FIDO" type="object" />
                  </field>
              </field>
-         </record>
+         </record>-->
          
          <record model="ir.ui.view" id="view_res_partner_fido_details_form">
              <field name="name">res.partner.fido.details.form</field>

@@ -221,20 +221,20 @@ class ResPartner(orm.Model):
         # Read parameter for FIDO:
         # ---------------------------------------------------------------------
         _logger.warning('START FIDO CHECK')
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        no_fido_status = user.no_fido_status
-        if no_fido_status:
-            _logger.error('USER: %s NO FIDO INFORMATION' % uid)
-        else:
-            _logger.info('USER: %s FIDO INFORMATION' % uid)
+        #user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        #no_fido_status = user.no_fido_status
+        #if no_fido_status:
+        #    _logger.error('USER: %s NO FIDO INFORMATION' % uid)
+        #else:
+        #    _logger.info('USER: %s FIDO INFORMATION' % uid)
         
         for partner in self.browse(cr, uid, ids, context=context):       
-            if no_fido_status:
-                res[partner.id] = {
-                    'uncovered_amount': 0, 
-                    'uncovered_state': 'grey',
-                    }
-                continue 
+            #if no_fido_status:
+            #    res[partner.id] = {
+            #        'uncovered_amount': 0, 
+            #        'uncovered_state': 'grey',
+            #        }
+            #    continue 
 
             res[partner.id] = {}
             opened = 0.0 # total
