@@ -119,18 +119,11 @@ class PrintReportFIDOWizard(orm.TransientModel):
             'text_wrap': True,
             })
 
-        format_text = WB.add_format({
-            'font_name': 'Arial',
-            #'align': 'left',
-            'font_size': 9,
-            'border': 1,
-            })
-
-        format_text_white = WB.add_format({
+        format_text_green = WB.add_format({
             'font_name': 'Arial',
             'font_size': 9,
             #'align': 'right',
-            'bg_color': 'white',
+            'bg_color': 'c1e7b3',
             'border': 1,
             #'num_format': '0.00',
             })        
@@ -139,6 +132,14 @@ class PrintReportFIDOWizard(orm.TransientModel):
             'font_size': 9,
             #'align': 'right',
             'bg_color': '#fba099',
+            'border': 1,
+            #'num_format': '0.00',
+            })        
+        format_text_grey = WB.add_format({
+            'font_name': 'Arial',
+            'font_size': 9,
+            #'align': 'right',
+            'bg_color': '#e7e7e7',
             'border': 1,
             #'num_format': '0.00',
             })        
@@ -195,14 +196,20 @@ class PrintReportFIDOWizard(orm.TransientModel):
         for invoice in invoice_pool.browse(
                 cr, uid, account_ids, context=context):
             i += 1   
+            # Read parameter:
             deadline = get_deadline(invoice.date_invoice)
-            if deadline < now:
+            has_fido = invoice.partner_id.fido_total > 0
+            
+            # Check format:
+            if not has_fido:
+                format_current = format_text_grey                
+            elif deadline < now:
                 format_current = format_text_red
             else:    
-                format_current = format_text_white
+                format_current = format_text_green
                 
             data = [
-                'X' if invoice.partner_id.fido_total > 0 else '',
+                'X' if has_fido else '',
                 invoice.partner_id.fido_date,
                 invoice.partner_id.fido_total,
                 
