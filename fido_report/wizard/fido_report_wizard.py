@@ -126,13 +126,21 @@ class PrintReportFIDOWizard(orm.TransientModel):
             'border': 1,
             })
 
-        format_white = WB.add_format({
+        format_text_white = WB.add_format({
             'font_name': 'Arial',
             'font_size': 9,
-            'align': 'right',
+            #'align': 'right',
             'bg_color': 'white',
             'border': 1,
-            'num_format': '0.00',
+            #'num_format': '0.00',
+            })        
+        format_text_red = WB.add_format({
+            'font_name': 'Arial',
+            'font_size': 9,
+            #'align': 'right',
+            'bg_color': '#fba099',
+            'border': 1,
+            #'num_format': '0.00',
             })        
         
         header = [
@@ -182,11 +190,17 @@ class PrintReportFIDOWizard(orm.TransientModel):
         
         account_ids = invoice_pool.search(
             cr, uid, domain, order=order, context=context)        
+        now = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)    
         i = 0
         for invoice in invoice_pool.browse(
                 cr, uid, account_ids, context=context):
             i += 1   
             deadline = get_deadline(invoice.date_invoice)
+            if deadline < now:
+                format_current = format_text_red
+            else:    
+                format_current = format_text_white
+                
             data = [
                 'X' if invoice.partner_id.fido_total > 0 else '',
                 invoice.partner_id.fido_date,
@@ -200,7 +214,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
                 invoice.amount_untaxed,
                 invoice.amount_total,
                 ]
-            xls_write_row(WS, i, data, format_text)        
+            xls_write_row(WS, i, data, format_current)
 
         _logger.info('End FIDO invoice export on %s' % xls_filename)
         WB.close()

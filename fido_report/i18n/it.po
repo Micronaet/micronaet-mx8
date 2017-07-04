@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-04 09:46+0000\n"
-"PO-Revision-Date: 2017-07-04 11:47+0100\n"
+"POT-Creation-Date: 2017-07-04 09:55+0000\n"
+"PO-Revision-Date: 2017-07-04 11:56+0100\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,7 @@ msgstr "Stampa"
 
 #. module: fido_report
 #: model:ir.actions.act_window,name:fido_report.action_print_report_fido_wizard
+#: model:ir.ui.menu,name:fido_report.menu_print_report_fido_invoice_wizard
 #: model:ir.ui.menu,name:fido_report.menu_print_report_fido_wizard
 msgid "FIDO report wizard"
 msgstr "Report FIDO fatture"

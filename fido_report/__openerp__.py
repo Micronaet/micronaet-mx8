@@ -29,12 +29,12 @@
     'license': 'AGPL-3',
     'depends': [
         'base',
+        'account',
         'fido_management',
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        #'security/ir.model.access.csv',    
         'wizard/fido_report_view.xml',
         ],
     'active': False,
