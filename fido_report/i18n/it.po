@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fido_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-04 09:46+0000\n"
+"PO-Revision-Date: 2017-07-04 11:47+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,agent_id:0
+msgid "Agent"
+msgstr "Agente"
+
+#. module: fido_report
+#: view:print.report.fido.wizard:fido_report.print_report_fido_wizard_view
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,with_fido:0
+msgid "Customer with FIDO"
+msgstr "Cliente con FIDO"
+
+#. module: fido_report
+#: view:print.report.fido.wizard:fido_report.print_report_fido_wizard_view
+msgid "Done"
+msgstr "Stampa"
+
+#. module: fido_report
+#: model:ir.actions.act_window,name:fido_report.action_print_report_fido_wizard
+#: model:ir.ui.menu,name:fido_report.menu_print_report_fido_wizard
+msgid "FIDO report wizard"
+msgstr "Report FIDO fatture"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,from_date:0
+msgid "From date"
+msgstr "Dalla data"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,journal_id:0
+msgid "Journal"
+msgstr "Sezionale"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,partner_id:0
+msgid "Partner"
+msgstr "Cliente"
+
+#. module: fido_report
+#: field:print.report.fido.wizard,to_date:0
+msgid "To date"
+msgstr "Alla data"
+
+#. module: fido_report
+#: view:print.report.fido.wizard:fido_report.print_report_fido_wizard_view
+msgid "Wizard"
+msgstr "Wizard"
