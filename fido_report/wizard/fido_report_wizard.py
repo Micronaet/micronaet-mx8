@@ -146,16 +146,16 @@ class PrintReportFIDOWizard(orm.TransientModel):
         
         header = [
             _('FIDO'), 
-            _('FIDO From'),
-            _('FIDO Total'),
+            _('FIDO Da'),
+            _('FIDO Totale'),
             
-            _('Partner'), 
-            _('Agent'), 
-            _('Invoice'), 
-            _('Date'), 
-            _('Deadline'), # invoice covered
-            _('Total net'),
-            _('Total taxed'),
+            _('Cliente'), 
+            _('Agente'), 
+            _('Fattura'), 
+            _('Data'), 
+            _('Scadenza'), # invoice covered
+            _('Imponibile'),
+            _('Totale'),
            ]
 
         # Column dimension:
