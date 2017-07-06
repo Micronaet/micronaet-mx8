@@ -179,7 +179,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
         i = 0
         for payment in payment_pool.browse(
                 cr, uid, payment_ids, context=context):
-            i += 1   
+            i += 1
             
             # Read parameter:
             fido_deadline = payment.fido_deadline
