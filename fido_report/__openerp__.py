@@ -36,7 +36,8 @@
     'init_xml': [],
     'demo': [],
     'data': [
-        'wizard/fido_report_view.xml',
+        'deadline_view.xml',
+        'wizard/fido_report_view.xml',        
         ],
     'active': False,
     'installable': True,

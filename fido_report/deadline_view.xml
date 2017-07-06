@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <!-- statistic.deadline -->
+        <record model="ir.ui.view" id="view_statistic_deadline_insurance_search">
+        <field name="name">statistic.deadline.search</field>
+        <field name="model">statistic.deadline</field>
+        <field name="inherit_id" ref="accounting_statistic_deadline.view_statistic_deadline_search"/>
+        <field name="arch" type="xml">
+            <filter string="Deadlined" position="after">
+                <filter string="Non Assicurato" domain="[('fido_deadline','&lt;=', datetime.datetime.now().strftime('%Y-%m-%d'))]" />
+                <filter string="Assicurato" domain="[('fido_deadline','&gt;', datetime.datetime.now().strftime('%Y-%m-%d'))]" />
+            </filter>        
+            <filter string="Deadline" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'deadline'}">
+                <filter string="Data assicurazione" domain="[]" context="{'group_by':'fido_deadline'}"/>
+            </filter>
+        </field>
+    </record>    
+    <record model="ir.ui.view" id="view_statistic_deadline_insurance_tree">
+        <field name="name">statistic.deadline.tree</field>
+        <field name="model">statistic.deadline</field>
+        <field name="inherit_id" ref="accounting_statistic_deadline.view_statistic_deadline_tree"/>
+        <field name="arch" type="xml">
+            <!--<xpath expr="//tree" position="attributes">
+                <attribute name="string">Pagamenti (rosso=non piu' assicurato)</attribute>
+                <attribute name="colors">red:fido_deadline &lt;= datetime.datetime.now().strftime('%Y-%m-%d')</attribute>
+            </xpath>-->
+            <xpath expr="//tree" position="attributes">
+                <attribute name="string">Pagamenti aperti</attribute>
+            </xpath>
+            <field name="deadline" position="after">                
+                <field name="fido_deadline" />
+            </field>
+        </field>
+    </record>
+  </data>
+</openerp>

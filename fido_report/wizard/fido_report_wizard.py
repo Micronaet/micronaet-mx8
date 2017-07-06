@@ -203,7 +203,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
                 payment.invoice_ref,
                 payment.invoice_date, 
                 payment.deadline, 
-                fido_deadline,
+                fido_deadline or '',
                 payment.total,
                 ]
             xls_write_row(WS, i, data, format_current)
@@ -242,47 +242,4 @@ class PrintReportFIDOWizard(orm.TransientModel):
         
     _defaults = {
         }    
-
-class StatisticDeadline(orm.Model):
-    """ Model name: StatisticDeadline
-    """
-    
-    _inherit = 'statistic.deadline'
-
-    def _get_fido_deadline_date(
-            self, cr, uid, ids, fields, args, context=None):
-        ''' Add period to end month from date
-        '''
-        # XXX Static parameter (put in ODOO?)
-        months = 6
-        end_month = True    
-
-        res = {}
-        for line in self.browse(cr, uid, ids, context=None):
-            date = datetime.strptime(
-                line.invoice_date, DEFAULT_SERVER_DATE_FORMAT)
-            fido_deadline = date + relativedelta(months=months)
-            month_range = monthrange(
-                fido_deadline.year, fido_deadline.month)
-            if end_month:
-                res[line.id] = '%s-%s' % ( 
-                    fido_deadline.strftime('%Y-%m'),
-                    month_range[1],
-                    )
-            else:        
-                res[line.id] = fido_deadline.strftime('%Y-%m-%d')                
-        return res    
-    
-    _columns = {
-        'fido_total': fields.related(
-            'partner_id', 'fido_total', type='float', string='FIDO Total'),
-        'agent_id': fields.related(
-            'partner_id', 'agent_id', 
-            type='many2one', relation='res.partner', string='Agent'),    
-        'fido_deadline': fields.function(
-            _get_fido_deadline_date, method=True, type='date', 
-            string='FIDO deadline', store=True), 
-        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
