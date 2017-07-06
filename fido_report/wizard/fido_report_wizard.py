@@ -131,37 +131,36 @@ class PrintReportFIDOWizard(orm.TransientModel):
             })        
         
         header = [
+            _('Cliente'), 
+            _('Agente'), 
             _('FIDO'), 
             _('FIDO Da'),
             _('FIDO Totale'),
-            
-            _('Cliente'), 
-            _('Agente'), 
             _('Fattura'), 
             _('Data'), 
             _('Scadenza'),            
-            _('Scadenza FIDO'), # invoice covered
-            _('Importo pagamento'),
+            _('Scad. FIDO'), # invoice covered
+            _('Importo pag.'),
            ]
 
         # Column dimension:
-        WS.set_column(0, 0, 4)
-        WS.set_column(1, 1, 8)
-        WS.set_column(2, 2, 8)
-        WS.set_column(3, 3, 35)
-        WS.set_column(4, 4, 30)
+        WS.set_column(0, 0, 35)
+        WS.set_column(1, 1, 30)
+        WS.set_column(2, 2, 4)
+        WS.set_column(3, 3, 8)
+        WS.set_column(4, 4, 8)
         WS.set_column(5, 5, 11)
         WS.set_column(6, 6, 8)
         WS.set_column(7, 7, 8)
         WS.set_column(8, 8, 8)
-        WS.set_column(9, 9, 8)
+        WS.set_column(9, 9, 10)
         
         # Export Header:
         xls_write_row(WS, 0, header, format_title)        
         
         # Export data:
         order = 'invoice_ref'
-        domain = []
+        domain = [('c_o_s', '=', 'c')] # only customer payment
         if partner_id:
             domain.append(('partner_id', '=', partner_id))
         if agent_id:
@@ -194,12 +193,13 @@ class PrintReportFIDOWizard(orm.TransientModel):
                 format_current = format_text_green
                 
             data = [
+                payment.partner_id.name,
+                payment.partner_id.agent_id.name or '',
+
                 'X' if has_fido else '',
                 payment.partner_id.fido_date or '',
                 payment.partner_id.fido_total or '',
-                
-                payment.partner_id.name,
-                payment.partner_id.agent_id.name or '',
+
                 payment.invoice_ref,
                 payment.invoice_date, 
                 payment.deadline, 
