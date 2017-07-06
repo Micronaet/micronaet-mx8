@@ -56,6 +56,20 @@ class PrintReportFIDOWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Utility:
         # ---------------------------------------------------------------------
+        def get_deadline(date, months=6, end_month=True):        
+            ''' Add period to end month from date
+            '''
+            date = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT)
+            deadline = date + relativedelta(months=months)
+            month_range = monthrange(deadline.year, deadline.month)
+            if end_month:
+                return '%s-%s' % ( 
+                    deadline.strftime('%Y-%m'),
+                    month_range[1],
+                    )
+            else:        
+                return deadline.strftime('%Y-%m-%d')
+            
         def xls_write_row(WS, row, row_data, format_cell):
             ''' Print line in XLS file            
             '''
@@ -71,13 +85,13 @@ class PrintReportFIDOWizard(orm.TransientModel):
             context = {}
         
         # Pool used:
-        paytment_pool = self.pool.get('statistic.deadline')
+        invoice_pool = self.pool.get('account.invoice')
         
         # Read parameters:
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
         partner_id = wiz_browse.partner_id.id
         agent_id = wiz_browse.agent_id.id
-        #journal_id = wiz_browse.journal_id.id
+        journal_id = wiz_browse.journal_id.id
         with_fido = wiz_browse.with_fido
         from_date = wiz_browse.from_date
         to_date = wiz_browse.to_date
@@ -85,12 +99,12 @@ class PrintReportFIDOWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Export XLSX file:
         # ---------------------------------------------------------------------
-        xls_filename = '/tmp/fido_report.xlsx'
-        _logger.info('Start FIDO payment export on %s' % xls_filename)
+        xls_filename = '/tmp/bom_report.xlsx'
+        _logger.info('Start FIDO invoice export on %s' % xls_filename)
         
         # Open file and write header
         WB = xlsxwriter.Workbook(xls_filename)
-        WS = WB.add_worksheet(_('Payment'))
+        WS = WB.add_worksheet(_('Invoice'))
 
         # Format:
         format_title = WB.add_format({
@@ -139,9 +153,9 @@ class PrintReportFIDOWizard(orm.TransientModel):
             _('Agente'), 
             _('Fattura'), 
             _('Data'), 
-            _('Scadenza'),            
-            _('Scadenza FIDO'), # invoice covered
-            _('Importo pagamento'),
+            _('Scadenza'), # invoice covered
+            _('Imponibile'),
+            _('Totale'),
            ]
 
         # Column dimension:
@@ -160,64 +174,63 @@ class PrintReportFIDOWizard(orm.TransientModel):
         xls_write_row(WS, 0, header, format_title)        
         
         # Export data:
-        order = 'invoice_ref'
+        order = 'number'
         domain = []
         if partner_id:
             domain.append(('partner_id', '=', partner_id))
         if agent_id:
-            domain.append(('agent_id', '=', agent_id))
-        #if journal_id:
-        #    domain.append(('journal_id', '=', agent_id))
+            domain.append(('partner_id.agent_id', '=', agent_id))
+        if journal_id:
+            domain.append(('journal_id', '=', agent_id))
         if with_fido:
-            domain.append(('fido_total', '>', 0))
+            domain.append(('partner_id.fido_total', '>', 0))
         if from_date:
-            domain.append(('invoice_date', '>=', from_date))
+            domain.append(('date_invoice', '>=', from_date))
         if to_date:     
-            domain.append(('invoice_date', '<=', to_date))
+            domain.append(('date_invoice', '<=', to_date))
         
-        payment_ids = payment_pool.search(
+        account_ids = invoice_pool.search(
             cr, uid, domain, order=order, context=context)        
         now = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)    
         i = 0
-        for payment in payment_pool.browse(
-                cr, uid, payment_ids, context=context):
+        for invoice in invoice_pool.browse(
+                cr, uid, account_ids, context=context):
             i += 1   
-            
             # Read parameter:
-            fido_deadline = payment.fido_deadline
-            has_fido = payment.partner_id.fido_total > 0
+            deadline = get_deadline(invoice.date_invoice)
+            has_fido = invoice.partner_id.fido_total > 0
             
             # Check format:
             if not has_fido:
                 format_current = format_text_grey                
-            elif fido_deadline < now:
+            elif deadline < now:
                 format_current = format_text_red
             else:    
                 format_current = format_text_green
                 
             data = [
                 'X' if has_fido else '',
-                payment.partner_id.fido_date,
-                payment.partner_id.fido_total,
+                invoice.partner_id.fido_date,
+                invoice.partner_id.fido_total,
                 
-                payment.partner_id.name,
-                payment.partner_id.agent_id.name or '',
-                payment.invoide_ref,
-                payment.invoice_date, 
-                payment.deadline, 
-                fido_deadline,
-                payment.total,
+                invoice.partner_id.name,
+                invoice.partner_id.agent_id.name or '',
+                invoice.number,
+                invoice.date_invoice, 
+                deadline,
+                invoice.amount_untaxed,
+                invoice.amount_total,
                 ]
             xls_write_row(WS, i, data, format_current)
 
-        _logger.info('End FIDO payment export on %s' % xls_filename)
+        _logger.info('End FIDO invoice export on %s' % xls_filename)
         WB.close()
 
         attachment_pool = self.pool.get('ir.attachment')
         b64 = open(xls_filename, 'rb').read().encode('base64')
         attachment_id = attachment_pool.create(cr, uid, {
-            'name': 'FIDO payment report',
-            'datas_fname': 'payment_fido_report.xlsx',
+            'name': 'FIDO invoice report',
+            'datas_fname': 'invoice_fido_report.xlsx',
             'type': 'binary',
             'datas': b64,
             'partner_id': 1,
@@ -237,6 +250,9 @@ class PrintReportFIDOWizard(orm.TransientModel):
             'res.partner', 'Partner'),
         'agent_id': fields.many2one(
             'res.partner', 'Agent'),
+        'journal_id': fields.many2one(
+            'account.journal', 'Journal', 
+            required=False),
         'with_fido': fields.boolean('Customer with FIDO'),    
         'from_date': fields.date('From date'),    
         'to_date': fields.date('To date'),    
@@ -250,28 +266,6 @@ class StatisticDeadline(orm.Model):
     """
     
     _inherit = 'statistic.deadline'
-
-    def _get_fido_deadline_date(
-            self, cr, uid, ids, fields, args, context=None):
-        ''' Add period to end month from date
-        '''
-        # XXX Static parameter (put in ODOO?)
-        month = 6
-        end_month = True    
-
-        res = {}
-        for line in self.browse(cr, uid, ids, context=None):
-            date = line.invoice_date
-            fido_deadline = date + relativedelta(months=months)
-            month_range = monthrange(deadline.year, deadline.month)
-            if end_month:
-                res[line.id] = '%s-%s' % ( 
-                    deadline.strftime('%Y-%m'),
-                    month_range[1],
-                    )
-            else:        
-                res[line.id] = deadline.strftime('%Y-%m-%d')                
-        return res    
     
     _columns = {
         'fido_total': fields.related(
@@ -279,9 +273,6 @@ class StatisticDeadline(orm.Model):
         'agent_id': fields.related(
             'partner_id', 'agent_id', 
             type='many2one', relation='res.partner', string='Agent'),    
-        'fido_deadline': fields.function(
-            _get_fido_deadline_date, method=True, type='date', 
-            string='FIDO deadline', store=True), 
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
