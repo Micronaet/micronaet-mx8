@@ -30,7 +30,7 @@
     'depends': [
         'base',
         'account',
-        'account_statistic_deadline',
+        'accounting_statistic_deadline',
         'fido_management',
         ],
     'init_xml': [],

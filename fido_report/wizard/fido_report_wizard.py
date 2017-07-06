@@ -71,7 +71,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
             context = {}
         
         # Pool used:
-        paytment_pool = self.pool.get('statistic.deadline')
+        payment_pool = self.pool.get('statistic.deadline')
         
         # Read parameters:
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
@@ -102,7 +102,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
             'valign': 'vcenter',
             'bg_color': 'gray',
             'border': 1,
-            'text_wrap': True,
+            #'text_wrap': True,
             })
 
         format_text_green = WB.add_format({
@@ -166,8 +166,6 @@ class PrintReportFIDOWizard(orm.TransientModel):
             domain.append(('partner_id', '=', partner_id))
         if agent_id:
             domain.append(('agent_id', '=', agent_id))
-        #if journal_id:
-        #    domain.append(('journal_id', '=', agent_id))
         if with_fido:
             domain.append(('fido_total', '>', 0))
         if from_date:
@@ -197,12 +195,12 @@ class PrintReportFIDOWizard(orm.TransientModel):
                 
             data = [
                 'X' if has_fido else '',
-                payment.partner_id.fido_date,
-                payment.partner_id.fido_total,
+                payment.partner_id.fido_date or '',
+                payment.partner_id.fido_total or '',
                 
                 payment.partner_id.name,
                 payment.partner_id.agent_id.name or '',
-                payment.invoide_ref,
+                payment.invoice_ref,
                 payment.invoice_date, 
                 payment.deadline, 
                 fido_deadline,
@@ -256,21 +254,23 @@ class StatisticDeadline(orm.Model):
         ''' Add period to end month from date
         '''
         # XXX Static parameter (put in ODOO?)
-        month = 6
+        months = 6
         end_month = True    
 
         res = {}
         for line in self.browse(cr, uid, ids, context=None):
-            date = line.invoice_date
+            date = datetime.strptime(
+                line.invoice_date, DEFAULT_SERVER_DATE_FORMAT)
             fido_deadline = date + relativedelta(months=months)
-            month_range = monthrange(deadline.year, deadline.month)
+            month_range = monthrange(
+                fido_deadline.year, fido_deadline.month)
             if end_month:
                 res[line.id] = '%s-%s' % ( 
-                    deadline.strftime('%Y-%m'),
+                    fido_deadline.strftime('%Y-%m'),
                     month_range[1],
                     )
             else:        
-                res[line.id] = deadline.strftime('%Y-%m-%d')                
+                res[line.id] = fido_deadline.strftime('%Y-%m-%d')                
         return res    
     
     _columns = {
