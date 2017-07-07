@@ -79,7 +79,7 @@ class StatisticDeadline(orm.Model):
             'partner_id', 'fido_total', type='float', string='FIDO Total'),
         'agent_id': fields.related(
             'partner_id', 'agent_id', 
-            type='many2one', relation='res.partner', string='Agent'),    
+            type='many2one', relation='res.partner', string='Agente'),    
         'fido_deadline': fields.function(
             _get_fido_deadline_date, method=True, type='date', 
             string='FIDO deadline', store=True), 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-04 09:55+0000\n"
-"PO-Revision-Date: 2017-07-04 11:56+0100\n"
+"POT-Creation-Date: 2017-07-07 12:44+0000\n"
+"PO-Revision-Date: 2017-07-07 14:45+0100\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,8 +19,14 @@ msgstr ""
 
 #. module: fido_report
 #: field:print.report.fido.wizard,agent_id:0
+#: field:statistic.deadline,agent_id:0
 msgid "Agent"
 msgstr "Agente"
+
+#. module: fido_report
+#: view:statistic.deadline:fido_report.view_statistic_deadline_insurance_search
+msgid "Assicurato"
+msgstr "Assicurato"
 
 #. module: fido_report
 #: view:print.report.fido.wizard:fido_report.print_report_fido_wizard_view
@@ -43,16 +49,36 @@ msgid "Customer with FIDO"
 msgstr "Cliente con FIDO"
 
 #. module: fido_report
+#: view:statistic.deadline:fido_report.view_statistic_deadline_insurance_search
+msgid "Data assicurazione"
+msgstr "Data assicurazione"
+
+#. module: fido_report
+#: view:statistic.deadline:fido_report.view_statistic_deadline_insurance_search
+msgid "Deadline"
+msgstr "Scadenza"
+
+#. module: fido_report
+#: view:statistic.deadline:fido_report.view_statistic_deadline_insurance_search
+msgid "Deadlined"
+msgstr "Scaduto"
+
+#. module: fido_report
 #: view:print.report.fido.wizard:fido_report.print_report_fido_wizard_view
 msgid "Done"
 msgstr "Stampa"
+
+#. module: fido_report
+#: field:statistic.deadline,fido_deadline:0
+msgid "FIDO deadline"
+msgstr "Scadenza assicurazione"
 
 #. module: fido_report
 #: model:ir.actions.act_window,name:fido_report.action_print_report_fido_wizard
 #: model:ir.ui.menu,name:fido_report.menu_print_report_fido_invoice_wizard
 #: model:ir.ui.menu,name:fido_report.menu_print_report_fido_wizard
 msgid "FIDO report wizard"
-msgstr "Report FIDO fatture"
+msgstr "Report scadenzario fatture"
 
 #. module: fido_report
 #: field:print.report.fido.wizard,from_date:0
@@ -65,11 +91,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: fido_report
-#: field:print.report.fido.wizard,journal_id:0
-msgid "Journal"
-msgstr "Sezionale"
-
-#. module: fido_report
 #: field:print.report.fido.wizard,write_uid:0
 msgid "Last Updated by"
 msgstr "Last Updated by"
@@ -80,9 +101,24 @@ msgid "Last Updated on"
 msgstr "Last Updated on"
 
 #. module: fido_report
+#: view:statistic.deadline:fido_report.view_statistic_deadline_insurance_search
+msgid "Non Assicurato"
+msgstr "Non Assicurato"
+
+#. module: fido_report
+#: view:statistic.deadline:fido_report.view_statistic_deadline_insurance_tree
+msgid "Pagamenti aperti"
+msgstr "Pagamenti aperti"
+
+#. module: fido_report
 #: field:print.report.fido.wizard,partner_id:0
 msgid "Partner"
 msgstr "Cliente"
+
+#. module: fido_report
+#: model:ir.model,name:fido_report.model_statistic_deadline
+msgid "Statistic deadline"
+msgstr "Scadenze"
 
 #. module: fido_report
 #: field:print.report.fido.wizard,to_date:0

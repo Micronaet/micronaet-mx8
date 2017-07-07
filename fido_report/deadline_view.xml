@@ -28,6 +28,9 @@
             <xpath expr="//tree" position="attributes">
                 <attribute name="string">Pagamenti aperti</attribute>
             </xpath>
+            <field name="partner_id" position="after">
+                <field name="agent_id" />
+            </field>
             <field name="deadline" position="after">                
                 <field name="fido_deadline" />
             </field>
