@@ -16,8 +16,12 @@
                         <newline/>
                         <field name="partner_id" domain="[('customer', '=', True), ('is_company', '=', True), ('is_address', '=', False)]"/>
                         <field name="agent_id" domain="[('is_agent', '=', True)]"/>
+                        <separator string="Invoice:" colspan="4"/>
                         <field name="from_date" />
                         <field name="to_date" />                        
+                        <separator string="Deadline:" colspan="4"/>
+                        <field name="deadline_from_date" />
+                        <field name="deadline_to_date" />                        
                    </group>
                 </form>
             </field>

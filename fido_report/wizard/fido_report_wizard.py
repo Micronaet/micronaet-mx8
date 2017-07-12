@@ -171,6 +171,10 @@ class PrintReportFIDOWizard(orm.TransientModel):
             domain.append(('invoice_date', '>=', from_date))
         if to_date:     
             domain.append(('invoice_date', '<=', to_date))
+        if deadline_from_date:
+            domain.append(('deadline', '>=', deadline_from_date))
+        if deadline_to_date:     
+            domain.append(('deadline', '<=', deadline_to_date))
         
         payment_ids = payment_pool.search(
             cr, uid, domain, order=order, context=context)        
@@ -238,6 +242,8 @@ class PrintReportFIDOWizard(orm.TransientModel):
         'with_fido': fields.boolean('Customer with FIDO'),    
         'from_date': fields.date('From date'),    
         'to_date': fields.date('To date'),    
+        'deadline_from_date': fields.date('From deadline'),
+        'deadline_to_date': fields.date('To deadline'),
         }
         
     _defaults = {
