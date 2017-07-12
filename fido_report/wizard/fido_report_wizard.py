@@ -81,6 +81,8 @@ class PrintReportFIDOWizard(orm.TransientModel):
         with_fido = wiz_browse.with_fido
         from_date = wiz_browse.from_date
         to_date = wiz_browse.to_date
+        deadline_from_date = wiz_browse.deadline_from_date
+        deadline_to_date = wiz_browse.deadline_to_date
 
         # ---------------------------------------------------------------------
         # Export XLSX file:
@@ -175,7 +177,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
             domain.append(('deadline', '>=', deadline_from_date))
         if deadline_to_date:     
             domain.append(('deadline', '<=', deadline_to_date))
-        
+
         payment_ids = payment_pool.search(
             cr, uid, domain, order=order, context=context)        
         now = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)    
