@@ -63,7 +63,7 @@ class Parser(report_sxw.rml_parse):
         '''
         total = 0
         for l in o.order_line:
-            total += (l.product_uom_qty - l.delivered_qty) * l.price_unit * (1.0 - l.discount) / 100.0
+            total += (l.product_uom_qty - l.delivered_qty) * l.price_unit * (100.0 - l.discount) / 100.0
         return total
         
     def proforma_mode(self, ):
