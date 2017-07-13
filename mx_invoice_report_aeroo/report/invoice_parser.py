@@ -44,6 +44,8 @@ class Parser(report_sxw.rml_parse):
             'get_language':self.get_language,
             'get_vector_data': self.get_vector_data,
             'relink_order': self.relink_order,
+            'proforma_mode': self.proforma_mode,
+            'get_imponibile_mode': self.get_imponibile_mode,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
@@ -56,6 +58,20 @@ class Parser(report_sxw.rml_parse):
         })
         self.last_picking = False # TODO is reset all reports?
 
+    def get_imponibile_mode(self, o):
+        total = 0
+        for l in o.order_line:
+            total += (l.product_uom_qty - l.delivered_qty) * l.price_unit
+        return total
+        
+    def proforma_mode(self, ):
+        ''' Order all or remain ?
+        '''
+        if self.name == 'custom_mx_profora_invoice_remain_report':
+            return 'remain'
+        else:
+            return 'order'
+        
     def relink_order(self, o):
         ''' Force for all invoice picking relink to sale order if present
         '''
@@ -250,6 +266,7 @@ class Parser(report_sxw.rml_parse):
                 'DESCRIZIONE ARTICOLO': 'DESCRIPTION',
                 'COLORE': 'COLOR',
                 'Q.TA\'': 'Q.TY',
+                'RES.': 'REM.',
                 'PREZZO UNIT.': 'UNIT PRICE',
                 'SCONTO': 'DISCOUNT',
                 'IMPORTO': 'AMOUNT',
@@ -292,6 +309,7 @@ class Parser(report_sxw.rml_parse):
                 'DESCRIZIONE ARTICOLO': 'DESCRIPTION',
                 'COLORE': 'COULEUR',
                 'Q.TA\'': 'QTÉ',
+                'RES.': 'RES.',
                 'PREZZO UNIT.': 'PRIX UNITAIRE',
                 'SCONTO': 'RABAIS',
                 'IMPORTO': 'MONTANT',
