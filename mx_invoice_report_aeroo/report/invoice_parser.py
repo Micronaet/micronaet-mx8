@@ -59,9 +59,11 @@ class Parser(report_sxw.rml_parse):
         self.last_picking = False # TODO is reset all reports?
 
     def get_imponibile_mode(self, o):
+        ''' Procedure for net total with remain
+        '''
         total = 0
         for l in o.order_line:
-            total += (l.product_uom_qty - l.delivered_qty) * l.price_unit
+            total += (l.product_uom_qty - l.delivered_qty) * l.price_unit * (1.0 - l.discount)
         return total
         
     def proforma_mode(self, ):
