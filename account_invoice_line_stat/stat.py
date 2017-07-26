@@ -111,12 +111,20 @@ class AccountInvoiceLine(orm.Model):
         return True    
         
     def _get_first_supplier_from_product(self, cr, uid, ids, context=None):
-        ''' When change sol line order
+        ''' When change first supplier in product
         '''
         line_pool = self.pool.get('account.invoice.line')
-        #_logger.info('Update account line (change first supplier)')
+        _logger.info('Update account line (change first supplier product)')
         return line_pool.search(cr, uid, [
             ('product_id', 'in', ids)], context=context)
+            
+    def _get_first_supplier_from_product_line(
+            self, cr, uid, ids, context=None):
+        ''' When change product_id in sol line order 
+        '''
+        _logger.info('Update account line (change product in line) %s' % (  
+            len(ids)))
+        return ids
 
     def _get_invoice_destination(self, cr, uid, ids, context=None):
         ''' When change sol line order
@@ -171,7 +179,9 @@ class AccountInvoiceLine(orm.Model):
             type='many2one', string='First supplier', relation='res.partner',
             store={
                 'product.product': (_get_first_supplier_from_product, [
-                    'first_supplier_id'], 10),    
+                    'first_supplier_id'], 10),
+                'account.invoice.line': (_get_first_supplier_from_product_line,
+                    ['product_id'], 10),
                  # TODO add product_id                    
                 }),
         
