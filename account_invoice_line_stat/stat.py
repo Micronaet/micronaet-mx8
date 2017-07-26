@@ -172,6 +172,7 @@ class AccountInvoiceLine(orm.Model):
             store={
                 'account.invoice': (_get_invoice_agent, [
                     'mx_agent_id'], 10),    
+                # TODO force also in partner change agent    
                 }),
         
         'first_supplier_id': fields.related(
