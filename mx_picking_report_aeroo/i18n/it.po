@@ -1,0 +1,52 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* mx_picking_report_aeroo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-07-27 16:28+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mx_picking_report_aeroo
+#: code:addons/mx_picking_report_aeroo/report/picking_parser.py:63
+#, python-format
+msgid "\n"
+"Nr. Albo Trasp.: %s"
+msgstr "\n"
+"Nr. Albo Trasp.: %s"
+
+#. module: mx_picking_report_aeroo
+#: code:addons/mx_picking_report_aeroo/report/picking_parser.py:61
+#, python-format
+msgid "\n"
+"P.IVA: %s"
+msgstr "\n"
+"P.IVA: %s"
+
+#. module: mx_picking_report_aeroo
+#: code:addons/mx_picking_report_aeroo/report/picking_parser.py:62
+#, python-format
+msgid "\n"
+"Tel: %s"
+msgstr "\n"
+"Tel: %s"
+
+#. module: mx_picking_report_aeroo
+#: model:ir.actions.report.xml,name:mx_picking_report_aeroo.aeroo_mx_picking_deposit_report_id
+msgid "Mx deposit report"
+msgstr "Documento di deposito"
+
+#. module: mx_picking_report_aeroo
+#: code:addons/mx_picking_report_aeroo/report/picking_parser.py:50
+#, python-format
+msgid "VETTORE: %s"
+msgstr "VETTORE: %s"
+

@@ -1,0 +1,56 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_invoice_parcels
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:47+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mx_invoice_parcels
+#: code:addons/mx_invoice_parcels/parcels.py:69
+#, python-format
+msgid "%s no q x pack\n"
+msgstr "%s nessun q. x scatola\n"
+
+#. module: mx_invoice_parcels
+#: code:addons/mx_invoice_parcels/parcels.py:61
+#, python-format
+msgid "%s not correct q x pack\n"
+msgstr "%s q. x scatola non corretto\n"
+
+#. module: mx_invoice_parcels
+#: code:addons/mx_invoice_parcels/parcels.py:66
+#, python-format
+msgid "%s: parcels [%s x] %s \n"
+msgstr "%s: colli [%s x] %s \n"
+
+#. module: mx_invoice_parcels
+#: view:account.invoice:mx_invoice_parcels.account_invoice_form_parcels_view_ddt
+msgid "Auto counter"
+msgstr "Conteggio automatico"
+
+#. module: mx_invoice_parcels
+#: help:account.invoice,parcels_note:0
+msgid "Calculation procedure note"
+msgstr "Nota procedura di calcolo"
+
+#. module: mx_invoice_parcels
+#: model:ir.model,name:mx_invoice_parcels.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: mx_invoice_parcels
+#: field:account.invoice,parcels_note:0
+msgid "Parcel note"
+msgstr "Nota colli"

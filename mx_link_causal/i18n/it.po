@@ -1,0 +1,33 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_link_causal
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:49+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mx_link_causal
+#: field:stock.picking.transportation_reason,ddt_description:0
+msgid "DDT Description"
+msgstr "Descrizione DDT"
+
+#. module: mx_link_causal
+#: field:stock.picking.transportation_reason,invoice_description:0
+msgid "Invoice Description"
+msgstr "Descrizione fatture"
+
+#. module: mx_link_causal
+#: model:ir.model,name:mx_link_causal.model_stock_picking_transportation_reason
+msgid "Reason for Transportation"
+msgstr "Causale trasporto"

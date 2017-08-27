@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_multi_delivery_mrp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:32+0000\n"
+"PO-Revision-Date: 2017-08-16 16:55+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: sale_multi_delivery_mrp
+#: code:addons/sale_multi_delivery_mrp/mrp.py:74
+#, python-format
+msgid "0 was move, no stock, try set manual!"
+msgstr "Spostamento a 0, no magazzino, provare ad impostare manualmente!"
+
+#. module: sale_multi_delivery_mrp
+#: code:addons/sale_multi_delivery_mrp/mrp.py:58
+#, python-format
+msgid "Error"
+msgstr "Errore"
+
+#. module: sale_multi_delivery_mrp
+#: view:sale.order.delivery:sale_multi_delivery_mrp.view_sale_order_delivery_mrp_form
+#: view:sale.order.line:sale_multi_delivery_mrp.view_sale_order_line_for_mrp_delivery_tree
+msgid "Is manufactured"
+msgstr "E' prodotto"
+
+#. module: sale_multi_delivery_mrp
+#: model:ir.model,name:sale_multi_delivery_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
+
+#. module: sale_multi_delivery_mrp
+#: code:addons/sale_multi_delivery_mrp/mrp.py:59
+#, python-format
+msgid "Stock is used! Write manual to deliver qty!"
+msgstr "Utilizzato magazzino! Scrivi manualmente la q. da cconsegnare!"
+
+#. module: sale_multi_delivery_mrp
+#: code:addons/sale_multi_delivery_mrp/mrp.py:73
+#, python-format
+msgid "Warning"
+msgstr "Attenzione"

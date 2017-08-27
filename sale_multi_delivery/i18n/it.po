@@ -1,0 +1,310 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_multi_delivery
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:32+0000\n"
+"PO-Revision-Date: 2017-08-16 16:54+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: sale_multi_delivery
+#: view:create.sale.order.delivery.wizard:sale_multi_delivery.create_sale_order_delivery_wizard_view
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: sale_multi_delivery
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "Closed delivery"
+msgstr "Consegna chiusa"
+
+#. module: sale_multi_delivery
+#: view:create.sale.order.delivery.wizard:sale_multi_delivery.create_sale_order_delivery_wizard_view
+msgid "Create"
+msgstr "Crea"
+
+#. module: sale_multi_delivery
+#: field:sale.order.delivery,create_date:0
+msgid "Create date"
+msgstr "Data creazione"
+
+#. module: sale_multi_delivery
+#: view:create.sale.order.delivery.wizard:sale_multi_delivery.create_sale_order_delivery_wizard_view
+msgid "Create delivery"
+msgstr "Data consegna"
+
+#. module: sale_multi_delivery
+#: model:ir.actions.act_window,name:sale_multi_delivery.act_create_sale_order_delivery_wizard_view
+msgid "Create delivery order"
+msgstr "Crea ordine di consegna"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Create pickings"
+msgstr "Crea doc. prelievo"
+
+#. module: sale_multi_delivery
+#: field:sale.order.delivery,create_uid:0
+msgid "Create user"
+msgstr "Utente creatore"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+msgid "Date"
+msgstr "Data"
+
+#. module: sale_multi_delivery
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "Deadline"
+msgstr "Scadenza"
+
+#. module: sale_multi_delivery
+#: model:ir.actions.act_window,name:sale_multi_delivery.action_sale_order_delivery
+#: model:ir.ui.menu,name:sale_multi_delivery.menu_action_sale_order_delivery
+msgid "Delivery"
+msgstr "Consegna"
+
+#. module: sale_multi_delivery
+#: code:addons/sale_multi_delivery/wizard/create_delivery.py:79
+#, python-format
+msgid "Delivery order must have order with same partner"
+msgstr "L'ordine di consegna deve avere l'ordine con lo stesso partner"
+
+#. module: sale_multi_delivery
+#: selection:sale.order.delivery,state:0
+msgid "Done"
+msgstr "Fatto"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+msgid "Done state"
+msgstr "Stato: fatto"
+
+#. module: sale_multi_delivery
+#: selection:sale.order.delivery,state:0
+msgid "Draft"
+msgstr "Bozza"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+msgid "Draft state"
+msgstr "Stato: bozza"
+
+#. module: sale_multi_delivery
+#: code:addons/sale_multi_delivery/wizard/create_delivery.py:78
+#: field:create.sale.order.delivery.wizard,error:0
+#, python-format
+msgid "Error"
+msgstr "Errore"
+
+#. module: sale_multi_delivery
+#: view:create.sale.order.delivery.wizard:sale_multi_delivery.create_sale_order_delivery_wizard_view
+msgid "Error:"
+msgstr "Errore:"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "Group By"
+msgstr "Raggruppa per"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,id:0 field:sale.order.delivery,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,write_uid:0
+#: field:sale.order.delivery,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,write_date:0
+#: field:sale.order.delivery,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+#: field:sale.order.delivery,line_ids:0
+msgid "Lines"
+msgstr "Righe"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Lines currently linked"
+msgstr "Righe attualmente collegate"
+
+#. module: sale_multi_delivery
+#: field:sale.order,multi_delivery_id:0
+#: field:sale.order.line,multi_delivery_id:0
+#: field:stock.picking,multi_delivery_id:0
+msgid "Multi delivery"
+msgstr "Multi consegna"
+
+#. module: sale_multi_delivery
+#: code:addons/sale_multi_delivery/multi.py:254
+#, python-format
+msgid "Multi delivery of: %s"
+msgstr "Multi consegna di: %s"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "My open delivery"
+msgstr "Le mie consegne aperte"
+
+#. module: sale_multi_delivery
+#: field:sale.order.delivery,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,note:0
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+#: field:sale.order.delivery,note:0
+msgid "Note"
+msgstr "Note"
+
+#. module: sale_multi_delivery
+#: view:create.sale.order.delivery.wizard:sale_multi_delivery.create_sale_order_delivery_wizard_view
+msgid "Note:"
+msgstr "Note:"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Open"
+msgstr "Apri"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Open all pick"
+msgstr "Apri tutti i prelievi"
+
+#. module: sale_multi_delivery
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "Open delivery"
+msgstr "Apri le consegne"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+#: field:sale.order.delivery,order_ids:0
+msgid "Order"
+msgstr "Ordine"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Order currently linked"
+msgstr "Ordine attualmente collegato"
+
+#. module: sale_multi_delivery
+#: field:create.sale.order.delivery.wizard,order_list:0
+msgid "Order list"
+msgstr "Lista ordine"
+
+#. module: sale_multi_delivery
+#: view:create.sale.order.delivery.wizard:sale_multi_delivery.create_sale_order_delivery_wizard_view
+msgid "Orders:"
+msgstr "Ordini:"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+#: field:sale.order.delivery,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+#: field:sale.order.delivery,picking_ids:0
+msgid "Picking"
+msgstr "Prelievi"
+
+#. module: sale_multi_delivery
+#: model:ir.model,name:sale_multi_delivery.model_stock_picking
+msgid "Picking List"
+msgstr "Lista prelievi"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Picking linked"
+msgstr "Prelievi collegati"
+
+#. module: sale_multi_delivery
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: sale_multi_delivery
+#: model:ir.model,name:sale_multi_delivery.model_sale_order_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_tree
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+msgid "Sale order delivery"
+msgstr "Ordine di consegna"
+
+#. module: sale_multi_delivery
+#: model:ir.actions.act_window,name:sale_multi_delivery.action_sale_order_line_for_delivery
+msgid "Sale order line delivery"
+msgstr "Righe ordine di consegna"
+
+#. module: sale_multi_delivery
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_tree
+msgid "Sale order to deliver"
+msgstr "Ordini da consegnare"
+
+#. module: sale_multi_delivery
+#: model:ir.model,name:sale_multi_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: sale_multi_delivery
+#: model:ir.model,name:sale_multi_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_form
+msgid "Show lines"
+msgstr "Mostra righe"
+
+#. module: sale_multi_delivery
+#: field:sale.order.delivery,state:0
+msgid "State"
+msgstr "Stato"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+msgid "Status"
+msgstr "Stato"
+
+#. module: sale_multi_delivery
+#: view:sale.order.line:sale_multi_delivery.view_sale_order_line_for_delivery_search
+#: field:sale.order.line,to_deliver_qty:0
+msgid "To deliver"
+msgstr "Da consegnare"
+
+#. module: sale_multi_delivery
+#: view:sale.order.delivery:sale_multi_delivery.view_sale_order_delivery_search
+msgid "User"
+msgstr "Utente"

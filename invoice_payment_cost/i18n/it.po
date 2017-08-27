@@ -1,0 +1,88 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* invoice_payment_cost
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:25+0000\n"
+"PO-Revision-Date: 2017-08-05 23:35+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: invoice_payment_cost
+#: field:account.payment.term,refund_number:0
+msgid "# effects"
+msgstr "# effetti"
+
+#. module: invoice_payment_cost
+#: model:ir.model,name:invoice_payment_cost.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: invoice_payment_cost
+#: model:ir.model,name:invoice_payment_cost.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: invoice_payment_cost
+#: model:ir.model,name:invoice_payment_cost.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Righe Fattura"
+
+#. module: invoice_payment_cost
+#: help:account.payment.term,refund_number:0 help:res.company,refund_cost:0
+msgid "Number of effects to pay"
+msgstr "Numero di effetti da pagare"
+
+#. module: invoice_payment_cost
+#: model:ir.model,name:invoice_payment_cost.model_account_payment_term
+msgid "Payment Term"
+msgstr "Termine di pagamento"
+
+#. module: invoice_payment_cost
+#: field:res.company,refund_product_id:0
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: invoice_payment_cost
+#: field:res.company,refund_account_id:0
+msgid "Refund account"
+msgstr "Conto reso"
+
+#. module: invoice_payment_cost
+#: view:res.company:invoice_payment_cost.view_res_company_paymeny_form
+msgid "Refund configuration:"
+msgstr "Configurazione reso"
+
+#. module: invoice_payment_cost
+#: field:res.company,refund_cost:0
+msgid "Refund cost"
+msgstr "Costo reso"
+
+#. module: invoice_payment_cost
+#: field:account.invoice.line,refund_line:0
+msgid "Refund line"
+msgstr "Riga reso"
+
+#. module: invoice_payment_cost
+#: view:account.payment.term:invoice_payment_cost.view_view_payment_refund_form
+msgid "Refund:"
+msgstr "Reso:"
+
+#. module: invoice_payment_cost
+#: help:account.invoice.line,refund_line:0
+msgid "Used for check the creation or the presence"
+msgstr "Utilizzato per controllare la creazione o la presenza"
+
+#. module: invoice_payment_cost
+#: field:account.payment.term,has_refund:0
+msgid "has refund cost"
+msgstr "ha un costo reso"

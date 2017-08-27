@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_invoice_line_stat
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:23+0000\n"
+"PO-Revision-Date: 2017-07-27 18:39+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Account"
+msgstr "Conto"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+#: field:account.invoice.line,mx_agent_id:0
+msgid "Agent"
+msgstr "Agente"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+#: field:account.invoice.line,country_id:0
+msgid "Country"
+msgstr "Paese"
+
+#. module: account_invoice_line_stat
+#: selection:account.invoice.line,type:0
+msgid "Customer Invoice"
+msgstr "Fatture cliente"
+
+#. module: account_invoice_line_stat
+#: selection:account.invoice.line,type:0
+msgid "Customer Refund"
+msgstr "Reso cliente"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+#: field:account.invoice.line,date_invoice:0
+msgid "Date"
+msgstr "Data"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Date from >="
+msgstr "Dalla data >="
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Date to <="
+msgstr "Alla data <="
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+#: field:account.invoice.line,destination_partner_id:0
+msgid "Destination"
+msgstr "Destinazione"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+#: field:account.invoice.line,first_supplier_id:0
+msgid "First supplier"
+msgstr "Primo fornitore"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Group By"
+msgstr "Raggruppa per"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: account_invoice_line_stat
+#: model:ir.model,name:account_invoice_line_stat.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Righe Fattura"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_graph
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Invoice line"
+msgstr "Riga fattura"
+
+#. module: account_invoice_line_stat
+#: model:ir.actions.act_window,name:account_invoice_line_stat.action_account_invoice_line
+#: model:ir.ui.menu,name:account_invoice_line_stat.menu_invoice_line_stat
+msgid "Invoice line analysis"
+msgstr "Analisi righe fattura"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_tree
+msgid "Invoice line stat"
+msgstr "Statistiche righe fattura"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_tree
+msgid "Ref."
+msgstr "Rif."
+
+#. module: account_invoice_line_stat
+#: selection:account.invoice.line,type:0
+msgid "Supplier Invoice"
+msgstr "Fattura fornitore"
+
+#. module: account_invoice_line_stat
+#: selection:account.invoice.line,type:0
+msgid "Supplier Refund"
+msgstr "Reso fornitore"
+
+#. module: account_invoice_line_stat
+#: field:account.invoice.line,type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: account_invoice_line_stat
+#: view:account.invoice.line:account_invoice_line_stat.view_account_invoice_line_search
+#: field:account.invoice.line,zone_id:0
+msgid "Zone"
+msgstr "Zona"

@@ -1,0 +1,33 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_selection
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:25+0000\n"
+"PO-Revision-Date: 2017-08-04 16:26+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: delivery_selection
+#: field:res.users,order_print_ids:0 field:sale.order,print_ids:0
+msgid "Print selection"
+msgstr "Stampa selezione"
+
+#. module: delivery_selection
+#: model:ir.model,name:delivery_selection.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: delivery_selection
+#: model:ir.model,name:delivery_selection.model_res_users
+msgid "Users"
+msgstr "Utenti"

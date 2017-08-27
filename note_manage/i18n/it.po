@@ -1,0 +1,148 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* note_manage
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 11:10+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: note_manage
+#: field:res.note.template,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: note_manage
+#: field:res.note.template,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "DDT"
+msgstr "DDT"
+
+#. module: note_manage
+#: view:res.note.template:note_manage.view_res_note_template_search
+msgid "Group By"
+msgstr "Raggruppa per"
+
+#. module: note_manage
+#: field:res.note.template,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Invoice line"
+msgstr "Riga fattura"
+
+#. module: note_manage
+#: field:res.note.template,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: note_manage
+#: field:res.note.template,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "MRP order"
+msgstr "Ordine produzione"
+
+#. module: note_manage
+#: view:res.note.template:note_manage.view_res_note_template_form
+#: field:res.note.template,note:0
+msgid "Note"
+msgstr "Note"
+
+#. module: note_manage
+#: model:ir.actions.act_window,name:note_manage.action_res_note_template
+#: model:ir.ui.menu,name:note_manage.menu_action_res_note_template
+msgid "Note template"
+msgstr "Nota modello"
+
+#. module: note_manage
+#: field:res.note.template,object:0
+msgid "Object"
+msgstr "Oggetto"
+
+#. module: note_manage
+#: view:res.note.template:note_manage.view_res_note_template_search
+msgid "Partner"
+msgstr "Partner"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Picking"
+msgstr "Prelievo"
+
+#. module: note_manage
+#: field:res.note.template,propagate:0
+msgid "Propagate"
+msgstr "Propaga"
+
+#. module: note_manage
+#: help:res.note.template,propagate:0
+msgid "Propagate down the document"
+msgstr "Propaga nel documento"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Purchase order"
+msgstr "Ordine acquisto"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Purchase order line"
+msgstr "RIghe acquisto"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Sale order"
+msgstr "Ordine di vendita"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Sale order line"
+msgstr "Righe ordine vendita"
+
+#. module: note_manage
+#: selection:res.note.template,object:0
+msgid "Stock move (pick and DDT)"
+msgstr "Movimento magazzino (prelievo e DDT)"
+
+#. module: note_manage
+#: view:res.note.template:note_manage.view_res_note_template_form
+#: view:res.note.template:note_manage.view_res_note_template_search
+#: view:res.note.template:note_manage.view_res_note_template_tree
+msgid "Template"
+msgstr "Modello"
+
+#. module: note_manage
+#: field:res.note.template,name:0
+msgid "Template name"
+msgstr "Nome modello"
+
+#. module: note_manage
+#: view:res.note.template:note_manage.view_res_note_template_form
+#: field:res.note.template,text:0
+msgid "Text"
+msgstr "Testo"

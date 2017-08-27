@@ -1,0 +1,270 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_stock_status
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:59+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:200
+#, python-format
+msgid "All esistence; "
+msgstr "Tutta esistenza;"
+
+#. module: mx_stock_status
+#: view:stock.status.print.image.report.wizard:mx_stock_status.stock_status_print_report_wizard_form_view
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,catalog_ids:0
+#: selection:stock.status.print.image.report.wizard,status:0
+msgid "Catalog"
+msgstr "Catalogo"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:183
+#, python-format
+msgid "Catalog: %s; "
+msgstr "Catalogo: %s; "
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,categ_ids:0
+msgid "Category"
+msgstr "Categoria"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:181
+#, python-format
+msgid "Category: %s; "
+msgstr "Categoria: %s; "
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/wizard/print_wizard.py:321
+#, python-format
+msgid "Check type setup (not present)"
+msgstr "Controlla tipo configurazione (non presente)"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:177
+#, python-format
+msgid "Code: %s; "
+msgstr "Codice: %s; "
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,status:0
+msgid "Gamma"
+msgstr "Gamma"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,mode:0
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,mode:0
+msgid "Inventory XLS (exported not report)"
+msgstr "Inventario XLS (esportato non stampa)"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,inventory_category_id:0
+msgid "Inventory category"
+msgstr "Categoria inventario"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,mode:0
+msgid "Inventory check XLS (exported not report)"
+msgstr "Controlla inventario XLS (esportato non stampa)"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,mode:0
+msgid "Mode"
+msgstr "Modalità"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:169
+#, python-format
+msgid "Mode: %s; "
+msgstr "Modalità: %s; "
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/wizard/print_wizard.py:320
+#, python-format
+msgid "No type"
+msgstr "Nessun tipo"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,status:0
+msgid "Obsolete"
+msgstr "Obsoleto"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:198
+#, python-format
+msgid "Only present; "
+msgstr "Solo presente;"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,status:0
+msgid "Out catalog"
+msgstr "Fuori catalogo"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,default_code:0
+msgid "Partial code"
+msgstr "Codice parziale"
+
+#. module: mx_stock_status
+#: view:stock.status.print.image.report.wizard:mx_stock_status.stock_status_print_report_wizard_form_view
+msgid "Print"
+msgstr "Stampa"
+
+#. module: mx_stock_status
+#: model:ir.model,name:mx_stock_status.model_product_product
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,status:0
+msgid "Sample"
+msgstr "Campione"
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,mode:0
+msgid "Simple status"
+msgstr "Stato semplice"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,sortable:0
+msgid "Sortable"
+msgstr "Ordinabile"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:187
+#, python-format
+msgid "Sortable product; "
+msgstr "Prodotto ordinabile;"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,statistic_category:0
+msgid "Statistic category (separ.: |)"
+msgstr "Categoria statistica (separat.: |)"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:179
+#, python-format
+msgid "Statistic category: %s; "
+msgstr "Categoria statistica: %s; "
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:185
+#, python-format
+msgid "Status: %s; "
+msgstr "Statuo: %s; "
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,status:0
+msgid "Stock"
+msgstr "Magazzino\t"
+
+#. module: mx_stock_status
+#: model:ir.actions.report.xml,name:mx_stock_status.aeroo_stock_status_image_report_id
+#: selection:stock.status.print.image.report.wizard,mode:0
+msgid "Stock status"
+msgstr "Stato magazzino"
+
+#. module: mx_stock_status
+#: model:ir.actions.report.xml,name:mx_stock_status.aeroo_stock_status_inventory_report_id
+msgid "Stock status inventory"
+msgstr "Stato magazzino inventario"
+
+#. module: mx_stock_status
+#: model:ir.actions.act_window,name:mx_stock_status.action_stock_status_print_report_wizard
+#: model:ir.ui.menu,name:mx_stock_status.menu_stock_status_print_report_wizard
+msgid "Stock status report wizard"
+msgstr "Wizarad stampa stato magazzino"
+
+#. module: mx_stock_status
+#: model:ir.actions.report.xml,name:mx_stock_status.aeroo_stock_status_simple_report_id
+msgid "Stock status simple"
+msgstr "Stato magazzino semplificato"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,partner_id:0
+msgid "Supplier"
+msgstr "Fornitore"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:173
+#, python-format
+msgid "Supplier: %s; "
+msgstr "Fornitore: %s; "
+
+#. module: mx_stock_status
+#: selection:stock.status.print.image.report.wizard,status:0
+msgid "Todo"
+msgstr "Da fare"
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,with_photo:0
+msgid "With photo"
+msgstr "Con foto"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:192
+#, python-format
+msgid "With photo; "
+msgstr "Con foto: "
+
+#. module: mx_stock_status
+#: field:stock.status.print.image.report.wizard,with_stock:0
+msgid "With stock"
+msgstr "Con magazzino"
+
+#. module: mx_stock_status
+#: code:addons/mx_stock_status/report/stock_status_parser.py:194
+#, python-format
+msgid "Without photo; "
+msgstr "Senza magazzino;"
+
+#. module: mx_stock_status
+#: view:stock.status.print.image.report.wizard:mx_stock_status.stock_status_print_report_wizard_form_view
+msgid "Wizard"
+msgstr "Wizard"

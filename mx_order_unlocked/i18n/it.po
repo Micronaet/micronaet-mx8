@@ -1,0 +1,32 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* mx_order_unlocked
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-07-27 16:28+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mx_order_unlocked
+#: model:ir.model,name:mx_order_unlocked.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
+
+#. module: mx_order_unlocked
+#: view:sale.order:mx_order_unlocked.view_sale_order_unlock_form
+msgid "{'readonly': [('state','in',('done'))]}"
+msgstr "{'readonly': [('state','in',('done'))]}"
+
+#. module: mx_order_unlocked
+#: view:sale.order:mx_order_unlocked.view_sale_order_unlock_form
+msgid "{'readonly': [('state','in',('invoice_except', 'done'))]}"
+msgstr "{'readonly': [('state','in',('invoice_except', 'done'))]}"
+

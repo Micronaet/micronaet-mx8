@@ -1,0 +1,72 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* force_description
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:25+0000\n"
+"PO-Revision-Date: 2017-08-05 22:19+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: force_description
+#: field:account.invoice.line,force_description:0
+#: field:purchase.order.line,force_description:0
+#: field:sale.order.line,force_description:0
+#: field:stock.move,force_description:0
+msgid "Force description"
+msgstr "Forza descrizione"
+
+#. module: force_description
+#: model:ir.model,name:force_description.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Righe Fattura"
+
+#. module: force_description
+#: model:ir.model,name:force_description.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Riga Ordine d'Acquisto"
+
+#. module: force_description
+#: model:ir.model,name:force_description.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
+
+#. module: force_description
+#: model:ir.model,name:force_description.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento di magazzino"
+
+#. module: force_description
+#: view:account.invoice:force_description.view_account_invoice_force_form
+msgid "Use >>"
+msgstr "Usa >>"
+
+#. module: force_description
+#: field:account.invoice.line,use_text_description:0
+#: field:purchase.order.line,use_text_description:0
+#: field:sale.order.line,use_text_description:0
+#: field:stock.move,use_text_description:0
+msgid "Use description"
+msgstr "Usa descrizione"
+
+#. module: force_description
+#: help:account.invoice.line,use_text_description:0
+#: help:purchase.order.line,use_text_description:0
+#: help:sale.order.line,use_text_description:0
+#: help:stock.move,use_text_description:0
+msgid "Use description instead of product name"
+msgstr "Usa descrizione al posto del nome prodotto"
+
+#. module: force_description
+#: view:sale.order:force_description.view_order_form_destination_fields
+msgid "blue:use_text_description==True"
+msgstr "blue:use_text_description==True"

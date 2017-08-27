@@ -1,0 +1,38 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* mx_ddt_unlocked
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-07-27 16:28+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mx_ddt_unlocked
+#: view:stock.picking:mx_ddt_unlocked.view_stock_picking_unlock_form
+msgid "[('is_company','=',True),('is_address','=',False)]"
+msgstr "[('is_company','=',True),('is_address','=',False)]"
+
+#. module: mx_ddt_unlocked
+#: view:stock.picking:mx_ddt_unlocked.view_stock_picking_unlock_form
+msgid "{'readonly': [('state', 'in', ('cancel',))]}"
+msgstr "{'readonly': [('state', 'in', ('cancel',))]}"
+
+#. module: mx_ddt_unlocked
+#: view:sale.order:mx_ddt_unlocked.view_sale_order_unlock_form
+#: view:sale.order:mx_ddt_unlocked.view_sale_stock_order_unlock_form
+msgid "{'readonly': [('state','in',('invoice_except', 'done'))]}"
+msgstr "{'readonly': [('state','in',('invoice_except', 'done'))]}"
+
+#. module: mx_ddt_unlocked
+#: view:stock.picking:mx_ddt_unlocked.view_stock_picking_unlock_form
+msgid "{'readonly': [['state', 'in', ['cancel']]]}"
+msgstr "{'readonly': [['state', 'in', ['cancel']]]}"
+

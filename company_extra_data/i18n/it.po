@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* company_extra_data
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:24+0000\n"
+"PO-Revision-Date: 2017-08-04 15:17+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: company_extra_data
+#: field:res.company,header_capital:0
+msgid "Capital"
+msgstr "Capitale sociale"
+
+#. module: company_extra_data
+#: model:ir.model,name:company_extra_data.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: company_extra_data
+#: view:res.company:company_extra_data.view_res_company_extra_data_form
+msgid "Extra slogan..."
+msgstr "Slogan extra..."
+
+#. module: company_extra_data
+#: field:res.company,footer_note:0
+msgid "Footer note"
+msgstr "Nota pie di pagina"
+
+#. module: company_extra_data
+#: field:res.company,header_mecc:0
+msgid "Mecc. code"
+msgstr "Codice mecc."
+
+#. module: company_extra_data
+#: field:res.company,header3:0
+msgid "Order slogan"
+msgstr "Ordine slogan"
+
+#. module: company_extra_data
+#: view:res.company:company_extra_data.view_res_company_extra_data_form
+msgid "Order slogan..."
+msgstr "Ordine slogan..."
+
+#. module: company_extra_data
+#: field:res.company,header_rea:0
+msgid "REA"
+msgstr "REA"
+
+#. module: company_extra_data
+#: field:res.company,header2:0
+msgid "Sub slogan"
+msgstr "Sotto slogan"

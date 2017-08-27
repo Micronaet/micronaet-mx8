@@ -1,0 +1,33 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_tags
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:30+0000\n"
+"PO-Revision-Date: 2017-08-07 13:46+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: partner_tags
+#: field:res.partner,group_tag_id:0
+msgid "Group tag"
+msgstr "Tag di gruppo"
+
+#. module: partner_tags
+#: model:ir.model,name:partner_tags.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: partner_tags
+#: model:ir.model,name:partner_tags.model_res_partner_category
+msgid "Partner Tags"
+msgstr "Tag dei partner"

@@ -1,0 +1,29 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_invoice_analysis_family
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:23+0000\n"
+"PO-Revision-Date: 2017-07-27 18:37+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: account_invoice_analysis_family
+#: view:account.invoice.line:account_invoice_analysis_family.view_account_invoice_line_family_search
+#: field:account.invoice.line,family_id:0
+msgid "Family"
+msgstr "Famiglia"
+
+#. module: account_invoice_analysis_family
+#: model:ir.model,name:account_invoice_analysis_family.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Righe Fattura"

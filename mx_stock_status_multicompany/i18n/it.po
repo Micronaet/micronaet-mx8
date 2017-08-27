@@ -1,0 +1,233 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_stock_status_multicompany
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 11:05+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mx_stock_status_multicompany
+#: view:stock.status.print.report.wizard:mx_stock_status_multicompany.stock_status_print_report_wizard_form_view
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: mx_stock_status_multicompany
+#: code:addons/mx_stock_status_multicompany/report/status_parser.py:203
+#, python-format
+msgid "Cannot connect to second company"
+msgstr "Impossibile collegarsi alla seconda azienda"
+
+#. module: mx_stock_status_multicompany
+#: model:ir.model,name:mx_stock_status_multicompany.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: mx_stock_status_multicompany
+#: field:stock.status.print.report.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: mx_stock_status_multicompany
+#: field:stock.status.print.report.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_mrp_location_id:0
+msgid "Default production"
+msgstr "Produzione predefinita"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_location_id:0
+msgid "Default stock"
+msgstr "Magazzino predefinito"
+
+#. module: mx_stock_status_multicompany
+#: view:res.company:mx_stock_status_multicompany.view_res_company_pick_type_form
+msgid "Exclude other company:"
+msgstr "Escludi altra azienda:"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_explude_partner_ids:0
+msgid "Exclude partner"
+msgstr "Escludi partner"
+
+#. module: mx_stock_status_multicompany
+#: help:res.company,stock_mrp_location_id:0
+msgid "From movement in/out in production"
+msgstr "Dai movimenti in / out in produzione"
+
+#. module: mx_stock_status_multicompany
+#: field:stock.status.print.report.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mx_stock_status_multicompany
+#: help:res.company,is_remote_stock:0
+msgid "If is remote company no XMLRPC connection"
+msgstr "Se l'azienda remota non ha connessione XMLRPC"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,is_remote_stock:0
+msgid "Is remote company"
+msgstr "E' azienda remota"
+
+#. module: mx_stock_status_multicompany
+#: field:stock.status.print.report.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: mx_stock_status_multicompany
+#: field:stock.status.print.report.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_report_mrp_in_ids:0
+msgid "MRP in type"
+msgstr "Tipo produzione ingresso"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_report_mrp_out_ids:0
+msgid "MRP out type"
+msgstr "Tipo produzione uscita"
+
+#. module: mx_stock_status_multicompany
+#: view:res.company:mx_stock_status_multicompany.view_res_company_pick_type_form
+msgid "MRP to consider:"
+msgstr "Produzioni da considerare:"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,product_mask:0
+msgid "Mask"
+msgstr "Maschera"
+
+#. module: mx_stock_status_multicompany
+#: help:res.company,product_mask:0
+msgid "Mask for product in other DB"
+msgstr "Maschera per prodotto in altre DB"
+
+#. module: mx_stock_status_multicompany
+#: code:addons/mx_stock_status_multicompany/report/status_parser.py:131
+#, python-format
+msgid "No data for this partner (no first suppl. or in product)"
+msgstr ""
+"Nessun data per questo partner (nessun primo fornitore oppure nel prodotto)"
+
+#. module: mx_stock_status_multicompany
+#: help:res.company,stock_explude_partner_ids:0
+msgid "Other company partner ID"
+msgstr "ID altra azienda"
+
+#. module: mx_stock_status_multicompany
+#: model:ir.model,name:mx_stock_status_multicompany.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_report_load_ids:0
+msgid "Pick in type"
+msgstr "Tipo prelievo ingresso"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,stock_report_unload_ids:0
+msgid "Pick out type"
+msgstr "Tipo prelievo uscita"
+
+#. module: mx_stock_status_multicompany
+#: view:res.company:mx_stock_status_multicompany.view_res_company_pick_type_form
+msgid "Pick to consider:"
+msgstr "Prelievo da considerare"
+
+#. module: mx_stock_status_multicompany
+#: view:stock.status.print.report.wizard:mx_stock_status_multicompany.stock_status_print_report_wizard_form_view
+msgid "Print"
+msgstr "Stampa"
+
+#. module: mx_stock_status_multicompany
+#: view:res.partner:mx_stock_status_multicompany.view_res_partner_status_report_form
+msgid "Print stock status"
+msgstr "Stampa stato magazzino"
+
+#. module: mx_stock_status_multicompany
+#: code:addons/mx_stock_status_multicompany/report/status_parser.py:130
+#, python-format
+msgid "Report error"
+msgstr "Errore stampa"
+
+#. module: mx_stock_status_multicompany
+#: view:res.partner:mx_stock_status_multicompany.view_res_partner_status_report_form
+msgid "Status report for stock"
+msgstr "Stato stampa per magazzino"
+
+#. module: mx_stock_status_multicompany
+#: view:res.company:mx_stock_status_multicompany.view_res_company_pick_type_form
+msgid "Stock report"
+msgstr "Stampa magazzino"
+
+#. module: mx_stock_status_multicompany
+#: model:ir.actions.report.xml,name:mx_stock_status_multicompany.aeroo_stock_status_report_id
+msgid "Stock status multicompany"
+msgstr "Stato magazzino multi azienda"
+
+#. module: mx_stock_status_multicompany
+#: model:ir.actions.act_window,name:mx_stock_status_multicompany.action_stock_status_print_report_wizard
+msgid "Stock status report wizard"
+msgstr "Wizard Stampa stato magazzino "
+
+#. module: mx_stock_status_multicompany
+#: field:stock.status.print.report.wizard,partner_id:0
+msgid "Supplier"
+msgstr "Fornitore"
+
+#. module: mx_stock_status_multicompany
+#: view:stock.status.print.report.wizard:mx_stock_status_multicompany.stock_status_print_report_wizard_form_view
+msgid "Wizard"
+msgstr "Wizard"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,remote_name:0
+msgid "XMLRPC DB name"
+msgstr "XMLRPC DB nome"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,remote_hostname:0
+msgid "XMLRPC Hostname"
+msgstr "XMLRPC Hostname"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,remote_password:0
+msgid "XMLRPC Password"
+msgstr "XMLRPC Password"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,remote_port:0
+msgid "XMLRPC Port"
+msgstr "XMLRPC Porta"
+
+#. module: mx_stock_status_multicompany
+#: field:res.company,remote_username:0
+msgid "XMLRPC Username"
+msgstr "XMLRPC Nome utente"
+
+#. module: mx_stock_status_multicompany
+#: code:addons/mx_stock_status_multicompany/report/status_parser.py:202
+#, python-format
+msgid "XMLRPC error"
+msgstr "XMLRPC errore"
+
+#. module: mx_stock_status_multicompany
+#: view:res.company:mx_stock_status_multicompany.view_res_company_pick_type_form
+msgid "XMLRPC parameters:"
+msgstr "XMLRPC parametri:"

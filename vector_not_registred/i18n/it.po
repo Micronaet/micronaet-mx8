@@ -1,0 +1,45 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* vector_not_registred
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:32+0000\n"
+"PO-Revision-Date: 2017-08-09 00:13+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: vector_not_registred
+#: model:ir.model,name:vector_not_registred.model_stock_ddt
+msgid "DdT"
+msgstr "DDT"
+
+#. module: vector_not_registred
+#: view:account.invoice:vector_not_registred.view_invoice_force_vector_form
+#: view:stock.ddt:vector_not_registred.view_ddt_force_vector_form
+msgid "Force carrier description..."
+msgstr "Forza descrizione vettore..."
+
+#. module: vector_not_registred
+#: field:account.invoice,force_vector:0 field:sale.order,force_vector:0
+#: field:stock.ddt,force_vector:0
+msgid "Force vector"
+msgstr "Forza vettore"
+
+#. module: vector_not_registred
+#: model:ir.model,name:vector_not_registred.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: vector_not_registred
+#: model:ir.model,name:vector_not_registred.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"

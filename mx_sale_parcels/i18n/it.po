@@ -1,64 +1,56 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mx_ddt_parcels
+# 	* mx_sale_parcels
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-17 14:54+0000\n"
-"PO-Revision-Date: 2016-02-17 15:56+0100\n"
-"Last-Translator: Anna <anna@micronaet.it>\n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:55+0100\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 1.5.4\n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
 
-#. module: mx_ddt_parcels
-#: code:addons/mx_ddt_parcels/parcels.py:67
-#: code:addons/mx_ddt_parcels/parcels.py:106
+#. module: mx_sale_parcels
+#: code:addons/mx_sale_parcels/parcels.py:69
 #, python-format
 msgid "%s no q x pack\n"
-msgstr "%s no q x pack\n"
+msgstr "%s nessuna q. x scatola\n"
 
-#. module: mx_ddt_parcels
-#: code:addons/mx_ddt_parcels/parcels.py:59
-#: code:addons/mx_ddt_parcels/parcels.py:98
+#. module: mx_sale_parcels
+#: code:addons/mx_sale_parcels/parcels.py:61
 #, python-format
 msgid "%s not correct q x pack\n"
-msgstr "%s not correct q x pack\n"
+msgstr "%s q. x scatola non corretto\n"
 
-#. module: mx_ddt_parcels
-#: code:addons/mx_ddt_parcels/parcels.py:64
-#: code:addons/mx_ddt_parcels/parcels.py:103
+#. module: mx_sale_parcels
+#: code:addons/mx_sale_parcels/parcels.py:66
 #, python-format
 msgid "%s: parcels [%s x] %s \n"
-msgstr "%s: parcels [%s x] %s \n"
+msgstr "%s: colli [%s x] %s \n"
 
-#. module: mx_ddt_parcels
-#: view:stock.ddt:mx_ddt_parcels.stock_ddt_parcels_form
-#: view:stock.picking:mx_ddt_parcels.stock_picking_add_delivery_parcels_form
+#. module: mx_sale_parcels
+#: view:sale.order:mx_sale_parcels.sale_order_form_view_ddt
 msgid "Auto counter"
-msgstr "Conteggio automatico"
+msgstr "Auto contatore"
 
-#. module: mx_ddt_parcels
-#: help:stock.ddt,parcels_note:0 help:stock.picking,parcels_note:0
+#. module: mx_sale_parcels
+#: help:sale.order,parcels_note:0
 msgid "Calculation procedure note"
-msgstr "Calculation procedure note"
+msgstr "Note procedura di calcolo"
 
-#. module: mx_ddt_parcels
-#: model:ir.model,name:mx_ddt_parcels.model_stock_ddt
-msgid "DdT"
-msgstr "DdT"
-
-#. module: mx_ddt_parcels
-#: field:stock.ddt,parcels_note:0 field:stock.picking,parcels_note:0
+#. module: mx_sale_parcels
+#: field:sale.order,parcels_note:0
 msgid "Parcel note"
-msgstr "Nota collo"
+msgstr "Note colli"
 
-#. module: mx_ddt_parcels
-#: model:ir.model,name:mx_ddt_parcels.model_stock_picking
-msgid "Picking List"
-msgstr "Picking List"
+#. module: mx_sale_parcels
+#: model:ir.model,name:mx_sale_parcels.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"

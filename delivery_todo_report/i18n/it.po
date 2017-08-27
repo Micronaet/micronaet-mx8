@@ -6,17 +6,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-17 11:14+0000\n"
-"PO-Revision-Date: 2016-02-17 12:17+0100\n"
-"Last-Translator: Anna <anna@micronaet.it>\n"
+"POT-Creation-Date: 2017-07-27 16:25+0000\n"
+"PO-Revision-Date: 2017-08-04 16:40+0100\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 1.5.4\n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Agent"
+msgstr "Agente"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "All deliverable"
+msgstr "Tutto consegnabile"
+
+#. module: delivery_todo_report
+#: selection:sale.order.line,mrp_production_state:0
+msgid "All produced"
+msgstr "Tutto prodotto"
+
+#. module: delivery_todo_report
+#: field:sale.order,delivery_amount_b:0
+msgid "Amount B"
+msgstr "Totale B"
+
+#. module: delivery_todo_report
+#: field:sale.order,delivery_amount_s:0
+msgid "Amount S"
+msgstr "Totale S"
+
+#. module: delivery_todo_report
+#: field:sale.order.line,delivery_b:0
+msgid "B(lock)"
+msgstr "B(loccato)"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
 #: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_form
 #: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_production_tree
 #: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_tree
@@ -24,33 +58,346 @@ msgid "Cancel print"
 msgstr "Annulla stampa"
 
 #. module: delivery_todo_report
-#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx_load_list_report_id
-msgid "Mx Delivery todo report"
-msgstr "Stampa MX da consegnare"
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Close residual hide order from list, confirm?"
+msgstr "Chiudendo l'ordine residuo verrà nascosto dalla lista, confermi?"
 
 #. module: delivery_todo_report
-#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx_load_summary_report_id
-msgid "Mx Delivery todo summary report"
-msgstr "Stampa MX sommario da consegnare"
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Close residual!"
+msgstr "Chiudi residuo!"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Date"
+msgstr "Date"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Deadline"
+msgstr "Scadenza"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Deadline from >="
+msgstr "Scadenza da >="
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Deadline to <="
+msgstr "Scadenza a <="
+
+#. module: delivery_todo_report
+#: selection:sale.order.line,mrp_production_state:0
+msgid "Delivered"
+msgstr "Consegnato"
+
+#. module: delivery_todo_report
+#: field:sale.order,delivering_status:0
+msgid "Delivering status"
+msgstr "Stato consegna"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+#: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_production_tree
+#: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_tree
+msgid "Delivering..."
+msgstr "In consegna ..."
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Delivery lines"
+msgstr "Righe consegna"
+
+#. module: delivery_todo_report
+#: model:ir.actions.act_window,name:delivery_todo_report.action_sale_order_to_deliver_form
+msgid "Delivery manage"
+msgstr "Gestione consegne"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Delivery order"
+msgstr "Ordini di consegna"
+
+#. module: delivery_todo_report
+#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx1_todo_summary_report_id
+msgid "Delivery supplier XLS"
+msgstr "Lista di carico XLS (odoo)"
+
+#. module: delivery_todo_report
+#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx2_todo_summary_report_id
+msgid "Delivery supplier XLS 2"
+msgstr "Lista di carico XLS (mexal)"
+
+#. module: delivery_todo_report
+#: code:addons/delivery_todo_report/report/delivery_parser_todo.py:138
+#: code:addons/delivery_todo_report/report/delivery_parser_todo.py:170
+#, python-format
+msgid "ERROR"
+msgstr "ERRORE"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "FIDO"
+msgstr "FIDO"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Fiscal position"
+msgstr "Posizione fiscale"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Group By..."
+msgstr "Raggruppa per ..."
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Is manufactured"
+msgstr "E' prodotto"
+
+#. module: delivery_todo_report
+#: field:sale.order.line,mx_closed:0
+msgid "Line closed"
+msgstr "Riga chiusa"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Line:"
+msgstr "Riga:"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Load all data"
+msgstr "Rigenera tutti i dati"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Load this order"
+msgstr "Rigenera solo questo ordine"
+
+#. module: delivery_todo_report
+#: model:ir.ui.menu,name:delivery_todo_report.menu_sale_order_deliver_manage_form
+msgid "Manage delivery"
+msgstr "Gestione consegne"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Measure"
+msgstr "Misure"
 
 #. module: delivery_todo_report
 #: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx_purchase_report_id
 msgid "Mx Purchase internal"
-msgstr "Mx Acquisto interno"
+msgstr "MX Acquisto interno"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+#: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_production_tree
+#: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_tree
+msgid "No delivering"
+msgstr "No consegne"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Not closed"
+msgstr "Non chiuso"
+
+#. module: delivery_todo_report
+#: selection:sale.order.line,mrp_production_state:0
+msgid "Nothing to deliver"
+msgstr "Niente da consegnare"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "OC out"
+msgstr "OC uscita"
+
+#. module: delivery_todo_report
+#: field:sale.order.line,delivery_oc:0
+msgid "OC remain"
+msgstr "OC residuo"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "OF in"
+msgstr "OF ingresso"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "Open"
+msgstr "Aperto"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Open production"
+msgstr "Produzioni aperte"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Order"
+msgstr "Ordine"
+
+#. module: delivery_todo_report
+#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx1_todo_list_report_id
+msgid "Ordine di carico"
+msgstr "Ordine di carico (OC9)"
+
+#. module: delivery_todo_report
+#: selection:sale.order.line,mrp_production_state:0
+msgid "Over delivered"
+msgstr "Consegnato oltre"
+
+#. module: delivery_todo_report
+#: selection:sale.order.line,mrp_production_state:0
+msgid "Partial deliver"
+msgstr "Consegna parziale"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Partner"
+msgstr "Partner"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Payment"
+msgstr "Pagamento"
+
+#. module: delivery_todo_report
+#: field:sale.order.line,mrp_production_state:0
+msgid "Production state"
+msgstr "Stato produzione"
+
+#. module: delivery_todo_report
+#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx1_purchase_report_id
+msgid "Purchase internal unload"
+msgstr "Documento di scarico (interno)"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Quotation"
+msgstr "Preventivo"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Reset"
+msgstr "Azzera"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Reset all print selection?"
+msgstr "Azzera tutta la selezione di stampa?"
+
+#. module: delivery_todo_report
+#: field:sale.order,remain_order_line:0
+msgid "Residual order line"
+msgstr "Riga ordine residuo"
+
+#. module: delivery_todo_report
+#: model:ir.actions.report.xml,name:delivery_todo_report.aeroo_mx1_todo_summary_internal_report_id
+msgid "Riepilogo ordine di carico"
+msgstr "Riepilogo ordine di carico"
+
+#. module: delivery_todo_report
+#: field:sale.order.line,delivery_s:0
+msgid "S(uspend)"
+msgstr "S(ospeso)"
 
 #. module: delivery_todo_report
 #: model:ir.model,name:delivery_todo_report.model_sale_order
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
 msgid "Sales Order"
 msgstr "Ordine di vendita"
 
 #. module: delivery_todo_report
-#: field:sale.order,print:0
-msgid "To Print"
-msgstr "Da stampare"
+#: model:ir.model,name:delivery_todo_report.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
 
 #. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "Statistic Order Tree"
+msgstr "Statistiche ordine"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
 #: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_form
 #: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_production_tree
 #: view:sale.order:delivery_todo_report.view_sale_order_to_delivery_tree
+#: field:sale.order,print:0
 msgid "To print"
 msgstr "Da stampare"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+msgid "Total"
+msgstr "Totale"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "Zone"
+msgstr "Zona"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_search
+msgid "all produced"
+msgstr "tutto prodotto"
+
+#. module: delivery_todo_report
+#: field:sale.order,delivery_ml_partial:0
+#: field:sale.order.line,delivery_ml_partial:0
+msgid "m/l part"
+msgstr "m/l parziale"
+
+#. module: delivery_todo_report
+#: field:sale.order,delivery_ml_total:0
+#: field:sale.order.line,delivery_ml_total:0
+msgid "m/l tot"
+msgstr "m/l totale"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "ml_partial"
+msgstr "ml_partial"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "ml_total"
+msgstr "ml_total"
+
+#. module: delivery_todo_report
+#: field:sale.order,delivery_vol_partial:0
+#: field:sale.order.line,delivery_vol_partial:0
+msgid "vol. part"
+msgstr "vol. parz."
+
+#. module: delivery_todo_report
+#: field:sale.order,delivery_vol_total:0
+#: field:sale.order.line,delivery_vol_total:0
+msgid "vol. tot"
+msgstr "vol. tot."
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "vol_partial"
+msgstr "vol_partial"
+
+#. module: delivery_todo_report
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_form
+#: view:sale.order:delivery_todo_report.view_sale_order_delivery_tree
+msgid "vol_total"
+msgstr "vol_total"

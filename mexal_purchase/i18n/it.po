@@ -1,0 +1,103 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mexal_purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:41+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mexal_purchase
+#: view:stock.picking:mexal_purchase.view_stock_picking_in_search
+msgid "BF document"
+msgstr "BF documento"
+
+#. module: mexal_purchase
+#: field:stock.picking,bf_number:0
+msgid "BF number"
+msgstr "BF numero"
+
+#. module: mexal_purchase
+#: field:purchase.order,carriage_condition_id:0
+msgid "Carriage Condition"
+msgstr "Condizioni trasporto"
+
+#. module: mexal_purchase
+#: field:purchase.order,goods_description_id:0
+msgid "Description of Goods"
+msgstr "Descrizione beni\t\t\t\t"
+
+#. module: mexal_purchase
+#: view:stock.picking:mexal_purchase.view_stock_picking_in_form
+msgid "Document IN info:"
+msgstr "Info documento ingresso"
+
+#. module: mexal_purchase
+#: field:stock.picking,ff_number:0
+msgid "FF number"
+msgstr "FF numero"
+
+#. module: mexal_purchase
+#: view:stock.picking:mexal_purchase.view_stock_picking_in_form
+msgid "Force"
+msgstr "Forza"
+
+#. module: mexal_purchase
+#: field:purchase.order,transportation_method_id:0
+msgid "Method of Transportation"
+msgstr "Metodo di trasporto"
+
+#. module: mexal_purchase
+#: field:purchase.order,parcels:0
+msgid "Parcels"
+msgstr "Colli"
+
+#. module: mexal_purchase
+#: view:stock.picking:mexal_purchase.view_stock_picking_in_search
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mexal_purchase
+#: help:purchase.order,used_bank_id:0
+msgid "Partner bank account used for payment"
+msgstr "Conto bancario utilizzato per pagamento"
+
+#. module: mexal_purchase
+#: model:ir.model,name:mexal_purchase.model_stock_picking
+msgid "Picking List"
+msgstr "Lista prelievo"
+
+#. module: mexal_purchase
+#: model:ir.model,name:mexal_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ordine Acquisto"
+
+#. module: mexal_purchase
+#: field:purchase.order,transportation_reason_id:0
+msgid "Reason for Transportation"
+msgstr "Causale del trasporto"
+
+#. module: mexal_purchase
+#: view:purchase.order:mexal_purchase.purchase_order_mx_form
+msgid "Shipping Informations"
+msgstr "Informazioni consegna"
+
+#. module: mexal_purchase
+#: view:stock.picking:mexal_purchase.view_stock_picking_in_search
+msgid "Status"
+msgstr "Stato"
+
+#. module: mexal_purchase
+#: field:purchase.order,used_bank_id:0
+msgid "Used bank"
+msgstr "Banca utilizzata"

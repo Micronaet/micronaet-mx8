@@ -1,0 +1,239 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mexal_ddt
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:36+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mexal_ddt
+#: view:picking.create.direct.invoice:mexal_ddt.view_picking_create_direct_invoice
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:127
+#, python-format
+msgid "Cannot create invoice!"
+msgstr "Impossibile creare fattura!"
+
+#. module: mexal_ddt
+#: view:picking.create.direct.invoice:mexal_ddt.view_picking_create_direct_invoice
+msgid "Create"
+msgstr "Crea"
+
+#. module: mexal_ddt
+#: model:ir.actions.act_window,name:mexal_ddt.action_picking_create_invoice
+msgid "Create Direct Invoice"
+msgstr "Crea fattura diretta"
+
+#. module: mexal_ddt
+#: view:picking.create.direct.invoice:mexal_ddt.view_picking_create_direct_invoice
+msgid "Create direct invoice"
+msgstr "Crea fattura diretta"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: mexal_ddt
+#: model:ir.model,name:mexal_ddt.model_stock_ddt
+msgid "DdT"
+msgstr "DDT"
+
+#. module: mexal_ddt
+#: field:stock.ddt,default_carrier_id:0
+msgid "Default carrier"
+msgstr "Vettore predefinito"
+
+#. module: mexal_ddt
+#: field:account.invoice.line,generator_move_id:0
+msgid "Generator of line (move)"
+msgstr "Generatore di riga (movimento)"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mexal_ddt
+#: model:ir.model,name:mexal_ddt.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Righe Fattura"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,journal_id:0
+msgid "Journal"
+msgstr "Sezionale"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: mexal_ddt
+#: field:picking.create.direct.invoice,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: mexal_ddt
+#: help:stock.ddt,used_bank_id:0 help:stock.picking,used_bank_id:0
+msgid "Partner bank account used for payment"
+msgstr "Banca partner utilizzata per pagamento"
+
+#. module: mexal_ddt
+#: field:stock.ddt,payment_term_id:0
+msgid "Payment term"
+msgstr "Termini di pagamento"
+
+#. module: mexal_ddt
+#: model:ir.model,name:mexal_ddt.model_stock_picking
+msgid "Picking List"
+msgstr "Lista prelievo"
+
+#. module: mexal_ddt
+#: view:stock.ddt:mexal_ddt.view_stock_ddt_mx_form
+msgid "Print DDT"
+msgstr "Stampa DDT"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:254
+#, python-format
+msgid "Selected DDTs belong to different partners"
+msgstr "DDT selezionati appartengono a differenti partner"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:215
+#, python-format
+msgid "Selected DDTs have different Carriage Conditions"
+msgstr "DDT selezionati hanno differenti condizioni di trasporto"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:218
+#, python-format
+msgid "Selected DDTs have different Descriptions of Goods"
+msgstr "DDT selezionati hanno differenti descrizione beni"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:231
+#, python-format
+msgid "Selected DDTs have different Payment terms"
+msgstr "DDT selezionati hanno differenti termini di pagamento"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:224
+#, python-format
+msgid "Selected DDTs have different Transportation Methods"
+msgstr "DDT selezionati hanno differenti metodi di trasporto"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:221
+#, python-format
+msgid "Selected DDTs have different Transportation Reasons"
+msgstr "DDT selezionati hanno differenti motivi del trasporto"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:234
+#, python-format
+msgid "Selected DDTs have different bank account"
+msgstr "DDT selezionati hanno differenti conti bancari"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:97
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:237
+#, python-format
+msgid "Selected DDTs have different destination"
+msgstr "DDT selezionati hanno differenti destinazioni"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:100
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:103
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:240
+#, python-format
+msgid "Selected DDTs have different invoice partner"
+msgstr "DDT selezionati hanno differenti partner fatturazione"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:117
+#, python-format
+msgid "Selected pickings belong to different partners"
+msgstr "Prelievi selezionati appartengono a differenti partner"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:75
+#, python-format
+msgid "Selected pickings have different Carriage Conditions"
+msgstr "Prelievi selezionati hanno condizioni di trasporto differenti"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:78
+#, python-format
+msgid "Selected pickings have different Descriptions of Goods"
+msgstr "Prelievi selezionati hanno differenti descrizione beni"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:90
+#, python-format
+msgid "Selected pickings have different Payment terms"
+msgstr "Prelievvi selezionati hanno differenti metodi di pagamento"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:84
+#, python-format
+msgid "Selected pickings have different Transportation Methods"
+msgstr "Prelievi selezionai hanno differenti metodi di trasporto"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:81
+#, python-format
+msgid "Selected pickings have different Transportation Reasons"
+msgstr "Prelievi selezionati hanno differenti motivi del trasporto"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_direct_invoice.py:93
+#, python-format
+msgid "Selected pickings have different bank account"
+msgstr "Prelievi selezionati hanno differenti conti bancari"
+
+#. module: mexal_ddt
+#: model:ir.model,name:mexal_ddt.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento di magazzino"
+
+#. module: mexal_ddt
+#: code:addons/mexal_ddt/wizard/ddt_create_invoice.py:265
+#, python-format
+msgid "There' DDT yet invoiced: %s"
+msgstr "Ci sono DDT già fatturati: %s"
+
+#. module: mexal_ddt
+#: field:stock.ddt,used_bank_id:0 field:stock.picking,used_bank_id:0
+msgid "Used bank"
+msgstr "Banca utilizzata"
+
+#. module: mexal_ddt
+#: view:picking.create.direct.invoice:mexal_ddt.view_picking_create_direct_invoice
+msgid "or"
+msgstr "o"

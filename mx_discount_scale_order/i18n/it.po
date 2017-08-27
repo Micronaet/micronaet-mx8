@@ -1,27 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mx_discount_scale_base
+# 	* mx_discount_scale_order
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-17 14:26+0000\n"
-"PO-Revision-Date: 2016-02-17 15:26+0100\n"
-"Last-Translator: Anna <anna@micronaet.it>\n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:46+0100\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 1.5.4\n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
 
-#. module: mx_discount_scale_base
-#: view:res.partner:mx_discount_scale_base.view_partner_add_custom_fields
-msgid "Discount granted:"
-msgstr "Sconto concesso:"
+#. module: mx_discount_scale_order
+#: view:sale.order:mx_discount_scale_order.view_order_line_form_discount
+#: field:sale.order,multi_discount_rates:0
+msgid "Discount scale"
+msgstr "Scala sconto"
 
-#. module: mx_discount_scale_base
-#: model:ir.model,name:mx_discount_scale_base.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#. module: mx_discount_scale_order
+#: view:sale.order:mx_discount_scale_order.view_order_line_form_discount
+msgid "Discount:"
+msgstr "Sconto:"
+
+#. module: mx_discount_scale_order
+#: model:ir.model,name:mx_discount_scale_order.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: mx_discount_scale_order
+#: model:ir.model,name:mx_discount_scale_order.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linea d'ordine di vendita"
+
+#. module: mx_discount_scale_order
+#: help:sale.order,multi_discount_rates:0
+msgid "Use for force the one in lines"
+msgstr "Utilizza per forzare quello nelle righe"
+
+#. module: mx_discount_scale_order
+#: view:sale.order:mx_discount_scale_order.view_order_line_form_discount
+msgid "{'partner_id': partner_id}"
+msgstr "{'partner_id': partner_id}"

@@ -1,0 +1,149 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mexal_invoice
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:39+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mexal_invoice
+#: field:account.invoice,default_carrier_id:0
+msgid "Carrier"
+msgstr "Vettore"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "DDT:"
+msgstr "DDT:"
+
+#. module: mexal_invoice
+#: field:account.invoice,direct_invoice:0
+msgid "Direct invoice"
+msgstr "Fattura diretta"
+
+#. module: mexal_invoice
+#: selection:account.invoice,invoice_type:0
+msgid "FT 1 (normal)"
+msgstr "FT 1 (normala)"
+
+#. module: mexal_invoice
+#: selection:account.invoice,invoice_type:0
+msgid "FT 2 ()"
+msgstr "FT 2 ()"
+
+#. module: mexal_invoice
+#: selection:account.invoice,invoice_type:0
+msgid "FT 3 ()"
+msgstr "FT 3 ()"
+
+#. module: mexal_invoice
+#: model:ir.model,name:mexal_invoice.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: mexal_invoice
+#: field:account.invoice,invoice_type:0
+msgid "Invoice module"
+msgstr "Modulo fattura"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Linked document"
+msgstr "Documento collegato"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Open DDT"
+msgstr "Apri DDT"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Open order"
+msgstr "Apri ordine"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Open pick out"
+msgstr "Apri prelievo"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Order:"
+msgstr "Ordine:"
+
+#. module: mexal_invoice
+#: help:account.invoice,used_bank_id:0
+msgid "Partner bank account used for payment"
+msgstr "Conto bancario del partner usato per il pagamento"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_supplier_search
+msgid "Payment"
+msgstr "Pagamento"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+#: view:account.invoice:mexal_invoice.account_mx_invoice_supplier_form
+msgid "Payments"
+msgstr "Pagamenti"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Pick out document:"
+msgstr "Documento uscita"
+
+#. module: mexal_invoice
+#: field:account.invoice,invoiced_picking_ids:0
+msgid "Picking"
+msgstr "Documento di prelievo"
+
+#. module: mexal_invoice
+#: model:ir.model,name:mexal_invoice.model_stock_picking
+msgid "Picking List"
+msgstr "Lista prelievo"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Picking out"
+msgstr "Documento uscita"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Re-Link pick out"
+msgstr "Ricollega documenti in uscita"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_form
+msgid "Re-link"
+msgstr "Ricollega"
+
+#. module: mexal_invoice
+#: view:account.invoice:mexal_invoice.account_mx_invoice_supplier_search
+msgid "Salesperson"
+msgstr "Commerciale"
+
+#. module: mexal_invoice
+#: field:account.invoice,start_transport:0
+msgid "Start transport"
+msgstr "Inizio trasporto"
+
+#. module: mexal_invoice
+#: field:account.invoice,used_bank_id:0
+msgid "Used bank"
+msgstr "Banca utilizzata"
+
+#. module: mexal_invoice
+#: help:account.invoice,start_transport:0
+msgid "Used in direct invoice"
+msgstr "Utilizza fattura diretta"

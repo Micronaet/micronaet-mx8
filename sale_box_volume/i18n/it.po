@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-22 11:04+0000\n"
-"PO-Revision-Date: 2016-03-22 12:06+0100\n"
+"POT-Creation-Date: 2017-07-27 16:32+0000\n"
+"PO-Revision-Date: 2017-08-09 00:08+0100\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgid "Number of pallet"
 msgstr "Numero di pallet"
 
 #. module: sale_box_volume
-#: code:addons/sale_box_volume/volume.py:90
+#: code:addons/sale_box_volume/volume.py:92
 #, python-format
 msgid "Number of pallet: %s\n"
 msgstr "Numero di pallet: %s\n"
@@ -160,7 +160,7 @@ msgid "Volume"
 msgstr "Volume"
 
 #. module: sale_box_volume
-#: code:addons/sale_box_volume/volume.py:93
+#: code:addons/sale_box_volume/volume.py:95
 #, python-format
 msgid "Volume %5.2f CBM"
 msgstr "Volume %5.2f CBM"

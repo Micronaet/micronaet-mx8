@@ -1,0 +1,28 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_it_ddt_sectional
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:25+0000\n"
+"PO-Revision-Date: 2017-08-05 23:36+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: l10n_it_ddt_sectional
+#: model:ir.model,name:l10n_it_ddt_sectional.model_stock_ddt
+msgid "DdT"
+msgstr "DDT\t"
+
+#. module: l10n_it_ddt_sectional
+#: view:stock.ddt:l10n_it_ddt_sectional.view_stock_ddt_master_form
+msgid "False"
+msgstr "Falso"

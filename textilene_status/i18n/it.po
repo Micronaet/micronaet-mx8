@@ -1,0 +1,182 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* textilene_status
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:32+0000\n"
+"PO-Revision-Date: 2017-08-09 00:24+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: textilene_status
+#: model:ir.model,name:textilene_status.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Distinta Base"
+
+#. module: textilene_status
+#: view:product.product.fabric.report.wizard:textilene_status.view_product_product_fabric_report_wizard
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: textilene_status
+#: model:ir.model,name:textilene_status.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: textilene_status
+#: field:product.product.fabric.report.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: textilene_status
+#: field:product.product.fabric.report.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il "
+
+#. module: textilene_status
+#: model:ir.actions.act_window,name:textilene_status.action_product_product_fabric_report_wizard
+#: model:ir.ui.menu,name:textilene_status.menu_report_fabric_wizard
+msgid "Fabric report wizard"
+msgstr "Wizard stampa tessuti"
+
+#. module: textilene_status
+#: view:product.product.fabric.report.wizard:textilene_status.view_product_product_fabric_report_wizard
+msgid "Fabric status"
+msgstr "Stato tessuti"
+
+#. module: textilene_status
+#: field:product.product.fabric.report.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: textilene_status
+#: help:mrp.bom,in_report:0
+msgid "If true the bom will be tracked for status report"
+msgstr "Se vero la DB sarà tracciata per la stampa di stato"
+
+#. module: textilene_status
+#: field:mrp.bom,in_report:0 field:product.product,in_report:0
+msgid "In report"
+msgstr "Nella stampa"
+
+#. module: textilene_status
+#: field:product.product.fabric.report.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: textilene_status
+#: field:product.product.fabric.report.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: textilene_status
+#: field:res.company,stock_report_tx_load_in_ids:0
+msgid "Load TX in type"
+msgstr "Carica tipo ingresso TX"
+
+#. module: textilene_status
+#: field:res.company,stock_report_tx_load_out_ids:0
+msgid "Load TX out type"
+msgstr "Scarico tipo uscita TX"
+
+#. module: textilene_status
+#: field:res.company,stock_report_tx_mrp_in_ids:0
+msgid "MRP. TX in type"
+msgstr "Carico produzione TX"
+
+#. module: textilene_status
+#: field:res.company,stock_report_tx_mrp_out_ids:0
+msgid "MRP. TX out type"
+msgstr "Scarico produzione TX"
+
+#. module: textilene_status
+#: help:product.product,in_report:0
+msgid ""
+"Material that need to be track in report status, usedfor textylene material"
+msgstr ""
+"Materiale che necessita di essere tracciato nella stampa di stato, "
+"utilizzato per la stampa tessuto textilene"
+
+#. module: textilene_status
+#: help:product.product,not_in_report:0
+msgid ""
+"Material that start with T but don't need to be trackfor textylene material"
+msgstr ""
+"Materiale che inizia per T ma non deve essere tracciato per il materiale "
+"textilene"
+
+#. module: textilene_status
+#: view:res.company:textilene_status.view_res_company_pick_type_form
+msgid "Movement from stock:"
+msgstr "Movimento dal magazzino:"
+
+#. module: textilene_status
+#: field:product.product,not_in_report:0
+msgid "Not in report"
+msgstr "Non in stampa"
+
+#. module: textilene_status
+#: help:product.product,report_bom_id:0
+msgid "One reference BOM for product (for in report status)"
+msgstr "Riferimento unico DB per il prodotto (per la stampa stato)"
+
+#. module: textilene_status
+#: view:product.product.fabric.report.wizard:textilene_status.view_product_product_fabric_report_wizard
+msgid "Print"
+msgstr "Stampa"
+
+#. module: textilene_status
+#: model:ir.model,name:textilene_status.model_product_product
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: textilene_status
+#: model:ir.actions.act_window,name:textilene_status.action_product_in_report
+#: model:ir.ui.menu,name:textilene_status.menu_report_fabric_choose_in_report
+#: field:mrp.bom.line,in_report:0
+msgid "Product in report"
+msgstr "Prodotto in stampa"
+
+#. module: textilene_status
+#: view:res.company:textilene_status.view_res_company_pick_type_form
+msgid "Production document:"
+msgstr "Documento produzione:"
+
+#. module: textilene_status
+#: view:product.product:textilene_status.view_in_report_product_normal_report_enable_tree_view
+msgid "Report for material"
+msgstr "Stampa per materiale"
+
+#. module: textilene_status
+#: model:ir.actions.report.xml,name:textilene_status.aeroo_stock_fabric_status_report_id
+msgid "Stock status fabric"
+msgstr "Stampa stato magazzino"
+
+#. module: textilene_status
+#: model:res.groups,name:textilene_status.group_textilene_admin
+msgid "Textilene admin"
+msgstr "Amministrazione textilene"
+
+#. module: textilene_status
+#: field:product.product,report_bom_id:0
+msgid "Textilene bom"
+msgstr "DB textilene"
+
+#. module: textilene_status
+#: view:res.company:textilene_status.view_res_company_pick_type_form
+msgid "Textilene report"
+msgstr "Stampa textilene"
+
+#. module: textilene_status
+#: view:product.product.fabric.report.wizard:textilene_status.view_product_product_fabric_report_wizard
+msgid "or"
+msgstr "o"

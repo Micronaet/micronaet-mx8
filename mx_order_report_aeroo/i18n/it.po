@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mx_order_report_aeroo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-27 16:28+0000\n"
+"PO-Revision-Date: 2017-08-06 10:51+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: mx_order_report_aeroo
+#: model:ir.actions.report.xml,name:mx_order_report_aeroo.aeroo_mx_purchase_order_report_id
+msgid "Mx purchase order report"
+msgstr "MX stampa ordine acquisto"
+
+#. module: mx_order_report_aeroo
+#: field:purchase.order,quotation_mode:0
+msgid "Order print mode"
+msgstr "Modalità stampa ordine"
+
+#. module: mx_order_report_aeroo
+#: field:purchase.order,printed_time:0
+msgid "Printed time"
+msgstr "Orario stampato"
+
+#. module: mx_order_report_aeroo
+#: model:ir.model,name:mx_order_report_aeroo.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ordine Acquisto"
+
+#. module: mx_order_report_aeroo
+#: selection:purchase.order,quotation_mode:0
+msgid "TODO Type 1"
+msgstr "DA FARE Tipo 1"
+
+#. module: mx_order_report_aeroo
+#: selection:purchase.order,quotation_mode:0
+msgid "TODO Type 2"
+msgstr "DA FARE Tipo 2"
+
+#. module: mx_order_report_aeroo
+#: selection:purchase.order,quotation_mode:0
+msgid "TODO Type 3"
+msgstr "DA FARE Tipo 3"
+
+#. module: mx_order_report_aeroo
+#: selection:purchase.order,quotation_mode:0
+msgid "With code"
+msgstr "Con codice"
+
+#. module: mx_order_report_aeroo
+#: selection:purchase.order,quotation_mode:0
+msgid "Without code"
+msgstr "Senza codice"
