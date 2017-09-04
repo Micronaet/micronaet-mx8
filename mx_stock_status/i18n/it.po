@@ -219,7 +219,7 @@ msgstr "Stato magazzino inventario"
 #: model:ir.actions.act_window,name:mx_stock_status.action_stock_status_print_report_wizard
 #: model:ir.ui.menu,name:mx_stock_status.menu_stock_status_print_report_wizard
 msgid "Stock status report wizard"
-msgstr "Wizarad stampa stato magazzino"
+msgstr "Wizard stampa stato magazzino"
 
 #. module: mx_stock_status
 #: model:ir.actions.report.xml,name:mx_stock_status.aeroo_stock_status_simple_report_id
