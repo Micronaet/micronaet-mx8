@@ -67,6 +67,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #                        XLS log export:        
         # ---------------------------------------------------------------------
         filename = '/home/administrator/photo/output/post_inventory_table.xlsx'
+        _logger.info('Extract: %s' % filename)
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
@@ -261,8 +262,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             if with_parent_bom:         
                 record[0].write(record[1], 11, linked_bom.get(product.id, ''))
                 
-            record[1] += 1
-                    
+            record[1] += 1                    
         return True
 
     # -------------------------------------------------------------------------

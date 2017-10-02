@@ -32,6 +32,7 @@
         'base',
         'stock',
         'product',
+        'purchase', # for last purchase date
         'sql_product', # for stat. cat.
         'close_residual_order',
         'product_image_base', # for image in report
