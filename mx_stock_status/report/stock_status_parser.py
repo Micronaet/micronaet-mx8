@@ -145,30 +145,35 @@ class Parser(report_sxw.rml_parse):
             'get_purchase_last_date': self.get_purchase_last_date,
         })
 
-    def get_purchase_last_date(self, code=False):
+    def get_purchase_last_date(self, code=False, load_all=False):
         ''' Get filter selected
         '''
         cr = self.cr
         uid = self.uid
         context = {}
-        
-        if not code: # no code = load data
-            self.purchase_date = {}
+        if load_all: # no code = load data
+            self._purchase_date = {}
             line_pool = self.pool.get('purchase.order.line')
             line_ids = line_pool.search(cr, uid, [
                 ('order_id.state', 'not in', ('draft', 'cancel', 'sent')),
                 ], order='date_planned desc', context=context)
+            
             for line in line_pool.browse(
                     cr, uid, line_ids, context=context):
                 code = line.product_id.default_code or False
                 date = line.date_planned or \
                     line.order_id.minimum_date_planned or \
                     line.order_id.date_order
-                if code and code in self.purchase_date and \
-                        date > self.purchase_date[code]:
-                    self.purchase_date[code] = date
+            
+                if not code:
+                    continue
+                if code in self._purchase_date:
+                    if date > self._purchase_date[code]:
+                        self._purchase_date[code] = date                        
+                else:
+                    self._purchase_date[code] = date                    
             return ''
-        return self.purchase_date.get(code, '/')    
+        return self._purchase_date.get(code, '/')    
 
     def get_date(self, ):
         ''' Get filter selected
