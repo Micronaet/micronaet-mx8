@@ -38,6 +38,7 @@ class Parser(report_sxw.rml_parse):
         self.localcontext.update({
             'get_counter': self.get_counter,
             'set_counter': self.set_counter,
+            'get_line_number': self.get_line_number,
             'bank': self.get_company_bank,
             'get_partic_description': self.get_partic_description,
             'get_tax_line_invoice':self.get_tax_line_invoice,
@@ -58,6 +59,16 @@ class Parser(report_sxw.rml_parse):
         })
         self.last_picking = False # TODO is reset all reports?
 
+    def get_line_number(self, reset=False):
+        ''' Get total line or reset number
+        '''
+        if reset:
+            self._line_counter = 0
+            return ''
+        else:
+            self._line_counter += 1
+            return self._line_counter
+        
     def get_imponibile_mode(self, o):
         ''' Procedure for net total with remain
         '''
