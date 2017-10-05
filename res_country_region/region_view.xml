@@ -39,6 +39,20 @@
         </record>
 
         <!--res.country.state-->        
+        <record model="ir.ui.view" id="view_res_country_state_editable_tree">
+            <field name="name">res.country.state.tree</field>
+            <field name="model">res.country.state</field>
+            <field name="priority" eval="30"/>
+            <field name="arch" type="xml">
+                <tree string="Region association" editable="bottom" color="red:region_id==False">        
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="region_id" />
+                    <field name="country_id" />
+                </tree>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="view_model_name_tree">
             <field name="name">res.country.state.tree</field>
             <field name="model">res.country.state</field>
@@ -59,12 +73,29 @@
                  </field>
             </field>
         </record>
+        <record model="ir.actions.act_window" id="action_region_association_form">
+            <field name="name">Region association</field>
+            <field name="res_model">res.country.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_model_name_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
         
         <menuitem 
             parent="base.menu_localisation" 
             id="menu_res_country_region" 
             action="action_res_country_region"            
-            />        
+            sequence="30"
+            />    
+            <menuitem 
+                parent="menu_res_country_region" 
+                id="menu_region_association_form" 
+                action="action_region_association_form"
+                sequence="10"
+                />
+            
     </data>
 </openerp>
 

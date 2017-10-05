@@ -33,10 +33,10 @@
     'init_xml': [],
     'demo': [],
     'data': [        
+        'data/region_data.xml',
+
         'security/ir.model.access.csv',    
         'region_view.xml',
-        
-        'data/region_data.xml',
         ],
     'active': False,
     'installable': True,
