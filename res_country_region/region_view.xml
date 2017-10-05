@@ -52,7 +52,23 @@
                 </tree>
             </field>
         </record>
-        
+        <record model="ir.ui.view" id="view_res_country_state_search">
+            <field name="name">res.country.state.search</field>
+            <field name="model">res.country.state</field>
+            <field name="priority" eval="4" />
+            <field name="arch" type="xml">
+                <search string="Ricerca" version="7.0">        
+                    <field name="name" />
+                    <field name="region_id" filter_domain="[('region_id','=',self)]"/>
+                    <field name="country_id" filter_domain="[('country_id','=',self)]"/>
+                    <filter name="region_unassociated" string="Non associati" domain="[('region_id','=',False)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_region" string="Regione" context="{'group_by': 'region_id'}"/>
+                        <filter name="group_country" string="Nazione" context="{'group_by': 'country_id'}"/>
+                    </group>                
+                </search>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_model_name_tree">
             <field name="name">res.country.state.tree</field>
             <field name="model">res.country.state</field>
@@ -79,6 +95,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_res_country_state_editable_tree"/>
+            <field name="search_view_id" ref="view_res_country_state_search"/>
             <field name="context">{}</field>
             <field name="domain">[]</field>
         </record>
