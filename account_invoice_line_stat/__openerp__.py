@@ -32,6 +32,7 @@
         'account',
         'mx_agent', # for agent filter
         'order_destination', # for destination header
+        'res_country_region', # for region analysis
         ],
     'init_xml': [],
     'demo': [],

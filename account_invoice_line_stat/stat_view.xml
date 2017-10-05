@@ -13,6 +13,7 @@
                     <field name="invoice_id" filter_domain="[('order_id.name','ilike',self)]"/>
                     <field name="account_id" filter_domain="[('account_id.name','ilike',self)]"/>
                     <field name="zone_id" filter_domain="[('zone_id.name','ilike',self)]"/>
+                    <field name="region_id" filter_domain="[('region_id.name','ilike',self)]"/>
                     <field name="country_id" filter_domain="[('country_id.name','ilike',self)]"/>
 
                     <!--<field name="property_account_position" filter_domain="[('property_account_position','=',self)]"/>-->
@@ -31,6 +32,7 @@
 
                         <!--<filter name="group_fiscal" string="Fiscal position" context="{'group_by': 'property_account_position'}"/>-->
                         <filter name="group_zone" string="Zone" context="{'group_by': 'zone_id'}"/>
+                        <filter name="group_region" string="Regione" context="{'group_by': 'region_id'}"/>
                         <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
                         <filter name="group_date" string="Date" context="{'group_by': 'date_invoice'}"/>
                     </group>                          
@@ -52,7 +54,8 @@
                      <field name="date_invoice" readonly="1"/>                  
                      <!--field name="property_fiscal_position" readonly="1"/-->
 
-                     <field name="zone_id" readonly="1"/>
+                     <field name="zone_id" readonly="1" invisible="1"/>
+                     <field name="region_id" readonly="1"/>
                      <field name="country_id" readonly="1"/>
                      <field name="account_id" readonly="1"/>
                      <field name="product_id" readonly="1"/>

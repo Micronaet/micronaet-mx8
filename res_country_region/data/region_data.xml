@@ -31,6 +31,9 @@
         <record model="res.country.region" id="region_id_marche">
             <field name="name">Marche</field>
         </record>
+        <record model="res.country.region" id="region_id_lazio">
+            <field name="name">Lazio</field>
+        </record>
         <record model="res.country.region" id="region_id_umbria">
             <field name="name">Umbria</field>
         </record>
