@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <record model="res.country.region" id="region_id_aosta">
+            <field name="name">Valle d'Aosta</field>
+        </record>
+        <record model="res.country.region" id="region_id_piemonte">
+            <field name="name">Piemonte</field>
+        </record>
+        <record model="res.country.region" id="region_id_liguria">
+            <field name="name">Liguria</field>
+        </record>
+        <record model="res.country.region" id="region_id_lombardia">
+            <field name="name">Lombardia</field>
+        </record>
+        <record model="res.country.region" id="region_id_trentino">
+            <field name="name">Trentino Alto Adige</field>
+        </record>
+        <record model="res.country.region" id="region_id_veneto">
+            <field name="name">Veneto</field>
+        </record>
+        <record model="res.country.region" id="region_id_friuli">
+            <field name="name">Friuli Venezia Giulia</field>
+        </record>
+        <record model="res.country.region" id="region_id_emilia">
+            <field name="name">Emilia Romagna</field>
+        </record>
+        <record model="res.country.region" id="region_id_toscana">
+            <field name="name">Toscana</field>
+        </record>
+        <record model="res.country.region" id="region_id_marche">
+            <field name="name">Marche</field>
+        </record>
+        <record model="res.country.region" id="region_id_umbria">
+            <field name="name">Umbria</field>
+        </record>
+        <record model="res.country.region" id="region_id_abruzzo">
+            <field name="name">Abruzzo</field>
+        </record>
+        <record model="res.country.region" id="region_id_molise">
+            <field name="name">Molise</field>
+        </record>
+        <record model="res.country.region" id="region_id_liguria">
+            <field name="name">Liguria</field>
+        </record>
+        <record model="res.country.region" id="region_id_campania">
+            <field name="name">Campania</field>
+        </record>
+        <record model="res.country.region" id="region_id_puglia">
+            <field name="name">Puglia</field>
+        </record>
+        <record model="res.country.region" id="region_id_basilicata">
+            <field name="name">Basilicata</field>
+        </record>
+        <record model="res.country.region" id="region_id_calabria">
+            <field name="name">Calabria</field>
+        </record>
+        <record model="res.country.region" id="region_id_sicilia">
+            <field name="name">Sicilia</field>
+        </record>
+        <record model="res.country.region" id="region_id_sardegna">
+            <field name="name">Sardegna</field>
+        </record>        
+    </data>
+</openerp>
+
