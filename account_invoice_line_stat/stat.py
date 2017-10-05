@@ -156,18 +156,23 @@ class AccountInvoiceLine(orm.Model):
     def _refresh_invoice_partner(self, cr, uid, ids, context=None):
         ''' Change account.invoice >> partner_id
         '''
-        return self.search(cr, uid, [
+        line_ids = self.pool.get('account.invoice.line').search(cr, uid, [
             ('invoice_id', 'in', ids),
             ], context=context)
+        _logger.warning('Line of invoice change partner: %s' % len(line_ids))
+        
+        return line_ids
 
     def _refresh_res_partner_city(self, cr, uid, ids, context=None):
         ''' Change res.partner >> state_id
         '''
         invoice_ids = self.pool.get('account.invoice').search(cr, uid, [
             ('partner_id', 'in', ids),
-            ], context=context)
-            
-        return self._refresh_invoice_partner(
+            ], context=context)            
+        _logger.warning(
+            'Invoice of partner change state: %s' % len(invoice_ids))    
+        
+        return self.pool.get('account.invoice.line')._refresh_invoice_partner(
             cr, uid, invoice_ids, context=context)
 
     def _refresh_state_region(self, cr, uid, ids, context=None):
@@ -176,8 +181,9 @@ class AccountInvoiceLine(orm.Model):
         partner_ids = self.pool.get('res.partner').search(cr, uid, [
             ('state_id', 'in', ids),
             ], context=context)
-            
-        return self._refresh_res_partner_city(
+        _logger.warning('Partner of city change region: %s' % len(partner_ids))    
+        
+        return self.pool.get('account.invoice.line')._refresh_res_partner_city(
             cr, uid, partner_ids, context=context)
     
     # -------------------------------------------------------------------------
