@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>        
+        <!--res.country.region-->
+        <record model="ir.ui.view" id="view_res_country_region_tree">
+            <field name="name">res.country.region.tree</field>
+            <field name="model">res.country.region</field>
+            <field name="arch" type="xml">
+                <tree string="Region" editable="bottom">
+                    <field name="name" />
+                    <field name="note" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_res_country_region_form">
+            <field name="name">res.country.region.form</field>
+            <field name="model">res.country.region</field>
+            <field name="arch" type="xml">
+                <form string="Region" version="7.0">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="name" />
+                            <newline/>
+                            <separator string="Note" colspan="4"/>
+                            <field name="note" colspan="4" nolabel="4"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_res_country_region">
+            <field name="name">Region</field>
+            <field name="res_model">res.country.region</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_res_country_region_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--res.country.state-->        
+        <record model="ir.ui.view" id="view_model_name_tree">
+            <field name="name">res.country.state.tree</field>
+            <field name="model">res.country.state</field>
+            <field name="inherit_id" ref="base.view_country_state_tree"/>
+            <field name="arch" type="xml">
+                 <field name="country_id" position="after">
+                     <field name="region_id" />
+                 </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_model_name_form">
+            <field name="name">res.country.state.form</field>
+            <field name="model">res.country.state</field>
+            <field name="inherit_id" ref="base.view_country_state_form"/>
+            <field name="arch" type="xml">
+                 <field name="country_id" position="after">
+                     <field name="region_id" />
+                 </field>
+            </field>
+        </record>
+        
+        <menuitem 
+            parent="base.menu_localisation" 
+            id="menu_res_country_region" 
+            action="action_res_country_region"            
+            />        
+    </data>
+</openerp>
+
