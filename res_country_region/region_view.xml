@@ -44,7 +44,7 @@
             <field name="model">res.country.state</field>
             <field name="inherit_id" ref="base.view_country_state_tree"/>
             <field name="arch" type="xml">
-                 <field name="country_id" position="after">
+                 <field name="country_id" position="before">
                      <field name="region_id" />
                  </field>
             </field>
@@ -54,7 +54,7 @@
             <field name="model">res.country.state</field>
             <field name="inherit_id" ref="base.view_country_state_form"/>
             <field name="arch" type="xml">
-                 <field name="country_id" position="after">
+                 <field name="country_id" position="before">
                      <field name="region_id" />
                  </field>
             </field>
