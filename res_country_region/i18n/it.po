@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-05 14:22+0000\n"
-"PO-Revision-Date: 2017-10-05 16:23+0100\n"
+"POT-Creation-Date: 2017-10-05 15:06+0000\n"
+"PO-Revision-Date: 2017-10-05 17:06+0100\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,3 +67,10 @@ msgstr "Note"
 #: field:res.country.state,region_id:0
 msgid "Region"
 msgstr "Regione"
+
+#. module: res_country_region
+#: model:ir.actions.act_window,name:res_country_region.action_region_association_form
+#: model:ir.ui.menu,name:res_country_region.menu_region_association_form
+#: view:res.country.state:res_country_region.view_res_country_state_editable_tree
+msgid "Region association"
+msgstr "Associazione regione"
