@@ -186,9 +186,41 @@ class AccountInvoiceLine(orm.Model):
         return self.pool.get('account.invoice.line')._refresh_res_partner_city(
             cr, uid, partner_ids, context=context)
     
+    
+    # -------------------------------------------------------------------------
+    # Store function state_id:
+    # -------------------------------------------------------------------------
+    def _refresh_state_id_invoice_partner_id(self, cr, uid, ids, context=None):
+        ''' Change partner_id (account.invoice)
+        '''
+        return self.pool.get('account.invoice.line').search(cr, uid, [
+            ('invoice_id', 'in', ids), # line with this invoice partner changed
+            ], context=context)
+
+    def _refresh_state_id_partner_state_id(self, cr, uid, ids, context=None):
+        ''' Change partner state (res.partner)
+        '''
+        invoice_ids = self.pool.get('account.invoice').search(cr, uid, [
+           ('partner_id', 'in', ids),
+           ], context=context)
+        return self.pool.get('account.invoice.line'
+            )._refresh_state_id_invoice_partner_id(
+                cr, uid, invoice_ids, context=context)
+    
     # -------------------------------------------------------------------------
     # Field function:
     # -------------------------------------------------------------------------
+    def _get_line_state_id(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''       
+        res = {}     
+        for line in self.browse(cr, uid, ids, context=context):
+            try:
+                res[line.id] = line.invoice_id.partner_id.state_id.id
+            except:
+                res[line.id] = False                    
+        return res
+        
     def _get_region_invoiced_line(self, cr, uid, ids, fields, args, 
             context=None):
         ''' Fields function for calculate 
@@ -211,14 +243,31 @@ class AccountInvoiceLine(orm.Model):
 
         'region_id': fields.function(
             _get_region_invoiced_line, method=True, 
-            type='many2one', string='Region', relation='res.country.region',
+            type='many2one', string='Regione', relation='res.country.region',
             store={
                 'account.invoice': (
                     _refresh_invoice_partner, ['partner_id'], 10),
-                'res.partner': (_refresh_res_partner_city, ['state_id'], 10),
+                'res.partner': (
+                    _refresh_res_partner_city, ['state_id'], 10),
                 'res.country.state': (
                     _refresh_state_region, ['region_id'], 10),
                 }), 
+
+        'state_id': fields.function(
+            _get_line_state_id, method=True, 
+            type='many2one', string='Città', relation='res.country.state',
+            store={
+                'account.invoice': (
+                    _refresh_state_id_invoice_partner_id, ['partner_id'], 10),
+                'res.partner': (
+                    _refresh_state_id_partner_state_id, ['state_id'], 10),
+                }), 
+
+        # TODO change:
+        'country_id': fields.related(
+            'partner_id', 'country_id', 
+            type='many2one', relation='res.country', 
+            string='Country', store=True),
 
         'destination_partner_id': fields.related(
             'invoice_id', 'destination_partner_id', 
@@ -262,10 +311,6 @@ class AccountInvoiceLine(orm.Model):
             type='many2one', relation='res.partner.zone', 
             string='Zone', store=True),
 
-        'country_id': fields.related(
-            'partner_id', 'country_id', 
-            type='many2one', relation='res.country', 
-            string='Country', store=True),
         #'property_account_position': fields.related(
         #    'partner_id', 'property_account_position', 
         #    type='many2one', relation='account.fiscal.position', 
