@@ -43,17 +43,17 @@ class AccountInvoiceLine(orm.Model):
     """    
     _inherit = 'account.invoice.line'
     
-    def _get_season_from_date(self, date):
+    def _get_season_from_date(self, date_invoice):
         ''' Return season from date
         '''
         start_month = '09'
-        if not date:
+        if not date_invoice:
             return False
-        current_month = date[5:7]
-        year = int(date[2:4])
-        if current_month >= start_month:
+        current_month = date_invoice[5:7]
+        year = int(date_invoice[2:4])
+        if current_month >= start_month: # [09 : 12]
             return '%02d-%02d' % (year, year + 1)
-        else: 
+        else: # [01 : 08]
             return '%02d-%02d' % (year - 1, year)
                 
     def _get_season_from_invoice_line(self, cr, uid, ids, context=None):
@@ -66,7 +66,11 @@ class AccountInvoiceLine(orm.Model):
         _logger.warning('Change season invoice line as invoice change date')
         return line_ids
         
-    def _get_season_from_invoice_date(self, cr, uid, ids, fields, args, context=None):
+    # -------------------------------------------------------------------------    
+    # Field function:    
+    # -------------------------------------------------------------------------    
+    def _get_season_from_invoice_date(self, cr, uid, ids, fields, args, 
+            context=None):
         ''' Fields function for calculate 
         '''
         res = {}
