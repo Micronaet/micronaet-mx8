@@ -219,14 +219,26 @@ class Parser(report_sxw.rml_parse):
         # TODO call XMLRPC procedure:
         # ERPPEEK CLIENT:
 
-        erp = erppeek.Client(
-            'http://%s:%s' % (
-                company_proxy.remote_hostname, 
-                company_proxy.remote_port),
-            db=company_proxy.remote_name,
-            user=company_proxy.remote_username,
-            password=company_proxy.remote_password,
-            )
+        try:
+            erp = erppeek.Client(
+                'http://%s:%s' % (
+                    company_proxy.remote_hostname, 
+                    company_proxy.remote_port),
+                db=company_proxy.remote_name,
+                user=company_proxy.remote_username,
+                password=company_proxy.remote_password,
+                )
+        except:
+            raise osv.except_osv(
+                _('XMLRPC error'),
+                _('Cannot connect to second: %s:%s/%s %s' % (
+                    company_proxy.remote_hostname, 
+                    company_proxy.remote_port,
+                    company_proxy.remote_name,
+                    company_proxy.remote_username,
+                    ),
+                ))
+                    
 
         if not erp:
             raise osv.except_osv(
