@@ -49,12 +49,36 @@ class Parser(report_sxw.rml_parse):
             'get_object': self.get_object,
             'get_date': self.get_date,
             'get_filter': self.get_filter,
+            'get_gamma': self.get_gamma,
             
             # Utility:
             #'get_counter': self.get_counter,
             #'set_counter': self.set_counter,            
         })
 
+    def get_gamma(self, product):
+        ''' Write gamma on report
+        '''
+        gamma = product.status
+        if gamma == 'catalog': 
+            return 'CA'
+        elif gamma == 'out':
+            return 'FC'
+        elif gamma == 'stock':
+            return 'ST'
+        elif gamma == 'obsolete':
+            return 'OB'
+        elif gamma == 'todo':
+            return 'T'
+        elif gamma == 'sample':
+            return 'SA'
+        elif gamma == 'promo':
+            return 'PR'            
+        elif gamma == 'parent':
+            return 'PD'
+        else:
+            return ''
+        
     def get_date(self, ):
         ''' Get filter selected
         '''

@@ -34,6 +34,7 @@
         'product',
         'close_residual_order',
         'inventory_status',
+        'catalog_management', # for gamma test
         ],
     'init_xml': [],
     'demo': [],
