@@ -303,6 +303,15 @@ class ResPartner(orm.Model):
         else:
             return 
     
+    def print_stock_status_report_stock(self, cr, uid, ids, context=None):
+        ''' Print only present
+        '''
+        if context is None: 
+            context = {}            
+        context['only_with_stock'] = True
+        return self.print_stock_status_report(
+            cr, uid, ids, context=context)
+            
     def print_stock_status_report(self, cr, uid, ids, context=None):
         ''' Print report product stock
         '''
@@ -313,6 +322,9 @@ class ResPartner(orm.Model):
         datas['partner_id'] = ids[0]
         datas['partner_name'] = self.browse(
             cr, uid, ids, context=context)[0].name
+        # Mode with esistence or not:    
+        datas['only_with_stock'] = context.get('only_with_stock', False)
+            
                        
         return {
             'type': 'ir.actions.report.xml',

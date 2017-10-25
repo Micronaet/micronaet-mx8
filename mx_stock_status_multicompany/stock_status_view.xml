@@ -45,6 +45,7 @@
             <field name="arch" type="xml">
                 <field name="website" position="after">
                     <button name="print_stock_status_report" string="Print stock status" help="Status report for stock" type="object" attrs="{'invisible':['|',('is_company', '=', False),('supplier', '=', False)]}"/>
+                    <button name="print_stock_status_report_stock" string="Stampa stato magazzino (esist.)" help="Stato magazzino solo per prodotti con esistenza" type="object" attrs="{'invisible':['|',('is_company', '=', False),('supplier', '=', False)]}"/>
                 </field>
             </field>
         </record>

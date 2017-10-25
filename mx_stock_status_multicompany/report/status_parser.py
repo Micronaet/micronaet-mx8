@@ -102,6 +102,9 @@ class Parser(report_sxw.rml_parse):
         company_ids = company_pool.search(self.cr, self.uid, [])
         company_proxy = company_pool.browse(self.cr, self.uid, company_ids)[0]
         
+        # Data parameters:
+        only_with_stock = data.get('only_with_stock', False)
+        
         # ---------------------------------------------------------------------
         # Search partner in supplier info:
         # ---------------------------------------------------------------------
@@ -161,6 +164,10 @@ class Parser(report_sxw.rml_parse):
 
         clean_product_ids = []
         for product in product_pool.browse(self.cr, self.uid, product_ids):
+            if only_with_stock and abs(product.mx_net_mrp_qty) <= 0.01:
+                # If request, jump empry stock product:
+                continue # no quantity
+                
             default_code = product.default_code # or ''
             products_code.append(product_mask % default_code)
 
