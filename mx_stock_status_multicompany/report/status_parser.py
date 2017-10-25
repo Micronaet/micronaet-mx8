@@ -237,8 +237,7 @@ class Parser(report_sxw.rml_parse):
                     company_proxy.remote_name,
                     company_proxy.remote_username,
                     ),
-                ))
-                    
+                ))                    
 
         if not erp:
             raise osv.except_osv(
