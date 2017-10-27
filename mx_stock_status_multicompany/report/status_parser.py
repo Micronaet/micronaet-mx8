@@ -164,10 +164,6 @@ class Parser(report_sxw.rml_parse):
 
         clean_product_ids = []
         for product in product_pool.browse(self.cr, self.uid, product_ids):
-            if only_with_stock and abs(product.mx_net_mrp_qty) <= 0.01:
-                # If request, jump empry stock product:
-                continue # no quantity
-                
             default_code = product.default_code # or ''
             products_code.append(product_mask % default_code)
 
@@ -311,8 +307,12 @@ class Parser(report_sxw.rml_parse):
             procurement = virtual_loads.get(default_code, 0.0) + \
                 remote_virtual_loads.get(remote_code, 0.0)
                 
-            dispo = inventory + load - unload
-            virtual = dispo + procurement - order
+            dispo = int(inventory + load - unload)
+            virtual = int(dispo + procurement - order)
+            
+            if only_with_stock and not dispo and not virtual:
+                # If request, jump empry stock product:
+                continue # no quantity
             
             res.append(
                 (products[key],
@@ -321,8 +321,8 @@ class Parser(report_sxw.rml_parse):
                 int(unload), 
                 int(order), 
                 int(procurement), 
-                int(dispo), 
-                int(virtual),
+                dispo,
+                virtual,
                 ))
         return res        
         
