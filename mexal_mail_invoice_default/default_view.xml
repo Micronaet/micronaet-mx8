@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_email_default_template_form">
+            <field name="name">email.template.form</field>
+            <field name="model">email.template</field>
+            <field name="inherit_id" ref="email_template.email_template_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="default_send" />
+                    <label for="default_send" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_email_default_template_tree">
+            <field name="name">email.template.form</field>
+            <field name="model">email.template</field>
+            <field name="inherit_id" ref="email_template.email_template_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="default_send" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
