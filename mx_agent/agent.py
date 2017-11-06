@@ -158,27 +158,6 @@ class AccountInvoiceRefund(orm.Model):
                 'mx_agent_id': refund.partner_id.agent_id.id,
                 }, context=context)
         return res
-        
-    """# Override:
-    def compute_refund(self, cr, uid, ids, mode='refund', context=None):
-        ''' Add also agent
-        '''        
-        res = super(AccountInvoiceRefund, self).compute_refund(
-            cr, uid, ids, mode=mode, context=context)
-
-        import pdb; pdb.set_trace()
-        # Update agent for refund: 
-        if context is None:
-            context = {}            
-        # Read invoice origin from context
-        invoice_pool = self.pool.get('account.invoice')
-        active_ids = context.get('active_ids', [])
-        for refund in invoice_pool.browse(
-                cr, uid, active_ids, context=context):
-            invoice_pool.write(cr, uid, refund.id, {
-                'mx_agent_id': refund.partner_id.agent_id.id,
-                }, context=context)
-        return res"""
 
 class AccountInvoice(orm.Model):
     """ Model name: Account Invoice
