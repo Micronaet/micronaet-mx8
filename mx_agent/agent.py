@@ -133,19 +133,40 @@ class SaleOrderLine(orm.Model):
             )
         }#'partner_id', 
 
-
 class AccountInvoiceRefund(orm.Model):
     """ Model name: Account Invoice Refund
     """    
     _inherit = 'account.invoice.refund'
-    
-    # Override:
+
+    def invoice_refund(self, cr, uid, ids, context=None):
+        ''' Change agent after create refund
+        '''
+        res = super(AccountInvoiceRefund, self).invoice_refund(
+            cr, uid, ids, context=context)
+        
+        # Update agent for refund: 
+        if 'domain' not in res:
+            _logger.error('No domain returned, no agent setup!')
+            return res
+        domain = res['domain']
+        # Read invoice origin from context
+        invoice_pool = self.pool.get('account.invoice')
+        refund_ids = invoice_pool.search(cr, uid, domain, context=context)
+        for refund in invoice_pool.browse(
+                cr, uid, refund_ids, context=context):
+            invoice_pool.write(cr, uid, refund.id, {
+                'mx_agent_id': refund.partner_id.agent_id.id,
+                }, context=context)
+        return res
+        
+    """# Override:
     def compute_refund(self, cr, uid, ids, mode='refund', context=None):
         ''' Add also agent
         '''        
         res = super(AccountInvoiceRefund, self).compute_refund(
             cr, uid, ids, mode=mode, context=context)
-            
+
+        import pdb; pdb.set_trace()
         # Update agent for refund: 
         if context is None:
             context = {}            
@@ -157,7 +178,7 @@ class AccountInvoiceRefund(orm.Model):
             invoice_pool.write(cr, uid, refund.id, {
                 'mx_agent_id': refund.partner_id.agent_id.id,
                 }, context=context)
-        return res
+        return res"""
 
 class AccountInvoice(orm.Model):
     """ Model name: Account Invoice
