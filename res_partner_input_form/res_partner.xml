@@ -10,15 +10,15 @@
                     <group col="4" colspan="4">
                         <field name="is_company"/> 
                         <field name="name" required="1"/>                      
-                        <field name="use_parent_adress" invisible="1"/>
-                        <field name="street" attrs="{'readonly': [('use_parent_adress','=',True)]}"/>
-                        <field name="zip_id" attrs="{'invisible': [('use_parent_adress','=',True)]}"/>
-                        <field name="city" attrs="{'readonly': [('use_partner_adress','=',True)]}"/>
+                        <field name="use_parent_address" invisible="1"/>
+                        <field name="street" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                        <field name="zip_id" attrs="{'invisible': [('use_parent_address','=',True)]}"/>
+                        <field name="city" attrs="{'readonly': [('use_partner_address','=',True)]}"/>
                         <field name="state_id" on_change="onchange_state(state_id)"/>
-                        <field name="zip" attrs="{'readonly': [('use_parent_adress','=',True)]}"/>
+                        <field name="zip" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                         <field name="zone_id" required="1"/>
-                        <field name="country_id" attrs="{'readonly': [('use_parent_adress','=',True)]}"/>
-                        <field name="website"required="1"/> 
+                        <field name="country_id" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                        <field name="website" required="1"/> 
                         <field name="phone" required="1"/>
                         <field name="email" required="1"/>
                         <field name="newsletter_category_id" required="1"/>
@@ -37,6 +37,20 @@
             </form>
         </field>
     </record>
+    <record model="ir.actions.act_window" id="action_create_new_partner">
+        <field name="name">New Partner</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="view_res_partner_input_form"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+    </record>
+    <menuitem 
+        parent="base.menu_partner_form" 
+        id="menu_create_new_partner" 
+        action="action_create_new_partner"/>
+    
     </data>
 </openerp>
 

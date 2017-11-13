@@ -26,8 +26,12 @@
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
     'license': 'AGPL-3',
-    'depends': [
+    'depends': [ 
         'base',
+        'account',
+        'crm_newsletter_category', # micronaet-crm
+        'sql_partner_transport', # micronaet-sql7
+     
         ],
     'init_xml': [],
     'demo': [],
