@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_res_partner_input_form">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="String" version="7.0">        
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="is_company"/> 
+                        <field name="name" required="1"/>                      
+                        <field name="use_parent_adress" invisible="1"/>
+                        <field name="street" attrs="{'readonly': [('use_parent_adress','=',True)]}"/>
+                        <field name="zip_id" attrs="{'invisible': [('use_parent_adress','=',True)]}"/>
+                        <field name="city" attrs="{'readonly': [('use_partner_adress','=',True)]}"/>
+                        <field name="state_id" on_change="onchange_state(state_id)"/>
+                        <field name="zip" attrs="{'readonly': [('use_parent_adress','=',True)]}"/>
+                        <field name="zone_id" required="1"/>
+                        <field name="country_id" attrs="{'readonly': [('use_parent_adress','=',True)]}"/>
+                        <field name="website"required="1"/> 
+                        <field name="phone" required="1"/>
+                        <field name="email" required="1"/>
+                        <field name="newsletter_category_id" required="1"/>
+                        <field name="agent_id" required ="1"/>
+                        <field name="lang" required="1"/>
+                        <field name="discount_rates" on_change="onechange_discount_rates(discount_rates)"/>
+                        <field name="customer"/>
+                        <field name="supplier"/>
+                        <field name="is_vector" />
+                        <field name="property_account_position" required="1"/>
+                        <field name="vat" required="1"/>    
+                        <field name="fiscalcode" required="1"/>
+                        <field name="bank_ids"/>                    
+                    </group>
+                </sheet>        
+            </form>
+        </field>
+    </record>
+    </data>
+</openerp>
+
