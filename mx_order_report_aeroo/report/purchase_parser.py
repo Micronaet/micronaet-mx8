@@ -36,13 +36,13 @@ class Parser(report_sxw.rml_parse):
             'set_counter': self.set_counter,
             'bank': self.get_company_bank,
             'get_supplier_info': self.get_supplier_info,
-            'get_vat': self.get_vat,
+            #'get_vat': self.get_vat,
             })
 
-    def get_vat(self, tax):
-        ''' Get vat perc
-        '''
-        return  tax.description or  tax.description
+    #def get_vat(self, tax):
+    #    ''' Get vat perc
+    #    '''
+    #    return  tax.description or  tax.description
         
     def get_supplier_info(self, product_proxy, supplier_id):
         ''' Search if supplier is in product supplier list and return 
