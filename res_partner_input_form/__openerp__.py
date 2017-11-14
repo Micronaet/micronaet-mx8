@@ -31,7 +31,7 @@
         'account',
         'crm_newsletter_category', # micronaet-crm
         'sql_partner_transport', # micronaet-sql7
-     
+        'mx_partner_move_deadline',     
         ],
     'init_xml': [],
     'demo': [],
