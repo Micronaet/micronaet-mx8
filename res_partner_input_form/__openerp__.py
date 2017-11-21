@@ -32,6 +32,7 @@
         'crm_newsletter_category', # micronaet-crm
         'sql_partner_transport', # micronaet-sql7
         'mx_partner_move_deadline',     
+        'xmlrpc_operation_partner', # syncro operations
         ],
     'init_xml': [],
     'demo': [],

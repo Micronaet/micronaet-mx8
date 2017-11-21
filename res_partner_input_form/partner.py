@@ -46,6 +46,34 @@ class ResPartner(orm.Model):
     # -------------------------------------------------------------------------
     # Button event:
     # -------------------------------------------------------------------------
+    def go_check_input_form_mandatory_fields(self, cr, uid, ids, context=None):
+        '''
+        '''
+        model_pool = self.pool.get('ir.model.data')
+        view_id = model_pool.get_object_reference(
+            cr, uid, 
+            'res_partner_input_form', 
+            'view_insert_res_partner_form',
+            )[1]
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Partner (campi obbligatori)'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_id': ids[0],
+            'res_model': 'res.partner',
+            'view_id': view_id,
+            'views': [
+                (view_id, 'form'),
+                (False, 'tree'),
+                ],
+            'domain': [('id', '=', ids[0])],
+            'context': context,
+            'target': 'current', # 'new'
+            'nodestroy': False,
+            }
+        
     def go_partner_normal_form(self, cr, uid, ids, context=None):
         '''
         '''
@@ -62,10 +90,10 @@ class ResPartner(orm.Model):
             'res_model': 'res.partner',
             #'view_id': view_id, # False
             'views': [
-                (False, 'tree'),
                 (False, 'form'),
+                (False, 'tree'),
                 ],
-            'domain': [],
+            'domain': [('id', '=', ids[0])],
             'context': context,
             'target': 'current', # 'new'
             'nodestroy': False,
