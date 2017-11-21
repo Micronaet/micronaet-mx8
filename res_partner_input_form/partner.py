@@ -53,7 +53,7 @@ class ResPartner(orm.Model):
         view_id = model_pool.get_object_reference(
             cr, uid, 
             'res_partner_input_form', 
-            'view_insert_res_partner_form',
+            'view_res_partner_input_form',
             )[1]
         
         return {

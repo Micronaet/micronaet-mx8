@@ -31,15 +31,19 @@
                                     
                                     <field name="country_id" attrs="{'readonly': [('use_parent_address','=',True)]}" placeholder="Nazione"/>
                                     <field name="zone_id" required="1"/>
-                                </group>
+
+			                   </group>
                             </page>
+	                        <page string="Destinazioni" attrs="{'invisible': [('is_company','=',False)]}">
+		                        <field name="address_ids" context="{'default_parent_id': active_id, 'default_is_address':1, 'default_name': name}" mode="tree"/>
+	                        </page>                                
                             <page string="Recapiti">
                                 <group col="4" colspan="4">
                                     <field name="phone" required="1"/>
                                     <field name="email" required="1"/>
 
                                     <field name="newsletter_category_id" required="1"/>
-                                    <field name="agent_id" required ="1"/>
+                                    <field name="agent_id" />
 
                                     <field name="website" placeholder="es. www.odoo.com"/> 
                                     <field name="lang" required="1"/>
@@ -60,8 +64,8 @@
                                     <field name="property_product_pricelist" />
                                     <field name="property_product_pricelist_purchase" />                                    
                                     
-                                    <field name="vat" required="1"/>    
-                                    <field name="fiscalcode" required="1"/>
+                                    <field name="vat" />
+                                    <field name="fiscalcode" />
                                     
                                     <separator string="RIBA:" colspan="4"/>
                                     <field name="pay_days_fix_delivery"/>
