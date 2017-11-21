@@ -11,7 +11,7 @@
 		            <button name="xmlrpc_export_partner" string="Sincro fornitore" type="object" icon="gtk-refresh" context="{'sync_type':'supplier'}"/>
 		            <field name="xmlrpc_sync" invisible="1" modifiers="{'invisible': true}"/>
 
-                    <button name="go_partner_normal_form" string="Completo" type="object" class="oe-highlight"/>
+                    <button name="go_partner_normal_form" string="Completo" icon="gtk-goto-last" type="object" class="oe-highlight" help="Apre la videata normale completa con tutte le informazioni cliente"/>
                 </header>
                 <sheet>
                     <group col="4" colspan="4">
