@@ -41,7 +41,7 @@
                                     <field name="phone" required="1"/>
                                     <field name="email" required="1"/>
 
-                                    <field name="newsletter_category_id" required="1"/>
+                                    <field name="newsletter_category_id" />
                                     <field name="agent_id" />
 
                                     <field name="website" placeholder="es. www.odoo.com"/> 
