@@ -5,55 +5,65 @@
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <form string="String" version="7.0">        
+            <form string="Partner" version="7.0">        
+                <header>
+                    <button name="go_partner_normal_form" string="Completo" type="object" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="is_company"/> 
                         <field name="name" required="1"/>
+                        <field name="is_company"/> 
                         <notebook colspan="4">
                             <page string="Address">
                                 <group col="4" colspan="4">
                                     <field name="use_parent_address" invisible="1"/>
                                     <field name="street" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                    
                                     <field name="zip_id" attrs="{'invisible': [('use_parent_address','=',True)]}"/>
                                     <field name="city" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                    <field name="state_id" on_change="onchange_state(state_id)"/>
+                                    
                                     <field name="zip" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                    <field name="zone_id" required="1"/>
+                                    <field name="state_id" on_change="onchange_state(state_id)"/>
+                                    
                                     <field name="country_id" attrs="{'readonly': [('use_parent_address','=',True)]}"/>                                
+                                    <field name="zone_id" required="1"/>
                                 </group>
                             </page>
-                        </notebook>
-                                          
-                        <notebook colspan="4">
-                            <page string="Information">
+                            <page string="Recapiti">
                                 <group col="4" colspan="4">
                                     <field name="phone" required="1"/>
                                     <field name="email" required="1"/>
+
                                     <field name="newsletter_category_id" required="1"/>
                                     <field name="agent_id" required ="1"/>
+
                                     <field name="website"/> 
                                     <field name="lang" required="1"/>
+
                                     <field name="customer"/>
-                                    <field name="is_vector" />
                                     <field name="supplier"/>
+                                    <field name="is_vector" />
                                 </group>
                             </page>
-                        </notebook>
-                        <notebook colspan="4">
                             <page string="Accounting">
                                 <group col="4" colspan="4">
                                     <field name="property_account_position" required="1"/>
+                                    <field name="discount_rates" on_change="onchange_discount_rates(discount_rates)"/>
+                                    
                                     <field name="vat" required="1"/>    
                                     <field name="fiscalcode" required="1"/>
-                                    <field name="discount_rates" on_change="onchange_discount_rates(discount_rates)"/>
+                                    
+                                    <separator string="RIBA" colspan="4"/>
                                     <field name="pay_days_fix_delivery"/>
                                     <field name="pay_days_m1"/>
+
                                     <field name="pay_days_m1_days"/>
                                     <field name="pay_days_m2"/>
+
                                     <field name="pay_days_m2_days"/>
                                     <field name="credit_limit"/>
-                                    <field name="bank_ids"/>
+                                    
+                                    <field name="bank_ids" colspan="4"/>
                                 </group>
                             </page>
                         </notebook>

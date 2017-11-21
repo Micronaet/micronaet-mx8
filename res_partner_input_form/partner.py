@@ -38,4 +38,37 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResPartner(orm.Model):
+    """ Model name: ResPartner
+    """    
+    _inherit = 'res.partner'    
+
+    # -------------------------------------------------------------------------
+    # Button event:
+    # -------------------------------------------------------------------------
+    def go_partner_normal_form(self, cr, uid, ids, context=None):
+        '''
+        '''
+        #model_pool = self.pool.get('ir.model.data')
+        #view_id = model_pool.get_object_reference('module_name', 
+        #    'view_name')[1]
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Partner'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_id': ids[0],
+            'res_model': 'res.partner',
+            #'view_id': view_id, # False
+            'views': [
+                (False, 'tree'),
+                (False, 'form'),
+                ],
+            'domain': [],
+            'context': context,
+            'target': 'current', # 'new'
+            'nodestroy': False,
+            }
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
