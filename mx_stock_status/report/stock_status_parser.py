@@ -143,8 +143,15 @@ class Parser(report_sxw.rml_parse):
             'get_date': self.get_date,
             'get_filter': self.get_filter,
             'get_purchase_last_date': self.get_purchase_last_date,
+            'get_duty_for_product': self.get_duty_for_product,
         })
 
+    def get_duty_for_product(self, product):
+        ''' Get duty info for product (proxy)
+        '''
+        product_pool = self.pool.get('product.product')
+        return product_pool.get_duty_this_product_rate(product)
+        
     def get_purchase_last_date(self, code=False, load_all=False):
         ''' Get filter selected
         '''
