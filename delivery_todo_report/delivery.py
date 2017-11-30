@@ -38,6 +38,17 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResPartner(orm.Model):
+    """ Model name: ResPartner
+    """
+    
+    _inherit = 'res.partner'
+    
+    _columns = {
+        'extra_description_load_list': fields.boolean('Descrizione extra',
+            help='Attiva la colonna extra descrizione nella lista di carico'),
+        }
+
 class SaleOrder(orm.Model):
     """ Model name: SaleOrder
     """

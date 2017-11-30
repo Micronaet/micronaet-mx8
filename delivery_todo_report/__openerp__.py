@@ -32,6 +32,7 @@
         'base',
         'sale',
         'sale_delivery_partial',
+        'partner_product_partic_base',
         'mx_agent',
         'mx_close_order',
         'close_residual_order',

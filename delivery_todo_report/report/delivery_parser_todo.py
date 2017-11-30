@@ -68,11 +68,18 @@ class Parser(report_sxw.rml_parse):
             # Wizard mode function:
             'get_header_string': self.get_header_string,
             'get_stock_value': self.get_stock_value,
+            
+            'has_extra_description': self.has_extra_description,
         })
         self.reset_counter()
         # TODO remove        
         self.total_parcel = 0.0
 
+    def has_extra_description(self, o):
+        ''' Test if partner required extra columns for his description
+        '''
+        return o.partner_id.extra_description_load_list
+        
     def get_mode(self, ):
         ''' Utility for check the mode of report depend on name
         '''
@@ -112,6 +119,9 @@ class Parser(report_sxw.rml_parse):
                 13: 'Request',
                 14: 'Bookable',
                 15: 'Note',                
+                
+                # Extra columns:
+                '6a': 'Your description',
                 },
                        
             'mexal': {
@@ -132,6 +142,9 @@ class Parser(report_sxw.rml_parse):
                 13: 'Richiesti',
                 14: 'Prenotati',
                 15: 'Note',
+
+                # Extra columns:
+                '6a': 'Vs. descrizione',
                 },   
             }            
         

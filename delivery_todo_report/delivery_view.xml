@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>    
+        <record id="view_partner_product_partic_extra_col_form" model="ir.ui.view">
+            <field name="name">res.partner.product.partic.page</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="partner_product_partic_base.view_partner_product_partic_form" />
+            <field name="arch" type="xml">			                
+                <field name="partic_ids" position="before">
+                    <group colspan="4" col="4">
+                        <field name="extra_description_load_list" />
+                    </group>    
+                </field>
+            </field>
+        </record>
+    
         <record model="ir.ui.view" id="view_sale_order_to_delivery_tree">
             <field name="name">sale.order.delivery.tree</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>

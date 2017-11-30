@@ -268,14 +268,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
     # -------------------------------------------------------------------------
     #                             Wizard button event
     # -------------------------------------------------------------------------
-    def print_report(self, cr, uid, ids, context=None):
-        ''' Print report product
+    def get_data_dict(self, wiz_proxy):
+        ''' Utility for create data dict in report actions
         '''
-        if context is None: 
-            context = {}
-
-        wiz_proxy = self.browse(cr, uid, ids)[0]
-            
         datas = {
             'wizard': True, # started from wizard
             'partner_id': wiz_proxy.partner_id.id,
@@ -299,6 +294,16 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     wiz_proxy.statistic_category or '').split('|')]
         else:            
             datas['statistic_category'] = False
+        return datas    
+        
+    def print_report(self, cr, uid, ids, context=None):
+        ''' Print report product
+        '''
+        if context is None: 
+            context = {}
+
+        wiz_proxy = self.browse(cr, uid, ids)[0]            
+        datas = self.get_data_dict(wiz_proxy)
         
         if datas['mode'] == 'status':
             report_name = 'stock_status_report'
