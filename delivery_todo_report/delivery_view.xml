@@ -24,8 +24,8 @@
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
       
-                    <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':[('delivering_status', '=', True)]}" />
-                    <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':[('delivering_status', '=', False)]}" />
+                    <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', True)]}" />
+                    <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', False)]}" />
                     <field name="delivering_status" invisible="1"/>
                 </field>    
             </field>
@@ -40,8 +40,8 @@
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
                     
-                    <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':[('delivering_status', '=', True)]}" />
-                    <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':[('delivering_status', '=', False)]}" />
+                    <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', True)]}" />
+                    <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', False)]}" />
                     <field name="delivering_status" invisible="1"/>
                 </field>    
             </field>
@@ -58,8 +58,8 @@
                           <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                           <field name="print" invisible="1"/>
 
-                          <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':[('delivering_status', '=', True)]}" />
-                          <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':[('delivering_status', '=', False)]}" />
+                          <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', True)]}" />
+                          <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', False)]}" />
                           <field name="delivering_status" invisible="1"/>
 
                           <field name="uncovered_state" invisible="1"/>
@@ -209,8 +209,8 @@
                       <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                       <field name="print" invisible="1"/>
 
-                      <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':[('delivering_status', '=', True)]}" />
-                      <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':[('delivering_status', '=', False)]}" />
+                      <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', True)]}" />
+                      <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', False)]}" />
                       <field name="delivering_status" invisible="1"/>
                   </field>
             </field>
@@ -290,8 +290,8 @@
                     <button name="print_off_set_user_order" string="Cancel print" icon="gtk-ok" type="object" attrs="{'invisible':[('print', '=', False)]}" />
                     <field name="print" invisible="1"/>
 
-                    <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':[('delivering_status', '=', True)]}" />
-                    <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':[('delivering_status', '=', False)]}" />
+                    <button name="mark_as_delivering" string="Delivering..." icon="muletto-on" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', True)]}" />
+                    <button name="mark_as_no_delivering" string="No delivering" icon="muletto-off" type="object" attrs="{'invisible':['|',('state', 'in', ('cancel', 'draft', 'sent')),('delivering_status', '=', False)]}" />
                     <field name="delivering_status" invisible="1"/>
                     
                     <!--<button name="force_parameter_for_delivery" string="Update delivery parameter" icon="gtk-refresh" type="object" />-->
