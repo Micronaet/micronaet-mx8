@@ -56,6 +56,17 @@ class PrintReportFIDOWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Utility:
         # ---------------------------------------------------------------------
+        def italian_date(date):
+            ''' Change ISO to Italian format
+            '''
+            if not date: 
+                return ''
+            return '%s/%s/%s' % (
+                date[8:10],
+                date[5:7],
+                date[:4],
+                )    
+                
         def xls_write_row(WS, row, row_data, format_cell):
             ''' Print line in XLS file            
             '''
@@ -69,9 +80,11 @@ class PrintReportFIDOWizard(orm.TransientModel):
 
         if context is None: 
             context = {}
-        
+
         # Pool used:
         payment_pool = self.pool.get('statistic.deadline')
+
+        type_db = dict(payment_pool._columns['type'].selection)
         
         # Read parameters:
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
@@ -142,6 +155,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
             _('Data'), 
             _('Scadenza'),            
             _('Scad. FIDO'), # invoice covered
+            _('Pagamento'),
             _('Importo pag.'),
            ]
 
@@ -155,7 +169,8 @@ class PrintReportFIDOWizard(orm.TransientModel):
         WS.set_column(6, 6, 8)
         WS.set_column(7, 7, 8)
         WS.set_column(8, 8, 8)
-        WS.set_column(9, 9, 10)
+        WS.set_column(9, 9, 8)
+        WS.set_column(10, 10, 10)
         
         # Export Header:
         xls_write_row(WS, 0, header, format_title)        
@@ -203,13 +218,14 @@ class PrintReportFIDOWizard(orm.TransientModel):
                 payment.partner_id.agent_id.name or '',
 
                 'X' if has_fido else '',
-                payment.partner_id.fido_date or '',
+                italian_date(payment.partner_id.fido_date),
                 payment.partner_id.fido_total or '',
 
                 payment.invoice_ref,
-                payment.invoice_date, 
-                payment.deadline, 
-                fido_deadline or '',
+                italian_date(payment.invoice_date), 
+                italian_date(payment.deadline),                 
+                italian_date(fido_deadline),
+                type_db.get(payment.type, '?'),
                 payment.total,
                 ]
             xls_write_row(WS, i, data, format_current)
