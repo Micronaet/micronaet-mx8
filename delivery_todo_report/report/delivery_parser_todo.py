@@ -55,6 +55,7 @@ class Parser(report_sxw.rml_parse):
             'get_datetime': self.get_datetime,
             'get_datetime_now': self.get_datetime_now,
             'get_partic': self.get_partic,
+            'get_partic_description': self.get_partic_description,
             'get_parcels': self.get_parcels,
             'get_parcels_table_load': self.get_parcels_table_load,
 
@@ -188,8 +189,7 @@ class Parser(report_sxw.rml_parse):
         
     # -------------------------------------------------------------------------
     #                              COUNTER MANAGE
-    # -------------------------------------------------------------------------
-    
+    # -------------------------------------------------------------------------    
     def reset_counter(self):
         _logger.info('Counter reset for company 1 load report')
         # reset counters:
@@ -292,8 +292,8 @@ class Parser(report_sxw.rml_parse):
                     ))
         return res
 
-    def get_partic(self, line):
-        ''' Return return if present partner-product partic code
+    def get_partic_browse(self, line):
+        ''' Return browse object for line passed:
         '''
         partic_pool = self.pool.get('res.partner.product.partic')
         partic_ids = partic_pool.search(self.cr, self.uid, [
@@ -301,9 +301,27 @@ class Parser(report_sxw.rml_parse):
             ('product_id', '=', line.product_id.id),
             ])
         if partic_ids: 
-            partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
+            return partic_pool.browse(self.cr, self.uid, partic_ids)[0]
+        else: 
+            return False    
+        
+    def get_partic(self, line):
+        ''' Return return if present partner-product partic code
+        '''
+        partic_proxy = self.get_partic_browse(line)
+        if partic_proxy:
             return partic_proxy.partner_code or '/'
-        return ''#'???'
+        else:    
+            return ''
+
+    def get_partic_description(self, line):
+        ''' Return return if present partner-product partic code
+        '''
+        partic_proxy = self.get_partic_browse(line)
+        if partic_proxy:
+            return partic_proxy.partner_description or ''
+        else:    
+            return ''
 
     def get_datetime(self):
         ''' Return datetime obj
