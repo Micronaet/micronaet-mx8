@@ -319,7 +319,10 @@ class Parser(report_sxw.rml_parse):
         '''
         partic_proxy = self.get_partic_browse(line)
         if partic_proxy:
-            return partic_proxy.partner_description or ''
+            return '%s %s' % (
+                partic_proxy.partner_description or '',
+                partic_proxy.fabric_color or '',
+                )
         else:    
             return ''
 
