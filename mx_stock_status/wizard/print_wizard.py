@@ -136,25 +136,24 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             price_item = price_db.get(product.id, ('', '', ''))
             
             # Write data in correct WS:
-            WS.write(counter, 0, 'X' if product.id in in_bom_ids else '')
-            WS.write(counter, 1, product.default_code)
-            WS.write(counter, 2, product.name)
-            WS.write(counter, 3, product.uom_id.name or '')
-            WS.write(counter, 4, product.statistic_category or '')            
-            WS.write(counter, 5, product.categ_id.name or '')
-            WS.write(counter, 6, 
+            WS.write(counter, 0, 'X' if product.id in in_bom_ids else '') # A
+            WS.write(counter, 1, product.default_code) # B
+            WS.write(counter, 2, product.name) # C
+            WS.write(counter, 3, product.uom_id.name or '') # D
+            WS.write(counter, 4, product.statistic_category or '') # E
+            WS.write(counter, 5, product.categ_id.name or '') # F
+            WS.write(counter, 6,
                 product.seller_ids[0].name.name if product.seller_ids else (
-                    product.first_supplier_id.name or ''))
-            WS.write(counter, 7, product.inventory_start or '')
-            WS.write(counter, 8, product.inventory_delta or '')
-            WS.write(counter, 9, product.mx_mrp_out or '')
-            WS.write(counter, 10, product.inventory_category_id.name)
-            WS.write(counter, 11, product.mx_history_net_qty or '')                
-            WS.write(counter, 12, product.mx_start_qty or '')                
-            WS.write(counter, 13, price_item[0])
-            WS.write(counter, 14, price_item[1])
-            WS.write(counter, 15, price_item[2])
-                   
+                    product.first_supplier_id.name or '')) # G
+            WS.write(counter, 7, product.inventory_start or '') # H
+            WS.write(counter, 8, product.inventory_delta or '') # I
+            WS.write(counter, 9, product.mx_mrp_out or '') # J
+            WS.write(counter, 10, product.inventory_category_id.name) # K
+            WS.write(counter, 11, product.mx_history_net_qty or '') # L          
+            WS.write(counter, 12, product.mx_start_qty or '') # M      
+            WS.write(counter, 13, price_item[0]) # N
+            WS.write(counter, 14, price_item[1]) # O
+            WS.write(counter, 15, price_item[2]) # P
         return True
         
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
