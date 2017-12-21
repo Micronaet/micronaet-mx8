@@ -43,12 +43,15 @@ _logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------
 # Utility: 
 # ---------------------------------------------------------------------
-def write_header(current_WS, header, row=0):
+def write_header(current_WS, header, row=0, cell_format=False):
     ''' Write header in first line:            
     '''
     col = 0
     for title in header:
-        current_WS.write(row, col, title)
+        if cell_format:
+            current_WS.write(row, col, title, cell_format)
+        else:    
+            current_WS.write(row, col, title)
         col += 1
     return     
 
@@ -161,7 +164,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         ''' Extract inventory as XLS extrenal files every category in different
             page
         '''    
-        product_pool = self.pool.get('product.product') 
+        product_pool = self.pool.get('product.product')
+        
         # ---------------------------------------------------------------------
         #                        XLS log export:        
         # ---------------------------------------------------------------------
@@ -170,38 +174,84 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         WS = WB.add_worksheet(_('Inventario'))
 
         # ---------------------------------------------------------------------
+        # Format:
+        # ---------------------------------------------------------------------
+        format_title = WB.add_format({
+            'bold': True, 
+            'font_color': 'black',
+            'font_name': 'Arial',
+            'font_size': 10,
+            #'align': 'center',
+            #'valign': 'vcenter',
+            #'bg_color': 'gray',
+            #'border': 1,
+            #'text_wrap': True,
+            })
+        format_header = WB.add_format({
+            'bold': True, 
+            'font_color': 'black',
+            'font_name': 'Arial',
+            'font_size': 10,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bg_color': 'gray',
+            'border': 1,
+            'text_wrap': True,
+            })
+        format_text = WB.add_format({
+            'font_name': 'Arial',
+            'font_size': 9,
+            #'align': 'right',
+            #'bg_color': 'c1e7b3',
+            'border': 1,
+            #'num_format': '0.00',
+            })        
+        
+        # ---------------------------------------------------------------------
+        # Setup columns:
+        # ---------------------------------------------------------------------
+        WS.set_column('A:A', 15)
+        WS.set_column('B:B', 40)
+        WS.set_column('C:C', 5)
+        WS.set_column('D:D', 8)
+        WS.set_column('E:E', 10)
+        WS.set_column('F:F', 35)
+        WS.set_column('G:J', 16)
+        WS.set_column('K:M', 8)
+        WS.set_column('N:N', 5)
+        WS.set_column('O:Q', 8)
+        
+        # ---------------------------------------------------------------------
         # Create work sheet:
         # ---------------------------------------------------------------------
+        # Title:
         header = [
             'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
             'CATEGORIA', 'FORNITORE', 'RIF. FORNITORE', 'ULTIMO ACQ.', 
             'COSTO FOM FORN.', 'ESISTENZA', 'COSTO INV.', 'DAZI', 
-            'TRASPORTO', 'USD', 'COSTO €', 'DAZIO €', 'COSTO FIN. €',
+            'TRASPORTO', 'USD', 'COSTO EUR', 'DAZIO EUR', 'COSTO FIN. EUR',
             ]
         
-        write_header(WS, [
-            '', 
-            'RACCOLTA DATI PER INVENTARIO',
-            ], 0)
+        # Write 3 line of header:
+        write_header(
+            WS, ['', 'RACCOLTA DATI PER INVENTARIO', ], 0, format_title)
         write_header(WS, [
             _('Filtro'), 
             product_pool.mx_stock_status_get_filter(data),
             product_pool.get_purchase_last_date(False, True),
-            ], 1)
-        
-        write_header(WS, header, 3)
+            ], 1, format_title)        
+        write_header(WS, header, 3, format_header)
             
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
-        row = 0
-        for o in self.pool.get(
-                'product.product').stock_status_report_get_object(
+        row = 3
+        for o in product_pool.stock_status_report_get_object(
                     cr, uid, data=data, context=context):                    
             row += 1        
             
             # Calculate:
-            duty = get_duty_for_product(o) # L
+            duty = product_pool.get_duty_this_product_rate(o) # L
             cost_fob = o.standard_price # I
             usd = o.inventory_cost_exchange # N
             transport = o.inventory_cost_transport # M
@@ -226,29 +276,48 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 supplier_ref = '?'
             
             # Write data in correct WS:
-            WS.write(row, 0, o.default_code or '????') # A
-            WS.write(row, 1, o.name or '') # B
-            WS.write(row, 2, o.uom_id.name or '') # C
-            WS.write(row, 3, o.statistic_category or '') # D
-            WS.write(row, 1, o.categ_id.name or '') # E 
-            WS.write(row, 1, supplier)) # F
-            WS.write(row, 1, supplier_ref) # G
-            WS.write(row, 1, product_pool.get_purchase_last_date(
-                cr, uid, o.default_code, context=context)) # H
-            WS.write(row, 1, cost_fob) # I
-            WS.write(row, 1, 
-                o.mx_net_qty if data.get('with_stock', False) else '/') # J
-            WS.write(row, 1, o.inventory_cost_no_move) # K
-            WS.write(row, 1, duty) # L
-            WS.write(row, 1, transport) # M
-            WS.write(row, 1, usd) # N
-            WS.write(row, 1, cost_eur) # O
-            WS.write(row, 1, cost_duty_eur) # P            
-            WS.write(row, 1, cost_end_eur) # Q
-        
+            WS.write(row, 0, o.default_code or '????', format_text) # A
+            WS.write(row, 1, o.name or '', format_text) # B
+            WS.write(row, 2, o.uom_id.name or '', format_text) # C
+            WS.write(row, 3, o.statistic_category or '', format_text) # D
+            WS.write(row, 4, o.categ_id.name or '', format_text) # E 
+            WS.write(row, 5, supplier, format_text) # F
+            WS.write(row, 6, supplier_ref, format_text) # G
+            WS.write(row, 7, product_pool.get_purchase_last_date(
+                cr, uid, o.default_code, context=context), format_text) # H
+            WS.write(row, 8, cost_fob, format_text) # I
+            WS.write(row, 9, 
+                o.mx_net_qty if data.get('with_stock', False) else '/', 
+                format_text) # J
+            WS.write(row, 10, o.inventory_cost_no_move, format_text) # K
+            WS.write(row, 11, duty, format_text) # L
+            WS.write(row, 12, transport, format_text) # M
+            WS.write(row, 13, usd, format_text) # N
+            WS.write(row, 14, cost_eur, format_text) # O
+            WS.write(row, 15, cost_duty_eur, format_text) # P            
+            WS.write(row, 16, cost_end_eur, format_text) # Q
+        WB.close()    
+            
+        # ---------------------------------------------------------------------
         # Generate attachment for return file:
-        # XXX
-        return True
+        # ---------------------------------------------------------------------        
+        attachment_pool = self.pool.get('ir.attachment')
+        b64 = open(filename, 'rb').read().encode('base64')
+        attachment_id = attachment_pool.create(cr, uid, {
+            'name': 'Temp report',
+            'datas_fname': 'stato_inventario.xlsx',
+            'type': 'binary',
+            'datas': b64,
+            'partner_id': 1,
+            'res_model': 'res.partner',
+            'res_id': 1,
+            }, context=context)        
+        return {
+            'type' : 'ir.actions.act_url',
+            'url': '/web/binary/saveas?model=ir.attachment&field=datas&'
+                'filename_field=datas_fname&id=%s' % attachment_id,
+            'target': 'self',
+            }
 
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):

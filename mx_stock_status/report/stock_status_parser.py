@@ -101,11 +101,11 @@ class ProductProdcut(orm.Model):
         return res
         
     def get_purchase_last_date(self, cr, uid, code=False, load_all=False, 
-            context=context):
+            context=None):
         ''' Function used in parser for last purchase date
         '''        
+        self._purchase_date = {}
         if load_all: # no code = load data
-            self._purchase_date = {}
             line_pool = self.pool.get('purchase.order.line')
             line_ids = line_pool.search(cr, uid, [
                 ('order_id.state', 'not in', ('draft', 'cancel', 'sent')),
