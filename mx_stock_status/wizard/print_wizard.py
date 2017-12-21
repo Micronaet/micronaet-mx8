@@ -179,8 +179,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         format_title = WB.add_format({
             'bold': True, 
             'font_color': 'black',
-            'font_name': 'Arial',
-            'font_size': 10,
+            'font_name': 'Verdana',
+            'font_size': 9,
             #'align': 'center',
             #'valign': 'vcenter',
             #'bg_color': 'gray',
@@ -190,8 +190,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         format_header = WB.add_format({
             'bold': True, 
             'font_color': 'black',
-            'font_name': 'Arial',
-            'font_size': 10,
+            'font_name': 'Verdana',
+            'font_size': 9,
             'align': 'center',
             'valign': 'vcenter',
             'bg_color': 'gray',
@@ -199,8 +199,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'text_wrap': True,
             })
         format_text = WB.add_format({
-            'font_name': 'Arial',
-            'font_size': 9,
+            'font_name': 'Courier 10 Pitch',
+            'font_size': 8,
             #'align': 'right',
             #'bg_color': 'c1e7b3',
             'border': 1,
@@ -208,8 +208,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             })        
         
         # ---------------------------------------------------------------------
-        # Setup columns:
+        # Setup dimension:
         # ---------------------------------------------------------------------
+        # Columns:
         WS.set_column('A:A', 15)
         WS.set_column('B:B', 40)
         WS.set_column('C:C', 5)
@@ -220,6 +221,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         WS.set_column('K:M', 8)
         WS.set_column('N:N', 5)
         WS.set_column('O:Q', 8)
+
+        # Rows:
+        WS.set_row(3, 25)
         
         # ---------------------------------------------------------------------
         # Create work sheet:
@@ -264,6 +268,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 cost_duty_eur = 'ERR' # P 
                 cost_end_eur = 'ERR' # Q
                 
+                
             if o.seller_ids:
                 supplier = \
                     o.first_supplier_id.name or o.seller_ids[0].name.name # F
@@ -272,7 +277,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     o.seller_ids[0].product_name or '',
                     ) # G
             else:
-                supplier = '?'
+                supplier = o.first_supplier_id.name or '?' # F
                 supplier_ref = '?'
             
             # Write data in correct WS:
