@@ -529,6 +529,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('stock', 'Stock'),
             ('obsolete', 'Obsolete'),
             ('sample', 'Sample'),
+            ('promo', 'Promo'),
+            ('parent', 'Padre'),
             ('todo', 'Todo'),
             ], 'Gamma'),
         'sortable': fields.boolean('Sortable'),
