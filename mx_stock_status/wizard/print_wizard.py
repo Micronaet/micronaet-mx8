@@ -260,11 +260,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             usd = o.inventory_cost_exchange # N
             transport = o.inventory_cost_transport # M
             
-            cost_eur = cost_fob * usd # O
             if usd:
+                cost_eur = cost_fob / usd # O
                 cost_duty_eur = cost_fob * duty / 100.0 / usd # P
                 cost_end_eur = cost_eur + cost_duty_eur + transport # Q
             else:
+                cost_eur = 'ERR' # O
                 cost_duty_eur = 'ERR' # P 
                 cost_end_eur = 'ERR' # Q
                 
