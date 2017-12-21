@@ -40,6 +40,18 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------
+# Utility: 
+# ---------------------------------------------------------------------
+def write_header(current_WS, header, row=0):
+    ''' Write header in first line:            
+    '''
+    col = 0
+    for title in header:
+        current_WS.write(row, col, title)
+        col += 1
+    return     
+
 class StockStatusPrintImageReportWizard(orm.TransientModel):
     ''' Wizard for print stock status
     '''
@@ -51,18 +63,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             page
             TODO Correct and write better!!!
         '''
-        # ---------------------------------------------------------------------
-        # Utility: 
-        # ---------------------------------------------------------------------
-        def write_header(current_WS, header):
-            ''' Write header in first line:            
-            '''
-            col = 0
-            for title in header:
-                current_WS.write(0, col, title)
-                col += 1
-            return     
-            
         # ---------------------------------------------------------------------
         #                        XLS log export:        
         # ---------------------------------------------------------------------
@@ -156,6 +156,100 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(counter, 15, price_item[2]) # P
         return True
         
+    def extract_stock_status_xls_inventory_file(self, cr, uid, ids, data=None,
+            context=None):
+        ''' Extract inventory as XLS extrenal files every category in different
+            page
+        '''    
+        product_pool = self.pool.get('product.product') 
+        # ---------------------------------------------------------------------
+        #                        XLS log export:        
+        # ---------------------------------------------------------------------
+        filename = '/tmp/inventory_status.xlsx'
+        WB = xlsxwriter.Workbook(filename)
+        WS = WB.add_worksheet(_('Inventario'))
+
+        # ---------------------------------------------------------------------
+        # Create work sheet:
+        # ---------------------------------------------------------------------
+        header = [
+            'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
+            'CATEGORIA', 'FORNITORE', 'RIF. FORNITORE', 'ULTIMO ACQ.', 
+            'COSTO FOM FORN.', 'ESISTENZA', 'COSTO INV.', 'DAZI', 
+            'TRASPORTO', 'USD', 'COSTO €', 'DAZIO €', 'COSTO FIN. €',
+            ]
+        
+        write_header(WS, [
+            '', 
+            'RACCOLTA DATI PER INVENTARIO',
+            ], 0)
+        write_header(WS, [
+            _('Filtro'), 
+            product_pool.mx_stock_status_get_filter(data),
+            product_pool.get_purchase_last_date(False, True),
+            ], 1)
+        
+        write_header(WS, header, 3)
+            
+        # ---------------------------------------------------------------------
+        # Populate product in correct page
+        # ---------------------------------------------------------------------
+        row = 0
+        for o in self.pool.get(
+                'product.product').stock_status_report_get_object(
+                    cr, uid, data=data, context=context):                    
+            row += 1        
+            
+            # Calculate:
+            duty = get_duty_for_product(o) # L
+            cost_fob = o.standard_price # I
+            usd = o.inventory_cost_exchange # N
+            transport = o.inventory_cost_transport # M
+            
+            cost_eur = cost_fob * usd # O
+            if usd:
+                cost_duty_eur = cost_fob * duty / 100.0 / usd # P
+                cost_end_eur = cost_eur + cost_duty_eur + transport # Q
+            else:
+                cost_duty_eur = 'ERR' # P 
+                cost_end_eur = 'ERR' # Q
+                
+            if o.seller_ids:
+                supplier = \
+                    o.first_supplier_id.name or o.seller_ids[0].name.name # F
+                supplier_ref = '%s %s' % (
+                    o.seller_ids[0].product_code or '',
+                    o.seller_ids[0].product_name or '',
+                    ) # G
+            else:
+                supplier = '?'
+                supplier_ref = '?'
+            
+            # Write data in correct WS:
+            WS.write(row, 0, o.default_code or '????') # A
+            WS.write(row, 1, o.name or '') # B
+            WS.write(row, 2, o.uom_id.name or '') # C
+            WS.write(row, 3, o.statistic_category or '') # D
+            WS.write(row, 1, o.categ_id.name or '') # E 
+            WS.write(row, 1, supplier)) # F
+            WS.write(row, 1, supplier_ref) # G
+            WS.write(row, 1, product_pool.get_purchase_last_date(
+                cr, uid, o.default_code, context=context)) # H
+            WS.write(row, 1, cost_fob) # I
+            WS.write(row, 1, 
+                o.mx_net_qty if data.get('with_stock', False) else '/') # J
+            WS.write(row, 1, o.inventory_cost_no_move) # K
+            WS.write(row, 1, duty) # L
+            WS.write(row, 1, transport) # M
+            WS.write(row, 1, usd) # N
+            WS.write(row, 1, cost_eur) # O
+            WS.write(row, 1, cost_duty_eur) # P            
+            WS.write(row, 1, cost_end_eur) # Q
+        
+        # Generate attachment for return file:
+        # XXX
+        return True
+
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
         ''' Extract inventory as XLS extrenal files every category in different
@@ -309,7 +403,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         elif datas['mode'] == 'simple':
             report_name = 'stock_status_simple_report'
         elif datas['mode'] == 'inventory':
-            report_name = 'stock_status_inventory_report'
+            # XXX Migrate in Excel:
+            #report_name = 'stock_status_inventory_report'
+            return self.extract_stock_status_xls_inventory_file(
+                cr, uid, ids, datas, context=context)
+            
         elif datas['mode'] == 'inventory_xls':
             return self.extract_xls_inventory_file(
                 cr, uid, ids, datas, context=context)

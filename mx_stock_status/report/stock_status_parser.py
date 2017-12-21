@@ -44,6 +44,90 @@ class ProductProdcut(orm.Model):
     
     _inherit = 'product.product'
     
+    # -------------------------------------------------------------------------
+    #                         UTILITY USED IN PARSER:
+    # -------------------------------------------------------------------------
+    def mx_stock_status_get_filter(self, data):
+        ''' Get filter function used in parser
+        '''
+        if data is None:
+            data = {}
+        res = ''
+        
+        partner_name = data.get('partner_name', False)        
+        default_code = data.get('default_code', False)        
+        statistic_category = data.get('statistic_category', False)        
+        categ_name = data.get('categ_id', False)
+        catalog_name = data.get('catalog_id', False)
+        status = data.get('status', False)
+        sortable = data.get('sortable', False)
+        with_photo = data.get('with_photo', False)
+        with_stock = data.get('with_stock', False)
+        mode = data.get('mode', False)
+        
+        # Mode: 
+        res += _('Modo: %s; ') % mode
+        
+        # Partner:
+        if partner_name:
+            res += _('Fornitore: %s; ') % partner_name
+        
+        # Product:    
+        if default_code:
+            res += _('Codice: %s; ') % default_code
+        if statistic_category:
+            res += _('Categoria statistica: %s; ') % statistic_category
+        if categ_name:
+            res += _('Categoria: %s; ') % categ_name
+        if catalog_name:
+            res += _('Catalogo: %s; ') % catalog_name
+        if status:
+            res += _('Stato: %s; ') % status
+        if sortable:
+            res += _('Prodotti ordinabili; ')
+            
+        if mode == 'status':            
+            # Photo:            
+            if with_photo:
+                res += _('Con foto; ')
+            else:    
+                res += _('Senza foto; ')
+        else: # simple
+            # Stock:            
+            if with_stock:
+                res += _('Solo esistenti; ')
+            else:    
+                res += _('Tutti; ')            
+        return res
+        
+    def get_purchase_last_date(self, cr, uid, code=False, load_all=False, 
+            context=context):
+        ''' Function used in parser for last purchase date
+        '''        
+        if load_all: # no code = load data
+            self._purchase_date = {}
+            line_pool = self.pool.get('purchase.order.line')
+            line_ids = line_pool.search(cr, uid, [
+                ('order_id.state', 'not in', ('draft', 'cancel', 'sent')),
+                ], order='date_planned desc', context=context)
+            
+            for line in line_pool.browse(
+                    cr, uid, line_ids, context=context):
+                code = line.product_id.default_code or False
+                date = line.date_planned or \
+                    line.order_id.minimum_date_planned or \
+                    line.order_id.date_order
+            
+                if not code:
+                    continue
+                if code in self._purchase_date:
+                    if date > self._purchase_date[code]:
+                        self._purchase_date[code] = date                        
+                else:
+                    self._purchase_date[code] = date                    
+            return ''
+        return self._purchase_date.get(code, '/')    
+            
     def stock_status_report_get_object(self, cr, uid, data=None, context=None):
         ''' Keep function here for call extra parser
         '''
@@ -158,86 +242,19 @@ class Parser(report_sxw.rml_parse):
         cr = self.cr
         uid = self.uid
         context = {}
-        if load_all: # no code = load data
-            self._purchase_date = {}
-            line_pool = self.pool.get('purchase.order.line')
-            line_ids = line_pool.search(cr, uid, [
-                ('order_id.state', 'not in', ('draft', 'cancel', 'sent')),
-                ], order='date_planned desc', context=context)
-            
-            for line in line_pool.browse(
-                    cr, uid, line_ids, context=context):
-                code = line.product_id.default_code or False
-                date = line.date_planned or \
-                    line.order_id.minimum_date_planned or \
-                    line.order_id.date_order
-            
-                if not code:
-                    continue
-                if code in self._purchase_date:
-                    if date > self._purchase_date[code]:
-                        self._purchase_date[code] = date                        
-                else:
-                    self._purchase_date[code] = date                    
-            return ''
-        return self._purchase_date.get(code, '/')    
+        return self.pool.get('product.product').get_purchase_last_date(
+            cr, uid, code=False, load_all=False, context=context)
 
     def get_date(self, ):
         ''' Get filter selected
         '''
         return datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
 
-    def get_filter(self, data):
+    def get_filter(self, data):        
         ''' Get filter selected
         '''
-        data = data or {}
-        res = ''
-        partner_name = data.get('partner_name', False)        
-        default_code = data.get('default_code', False)        
-        statistic_category = data.get('statistic_category', False)        
-        categ_name = data.get('categ_id', False)
-        catalog_name = data.get('catalog_id', False)
-        status = data.get('status', False)
-        sortable = data.get('sortable', False)
-        with_photo = data.get('with_photo', False)
-        with_stock = data.get('with_stock', False)
-        mode = data.get('mode', False)
-        
-        # Mode: 
-        res += _('Mode: %s; ') % mode
-        
-        # Partner:
-        if partner_name:
-            res += _('Supplier: %s; ') % partner_name
-        
-        # Product:    
-        if default_code:
-            res += _('Code: %s; ') % default_code
-        if statistic_category:
-            res += _('Statistic category: %s; ') % statistic_category
-        if categ_name:
-            res += _('Category: %s; ') % categ_name
-        if catalog_name:
-            res += _('Catalog: %s; ') % catalog_name
-        if status:
-            res += _('Status: %s; ') % status
-        if sortable:
-            res += _('Sortable product; ')
-            
-        if mode == 'status':            
-            # Photo:            
-            if with_photo:
-                res += _('With photo; ')
-            else:    
-                res += _('Without photo; ')
-        else: # simple
-            # Stock:            
-            if with_stock:
-                res += _('Only present; ')
-            else:    
-                res += _('All esistence; ')
-            
-        return res
+        return self.pool.get('product.product').mx_stock_status_get_filter(
+            data)
     
     def get_object(self, data):
         ''' Search all product elements
