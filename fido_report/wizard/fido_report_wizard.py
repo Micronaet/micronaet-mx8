@@ -48,36 +48,204 @@ class PrintReportFIDOWizard(orm.TransientModel):
     _name = 'print.report.fido.wizard'
 
     # -------------------------------------------------------------------------
+    # Utility:
+    # -------------------------------------------------------------------------
+    def italian_date(self, date):
+        ''' Change ISO to Italian format
+        '''
+        if not date: 
+            return ''
+            
+        return '%s/%s/%s' % (
+            date[8:10],
+            date[5:7],
+            date[:4],
+            )    
+
+    def xls_write_row(self, WS, row, row_data, format_cell):
+        ''' Print line in XLS file            
+        '''
+        ''' Write line in excel file
+        '''
+        col = 0
+        for item in row_data:
+            WS.write(row, col, item, format_cell)
+            col += 1
+        return True
+
+    # -------------------------------------------------------------------------
     # Wizard button event:
     # -------------------------------------------------------------------------    
+    def action_invoice_print(self, cr, uid, ids, context=None):
+        ''' Event for button done
+        '''
+        if context is None: 
+            context = {}
+
+        # Pool used:
+        invoice_pool = self.pool.get('account.invoice')
+
+        # Read parameters:
+        wiz_browse = self.browse(cr, uid, ids, context=context)[0]
+        partner_id = wiz_browse.partner_id.id
+        agent_id = wiz_browse.agent_id.id
+        with_fido = wiz_browse.with_fido
+        from_date = wiz_browse.from_date
+        to_date = wiz_browse.to_date
+        #deadline_from_date = wiz_browse.deadline_from_date
+        #deadline_to_date = wiz_browse.deadline_to_date
+
+        # ---------------------------------------------------------------------
+        # Export XLSX file:
+        # ---------------------------------------------------------------------
+        xls_filename = '/tmp/invoice_report.xlsx'
+        _logger.info('Start FIDO invoice export on %s' % xls_filename)
+        
+        # Open file and write header
+        WB = xlsxwriter.Workbook(xls_filename)
+        WS = WB.add_worksheet(_('Fatture'))
+
+        # Format:
+        #num_format = '#,##0'
+        format_title = WB.add_format({
+            'bold': True, 
+            'font_color': 'black',
+            'font_name': 'Arial',
+            'font_size': 10,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bg_color': 'gray',
+            'border': 1,
+            #'text_wrap': True,
+            })
+
+        format_text_green = WB.add_format({
+            'font_name': 'Arial',
+            'font_size': 9,
+            #'align': 'right',
+            'bg_color': 'c1e7b3',
+            'border': 1,
+            #'num_format': num_format,
+            })        
+        format_text_red = WB.add_format({
+            'font_name': 'Arial',
+            'font_size': 9,
+            #'align': 'right',
+            'bg_color': '#fba099',
+            'border': 1,
+            #'num_format': num_format,
+            })        
+        format_text_grey = WB.add_format({
+            'font_name': 'Arial',
+            'font_size': 9,
+            #'align': 'right',
+            'bg_color': '#e7e7e7',
+            'border': 1,
+            #'num_format': num_format,
+            })        
+        
+        header = [
+            _(u'Cliente'), 
+            _(u'Numero'), 
+            _(u'Data'), 
+            _(u'Imponibile'),
+            _(u'Città'),
+            _(u'Nazione'),
+            _(u'FIDO'),
+            _(u'FIDO RIMOSSO'),
+            _(u'FIDO Da'),
+            _(u'FIDO Totale'),
+           ]
+
+        # Column dimension:
+        WS.set_column(0, 0, 35)
+        WS.set_column(1, 1, 15)
+        WS.set_column(2, 2, 8)
+        WS.set_column(3, 3, 10)
+        WS.set_column(4, 4, 25)
+        WS.set_column(5, 5, 15)
+        WS.set_column(6, 6, 6)
+        WS.set_column(7, 7, 6)
+        WS.set_column(8, 8, 10)
+        WS.set_column(8, 8, 11)
+        
+        # Export Header:
+        self.xls_write_row(WS, 0, header, format_title)        
+        
+        # Export data:
+        order = 'date_invoice'
+        domain = []
+        if partner_id:
+            domain.append(('partner_id', '=', partner_id))
+        if agent_id:
+            domain.append(('partner_id.agent_id', '=', agent_id))
+        if with_fido:
+            domain.append(('partner_id.fido_total', '>', 0))
+        if from_date:
+            domain.append(('date_invoice', '>=', from_date))
+        if to_date:     
+            domain.append(('date_invoice', '<=', to_date))
+
+        invoice_ids = invoice_pool.search(
+            cr, uid, domain, order=order, context=context)        
+        now = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)    
+        i = 0
+        for invoice in invoice_pool.browse(
+                cr, uid, invoice_ids, context=context):
+            i += 1
+            
+            # Read parameter:
+            partner = invoice.partner_id
+            has_fido = partner.fido_total > 0
+            data = [
+                partner.name,
+                invoice.number,
+                self.italian_date(invoice.date_invoice),
+                invoice.amount_untaxed,
+                '%s (%s)' % (
+                    partner.city,
+                    partner.state_id.name if partner.state_id else '',
+                    ),
+                partner.country_id.name if partner.country_id else '',
+                'X' if has_fido else '',
+                'X' if partner.fido_ko else '',
+                self.italian_date(partner.fido_date),
+                partner.fido_total or '',
+                ]
+                
+            # Format in color:    
+            if partner.fido_ko:
+                self.xls_write_row(WS, i, data, format_text_red)
+            elif has_fido:    
+                self.xls_write_row(WS, i, data, format_text_green)
+            else:
+                self.xls_write_row(WS, i, data, format_text_grey)
+
+        _logger.info('End FIDO invoice export on %s' % xls_filename)
+        WB.close()
+
+        attachment_pool = self.pool.get('ir.attachment')
+        b64 = open(xls_filename, 'rb').read().encode('base64')
+        attachment_id = attachment_pool.create(cr, uid, {
+            'name': 'FIDO invoice export report',
+            'datas_fname': 'invoice_fido_report.xlsx',
+            'type': 'binary',
+            'datas': b64,
+            'partner_id': 1,
+            'res_model': 'res.partner',
+            'res_id': 1,
+            }, context=context)
+        
+        return {
+            'type' : 'ir.actions.act_url',
+            'url': '/web/binary/saveas?model=ir.attachment&field=datas&'
+                'filename_field=datas_fname&id=%s' % attachment_id,
+            'target': 'self',
+            }   
+        
     def action_print(self, cr, uid, ids, context=None):
         ''' Event for button done
         '''
-        # ---------------------------------------------------------------------
-        # Utility:
-        # ---------------------------------------------------------------------
-        def italian_date(date):
-            ''' Change ISO to Italian format
-            '''
-            if not date: 
-                return ''
-            return '%s/%s/%s' % (
-                date[8:10],
-                date[5:7],
-                date[:4],
-                )    
-                
-        def xls_write_row(WS, row, row_data, format_cell):
-            ''' Print line in XLS file            
-            '''
-            ''' Write line in excel file
-            '''
-            col = 0
-            for item in row_data:
-                WS.write(row, col, item, format_cell)
-                col += 1
-            return True
-
         if context is None: 
             context = {}
 
@@ -173,7 +341,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
         WS.set_column(10, 10, 10)
         
         # Export Header:
-        xls_write_row(WS, 0, header, format_title)        
+        self.xls_write_row(WS, 0, header, format_title)        
         
         # Export data:
         order = 'invoice_ref'
@@ -218,17 +386,17 @@ class PrintReportFIDOWizard(orm.TransientModel):
                 payment.partner_id.agent_id.name or '',
 
                 'X' if has_fido else '',
-                italian_date(payment.partner_id.fido_date),
+                self.italian_date(payment.partner_id.fido_date),
                 payment.partner_id.fido_total or '',
 
                 payment.invoice_ref,
-                italian_date(payment.invoice_date), 
-                italian_date(payment.deadline),                 
-                italian_date(fido_deadline),
+                self.italian_date(payment.invoice_date), 
+                self.italian_date(payment.deadline),                 
+                self.italian_date(fido_deadline),
                 type_db.get(payment.type, '?'),
                 payment.total,
                 ]
-            xls_write_row(WS, i, data, format_current)
+            self.xls_write_row(WS, i, data, format_current)
 
         _logger.info('End FIDO payment export on %s' % xls_filename)
         WB.close()
