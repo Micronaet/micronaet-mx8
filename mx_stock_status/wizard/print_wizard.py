@@ -325,6 +325,94 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'target': 'self',
             }
 
+    def extract_old_xls_inventory_file(self, cr, uid, ids, data=None,
+            context=None):
+        ''' Extract inventory as XLS extrenal files every category in different
+            page old version (from anagraphic)
+        '''        
+        # ---------------------------------------------------------------------
+        # Utility: 
+        # ---------------------------------------------------------------------
+        def write_header(current_WS, header):
+            ''' Write header in first line:            
+            '''
+            col = 0
+            for title in header:
+                current_WS.write(0, col, title)
+                col += 1
+            return
+            
+        def get_last_cost(product):
+            ''' Get last (supplier, cost)
+            '''
+            res = ['', 0.0]
+            last_date = False
+            for supplier in product.seller_ids:
+                for price in supplier.pricelist_ids:
+                    # TODO check is_active?!?!?
+                    if last_date == False or price.date_quotation > last_date:                        
+                        last_date = price.date_quotation
+                        res[0] = supplier.name.name
+                        res[1] = price.price
+            return res
+            
+        # ---------------------------------------------------------------------
+        #                        XLS log export:        
+        # ---------------------------------------------------------------------
+        filename = '/home/administrator/photo/output/old_inventory_table.xlsx'
+        WB = xlsxwriter.Workbook(filename)
+
+        # ---------------------------------------------------------------------
+        # Search all inventory category:
+        # ---------------------------------------------------------------------        
+        inv_pool = self.pool.get('product.product.inventory.category')
+        inv_ids = inv_pool.search(cr, uid, [], context=context)
+
+        # ---------------------------------------------------------------------
+        # Create work sheet:
+        # ---------------------------------------------------------------------
+        header = ['CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
+            'CATEGORIA', 'FORNITORE', 'INV', 'COSTO', 'TOTALE']
+        
+        # Create elemnt for empty category:
+        WS = {
+            #ID: worksheet, counter
+            0: [WB.add_worksheet('Non assegnati'), 1],
+            }
+        write_header(WS[0][0], header)
+            
+        # Create all others category:    
+        for category in inv_pool.browse(
+                cr, uid, inv_ids, context=context):
+            WS[category.id] = [WB.add_worksheet(category.name), 1]
+            write_header(WS[category.id][0], header)
+            
+        # ---------------------------------------------------------------------
+        # Populate product in correct page
+        # ---------------------------------------------------------------------
+        for product in self.pool.get(
+                'product.product').stock_status_report_get_object(
+                    cr, uid, data=data, context=context):                    
+            if product.inventory_category_id.id in WS:
+                record = WS[product.inventory_category_id.id]
+            else:
+                record = WS[0]
+            
+            supplier, cost = get_last_cost(product)
+            inventory = product.inventory_start
+            # Write data in correct WS:
+            record[0].write(record[1], 0, product.default_code)
+            record[0].write(record[1], 1, product.name)
+            record[0].write(record[1], 2, product.uom_id.name or '')
+            record[0].write(record[1], 3, product.statistic_category or '')            
+            record[0].write(record[1], 4, product.categ_id.name or '')
+            record[0].write(record[1], 5, supplier)
+            record[0].write(record[1], 6, inventory)
+            record[0].write(record[1], 7, cost)
+            record[0].write(record[1], 7, cost * inventory)
+            record[1] += 1                    
+        return True
+
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
         ''' Extract inventory as XLS extrenal files every category in different
@@ -489,6 +577,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         elif datas['mode'] == 'inventory_check_xls':
             return self.extract_xls_check_inventory_file(
                 cr, uid, ids, datas, context=context)
+        elif datas['mode'] == 'inventory_old_xls':
+            return self.extract_old_xls_inventory_file(
+                cr, uid, ids, datas, context=context)
+            
         #elif datas['mode'] == 'inventory_web':
         #    return self.extract_web_inventory_file(
         #        cr, uid, ids, datas, context=context)
@@ -543,6 +635,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('inventory', 'Inventory'),
             ('inventory_xls', 'Inventory XLS (exported not report)'),
             ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
+            ('inventory_old_xls', 'Inventario precedente valorizzato'),            
             ], 'Mode', required=True)
         }
         
