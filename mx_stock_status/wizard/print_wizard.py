@@ -426,7 +426,56 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 10, cost * inventory)
             record[0].write(record[1], 11, '' if cost else 'X')
             record[1] += 1                    
-        return True
+
+        # ---------------------------------------------------------------------
+        # Write empty page with no stock product:
+        # ---------------------------------------------------------------------
+        WS_no = WB.add_worksheet('SENZA INVENTARIO')
+        header = [
+            'CAT. INV.', 'CODICE', 'DESCRIZIONE', 'UM', 
+            'CAT. STAT.', 'CATEGORIA',
+            ]
+        product_ids = product_pool.search(cr, uid, [
+            ('mx_start_qty', '<=', 0.0), # No inventory present
+            ], context=context)
+        write_header(WS_no, header)
+        i = 0
+        for product in sorted(
+                product_pool.browse(cr, uid, product_ids, context=context),
+                key=lambda x: (
+                    x.inventory_category_id.name, 
+                    x.default_code, 
+                    x.name,
+                    )):
+            i += 1    
+            WS_no.write(i, 0, product.inventory_category_id.name)
+            WS_no.write(i, 1, product.default_code)
+            WS_no.write(i, 2, product.name)
+            WS_no.write(i, 3, product.uom_id.name or '')
+            WS_no.write(i, 4, product.statistic_category or '')            
+            WS_no.write(i, 5, product.categ_id.name or '')
+        WB.close()                    
+        
+        # ---------------------------------------------------------------------
+        # Generate attachment for return file:
+        # ---------------------------------------------------------------------        
+        attachment_pool = self.pool.get('ir.attachment')
+        b64 = open(filename, 'rb').read().encode('base64')
+        attachment_id = attachment_pool.create(cr, uid, {
+            'name': 'Inventario vecchio attachment',
+            'datas_fname': 'precedente_inventario_valorizzato.xlsx',
+            'type': 'binary',
+            'datas': b64,
+            'partner_id': 1,
+            'res_model': 'res.partner',
+            'res_id': 1,
+            }, context=context)        
+        return {
+            'type' : 'ir.actions.act_url',
+            'url': '/web/binary/saveas?model=ir.attachment&field=datas&'
+                'filename_field=datas_fname&id=%s' % attachment_id,
+            'target': 'self',
+            }
 
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
