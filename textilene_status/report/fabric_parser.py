@@ -491,7 +491,7 @@ class Parser(report_sxw.rml_parse):
         # =====================================================================
         block = 'OC (not delivered)'
         order_ids = sale_pool.search(self.cr, self.uid, [
-            ('state', 'not in', ('cancel', 'send', 'draft')),
+            ('state', 'not in', ('cancel', 'sent', 'draft')),
             ('pricelist_order', '=', False),
             ('partner_id', 'not in', exclude_partner_ids),            
             # Also forecasted order
