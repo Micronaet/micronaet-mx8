@@ -345,38 +345,47 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         def get_last_cost(product):
             ''' Get last (supplier, cost)
             '''
-            res = ['', 0.0]
-            last_date = False
+            res = [False, '', 0.0, 0] # Date, supplier, price, # 
+            i = 0
             for supplier in product.seller_ids:
                 for price in supplier.pricelist_ids:
+                    i += 1
                     # TODO check is_active?!?!?
-                    if last_date == False or price.date_quotation > last_date:                        
-                        last_date = price.date_quotation
-                        res[0] = supplier.name.name
-                        res[1] = price.price
+                    if not res[0] or price.date_quotation > res[0]:
+                        res[0] = price.date_quotation
+                        res[1] = supplier.name.name
+                        res[2] = price.price
+            res[3] = i            
             return res
             
+        # ---------------------------------------------------------------------
+        #                          START PROCEDURE:
+        # ---------------------------------------------------------------------
+        # Pool used:
+        product_pool = self.pool.get('product.product')
+        inv_pool = self.pool.get('product.product.inventory.category')
+
         # ---------------------------------------------------------------------
         #                        XLS log export:        
         # ---------------------------------------------------------------------
         filename = '/home/administrator/photo/output/old_inventory_table.xlsx'
+        _logger.warning('Create file in: %s' % filename)
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
         # Search all inventory category:
         # ---------------------------------------------------------------------        
-        inv_pool = self.pool.get('product.product.inventory.category')
         inv_ids = inv_pool.search(cr, uid, [], context=context)
 
         # ---------------------------------------------------------------------
         # Create work sheet:
         # ---------------------------------------------------------------------
         header = ['CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
-            'CATEGORIA', 'FORNITORE', 'INV', 'COSTO', 'TOTALE']
+            'CATEGORIA', 'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO', 
+            'TOTALE', 'ERRORE']
         
         # Create elemnt for empty category:
-        WS = {
-            #ID: worksheet, counter
+        WS = {#ID: worksheet, counter
             0: [WB.add_worksheet('Non assegnati'), 1],
             }
         write_header(WS[0][0], header)
@@ -390,16 +399,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
-        for product in self.pool.get(
-                'product.product').stock_status_report_get_object(
-                    cr, uid, data=data, context=context):                    
+        product_ids = product_pool.search(cr, uid, [
+            ('mx_start_qty', '>', 0.0), # Only present
+            ], context=context)
+        for product in sorted(
+                product_pool.browse(cr, uid, product_ids, context=context),
+                key=lambda x: (x.default_code, x.name)):
             if product.inventory_category_id.id in WS:
                 record = WS[product.inventory_category_id.id]
             else:
                 record = WS[0]
             
-            supplier, cost = get_last_cost(product)
-            inventory = product.inventory_start
+            date, supplier, cost, number = get_last_cost(product)
+            inventory = product.mx_start_qty
             # Write data in correct WS:
             record[0].write(record[1], 0, product.default_code)
             record[0].write(record[1], 1, product.name)
@@ -408,8 +420,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 4, product.categ_id.name or '')
             record[0].write(record[1], 5, supplier)
             record[0].write(record[1], 6, inventory)
-            record[0].write(record[1], 7, cost)
-            record[0].write(record[1], 7, cost * inventory)
+            record[0].write(record[1], 7, date)
+            record[0].write(record[1], 8, number)
+            record[0].write(record[1], 9, cost)
+            record[0].write(record[1], 10, cost * inventory)
+            record[0].write(record[1], 11, '' if cost else 'X')
             record[1] += 1                    
         return True
 
