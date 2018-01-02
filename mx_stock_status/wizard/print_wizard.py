@@ -346,18 +346,28 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ''' Get last (supplier, cost)
             '''
             res = [False, '', 0.0, 0] # Date, supplier, price, # 
-            i = 0
-            for supplier in product.seller_ids:
-                for price in supplier.pricelist_ids:
-                    i += 1
-                    # TODO check is_active?!?!?
-                    if not res[0] or price.date_quotation > res[0]:
-                        res[0] = price.date_quotation
-                        res[1] = supplier.name.name
-                        res[2] = price.price
-            res[3] = i            
-            return res
             
+            #half_bom_ids = 
+            if product.relative_type == 'half': # Product is HW
+                for line in product.half_bom_ids:
+                    price = line.product_qty * get_last_cost(
+                        line.product_id)[2]
+                    if not price: 
+                        return res # XXX 0 price means all cost is 0!
+                    res[2] += price
+            else: # Product is normal product
+                i = 0
+                for supplier in product.seller_ids:
+                    for price in supplier.pricelist_ids:
+                        i += 1
+                        # TODO check is_active?!?!?
+                        if not res[0] or price.date_quotation > res[0]:
+                            res[0] = price.date_quotation
+                            res[1] = supplier.name.name
+                            res[2] = price.price
+                res[3] = i            
+            return res
+
         # ---------------------------------------------------------------------
         #                          START PROCEDURE:
         # ---------------------------------------------------------------------
