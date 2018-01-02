@@ -362,7 +362,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                         return res # XXX 0 price means all cost is 0!
                     res[2] += price
             elif parent_code in self.parent_bom_cost:
-                import pdb; pdb.set_trace()
                 res[2] = self.parent_bom_cost[parent_code]
                 res[1] = _('Preso da DB: %s') % parent_code
             else: # Product is normal product
