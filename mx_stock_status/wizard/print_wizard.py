@@ -362,6 +362,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                         return res # XXX 0 price means all cost is 0!
                     res[2] += price
             elif parent_code in self.parent_bom_cost:
+                import pdb; pdb.set_trace()
                 res[2] = self.parent_bom_cost[parent_code]
                 res[1] = _('Preso da DB: %s') % parent_code
             else: # Product is normal product
@@ -387,18 +388,18 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Load parent bom if necessary:
         self.parent_bom_cost = {} # reset value
         if 'bom_selection' in product_pool._columns: # DB with BOM price manage 
-            product_ids = product.search(cr, uid, [
+            product_ids = product_pool.search(cr, uid, [
                 ('bom_selection', '=', True),
                 ], context=context)
             for p in product_pool.browse(
                     cr, uid, product_ids, context=context):
-                if not p.default_code:
+                default_code = p.default_code
+                if not default_code:
                     continue
-                default_code = p.default_code:
-                if default_code.statswith('MT'): # MT half worked
-                    self.parent_bom_cost[default_code[7]] = p.to_industrial
+                if default_code.startswith('MT'): # MT half worked
+                    self.parent_bom_cost[default_code[:7]] = p.to_industrial
                 else: # Product
-                    self.parent_bom_cost[default_code[6]] = p.to_industrial
+                    self.parent_bom_cost[default_code[:6]] = p.to_industrial
 
         # ---------------------------------------------------------------------
         #                        XLS log export:        
