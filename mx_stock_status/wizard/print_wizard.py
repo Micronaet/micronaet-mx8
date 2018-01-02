@@ -348,6 +348,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             res = [False, '', 0.0, 0] # Date, supplier, price, # 
             
             #half_bom_ids = 
+            default_code = product.default_code
+            if default_code.startswith('MT'):
+                parent_code = default_code[:7]
+            else:    
+                parent_code = default_code[:6]
+            
             if product.relative_type == 'half': # Product is HW
                 for line in product.half_bom_ids:
                     price = line.product_qty * get_last_cost(
@@ -355,6 +361,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     if not price: 
                         return res # XXX 0 price means all cost is 0!
                     res[2] += price
+            elif parent_code in self.parent_bom_cost:
+                res[2] = self.parent_bom_cost[parent_code]
+                res[1] = _('Preso da DB: %s') % parent_code
             else: # Product is normal product
                 i = 0
                 for supplier in product.seller_ids:
@@ -374,6 +383,22 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Pool used:
         product_pool = self.pool.get('product.product')
         inv_pool = self.pool.get('product.product.inventory.category')
+        
+        # Load parent bom if necessary:
+        self.parent_bom_cost = {} # reset value
+        if 'bom_selection' in product_pool._columns: # DB with BOM price manage 
+            product_ids = product.search(cr, uid, [
+                ('bom_selection', '=', True),
+                ], context=context)
+            for p in product_pool.browse(
+                    cr, uid, product_ids, context=context):
+                if not p.default_code:
+                    continue
+                default_code = p.default_code:
+                if default_code.statswith('MT'): # MT half worked
+                    self.parent_bom_cost[default_code[7]] = p.to_industrial
+                else: # Product
+                    self.parent_bom_cost[default_code[6]] = p.to_industrial
 
         # ---------------------------------------------------------------------
         #                        XLS log export:        
