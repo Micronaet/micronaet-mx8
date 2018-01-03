@@ -360,12 +360,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 parent_code = default_code[:6]
             
             if product.relative_type == 'half': # Product is HW
+                no_price = False
                 for line in product.half_bom_ids:
                     cost = get_last_cost(line.product_id)[2]
                     price = line.product_qty * cost
                     if not price:
-                        res[2] += 0.0 # Reset price
-                        return res # XXX 0 price means all cost is 0!
+                        no_price = True
                     res[2] += price
                     res[4] += '[%s >> q. %s x %s = %s]' % (
                         line.product_id.default_code or '',
@@ -373,6 +373,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                         cost,
                         price,
                         )
+                if no_price:
+                    res[2] = 0.0
+                    res[4] = 'UN PREZZO A ZERO!: %s' % res[4]        
                         
             elif parent_code in self.parent_bom_cost:
                 res[2] = self.parent_bom_cost[parent_code]
