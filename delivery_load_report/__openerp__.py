@@ -38,6 +38,7 @@
         #'production_accounting_external',
         'mx_partner_zone',
         'fido_order_check',
+        'inventory_status', # 03/01/2018: add for extra status mx_ fields
         'inventory_status_on_delivery',
         'delivery_selection', # Add dep for manage selection to print
         'note_manage_sale', # For extra note

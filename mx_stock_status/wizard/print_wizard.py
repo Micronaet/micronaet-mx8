@@ -433,9 +433,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Create work sheet:
         # ---------------------------------------------------------------------
-        header = ['CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
-            'CATEGORIA', 'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO', 
-            'TOTALE', 'COSTO MANUALE', 'PESO', 'ERRORE', 'NOTE']
+        header = ['CODICE', 'DESCRIZIONE', 'UM', 
+            #'CAT. STAT.', 'CATEGORIA', 
+            'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO', 
+            'TOTALE', 'COSTO MANUALE', 'PESO', 'ERRORE', 
+            'NOTE',
+            ]
         
         # Create elemnt for empty category:
         WS = {#ID: worksheet, counter
@@ -470,18 +473,18 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 0, product.default_code)
             record[0].write(record[1], 1, product.name)
             record[0].write(record[1], 2, product.uom_id.name or '')
-            record[0].write(record[1], 3, product.statistic_category or '')            
-            record[0].write(record[1], 4, product.categ_id.name or '')
-            record[0].write(record[1], 5, supplier)
-            record[0].write(record[1], 6, inventory)
-            record[0].write(record[1], 7, date)
-            record[0].write(record[1], 8, number)
-            record[0].write(record[1], 9, cost)
-            record[0].write(record[1], 10, cost * inventory)
-            record[0].write(record[1], 11, standard_price)
-            record[0].write(record[1], 12, weight)            
-            record[0].write(record[1], 13, '' if cost else 'X')
-            record[0].write(record[1], 14, note)
+            #record[0].write(record[1], 3, product.statistic_category or '')            
+            #record[0].write(record[1], 4, product.categ_id.name or '')
+            record[0].write(record[1], 3, supplier)
+            record[0].write(record[1], 4, inventory)
+            record[0].write(record[1], 5, date)
+            record[0].write(record[1], 6, number)
+            record[0].write(record[1], 7, cost)
+            record[0].write(record[1], 8, cost * inventory)
+            record[0].write(record[1], 9, standard_price)
+            record[0].write(record[1], 10, weight)            
+            record[0].write(record[1], 11, '' if cost else 'X')
+            record[0].write(record[1], 12, note)
             record[1] += 1                    
 
         # ---------------------------------------------------------------------
