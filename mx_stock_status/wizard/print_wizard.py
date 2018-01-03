@@ -346,11 +346,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ''' Get last (supplier, cost)
             '''
             res = [
-                False, # 1. Date
-                '', # 2. Supplier
-                0.0, # 3. Price
-                0, # Numer
-                '', # Note
+                False, # 0. Date
+                '', # 1. Supplier
+                0.0, # 2. Price
+                0, # 3. Numer
+                '', # 4. Note
+                product.standard_price, # 5. Manual cost
+                product.weight, # 6. weight (for pipes)
                 ] # Date, supplier, price, #
             
             default_code = product.default_code
@@ -433,7 +435,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         header = ['CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
             'CATEGORIA', 'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO', 
-            'TOTALE', 'ERRORE', 'NOTE']
+            'TOTALE', 'COSTO MANUALE', 'PESO', 'ERRORE', 'NOTE']
         
         # Create elemnt for empty category:
         WS = {#ID: worksheet, counter
@@ -461,7 +463,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 record = WS[0]
             
-            date, supplier, cost, number, note = get_last_cost(product)
+            (date, supplier, cost, number, note, standard_price, 
+                weight) = get_last_cost(product)
             inventory = product.mx_start_qty
             # Write data in correct WS:
             record[0].write(record[1], 0, product.default_code)
@@ -475,8 +478,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 8, number)
             record[0].write(record[1], 9, cost)
             record[0].write(record[1], 10, cost * inventory)
-            record[0].write(record[1], 11, '' if cost else 'X')
-            record[0].write(record[1], 12, note)
+            record[0].write(record[1], 11, standard_price)
+            record[0].write(record[1], 12, weight)            
+            record[0].write(record[1], 13, '' if cost else 'X')
+            record[0].write(record[1], 14, note)
             record[1] += 1                    
 
         # ---------------------------------------------------------------------
