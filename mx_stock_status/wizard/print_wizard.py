@@ -345,9 +345,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         def get_last_cost(product):
             ''' Get last (supplier, cost)
             '''
-            res = [False, '', 0.0, 0] # Date, supplier, price, # 
+            res = [
+                False, # 1. Date
+                '', # 2. Supplier
+                0.0, # 3. Price
+                0, # Numer
+                '', # Note
+                ] # Date, supplier, price, #
             
-            #half_bom_ids = 
             default_code = product.default_code
             if default_code.startswith('MT'):
                 parent_code = default_code[:7]
@@ -356,11 +361,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             
             if product.relative_type == 'half': # Product is HW
                 for line in product.half_bom_ids:
-                    price = line.product_qty * get_last_cost(
-                        line.product_id)[2]
-                    if not price: 
+                    cost = get_last_cost(line.product_id)[2]
+                    price = line.product_qty * cost
+                    if not price:
+                        res[2] += 0.0 # Reset price
                         return res # XXX 0 price means all cost is 0!
                     res[2] += price
+                    res[4] += '[%s >> q. %s x %s = %s]' % (
+                        line.product_id.default_code or '',
+                        line.product_qty,
+                        cost,
+                        price,
+                        )
+                        
             elif parent_code in self.parent_bom_cost:
                 res[2] = self.parent_bom_cost[parent_code]
                 res[1] = _('Preso da DB: %s') % parent_code
@@ -417,7 +430,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         header = ['CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
             'CATEGORIA', 'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO', 
-            'TOTALE', 'ERRORE']
+            'TOTALE', 'ERRORE', 'NOTE']
         
         # Create elemnt for empty category:
         WS = {#ID: worksheet, counter
@@ -436,7 +449,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         product_ids = product_pool.search(cr, uid, [
             ('mx_start_qty', '>', 0.0), # Only present
-            ], context=context)
+            ], context=context)            
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
@@ -445,7 +458,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 record = WS[0]
             
-            date, supplier, cost, number = get_last_cost(product)
+            date, supplier, cost, number, note = get_last_cost(product)
             inventory = product.mx_start_qty
             # Write data in correct WS:
             record[0].write(record[1], 0, product.default_code)
@@ -460,6 +473,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 9, cost)
             record[0].write(record[1], 10, cost * inventory)
             record[0].write(record[1], 11, '' if cost else 'X')
+            record[0].write(record[1], 12, note)
             record[1] += 1                    
 
         # ---------------------------------------------------------------------
