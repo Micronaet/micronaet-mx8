@@ -147,7 +147,9 @@ class Parser(report_sxw.rml_parse):
         else:
             period_from = '%s-09-01' % (year - 1)
             period_to = '%s-08-31' % year
-        from_0101 = '%s-12-31' % (year - 1) # Activated 31-03-2017
+            
+        # XXX Restore period from 01/09 when change year period [01/09-31/08]
+        #from_0101 = '%s-12-31' % (year - 1) # Activated 31-03-2017
             
         debug_file.write('\n\nExclude partner list:\n%s\n\n'% (
             exclude_partner_ids,))
@@ -227,7 +229,9 @@ class Parser(report_sxw.rml_parse):
                 # check direct sale:
                 # ------------------
                 # No BC before Inventory date 1/1
-                if pick.date < from_0101:
+                # XXX Restore period from as 01/09 when change year period 
+                # from 01/09 to 31/08
+                if pick.date < period_from: # XXX removed: from_0101:
                     debug_mm.write(mask % (
                         block,
                         'NOT USED',
@@ -447,9 +451,11 @@ class Parser(report_sxw.rml_parse):
                     pos = get_position_season(date)
                 
                     # USE order data:
-                    # from 1/1 changedd: 31/01/2017:
+                    # from 1/1 changed: 31/01/2017:
+                    # XXX Restore period from as 01/09 when change year period 
+                    # from 01/09 to 31/08
                     #if date > period_to or date < period_from: # extra range
-                    if date < from_0101 or date > period_to:
+                    if date < period_from or date > period_to: # XXX <from_0101
                         debug_mm.write(mask % (
                             block,
                             'NOT USED',
