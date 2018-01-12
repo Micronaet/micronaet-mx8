@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+       <!-- stock.move.extract.xls.wizard -->
+       <record id="stock_move_extract_xls_wizard_view" model="ir.ui.view">
+            <field name="name">Extract stock move</field>
+            <field name="model">stock.move.extract.xls.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Extract partner" version="7.0">
+                   <header>
+                       <button string="Cancel" special="cancel" />
+                       <button name="action_done" string="Done" type="object" icon="gtk-jump-to" class="oe_highlight" />
+                   </header>                   
+                   <group colspan="4" col="4">
+                       <field name="from_date" />
+                       <field name="to_date" />
+                       <field name="picking_type_id" />
+                       <field name="origin" />
+                       <field name="partner_id" />
+                       <field name="product_id" />
+                   </group>
+                </form>
+            </field>
+      </record>
+
+      <record model="ir.actions.act_window" id="action_stock_move_extract_xls_wizard_view">
+          <field name="name">Extract stock move XLSX</field>
+          <field name="res_model">stock.move.extract.xls.wizard</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+          <field name="view_id" ref="stock_move_extract_xls_wizard_view"/>
+      </record>      
+      
+      <menuitem 
+          parent="base.menu_base_config" 
+          id="menu__stock_move_extract_xls_wizard_view" 
+          action="action_stock_move_extract_xls_wizard_view"
+          sequence="40"
+          />
+      
+    </data>
+</openerp>

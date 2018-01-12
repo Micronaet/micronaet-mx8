@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_filter_export_xlsx
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-12 10:10+0000\n"
+"PO-Revision-Date: 2018-01-12 11:11+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: it\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#. module: stock_filter_export_xlsx
+#: view:stock.move.extract.xls.wizard:stock_filter_export_xlsx.stock_move_extract_xls_wizard_view
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: stock_filter_export_xlsx
+#: view:stock.move.extract.xls.wizard:stock_filter_export_xlsx.stock_move_extract_xls_wizard_view
+msgid "Done"
+msgstr "Esporta"
+
+#. module: stock_filter_export_xlsx
+#: view:stock.move.extract.xls.wizard:stock_filter_export_xlsx.stock_move_extract_xls_wizard_view
+msgid "Extract partner"
+msgstr "Extrai movimenti"
+
+#. module: stock_filter_export_xlsx
+#: model:ir.actions.act_window,name:stock_filter_export_xlsx.action_stock_move_extract_xls_wizard_view
+#: model:ir.ui.menu,name:stock_filter_export_xlsx.menu__stock_move_extract_xls_wizard_view
+msgid "Extract stock move XLSX"
+msgstr "Estrai movimenti XLS"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,from_date:0
+msgid "From date"
+msgstr "Dalla data"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,origin:0
+msgid "Origin"
+msgstr "Origine"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,picking_type_id:0
+msgid "Picking type"
+msgstr "Tipo di prelievo"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,product_id:0
+msgid "Product"
+msgstr "Produtto"
+
+#. module: stock_filter_export_xlsx
+#: field:stock.move.extract.xls.wizard,to_date:0
+msgid "To date"
+msgstr "Alla data"
