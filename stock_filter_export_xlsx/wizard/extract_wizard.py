@@ -102,8 +102,8 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
         column_w = [55, 20, 20, 30, 20, 25, 40, 20, 10]
         xls_pool.create_worksheet(ws_product)
         xls_pool.write_xls_line(ws_product, 0, [
-            'Partner', 'Orgine', 'Prelievo', 'Data pian.', 'Tipo', 
-            'Codice', 'Prodotto', 'Q.', 'UM'])
+            'Partner', 'Orgine', 'Prelievo', 'Data pianificata', 'Tipo', 
+            'Codice', 'Nome', 'Descrizione', 'Q.', 'UM'])
         xls_pool.column_width(ws_product, column_w)
         
         move_ids = move_pool.search(cr, uid, domain, context=context)        
@@ -121,6 +121,7 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
                     move.picking_id.min_date,
                     move.picking_id.picking_type_id.name,
                     move.product_id.default_code,
+                    move.product_id.name,
                     move.name, # Use move description
                     move.product_uom_qty, 
                     move.product_uom.name,
