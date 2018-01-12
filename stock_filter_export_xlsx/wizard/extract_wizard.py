@@ -62,7 +62,6 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
         # Create domain depend on parameter passed:
         # ---------------------------------------------------------------------        
         domain = []     
-        import pdb; pdb.set_trace()   
         # Date:        
         if wiz_browse.from_date:
             domain.append(
@@ -103,7 +102,7 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
         column_w = [55, 20, 20, 30, 20, 25, 40, 20, 10]
         xls_pool.create_worksheet(ws_product)
         xls_pool.write_xls_line(ws_product, 0, [
-            'Partner', 'Orgine', 'Prelievo', 'Data', 'Tipo', 
+            'Partner', 'Orgine', 'Prelievo', 'Data pian.', 'Tipo', 
             'Codice', 'Prodotto', 'Q.', 'UM'])
         xls_pool.column_width(ws_product, column_w)
         
