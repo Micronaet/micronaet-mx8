@@ -121,7 +121,7 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
                     move.picking_id.min_date,
                     move.picking_id.picking_type_id.name,
                     move.product_id.default_code,
-                    move.product_id.name,
+                    move.name, # Use move description
                     move.product_uom_qty, 
                     move.product_uom.name,
                     ])
