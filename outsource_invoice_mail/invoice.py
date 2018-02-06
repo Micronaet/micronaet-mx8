@@ -117,7 +117,7 @@ class AccountInvoice(orm.Model):
             DEFAULT_SERVER_DATE_FORMAT)
         line_pool = self.pool.get('account.invoice.line')        
         line_ids = line_pool.search(cr, uid, [
-            ('marketed', '=', True),
+            ('product_id.marketed', '=', True),
             ('invoice_id.date_invoice', '>=', from_date),
             ], context=context)
         if not line_ids:
