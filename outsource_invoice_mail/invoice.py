@@ -122,6 +122,7 @@ class AccountInvoice(orm.Model):
             ], context=context)
         if not line_ids:
             _logger.warning('No invoice line with marketed product!')            
+            excel_pool.close_workbook() # remove file
             return True
             
         for line in sorted(
