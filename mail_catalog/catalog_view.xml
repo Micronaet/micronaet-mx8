@@ -25,7 +25,7 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Note:" colspan="2"/>
-                                <field name="mail_catalog_note" colspan="4" nolabel="1"  placeholder="Info about catalog..."/>                        
+                                <field name="mail_catalog_note" colspan="4" nolabel="1" placeholder="Info about catalog..."/>                        
                             </group>
                         </group>
                         

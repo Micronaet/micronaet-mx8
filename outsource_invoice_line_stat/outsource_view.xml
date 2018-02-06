@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_sale_order_line_marketed_tree">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account_invoice_line_stat.view_account_invoice_line_tree" />
+            <field name="arch" type="xml">
+                <field name="type" position="before">
+                    <field name="marketed" invisible="1"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_sale_order_line_stat_marketed_search">
+            <field name="name">account.invoice.line.search</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account_invoice_line_stat.view_account_invoice_line_search"/>
+            <field name="arch" type="xml">
+                <field name="date_invoice" position="after"> 
+                    <filter name="marketed" string="Commercializzato" domain="[('marketed','=',True)]"/>
+                </field>    
+                <filter name="group_state" position="before">
+                    <filter name="group_marketed" string="Commercializzato" context="{'group_by': 'marketed'}"/>
+                </filter>    
+            </field>
+        </record>
+        
+        <!--TODO change in an external module-->
+        <record model="ir.ui.view" id="view_account_invoice_outsource_form_view">
+            <field name="name">account.invoice.outsource.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <!--account.invoice.line:-->
+                <xpath expr="//page/field[@name='invoice_line']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="marketed" invisible="1" />
+                    <button name="nothing" string="Marketed product" type="object" icon="gtk-leave-fullscreen" attrs="{'invisible': [('marketed', '=', False)]}" />            
+                </xpath>
+                <xpath expr="//page/field[@name='invoice_line']/tree" position="attributes">
+                    <attribute name="colors">blue:marketed==True</attribute>
+                </xpath>
+            </field>
+        </record>        
+    </data>
+</openerp>
+
