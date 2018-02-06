@@ -37,8 +37,8 @@
     'init_xml': [],
     'demo': [],
     'data': [
-        #'mail_manager_group.xml',
-        #'scheduler.xml',
+        'security/mail_manager_group.xml',
+        'scheduler.xml',
         ],
     'active': False,
     'installable': True,
