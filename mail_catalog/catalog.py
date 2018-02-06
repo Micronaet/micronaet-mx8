@@ -38,6 +38,31 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResPartnerDocLeaved(orm.Model):
+    """ Model name: ResPartnerDocLeaved
+    """    
+    _name = 'res.partner.doc.leaved'
+    _description = 'Document leaved'
+    _rec_name = 'date'
+    _order = 'date desc'
+    
+    _columns = {
+        'partner_id': fields.many2one(
+            'res.partner', 'Partner', 
+            required=False),
+        'date': fields.date('Date', required=True),    
+        'note': fields.char('Note', size=180),
+        'mode': fields.selection([
+            ('catalog', 'Catalog'),
+            ('banner', 'Banner'),
+            ], 'mode'),
+        }
+        
+    _defaults = {
+        'date': lambda *x: datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
+        'mode': lambda *x: 'catalog',
+        }
+
 class ResPartner(orm.Model):
     """ Model name: ResPartner
     """    
@@ -45,10 +70,12 @@ class ResPartner(orm.Model):
     
     _columns = {
         'mail_catalog': fields.boolean('Catalog'),
-        'mail_catalog_note': fields.text(
-            'Catalog note') ,
+        'mail_catalog_note': fields.text('Catalog note'),
         'mail_banner': fields.boolean('Banner'),
-        'mail_banner_note': fields.text(
-            'Banner note') ,
+        'mail_banner_note': fields.text('Banner note'),
+        'catalog_ids': fields.one2many(
+            'res.partner.doc.leaved', 'partner_id', 'Catalog leaved'),
+        #'banner_ids': fields.one2many(
+        #    'res.partner.doc.leaved', 'partner_id', 'Catalog leaved'),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

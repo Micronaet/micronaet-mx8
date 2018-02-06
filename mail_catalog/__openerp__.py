@@ -33,7 +33,7 @@
     'init_xml': [],
     'demo': [],
     'data': [
-        #'security/ir.model.access.csv',    
+        'security/ir.model.access.csv',    
         'catalog_view.xml',
         ],
     'active': False,

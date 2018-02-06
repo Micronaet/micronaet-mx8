@@ -8,10 +8,27 @@
             <field name="arch" type="xml">
                 <field name="comment" position="before">
                     <group colspan="4">
+                    
                         <separator string="Catalog:" colspan="4"/>
                         <field name="mail_catalog" />
                         <newline />
-                        <field name="mail_catalog_note" colspan="4" nolabel="1"  placeholder="Info about catalog..."/>
+                        <group colspan="4" col="4">
+                            <group colspan="2" col="2">
+                                <separator string="Leaved:" colspan="2"/>
+                                <field name="catalog_ids" colspan="1" nolabel="1">                                
+                                    <tree string="Catalog leaved" editable="bottom">
+                                        <field name="date" />
+                                        <field name="note" />
+                                        <field name="mode" invisible="1" />
+                                    </tree>
+                                </field>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Note:" colspan="2"/>
+                                <field name="mail_catalog_note" colspan="4" nolabel="1"  placeholder="Info about catalog..."/>                        
+                            </group>
+                        </group>
+                        
                         <separator string="Banner:" colspan="4"/>
                         <field name="mail_banner" />
                         <newline />

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-27 16:28+0000\n"
-"PO-Revision-Date: 2017-08-06 10:29+0100\n"
+"POT-Creation-Date: 2018-02-06 11:45+0000\n"
+"PO-Revision-Date: 2018-02-06 12:46+0100\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 1.6.10\n"
 
 #. module: mail_catalog
-#: field:res.partner,mail_banner:0
+#: field:res.partner,mail_banner:0 selection:res.partner.doc.leaved,mode:0
 msgid "Banner"
 msgstr "Banner"
 
@@ -33,9 +33,15 @@ msgid "Banner:"
 msgstr "Banner:"
 
 #. module: mail_catalog
-#: field:res.partner,mail_catalog:0
+#: field:res.partner,mail_catalog:0 selection:res.partner.doc.leaved,mode:0
 msgid "Catalog"
 msgstr "Catalogo"
+
+#. module: mail_catalog
+#: view:res.partner:mail_catalog.view_partner_form_catelog
+#: field:res.partner,catalog_ids:0
+msgid "Catalog leaved"
+msgstr "Cataloghi lasciati"
 
 #. module: mail_catalog
 #: field:res.partner,mail_catalog_note:0
@@ -48,6 +54,31 @@ msgid "Catalog:"
 msgstr "Catalogo:"
 
 #. module: mail_catalog
+#: field:res.partner.doc.leaved,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: mail_catalog
+#: field:res.partner.doc.leaved,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: mail_catalog
+#: field:res.partner.doc.leaved,date:0
+msgid "Date"
+msgstr "Data"
+
+#. module: mail_catalog
+#: model:ir.model,name:mail_catalog.model_res_partner_doc_leaved
+msgid "Document leaved"
+msgstr "Documenti lasciati"
+
+#. module: mail_catalog
+#: field:res.partner.doc.leaved,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mail_catalog
 #: view:res.partner:mail_catalog.view_partner_form_catelog
 msgid "Info about banner..."
 msgstr "Informazioni riguardo banner..."
@@ -58,6 +89,37 @@ msgid "Info about catalog..."
 msgstr "Informazioni riguardo catalogo..."
 
 #. module: mail_catalog
+#: field:res.partner.doc.leaved,note:0
+msgid "Label"
+msgstr "Etichetta"
+
+#. module: mail_catalog
+#: field:res.partner.doc.leaved,write_uid:0
+msgid "Last Updated by"
+msgstr "Aggiornato da"
+
+#. module: mail_catalog
+#: field:res.partner.doc.leaved,write_date:0
+msgid "Last Updated on"
+msgstr "Aggiornato il"
+
+#. module: mail_catalog
+#: view:res.partner:mail_catalog.view_partner_form_catelog
+msgid "Leaved:"
+msgstr "Lasciati:"
+
+#. module: mail_catalog
+#: view:res.partner:mail_catalog.view_partner_form_catelog
+msgid "Note:"
+msgstr "Note:"
+
+#. module: mail_catalog
 #: model:ir.model,name:mail_catalog.model_res_partner
+#: field:res.partner.doc.leaved,partner_id:0
 msgid "Partner"
 msgstr "Partner"
+
+#. module: mail_catalog
+#: field:res.partner.doc.leaved,mode:0
+msgid "mode"
+msgstr "modalità"
