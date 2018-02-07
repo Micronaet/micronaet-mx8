@@ -68,14 +68,19 @@ class AccountInvoice(orm.Model):
 
         row_text_red = excel_pool.get_format('text_red')
         row_number_red = excel_pool.get_format('number_red')
-        
+
+        now = datetime.now().strftime(
+            DEFAULT_SERVER_DATE_FORMAT)
+        from_date = (datetime.now() - timedelta(days=days)).strftime(
+            DEFAULT_SERVER_DATE_FORMAT)
         
         # ---------------------------------------------------------------------
         #                                  DDT
         # ---------------------------------------------------------------------
         # Title:
-        title = 'Prodotti consegnati commercializzati: [Data: %s]' % (
-            datetime.now(),
+        title = 'Prodotti consegnati commercializzati: [Da: %s a: %s]' % (
+            from_date,
+            now,
             )
         row = 0
         excel_pool.write_xls_line(
@@ -110,9 +115,6 @@ class AccountInvoice(orm.Model):
             ])
 
         # Detail:
-        now = datetime.now().strftime(
-            DEFAULT_SERVER_DATE_FORMAT)
-
         move_pool = self.pool.get('stock.move')
         move_ids = move_pool.search(cr, uid, [
             # DDT confirmed not invoiced:
@@ -156,10 +158,10 @@ class AccountInvoice(orm.Model):
         #                                  INVOICE
         # ---------------------------------------------------------------------
         # Title:
-        title = 'Prodotti fatturati commercializzati: [Data: %s]' % (
-            datetime.now(),
+        title = 'Prodotti fatturati commercializzati: [Da: %s a: %s]' % (
+            from_date,
+            now,
             )
-
         row += 2
         excel_pool.write_xls_line(
             WS_name, row, [title, ], default_format=title_text)
@@ -183,8 +185,6 @@ class AccountInvoice(orm.Model):
                 ], default_format=header_text)
 
         # Detail:
-        from_date = (datetime.now() - timedelta(days=days)).strftime(
-            DEFAULT_SERVER_DATE_FORMAT)
         line_pool = self.pool.get('account.invoice.line')        
         line_ids = line_pool.search(cr, uid, [
             ('product_id.marketed', '=', True),
