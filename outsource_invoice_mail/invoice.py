@@ -69,9 +69,90 @@ class AccountInvoice(orm.Model):
         row_text_red = excel_pool.get_format('text_red')
         row_number_red = excel_pool.get_format('number_red')
         
+        
+        # ---------------------------------------------------------------------
+        #                                  DDT
         # ---------------------------------------------------------------------
         # Title:
+        title = 'Prodotti fatturati commercializzati: [Data: %s]' % (
+            datetime.now(),
+            )
+        row = 0
+        excel_pool.write_xls_line(
+            WS_name, row, [title, ], default_format=title_text)
+        
+        # Header:
+        row += 2
+        excel_pool.write_xls_line(
+            WS_name, row, [
+                # Header:
+                'DDT Numero',
+                'Cliente',
+                'Data',
+                
+                # Detail:
+                'Codice',
+                'Descrizione',
+                'Q.',
+                #'Prezzo',
+                #'Sconti',
+                #'Subtotale',
+                ], default_format=header_text)
+
+        excel_pool.column_width(WS_name, [
+            # Header:
+            15, 40, 10,
+            
+            # Detail:
+            10, 40, 10, 
+            # Invoice detail only
+            10, 10, 10,         
+            ])
+
+        # Detail:
+        move_pool = self.pool.get('stock.move')
+        move_ids = line_pool.search(cr, uid, [
+            # DDT confirmed not invoiced:
+            ('ddt_id.state', '=', 'confirmed'),
+            ('ddt_id.invoice_id', '=', False),
+
+            ('product_id.marketed', '=', True),
+            ], context=context)
+
+        for move in sorted(
+                move_pool.browse(cr, uid, move_ids, context=context),
+                key=lambda x: (
+                    x.ddt_id.date, 
+                    x.ddt_id.partner_id.name,
+                    x.ddt_id.name,
+                    ),
+                reverse=True,
+                ):
+            row += 1
+            if move.ddt_id.date == now:
+                row_text = row_text_red                
+                row_number = row_number_red
+            else:
+                row_text = row_text_white            
+                row_number = row_number_white
+                
+            excel_pool.write_xls_line(
+                WS_name, row, [
+                    # Header:
+                    move.ddt_id.number,
+                    move.ddt_id.partner_id.name,
+                    move.ddt_id.date,
+                    
+                    # Detail:
+                    move.product_id.default_code,
+                    move.name,
+                    (move.product_uom_qty, row_number),
+                    ], default_format=row_text)
+
         # ---------------------------------------------------------------------
+        #                                  INVOICE
+        # ---------------------------------------------------------------------
+        # Title:
         title = 'Prodotti fatturati commercializzati: [Data: %s]' % (
             datetime.now(),
             )
@@ -80,14 +161,12 @@ class AccountInvoice(orm.Model):
         excel_pool.write_xls_line(
             WS_name, row, [title, ], default_format=title_text)
         
-        # ---------------------------------------------------------------------
         # Header:
-        # ---------------------------------------------------------------------
         row += 2
         excel_pool.write_xls_line(
             WS_name, row, [
                 # Header:
-                'Numero',
+                'Fattura Numero',
                 'Cliente',
                 'Data',
                 
@@ -100,17 +179,7 @@ class AccountInvoice(orm.Model):
                 'Subtotale',
                 ], default_format=header_text)
 
-        excel_pool.column_width(WS_name, [
-            # Header:
-            15, 40, 10,
-            
-            # Detail:
-            10, 40, 10, 10, 10, 10,         
-            ])
-
-        # ---------------------------------------------------------------------
         # Detail:
-        # ---------------------------------------------------------------------        
         now = datetime.now().strftime(
             DEFAULT_SERVER_DATE_FORMAT)
         from_date = (datetime.now() - timedelta(days=days)).strftime(
@@ -120,7 +189,7 @@ class AccountInvoice(orm.Model):
             ('product_id.marketed', '=', True),
             ('invoice_id.date_invoice', '>=', from_date),
             ], context=context)
-        if not line_ids:
+        if not line_ids and not move_ids:
             _logger.warning('No invoice line with marketed product!')            
             excel_pool.close_workbook() # remove file
             return True
