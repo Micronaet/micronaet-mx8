@@ -57,6 +57,7 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
         xls_pool = self.pool.get('excel.writer')
 
         wiz_browse = self.browse(cr, uid, ids, context=context)[0]
+        total_code = wiz_browse.total_code
 
         # ---------------------------------------------------------------------        
         # Create domain depend on parameter passed:
@@ -99,20 +100,23 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
             
         # Create Excel WB
         ws_product = _('Movimenti magazino')
-        column_w = [55, 20, 20, 30, 20, 25, 40, 20, 10]
         xls_pool.create_worksheet(ws_product)
         xls_pool.write_xls_line(ws_product, 0, [
             'Partner', 'Orgine', 'Prelievo', 'Data pianificata', 'Tipo', 
             'Codice', 'Nome', 'Descrizione', 'Q.', 'UM'])
-        xls_pool.column_width(ws_product, column_w)
+        xls_pool.column_width(ws_product, [55, 20, 20, 30, 20, 25, 40, 20, 10])
         
+        # Total
+        total_db = {}
         move_ids = move_pool.search(cr, uid, domain, context=context)        
         row = 0
-        _logger.warning('Total move selected: %s' % len(move_ids))
+        _logger.warning('Total move selected: %s' % len(move_ids))        
         for move in sorted(move_pool.browse(
                 cr, uid, move_ids, context=context),
                 key=lambda x: x.picking_id.min_date):
-            row += 1    
+            row += 1               
+            product = move.product_id
+            qty = move.product_uom_qty
             xls_pool.write_xls_line(
                 ws_product, row, [
                     move.picking_id.partner_id.name,
@@ -120,22 +124,49 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
                     move.picking_id.name,
                     move.picking_id.min_date,
                     move.picking_id.picking_type_id.name,
-                    move.product_id.default_code,
-                    move.product_id.name,
+                    product.default_code,
+                    product.name,
                     move.name, # Use move description
-                    move.product_uom_qty, 
+                    qty, 
                     move.product_uom.name,
                     ])
+            # Total block:
+            if total_code:
+                if product not in total_db:
+                    total_db[product] = 0.0
+                total_db[product] += qty
 
             if not(row % 100):
                 _logger.info('... Exporting: %s' % row)
-                
+        
+        # ---------------------------------------------------------------------
+        # Total code page:        
+        # ---------------------------------------------------------------------
+        if total_code:
+            row = 0
+            ws_total = _('Totali per codice')
+            xls_pool.create_worksheet(ws_total)
+            xls_pool.write_xls_line(ws_total, row, [
+                'Codice', 'Descrizione', 'Totale'])
+            xls_pool.column_width(ws_total, [20, 30, 10])
+            for product in sorted(total_db, key=lambda x: x.default_code):                
+                row += 1
+                qty = total_db[product]
+                xls_pool.write_xls_line(
+                    ws_total, row, [
+                        product.default_code,
+                        product.name,
+                        qty,
+                        ])
+            
         return xls_pool.return_attachment(
             cr, uid,
             'Movimenti di magazzino', 'movimenti_di_magazzino.xlsx', 
             context=context)
 
     _columns = {
+        'total_code': fields.boolean('Totalizzatore', 
+            help='Aggiunte pagina con totale per codice'),
         'from_date': fields.date('From date'),
         'to_date': fields.date('To date'),
         'partner_id': fields.many2one('res.partner', 'Partner'),

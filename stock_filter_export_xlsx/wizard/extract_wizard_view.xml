@@ -12,6 +12,8 @@
                        <button name="action_done" string="Done" type="object" icon="gtk-jump-to" class="oe_highlight" />
                    </header>                   
                    <group colspan="4" col="4">
+                       <field name="total_code" />
+                       <newline/>
                        <field name="from_date" />
                        <field name="to_date" />
                        <field name="picking_type_id" />
