@@ -74,7 +74,7 @@ class AccountInvoice(orm.Model):
         #                                  DDT
         # ---------------------------------------------------------------------
         # Title:
-        title = 'Prodotti fatturati commercializzati: [Data: %s]' % (
+        title = 'Prodotti consegnati commercializzati: [Data: %s]' % (
             datetime.now(),
             )
         row = 0
@@ -110,11 +110,14 @@ class AccountInvoice(orm.Model):
             ])
 
         # Detail:
+        now = datetime.now().strftime(
+            DEFAULT_SERVER_DATE_FORMAT)
+
         move_pool = self.pool.get('stock.move')
-        move_ids = line_pool.search(cr, uid, [
+        move_ids = move_pool.search(cr, uid, [
             # DDT confirmed not invoiced:
-            ('ddt_id.state', '=', 'confirmed'),
-            ('ddt_id.invoice_id', '=', False),
+            #('ddt_id.state', '=', 'confirmed'),
+            ('picking_id.ddt_id.invoice_id', '=', False),
 
             ('product_id.marketed', '=', True),
             ], context=context)
@@ -122,14 +125,14 @@ class AccountInvoice(orm.Model):
         for move in sorted(
                 move_pool.browse(cr, uid, move_ids, context=context),
                 key=lambda x: (
-                    x.ddt_id.date, 
+                    x.ddt_id.date[:10], 
                     x.ddt_id.partner_id.name,
                     x.ddt_id.name,
                     ),
                 reverse=True,
                 ):
             row += 1
-            if move.ddt_id.date == now:
+            if move.ddt_id.date[:10] == now:
                 row_text = row_text_red                
                 row_number = row_number_red
             else:
@@ -139,9 +142,9 @@ class AccountInvoice(orm.Model):
             excel_pool.write_xls_line(
                 WS_name, row, [
                     # Header:
-                    move.ddt_id.number,
+                    move.ddt_id.name,
                     move.ddt_id.partner_id.name,
-                    move.ddt_id.date,
+                    move.ddt_id.date[:10],
                     
                     # Detail:
                     move.product_id.default_code,
@@ -157,7 +160,7 @@ class AccountInvoice(orm.Model):
             datetime.now(),
             )
 
-        row = 0
+        row += 2
         excel_pool.write_xls_line(
             WS_name, row, [title, ], default_format=title_text)
         
@@ -180,8 +183,6 @@ class AccountInvoice(orm.Model):
                 ], default_format=header_text)
 
         # Detail:
-        now = datetime.now().strftime(
-            DEFAULT_SERVER_DATE_FORMAT)
         from_date = (datetime.now() - timedelta(days=days)).strftime(
             DEFAULT_SERVER_DATE_FORMAT)
         line_pool = self.pool.get('account.invoice.line')        
