@@ -75,6 +75,15 @@ class AccountInvoice(orm.Model):
             DEFAULT_SERVER_DATE_FORMAT)
 
         row = 0 # Start line
+        excel_pool.column_width(WS_name, [
+            # Header:
+            15, 40, 10,
+            
+            # Detail:
+            10, 40, 10, 
+            # Invoice detail only
+            10, 10, 10,         
+            ])
         
         # ---------------------------------------------------------------------
         #                                  DDT
@@ -91,10 +100,7 @@ class AccountInvoice(orm.Model):
 
         if move_ids:
             # Title:
-            title = 'Prodotti consegnati commercializzati: [Da: %s a: %s]' % (
-                from_date,
-                now,
-                )
+            title = 'Prodotti consegnati commercializzati (DDT aperti)'
             excel_pool.write_xls_line(
                 WS_name, row, [title, ], default_format=title_text)
             
@@ -116,15 +122,6 @@ class AccountInvoice(orm.Model):
                     #'Subtotale',
                     ], default_format=header_text)
 
-            excel_pool.column_width(WS_name, [
-                # Header:
-                15, 40, 10,
-                
-                # Detail:
-                10, 40, 10, 
-                # Invoice detail only
-                10, 10, 10,         
-                ])
 
             # Detail:
             for move in sorted(
@@ -156,6 +153,8 @@ class AccountInvoice(orm.Model):
                         move.name,
                         (move.product_uom_qty, row_number),
                         ], default_format=row_text)
+        else:
+            _logger.warning('DDT Table not writed')                
 
         # ---------------------------------------------------------------------
         #                                  INVOICE
@@ -167,7 +166,12 @@ class AccountInvoice(orm.Model):
             ('invoice_id.date_invoice', '>=', from_date),
             ], context=context)
         if not line_ids and not move_ids:
-            _logger.warning('No invoice line with marketed product!')            
+            _logger.warning('No invoice line or DDT with marketed product!')            
+            excel_pool.close_workbook() # remove file
+            return True
+
+        if not line_ids: # no print table:
+            _logger.warning('Invoice Table not writed')                
             excel_pool.close_workbook() # remove file
             return True
 
