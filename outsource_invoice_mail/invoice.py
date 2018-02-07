@@ -100,7 +100,7 @@ class AccountInvoice(orm.Model):
 
         if move_ids:
             # Title:
-            title = 'Prodotti consegnati commercializzati (DDT aperti)'
+            title = 'Prodotti commercializzati consegnati (DDT aperti)'
             excel_pool.write_xls_line(
                 WS_name, row, [title, ], default_format=title_text)
             
@@ -165,84 +165,82 @@ class AccountInvoice(orm.Model):
             ('product_id.marketed', '=', True),
             ('invoice_id.date_invoice', '>=', from_date),
             ], context=context)
+
+        if line_ids: # no print table:
+            # Title:
+            title = 'Prodotti commercializzati fatturati: [Da: %s a: %s]' % (
+                from_date, now)
+            row += 2
+            excel_pool.write_xls_line(
+                WS_name, row, [title, ], default_format=title_text)
+            
+            # Header:
+            row += 2
+            excel_pool.write_xls_line(
+                WS_name, row, [
+                    # Header:
+                    'Fattura Numero',
+                    'Cliente',
+                    'Data',
+                    
+                    # Detail:
+                    'Codice',
+                    'Descrizione',
+                    'Q.',
+                    'Prezzo',
+                    'Sconti',
+                    'Subtotale',
+                    ], default_format=header_text)
+
+            # Detail:
+            for line in sorted(
+                    line_pool.browse(cr, uid, line_ids, context=context),
+                    key=lambda x: (
+                        x.invoice_id.date_invoice, 
+                        x.invoice_id.partner_id.name,
+                        x.invoice_id.number,
+                        ),
+                    reverse=True,
+                    ):
+                row += 1
+                if line.invoice_id.date_invoice == now:
+                    row_text = row_text_red                
+                    row_number = row_number_red
+                else:
+                    row_text = row_text_white            
+                    row_number = row_number_white
+                    
+                excel_pool.write_xls_line(
+                    WS_name, row, [
+                        # Header:
+                        line.invoice_id.number,
+                        line.invoice_id.partner_id.name,
+                        line.invoice_id.date_invoice,
+                        
+                        # Detail:
+                        line.product_id.default_code,
+                        line.name,
+                        (line.quantity, row_number),
+                        (line.price_unit, row_number),
+                        (line.multi_discount_rates, row_number),
+                        (line.price_subtotal, row_number),
+                        ], default_format=row_text)
+            
+        else:        
+            _logger.warning('Invoice Table not writed')                
+
+        # Send mail:
         if not line_ids and not move_ids:
             _logger.warning('No invoice line or DDT with marketed product!')            
             excel_pool.close_workbook() # remove file
             return True
-
-        if not line_ids: # no print table:
-            _logger.warning('Invoice Table not writed')                
-            excel_pool.close_workbook() # remove file
-            return True
-
-        # Title:
-        title = 'Prodotti fatturati commercializzati: [Da: %s a: %s]' % (
-            from_date,
-            now,
-            )
-        row += 2
-        excel_pool.write_xls_line(
-            WS_name, row, [title, ], default_format=title_text)
-        
-        # Header:
-        row += 2
-        excel_pool.write_xls_line(
-            WS_name, row, [
-                # Header:
-                'Fattura Numero',
-                'Cliente',
-                'Data',
-                
-                # Detail:
-                'Codice',
-                'Descrizione',
-                'Q.',
-                'Prezzo',
-                'Sconti',
-                'Subtotale',
-                ], default_format=header_text)
-
-        # Detail:
-        for line in sorted(
-                line_pool.browse(cr, uid, line_ids, context=context),
-                key=lambda x: (
-                    x.invoice_id.date_invoice, 
-                    x.invoice_id.partner_id.name,
-                    x.invoice_id.number,
-                    ),
-                reverse=True,
-                ):
-            row += 1
-            if line.invoice_id.date_invoice == now:
-                row_text = row_text_red                
-                row_number = row_number_red
-            else:
-                row_text = row_text_white            
-                row_number = row_number_white
-                
-            excel_pool.write_xls_line(
-                WS_name, row, [
-                    # Header:
-                    line.invoice_id.number,
-                    line.invoice_id.partner_id.name,
-                    line.invoice_id.date_invoice,
-                    
-                    # Detail:
-                    line.product_id.default_code,
-                    line.name,
-                    (line.quantity, row_number),
-                    (line.price_unit, row_number),
-                    (line.multi_discount_rates, row_number),
-                    (line.price_subtotal, row_number),
-                    ], default_format=row_text)
-        
-        excel_pool.send_mail_to_group(cr, uid, 
-            'outsource_invoice_mail.'
-            'group_report_mail_marketed_product_manager',
-            'Righe fattura con prodotti commercializzati', 
-            'Elenco righe fatture con prodotti commercializzati.', 
-            'commercializzati.xlsx', # Mail data
-            context=None)
-        return True
+        else:            
+            excel_pool.send_mail_to_group(cr, uid, 
+                'outsource_invoice_mail.'
+                'group_report_mail_marketed_product_manager',
+                'Righe fattura con prodotti commercializzati', 
+                'Elenco righe fatture con prodotti commercializzati.', 
+                'commercializzati.xlsx', # Mail data
+                context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
