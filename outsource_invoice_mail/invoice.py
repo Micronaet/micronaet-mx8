@@ -73,6 +73,8 @@ class AccountInvoice(orm.Model):
             DEFAULT_SERVER_DATE_FORMAT)
         from_date = (datetime.now() - timedelta(days=days)).strftime(
             DEFAULT_SERVER_DATE_FORMAT)
+
+        row = 0 # Start line
         
         # ---------------------------------------------------------------------
         #                                  DDT
@@ -93,7 +95,6 @@ class AccountInvoice(orm.Model):
                 from_date,
                 now,
                 )
-            row = 0
             excel_pool.write_xls_line(
                 WS_name, row, [title, ], default_format=title_text)
             
