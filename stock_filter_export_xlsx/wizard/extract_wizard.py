@@ -148,7 +148,7 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
             xls_pool.create_worksheet(ws_total)
             xls_pool.write_xls_line(ws_total, row, [
                 'Codice', 'Descrizione', 'Totale'])
-            xls_pool.column_width(ws_total, [20, 30, 10])
+            xls_pool.column_width(ws_total, [20, 45, 10])
             for product in sorted(total_db, key=lambda x: x.default_code):                
                 row += 1
                 qty = total_db[product]
