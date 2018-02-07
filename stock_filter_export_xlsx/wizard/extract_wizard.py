@@ -92,19 +92,20 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
                 ('picking_id.picking_type_id', '=',
                     wiz_browse.picking_type_id.id),
                 )
-
-        # Last filter:
-        domain.extend([
-            ('state', '=', 'done'),
-            ])
+        if wiz_browse.state == 'confirmed':            
+            domain.extend([
+                ('state', '=', 'done'),
+                ])
+        # else all no state filter        
             
         # Create Excel WB
         ws_product = _('Movimenti magazino')
         xls_pool.create_worksheet(ws_product)
         xls_pool.write_xls_line(ws_product, 0, [
             'Partner', 'Orgine', 'Prelievo', 'Data pianificata', 'Tipo', 
-            'Codice', 'Nome', 'Descrizione', 'Q.', 'UM'])
-        xls_pool.column_width(ws_product, [55, 20, 20, 30, 20, 25, 40, 20, 10])
+            'Codice', 'Nome', 'Descrizione', 'Q.', 'UM', 'Stato'])
+        xls_pool.column_width(ws_product, [
+            55, 20, 20, 30, 20, 25, 40, 20, 10, 12])
         
         # Total
         total_db = {}
@@ -129,6 +130,7 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
                     move.name, # Use move description
                     qty, 
                     move.product_uom.name,
+                    move.state,
                     ])
             # Total block:
             if total_code:
@@ -167,6 +169,10 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
     _columns = {
         'total_code': fields.boolean('Totalizzatore', 
             help='Aggiunte pagina con totale per codice'),
+        'state': fields.selection([
+            ('all', 'Tutti'),
+            ('confirmed', 'Confermati'),
+            ], 'Stato', required=True),
         'from_date': fields.date('From date'),
         'to_date': fields.date('To date'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
@@ -176,4 +182,8 @@ class StockMoveExtractXlsWizard(orm.TransientModel):
             'stock.picking.type', 'Picking type', required=False),
         # TODO state?
         }
+        
+    _defaults = {
+        'state': lambda *x: 'confirmed',
+        }    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
