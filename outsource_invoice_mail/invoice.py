@@ -77,44 +77,7 @@ class AccountInvoice(orm.Model):
         # ---------------------------------------------------------------------
         #                                  DDT
         # ---------------------------------------------------------------------
-        # Title:
-        title = 'Prodotti consegnati commercializzati: [Da: %s a: %s]' % (
-            from_date,
-            now,
-            )
-        row = 0
-        excel_pool.write_xls_line(
-            WS_name, row, [title, ], default_format=title_text)
-        
-        # Header:
-        row += 2
-        excel_pool.write_xls_line(
-            WS_name, row, [
-                # Header:
-                'DDT Numero',
-                'Cliente',
-                'Data',
-                
-                # Detail:
-                'Codice',
-                'Descrizione',
-                'Q.',
-                #'Prezzo',
-                #'Sconti',
-                #'Subtotale',
-                ], default_format=header_text)
-
-        excel_pool.column_width(WS_name, [
-            # Header:
-            15, 40, 10,
-            
-            # Detail:
-            10, 40, 10, 
-            # Invoice detail only
-            10, 10, 10,         
-            ])
-
-        # Detail:
+        # Load data:
         move_pool = self.pool.get('stock.move')
         move_ids = move_pool.search(cr, uid, [
             # DDT confirmed not invoiced:
@@ -124,39 +87,89 @@ class AccountInvoice(orm.Model):
             ('product_id.marketed', '=', True),
             ], context=context)
 
-        for move in sorted(
-                move_pool.browse(cr, uid, move_ids, context=context),
-                key=lambda x: (
-                    x.ddt_id.date[:10], 
-                    x.ddt_id.partner_id.name,
-                    x.ddt_id.name,
-                    ),
-                reverse=True,
-                ):
-            row += 1
-            if move.ddt_id.date[:10] == now:
-                row_text = row_text_red                
-                row_number = row_number_red
-            else:
-                row_text = row_text_white            
-                row_number = row_number_white
-                
+        if move_ids:
+            # Title:
+            title = 'Prodotti consegnati commercializzati: [Da: %s a: %s]' % (
+                from_date,
+                now,
+                )
+            row = 0
+            excel_pool.write_xls_line(
+                WS_name, row, [title, ], default_format=title_text)
+            
+            # Header:
+            row += 2
             excel_pool.write_xls_line(
                 WS_name, row, [
                     # Header:
-                    move.ddt_id.name,
-                    move.ddt_id.partner_id.name,
-                    move.ddt_id.date[:10],
+                    'DDT Numero',
+                    'Cliente',
+                    'Data',
                     
                     # Detail:
-                    move.product_id.default_code,
-                    move.name,
-                    (move.product_uom_qty, row_number),
-                    ], default_format=row_text)
+                    'Codice',
+                    'Descrizione',
+                    'Q.',
+                    #'Prezzo',
+                    #'Sconti',
+                    #'Subtotale',
+                    ], default_format=header_text)
+
+            excel_pool.column_width(WS_name, [
+                # Header:
+                15, 40, 10,
+                
+                # Detail:
+                10, 40, 10, 
+                # Invoice detail only
+                10, 10, 10,         
+                ])
+
+            # Detail:
+            for move in sorted(
+                    move_pool.browse(cr, uid, move_ids, context=context),
+                    key=lambda x: (
+                        x.ddt_id.date[:10], 
+                        x.ddt_id.partner_id.name,
+                        x.ddt_id.name,
+                        ),
+                    reverse=True,
+                    ):
+                row += 1
+                if move.ddt_id.date[:10] == now:
+                    row_text = row_text_red                
+                    row_number = row_number_red
+                else:
+                    row_text = row_text_white            
+                    row_number = row_number_white
+                    
+                excel_pool.write_xls_line(
+                    WS_name, row, [
+                        # Header:
+                        move.ddt_id.name,
+                        move.ddt_id.partner_id.name,
+                        move.ddt_id.date[:10],
+                        
+                        # Detail:
+                        move.product_id.default_code,
+                        move.name,
+                        (move.product_uom_qty, row_number),
+                        ], default_format=row_text)
 
         # ---------------------------------------------------------------------
         #                                  INVOICE
         # ---------------------------------------------------------------------
+        # Load data:
+        line_pool = self.pool.get('account.invoice.line')        
+        line_ids = line_pool.search(cr, uid, [
+            ('product_id.marketed', '=', True),
+            ('invoice_id.date_invoice', '>=', from_date),
+            ], context=context)
+        if not line_ids and not move_ids:
+            _logger.warning('No invoice line with marketed product!')            
+            excel_pool.close_workbook() # remove file
+            return True
+
         # Title:
         title = 'Prodotti fatturati commercializzati: [Da: %s a: %s]' % (
             from_date,
@@ -185,16 +198,6 @@ class AccountInvoice(orm.Model):
                 ], default_format=header_text)
 
         # Detail:
-        line_pool = self.pool.get('account.invoice.line')        
-        line_ids = line_pool.search(cr, uid, [
-            ('product_id.marketed', '=', True),
-            ('invoice_id.date_invoice', '>=', from_date),
-            ], context=context)
-        if not line_ids and not move_ids:
-            _logger.warning('No invoice line with marketed product!')            
-            excel_pool.close_workbook() # remove file
-            return True
-            
         for line in sorted(
                 line_pool.browse(cr, uid, line_ids, context=context),
                 key=lambda x: (
