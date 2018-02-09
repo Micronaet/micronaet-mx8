@@ -60,6 +60,7 @@ class AccountInvoice(orm.Model):
         # ---------------------------------------------------------------------
         # Format used:
         # ---------------------------------------------------------------------
+        has_today = False # Not today event (for subject)
         title_text = excel_pool.get_format('title')
         header_text = excel_pool.get_format('header')
         
@@ -135,6 +136,7 @@ class AccountInvoice(orm.Model):
                     ):
                 row += 1
                 if move.ddt_id.date[:10] == now:
+                    has_today = True
                     row_text = row_text_red                
                     row_number = row_number_red
                 else:
@@ -204,6 +206,7 @@ class AccountInvoice(orm.Model):
                     ):
                 row += 1
                 if line.invoice_id.date_invoice == now:
+                    has_today = True
                     row_text = row_text_red                
                     row_number = row_number_red
                 else:
@@ -238,7 +241,9 @@ class AccountInvoice(orm.Model):
             excel_pool.send_mail_to_group(cr, uid, 
                 'outsource_invoice_mail.'
                 'group_report_mail_marketed_product_manager',
-                'Righe fattura con prodotti commercializzati', 
+                'Righe fattura con prodotti commercializzati [%s]' % (
+                    'PRESENTE OGGI' if has_today else 'NESSUNA NOVITA\'',
+                    ), 
                 'Elenco righe fatture con prodotti commercializzati.', 
                 'commercializzati.xlsx', # Mail data
                 context=None)
