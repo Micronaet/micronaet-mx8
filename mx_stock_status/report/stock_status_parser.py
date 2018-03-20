@@ -228,8 +228,19 @@ class Parser(report_sxw.rml_parse):
             'get_filter': self.get_filter,
             'get_purchase_last_date': self.get_purchase_last_date,
             'get_duty_for_product': self.get_duty_for_product,
+            'clean_gamma': self.clean_gamma,
         })
 
+    def clean_gamma(self, gamma):
+        ''' Clean some gamma terms
+        '''
+        if gamma == 'Fuori catalogo':
+            return 'OUT'
+        elif gamma == 'Catalogo':
+            return 'Cat.'
+        else:
+            return gamma
+            
     def get_duty_for_product(self, product):
         ''' Get duty info for product (proxy)
         '''
