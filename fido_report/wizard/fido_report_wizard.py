@@ -149,6 +149,7 @@ class PrintReportFIDOWizard(orm.TransientModel):
             _(u'Numero'), 
             _(u'Data'), 
             _(u'Imponibile'),
+            _(u'Totale fatt.'),
             _(u'Città'),
             _(u'Nazione'),
             _(u'FIDO'),
@@ -162,12 +163,13 @@ class PrintReportFIDOWizard(orm.TransientModel):
         WS.set_column(1, 1, 15)
         WS.set_column(2, 2, 8)
         WS.set_column(3, 3, 10)
-        WS.set_column(4, 4, 25)
-        WS.set_column(5, 5, 15)
-        WS.set_column(6, 6, 6)
+        WS.set_column(4, 4, 10)
+        WS.set_column(5, 5, 25)
+        WS.set_column(6, 6, 15)
         WS.set_column(7, 7, 6)
-        WS.set_column(8, 8, 10)
-        WS.set_column(8, 8, 11)
+        WS.set_column(8, 8, 6)
+        WS.set_column(9, 9, 10)
+        WS.set_column(10, 10, 11)
         
         # Export Header:
         self.xls_write_row(WS, 0, header, format_title)        
@@ -197,11 +199,17 @@ class PrintReportFIDOWizard(orm.TransientModel):
             # Read parameter:
             partner = invoice.partner_id
             has_fido = partner.fido_total > 0
+            if invoice.type == 'out_refund':
+                sign = -1
+            else:
+                sign = +1
+                
             data = [
                 partner.name,
                 invoice.number,
                 self.italian_date(invoice.date_invoice),
-                invoice.amount_untaxed,
+                sign * invoice.amount_untaxed,
+                sign * invoice.amount_total,
                 '%s (%s)' % (
                     partner.city,
                     partner.state_id.name if partner.state_id else '',
