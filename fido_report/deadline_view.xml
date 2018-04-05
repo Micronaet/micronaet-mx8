@@ -11,8 +11,8 @@
                 <filter string="Non Assicurato" domain="[('fido_deadline','&lt;=', datetime.datetime.now().strftime('%Y-%m-%d'))]" />
                 <filter string="Assicurato" domain="[('fido_deadline','&gt;', datetime.datetime.now().strftime('%Y-%m-%d'))]" />
             </filter>        
-            <filter string="Deadline" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'deadline'}">
-                <filter string="Data assicurazione" domain="[]" context="{'group_by':'fido_deadline'}"/>
+            <filter string="Deadline" position="after">
+                <filter string="Data assicurazione" context="{'group_by':'fido_deadline'}"/>
             </filter>
         </field>
     </record>    
