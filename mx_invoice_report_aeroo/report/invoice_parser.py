@@ -140,6 +140,7 @@ class Parser(report_sxw.rml_parse):
 
             res = ''
             if self.last_picking.ddt_id:
+                # Same name as DDT report:
                 name = self.last_picking.ddt_id.name
                 name_ids = name.split('/')
                 if len(name_ids) == 4 and name_ids[2].startswith('2'):# and \
