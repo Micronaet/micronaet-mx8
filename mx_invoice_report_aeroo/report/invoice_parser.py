@@ -143,11 +143,11 @@ class Parser(report_sxw.rml_parse):
                 name = self.last_picking.ddt_id.name
                 name_ids = name.split('/')
                 if len(name_ids) == 4 and name_ids[2].startswith('2'):# and \
-                    #    len(name_ids[2]) == 4:
+                    if len(name_ids[2]) == 5: # 2016S mode season
+                        name_ids.append('S')
+                
                     del(name_ids[2])
                     name = '/'.join(name_ids)    
-                    if len(name_ids[2]) == 5: # 2016S mode season
-                        name += '/S'
                 
                 res += ' DDT: %s (%s/%s/%s) ' % (
                     name,
