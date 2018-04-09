@@ -146,6 +146,8 @@ class Parser(report_sxw.rml_parse):
                     #    len(name_ids[2]) == 4:
                     del(name_ids[2])
                     name = '/'.join(name_ids)    
+                    if len(name_ids[2]) == 5: # 2016S mode season
+                        name += '/S'
                 
                 res += ' DDT: %s (%s/%s/%s) ' % (
                     name,
