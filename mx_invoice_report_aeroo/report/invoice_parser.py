@@ -140,8 +140,15 @@ class Parser(report_sxw.rml_parse):
 
             res = ''
             if self.last_picking.ddt_id:
+                name = self.last_picking.ddt_id.name
+                name_ids = name.split('/')
+                if len(name_ids) == 4 and name_ids[2].startswith('2') and \
+                        len(name_ids[2]) == 4:
+                    del(name_ids[2])
+                    name = '/'.join(name_ids)    
+                
                 res += ' DDT: %s (%s/%s/%s) ' % (
-                    self.last_picking.ddt_id.name,
+                    name,
                     self.last_picking.ddt_id.date[8:10],
                     self.last_picking.ddt_id.date[5:7],
                     self.last_picking.ddt_id.date[0:4],
