@@ -142,8 +142,8 @@ class Parser(report_sxw.rml_parse):
             if self.last_picking.ddt_id:
                 name = self.last_picking.ddt_id.name
                 name_ids = name.split('/')
-                if len(name_ids) == 4 and name_ids[2].startswith('2') and \
-                        len(name_ids[2]) == 4:
+                if len(name_ids) == 4 and name_ids[2].startswith('2'):# and \
+                    #    len(name_ids[2]) == 4:
                     del(name_ids[2])
                     name = '/'.join(name_ids)    
                 
