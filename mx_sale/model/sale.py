@@ -339,6 +339,7 @@ class SaleOrderLine(orm.Model):
                 #if move.picking_id.ddt_number: # was marked as DDT
                 # TODO check UOM!!! for 
                 res[line.id] += move.product_uos_qty
+                print line.product_id.default_code, move.product_uos_qty
         return res
 
     _columns = {
