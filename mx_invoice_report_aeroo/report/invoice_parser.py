@@ -150,6 +150,7 @@ class Parser(report_sxw.rml_parse):
                     del(name_ids[2])
                     name = '/'.join(name_ids)    
                 
+                name = name.lstrip('BC/')
                 res += ' DDT: %s (%s/%s/%s) ' % (
                     name,
                     self.last_picking.ddt_id.date[8:10],
