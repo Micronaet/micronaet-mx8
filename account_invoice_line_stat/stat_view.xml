@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_res_partner_force_country_form">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="website" position="after">
+                    <button name="force_country_on_invoice_line" string="Aggiorna nazione righe fattura" type="object" />     
+                    <button name="force_missed_country_invoice_line" string="Aggiorna righe senza nazione" type="object" />                         
+                </field>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_account_invoice_line_search">
              <field name="name">account.invoice.line.search</field>
              <field name="model">account.invoice.line</field>

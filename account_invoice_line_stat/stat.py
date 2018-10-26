@@ -37,6 +37,55 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResPartner(orm.Model):
+    """ Add button procedure
+    """
+    _inherit = 'res.partner'
+    
+    def force_missed_country_invoice_line(self, cr, uid, ids, context=None):
+        ''' Update this country partner in invoice line
+        '''
+        line_pool = self.pool.get('account.invoice.line')
+        line_ids = line_pool.search(cr, uid, [
+            ('country_id', '=', False),
+            ], context=context)
+            
+        res = {}
+        print 'Updating %s invoice line' % len(line_ids)
+        for line in line_pool.browse(cr, uid, line_ids, context=context):
+            try:
+                res[line.id] = line.invoice_id.partner_id.country_id.id
+            except:
+                continue    
+
+        for line_id, country_id in res.iteritems():
+            line_pool.write(cr, uid, line_id, {
+                'country_id': country_id,
+                }, context=context)        
+        return True
+
+    def force_country_on_invoice_line(self, cr, uid, ids, context=None):
+        ''' Update this country partner in invoice line
+        '''
+        line_pool = self.pool.get('account.invoice.line')
+        line_ids = line_pool.search(cr, uid, [
+            ('invoice_id.partner_id', '=', ids[0])
+            ], context=context)
+            
+        res = {}
+        print 'Updating %s invoice line' % len(line_ids)
+        for line in line_pool.browse(cr, uid, line_ids, context=context):
+            try:
+                res[line.id] = line.invoice_id.partner_id.country_id.id
+            except:
+                continue    
+
+        for line_id, country_id in res.iteritems():
+            line_pool.write(cr, uid, line_id, {
+                'country_id': country_id,
+                }, context=context)        
+        return True
+
 class AccountInvoiceLine(orm.Model):
     """ Model name: Account invoice line
     """    
