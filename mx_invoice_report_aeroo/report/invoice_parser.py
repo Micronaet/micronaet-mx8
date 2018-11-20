@@ -47,6 +47,7 @@ class Parser(report_sxw.rml_parse):
             'relink_order': self.relink_order,
             'proforma_mode': self.proforma_mode,
             'get_imponibile_mode': self.get_imponibile_mode,
+            'template_substitute': self.template_substitute,
             
             # Proforma:
             'get_tax_line': self.get_tax_line,
@@ -59,6 +60,16 @@ class Parser(report_sxw.rml_parse):
         })
         self.last_picking = False # TODO is reset all reports?
 
+    def template_substitute(self, invoice, data):
+        ''' Replace data passed with invoice data
+        '''
+        if not data:
+            return data
+
+        data = data.replace('{date_invoice}', invoice.date_invoice)    
+        # TODO other substitution?
+        return data
+        
     def get_line_number(self, reset=False):
         ''' Get total line or reset number
         '''
