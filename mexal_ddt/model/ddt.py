@@ -29,8 +29,7 @@ import logging
 import openerp
 import openerp.netsvc as netsvc
 import openerp.addons.decimal_precision as dp
-#from openerp import models
-from openerp.osv import fields, osv, expression, orm#, models
+from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import SUPERUSER_ID, api
