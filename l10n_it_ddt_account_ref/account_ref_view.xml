@@ -1,6 +1,48 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record id="view_goods_description_account_tree" model="ir.ui.view">
+            <field name="name">stock.picking.goods_description.tree</field>
+            <field name="model">stock.picking.goods_description</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_goods_description_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+        <record id="view_goods_description_account_form" model="ir.ui.view">
+            <field name="name">stock.picking.goods_description.form</field>
+            <field name="model">stock.picking.goods_description</field>
+            <field name="inherit_id" ref="l10n_it_ddt.stock_goods_description_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_transportation_reason_account_tree" model="ir.ui.view">
+            <field name="name">stock.picking.transportation_reason.tree</field>
+            <field name="model">stock.picking.transportation_reason</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_transportation_reason_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+        <record id="view_transportation_reason_account_form" model="ir.ui.view">
+            <field name="name">stock.picking.transportation_reason.form</field>
+            <field name="model">stock.picking.transportation_reason</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_transportation_reason_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="account_ref" />
+                </field>
+            </field>
+        </record>
+
         <record id="view_carriage_condition_account_tree" model="ir.ui.view">
             <field name="name">stock.picking.carriage_condition.tree</field>
             <field name="model">stock.picking.carriage_condition</field>

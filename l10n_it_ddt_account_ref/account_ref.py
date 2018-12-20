@@ -42,14 +42,33 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class StockPickingGoodsDescription(orm.Model):
+    ''' Add extra account reference
+    '''
+    _inherit = 'stock.picking.goods_description'
+    # Aspetto esteriore beni
+    
+    _columns = {
+        'account_ref': fields.char('Account ref', size=2),
+        }
+
+class StockPickingTransportationReason(orm.Model):
+    ''' Add extra account reference
+    '''
+    _inherit = 'stock.picking.transportation_reason'
+    # Causali di movimento magazzino
+    
+    _columns = {
+        'account_ref': fields.char('Account ref', size=2),
+        }
 
 class StockPickingCarriageCondition(orm.Model):
     ''' Add extra account reference
     '''
-    _inherit = "stock.picking.carriage_condition"
+    _inherit = 'stock.picking.carriage_condition'
     
     _columns = {
-        'account_ref': fields.char('Account ref', size=10),
+        'account_ref': fields.char('Account ref', size=1),
         }
 
 class StockPickingTransportationMethod(orm.Model):
@@ -59,7 +78,7 @@ class StockPickingTransportationMethod(orm.Model):
     _inherit = 'stock.picking.transportation_method'
 
     _columns = {
-        'account_ref': fields.char('Account ref', size=10),
+        'account_ref': fields.char('Account ref', size=1),
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
