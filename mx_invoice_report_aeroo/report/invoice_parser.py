@@ -22,12 +22,91 @@
 #
 ##############################################################################
 import logging
+from openerp.osv import fields, osv, expression, orm
 from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from openerp.tools.translate import _
 
 
 _logger = logging.getLogger(__name__)
+
+
+
+class ProductProduct(orm.Model):
+    """ Model name: ProductProduct
+    """
+    
+    _inherit = 'product.product'
+    
+    def _xmlrpc_get_partic_description(self, cr, uid, product_id, 
+            partner_id, context=None):
+        ''' Get partic description
+        '''
+        # TODO optimize
+        partic_pool = self.pool.get('res.partner.product.partic')
+        res = ''
+        partic_ids = partic_pool.search(cr, uid, [
+            ('product_id', '=', product_id),
+            ('partner_id', '=', partner_id),
+            ])
+        if not partic_ids:
+            return res
+            
+        partic_proxy = partic_pool.browse(
+            cr, uid, partic_ids, context=context)[0]
+        res = '%s %s' % (
+            partic_proxy.partner_code or '', 
+            partic_proxy.partner_description or '',
+            )
+        return res.strip()
+        
+class StockPicking(orm.Model):
+    """ Model name: StockPicking
+    """
+    
+    _inherit = 'stock.picking'
+    
+    # -------------------------------------------------------------------------
+    # Utility:
+    # -------------------------------------------------------------------------
+    def write_reference_from_picking(self, picking):
+        ''' Extract row reference for picking passed
+        '''
+        try:
+            if not picking:
+                return _('No ref. ')
+
+            res = ''
+            if picking.ddt_id:
+                # Same name as DDT report:
+                name = picking.ddt_id.name
+                name_ids = name.split('/')
+                if len(name_ids) == 4 and name_ids[2].startswith('2'):# and \
+                    if len(name_ids[2]) == 5: # 2016S mode season
+                        name_ids.append('S')
+                
+                    del(name_ids[2])
+                    name = '/'.join(name_ids)    
+                
+                name = name.lstrip('BC/')
+                res += ' DDT: %s (%s/%s/%s) ' % (
+                    name,
+                    picking.ddt_id.date[8:10],
+                    picking.ddt_id.date[5:7],
+                    picking.ddt_id.date[0:4],
+                    )
+            if picking.sale_id:
+                res += _(' Order: %s%s ') % (
+                    picking.sale_id.name,
+                    _(' (Your ref.: %s )') % (
+                        picking.sale_id.client_order_ref) \
+                        if picking.sale_id.client_order_ref else '',
+                    )
+            return res            
+        except:
+            return _(' Reference error ')
+        
+        
 
 class Parser(report_sxw.rml_parse):
     counters = {}
@@ -55,6 +134,7 @@ class Parser(report_sxw.rml_parse):
             # Utility:
             'return_note': self.return_note,
             
+            # OC, DDT, OC customer ref DATA:
             'check_pick_change': self.check_pick_change,
             'write_reference': self.write_reference,
         })
@@ -145,39 +225,8 @@ class Parser(report_sxw.rml_parse):
     def write_reference(self):
         ''' Write reference for change pick
         '''
-        try:
-            if not self.last_picking.id:
-                return _('No ref. ')
-
-            res = ''
-            if self.last_picking.ddt_id:
-                # Same name as DDT report:
-                name = self.last_picking.ddt_id.name
-                name_ids = name.split('/')
-                if len(name_ids) == 4 and name_ids[2].startswith('2'):# and \
-                    if len(name_ids[2]) == 5: # 2016S mode season
-                        name_ids.append('S')
-                
-                    del(name_ids[2])
-                    name = '/'.join(name_ids)    
-                
-                name = name.lstrip('BC/')
-                res += ' DDT: %s (%s/%s/%s) ' % (
-                    name,
-                    self.last_picking.ddt_id.date[8:10],
-                    self.last_picking.ddt_id.date[5:7],
-                    self.last_picking.ddt_id.date[0:4],
-                    )
-            if self.last_picking.sale_id:
-                res += _(' Order: %s%s ') % (
-                    self.last_picking.sale_id.name,
-                    _(' (Your ref.: %s )') % (
-                        self.last_picking.sale_id.client_order_ref) \
-                        if self.last_picking.sale_id.client_order_ref else '',
-                    )
-            return res            
-        except:
-            return _(' Reference error ')
+        return self.pool.get('stock.picking').write_reference_from_picking(
+            self.last_picking)
 
     def return_note(self, note):
         ''' Check if exist and after return \n note
@@ -193,22 +242,8 @@ class Parser(report_sxw.rml_parse):
     def get_partic_description(self, partner_id, product_id):
         ''' Check if partner has partic description
         '''
-        # TODO optimize
-        partic_pool = self.pool.get('res.partner.product.partic')
-        res = ''
-        partic_ids = partic_pool.search(self.cr, self.uid, [
-            ('product_id', '=', product_id),
-            ('partner_id', '=', partner_id),
-            ])
-        if not partic_ids:
-            return res
-            
-        partic_proxy = partic_pool.browse(self.cr, self.uid, partic_ids)[0]
-        res = '%s %s' % (
-            partic_proxy.partner_code or '', 
-            partic_proxy.partner_description or '',
-            )
-        return res.strip()
+        return self.pool.get('product.product')._xmlrpc_get_partic_description(
+            self.cr, self.uid, product_id, partner_id)
 
     def get_tax_line(self, sol):
         ''' Tax line for order / proforma invoice        

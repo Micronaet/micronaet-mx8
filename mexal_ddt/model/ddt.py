@@ -29,7 +29,8 @@ import logging
 import openerp
 import openerp.netsvc as netsvc
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields, osv, expression, orm
+#from openerp import models
+from openerp.osv import fields, osv, expression, orm#, models
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import SUPERUSER_ID, api
@@ -101,4 +102,5 @@ class StockPicking(orm.Model):
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
             help='Partner bank account used for payment'),        
         }
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

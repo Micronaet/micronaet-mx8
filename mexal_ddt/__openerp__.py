@@ -33,6 +33,7 @@
         'stock',        
         'sale_stock',
         'stock_account',
+        'l10n_it_ddt',
         ],
     'init_xml': [],
     'demo': [],
