@@ -6,7 +6,7 @@
             <field name="model">stock.picking.carriage_condition</field>
             <field name="inherit_id" ref="l10n_it_ddt.view_carriage_condition_tree"/>
             <field name="arch" type="xml">
-                <field name="name" position="after"/>
+                <field name="name" position="after">
                     <field name="account_ref" />
                 </field>
             </field>
@@ -16,7 +16,7 @@
             <field name="model">stock.picking.carriage_condition</field>
             <field name="inherit_id" ref="l10n_it_ddt.view_carriage_condition_form"/>
             <field name="arch" type="xml">
-                <field name="name" position="after"/>
+                <field name="name" position="after">
                     <field name="account_ref" />
                 </field>
             </field>
@@ -27,7 +27,7 @@
             <field name="model">stock.picking.transportation_method</field>
             <field name="inherit_id" ref="l10n_it_ddt.view_transportation_method_tree"/>
             <field name="arch" type="xml">
-                <field name="name" position="after"/>
+                <field name="name" position="after">
                     <field name="account_ref" />
                 </field>
             </field>
@@ -37,7 +37,7 @@
             <field name="model">stock.picking.transportation_method</field>
             <field name="inherit_id" ref="l10n_it_ddt.view_transportation_method_form"/>
             <field name="arch" type="xml">
-                <field name="name" position="after"/>
+                <field name="name" position="after">
                     <field name="account_ref" />
                 </field>
             </field>

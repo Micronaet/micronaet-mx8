@@ -48,7 +48,9 @@ class StockPickingCarriageCondition(orm.Model):
     '''
     _inherit = "stock.picking.carriage_condition"
     
-    account_ref = fields.char(string='Account ref')
+    _columns = {
+        'account_ref': fields.char('Account ref', size=10),
+        }
 
 class StockPickingTransportationMethod(orm.Model):
     ''' Add extra account reference
@@ -56,6 +58,8 @@ class StockPickingTransportationMethod(orm.Model):
 
     _inherit = 'stock.picking.transportation_method'
 
-    account_ref = fields.char(string='Account ref')
+    _columns = {
+        'account_ref': fields.char('Account ref', size=10),
+        }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
