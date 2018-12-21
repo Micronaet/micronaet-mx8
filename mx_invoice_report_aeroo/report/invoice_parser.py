@@ -69,6 +69,16 @@ class StockPicking(orm.Model):
     # -------------------------------------------------------------------------
     # Utility:
     # -------------------------------------------------------------------------
+    def _parser_template_substitute(self, invoice, data):
+        ''' Replace data passed with invoice data
+        '''
+        if not data:
+            return data
+
+        data = data.replace('{date_invoice}', invoice.date_invoice)    
+        # TODO other substitution?
+        return data
+
     def write_reference_from_picking(self, picking):
         ''' Extract row reference for picking passed
         '''
@@ -143,12 +153,8 @@ class Parser(report_sxw.rml_parse):
     def template_substitute(self, invoice, data):
         ''' Replace data passed with invoice data
         '''
-        if not data:
-            return data
-
-        data = data.replace('{date_invoice}', invoice.date_invoice)    
-        # TODO other substitution?
-        return data
+        return self.pool.get('stock.picking')._parser_template_substitute(
+            invoice, data)
         
     def get_line_number(self, reset=False):
         ''' Get total line or reset number
