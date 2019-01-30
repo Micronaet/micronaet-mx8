@@ -781,6 +781,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             40, 
             15, 
             20,
+            15,
             10, 
             10,
             ])
