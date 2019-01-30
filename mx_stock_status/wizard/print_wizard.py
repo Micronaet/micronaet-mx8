@@ -776,7 +776,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         ws_name = u'Magazzino disponibile'
         excel_pool.create_worksheet(ws_name)
-        excel_pool.column_width(ws_name, [20, 40, 30, 10, 10])
+        excel_pool.column_width(ws_name, [
+            20, 
+            40, 
+            15, 
+            20,
+            10, 
+            10,
+            ])
         excel_pool.set_format()
         
         f_title = excel_pool.get_format('title')
@@ -794,6 +801,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             u'Codice', 
             u'Descrizione', 
             u'Cat. Stat.', 
+            u'Cat invent.', 
             u'Magazzino', 
             u'Disponibile'
             ], f_header)
@@ -810,6 +818,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 product.default_code or '?',
                 product.name, 
                 product.statistic_category or '',
+                product.inventory_category_id.name or '',
                 (stock_net, f_number),
                 (stock_available, f_number),
                 ], f_text)
