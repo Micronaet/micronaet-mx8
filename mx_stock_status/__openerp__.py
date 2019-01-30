@@ -40,6 +40,7 @@
         'inventory_field', # for category
         'csv_import_campaign', # campaign dispo        
         'catalog_management', # some categorization
+        'excel_export', # Excel report management (for available)
         ],
     'init_xml': [],
     'demo': [],

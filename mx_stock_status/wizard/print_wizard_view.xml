@@ -21,7 +21,7 @@
                         <field name="categ_ids" widget="many2many_tags" />
                         <field name="status" />
                         <field name="sortable" />
-                        <field name="inventory_category_id" attrs="{'invisible': [('mode','not in',('inventory_xls','inventory_web'))]}"/>
+                        <field name="inventory_category_id" attrs="{'invisible': [('mode','not in',('inventory_xls','inventory_web','available'))]}"/>
                         <field name="with_photo" attrs="{'invisible': [('mode','!=','status')]}"/>
                         <field name="with_stock" attrs="{'invisible': [('mode','not in',('simple','inventory','inventory_xls'))]}" />
                         <field name="catalog_ids" widget="many2many_tags" invisible="1"/><!--TODO-->

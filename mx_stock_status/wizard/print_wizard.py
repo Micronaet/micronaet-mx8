@@ -675,6 +675,147 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         else:            
             datas['statistic_category'] = False
         return datas    
+
+    def extract_available_stock_status(
+            self, cr, uid, ids, wiz_proxy, context=None):
+        ''' Extract available status for stock
+        '''
+        # Pool used:
+        partner_pool = self.pool.get('res.partner')
+        product_pool = self.pool.get('product.product')
+        supplier_pool = self.pool.get('product.supplierinfo')
+        excel_pool = self.pool.get('excel.writer')
+
+        # =====================================================================
+        #                       GENERATE DOMAIN FILTER:
+        # =====================================================================
+        product_ids = []
+        filter_text = u'Prodotti con disponibilità'
+
+        # Read wizard data:
+        partner_id = wiz_proxy.partner_id.id
+        default_code = wiz_proxy.default_code
+        statistic_category = wiz_proxy.statistic_category
+        categ_ids = wiz_proxy.categ_ids
+        catalog_ids = wiz_proxy.catalog_ids
+        status = wiz_proxy.status # gamma
+        sortable = wiz_proxy.sortable
+        inventory_category_id = wiz_proxy.inventory_category_id.id
+
+        # ---------------------------------------------------------------------
+        # SUPPLIER FILTER:
+        # ---------------------------------------------------------------------
+        if partner_id:
+            filter_text += u', con partner: %s' % wiz_proxy.partner_id.name
+            # -----------------------------------------------------------------
+            # A. Get template product supplier by partner (supplier in product)
+            # -----------------------------------------------------------------
+            supplierinfo_ids = supplier_pool.search(cr, uid, [
+                ('name', '=', partner_id)], context=context)
+            product_tmpl_ids = []
+            for supplier in supplier_pool.browse(
+                    cr, uid, supplierinfo_ids, context=context):
+                product_tmpl_ids.append(supplier.product_tmpl_id.id) 
+            # Get product form template:
+            tmpl_product_ids = product_pool.search(cr, uid, [
+                ('product_tmpl_id', 'in', product_tmpl_ids)], context=context)
+            product_ids.extend(tmpl_product_ids)
+
+            # -----------------------------------------------------------------
+            # B. Get product supplier by partner (field: first_supplier_id
+            # -----------------------------------------------------------------
+            first_supplier_product_ids = product_pool.search(
+                cr, uid, [
+                    ('first_supplier_id', '=', partner_id)], context=context)
+            product_ids.extend(first_supplier_product_ids)
+
+        # ---------------------------------------------------------------------
+        # PRODUCT FILTER:
+        # ---------------------------------------------------------------------
+        domain = []
+        if product_ids: # filtered for partner
+            domain.append(('id', 'in', product_ids))
+
+        if default_code: 
+            domain.append(('default_code', 'ilike', default_code))
+            filter_text += u', con codice: %s' % default_code
+
+        if statistic_category:            
+            domain.append(
+                ('statistic_category', 'in', statistic_category.split('|')))
+            filter_text += \
+                u', con categoria statistica: %s' % statistic_category
+
+        if categ_ids:
+            domain.append(('categ_id', 'in', categ_ids))
+            filter_text += u', con categorie in: %s' % categ_ids
+
+        if catalog_ids: # TODO test
+            domain.append(('catalog_ids', 'in', catalog_ids))
+            filter_text += u', con catalogo: %s' % catalog_ids
+
+        if status:
+            domain.append(('status', '=', status))
+            filter_text += u', con gamma: %s' % status
+
+        if sortable:
+            domain.append(('sortable', '=', True))
+            filter_text += u', ordinabile'
+            
+        if inventory_category_id:
+            domain.append(
+                ('inventory_category_id', '=', inventory_category_id))
+            filter_text += u', con categoria inventario: %s' % \
+                wiz_proxy.inventory_category_id.name
+
+        product_ids = product_pool.search(cr, uid, domain, context=context)
+        products = product_pool.browse(cr, uid, product_ids, context=context)
+        
+        # ---------------------------------------------------------------------
+        #                            Excel export:
+        # ---------------------------------------------------------------------
+        ws_name = u'Magazzino disponibile'
+        excel_pool.create_worksheet(ws_name)
+        excel_pool.column_width(ws_name, [20, 40, 30, 10, 10])
+        excel_pool.set_format()
+        
+        f_title = excel_pool.get_format('title')
+        f_header = excel_pool.get_format('header')
+        f_text = excel_pool.get_format('text')
+        f_number = excel_pool.get_format('number')
+        
+        row = 0
+        excel_pool.write_xls_line(ws_name, row, [
+            'Filtro: %s' % filter_text,
+            ], f_title)
+        
+        row += 1     
+        excel_pool.write_xls_line(ws_name, row, [
+            u'Codice', 
+            u'Descrizione', 
+            u'Cat. Stat.', 
+            u'Magazzino', 
+            u'Disponibile'
+            ], f_header)
+
+        for product in products:    
+            stock_net = product.mx_net_mrp_qty
+            stock_locked = product.mx_mrp_b_locked
+            stock_available = stock_net - stock_locked
+            if stock_available <= 0:
+                continue # Jumped product
+
+            row += 1     
+            excel_pool.write_xls_line(ws_name, row, [
+                product.default_code or '?',
+                product.name, 
+                product.statistic_category or '',
+                (stock_net, f_number),
+                (stock_available, f_number),
+                ], f_text)
+
+        return excel_pool.return_attachment(
+            cr, uid, 'disponibili_magazzino', context=context)
         
     def print_report(self, cr, uid, ids, context=None):
         ''' Print report product
@@ -704,7 +845,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         elif datas['mode'] == 'inventory_old_xls':
             return self.extract_old_xls_inventory_file(
                 cr, uid, ids, datas, context=context)
-            
+        elif datas['mode'] == 'available':
+            return self.extract_available_stock_status(
+                cr, uid, ids, wiz_proxy, context=context)
         #elif datas['mode'] == 'inventory_web':
         #    return self.extract_web_inventory_file(
         #        cr, uid, ids, datas, context=context)
@@ -760,6 +903,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('inventory_xls', 'Inventory XLS (exported not report)'),
             ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
             ('inventory_old_xls', 'Inventario precedente valorizzato'),            
+            ('available', 'Disponibile (non collegato a ordini)'),
             ], 'Mode', required=True)
         }
         
@@ -769,5 +913,3 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         }
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
