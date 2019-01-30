@@ -801,7 +801,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             u'Codice', 
             u'Descrizione', 
             u'Cat. Stat.', 
-            u'Cat invent.', 
+            u'Cat invent.',
+            u'Gamma', 
             u'Magazzino', 
             u'Disponibile'
             ], f_header)
@@ -819,6 +820,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 product.name, 
                 product.statistic_category or '',
                 product.inventory_category_id.name or '',
+                product.status,
                 (stock_net, f_number),
                 (stock_available, f_number),
                 ], f_text)
