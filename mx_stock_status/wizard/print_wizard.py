@@ -216,11 +216,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         WS.set_column('C:C', 5)
         WS.set_column('D:D', 8)
         WS.set_column('E:E', 10)
-        WS.set_column('F:F', 35)
-        WS.set_column('G:J', 16)
-        WS.set_column('K:M', 8)
-        WS.set_column('N:N', 5)
-        WS.set_column('O:Q', 8)
+        
+        WS.set_column('F:G', 15)
+
+        WS.set_column('H:H', 35)
+        WS.set_column('I:L', 16)
+        WS.set_column('M:O', 8)
+        WS.set_column('P:P', 5)
+        WS.set_column('Q:S', 8)
 
         # Rows:
         WS.set_row(3, 25)
@@ -231,7 +234,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Title:
         header = [
             'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
+            'COLORE', 'GAMMA',
             'CATEGORIA', 'FORNITORE', 'RIF. FORNITORE', 'ULTIMO ACQ.', 
+            'COSTO INV. SOLO ACQ.',
             'COSTO FOM FORN.', 'ESISTENZA', 'COSTO INV.', 'DAZI', 
             'TRASPORTO', 'USD', 'COSTO EUR', 'DAZIO EUR', 'COSTO FIN. EUR',
             ]
@@ -286,22 +291,29 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(row, 1, o.name or '', format_text) # B
             WS.write(row, 2, o.uom_id.name or '', format_text) # C
             WS.write(row, 3, o.statistic_category or '', format_text) # D
-            WS.write(row, 4, o.categ_id.name or '', format_text) # E 
-            WS.write(row, 5, supplier, format_text) # F
-            WS.write(row, 6, supplier_ref, format_text) # G
-            WS.write(row, 7, product_pool.get_purchase_last_date(
-                cr, uid, o.default_code, context=context), format_text) # H
-            WS.write(row, 8, cost_fob, format_text) # I
-            WS.write(row, 9, 
+
+            WS.write(row, 4, o.colour or '', format_text) # E
+            WS.write(row, 5, o.status or '', format_text) # F
+            
+            WS.write(row, 6, o.categ_id.name or '', format_text) # G 
+            WS.write(row, 7, supplier, format_text) # H
+            WS.write(row, 8, supplier_ref, format_text) # I
+            WS.write(row, 9, product_pool.get_purchase_last_date(
+                cr, uid, o.default_code, context=context), format_text) # J
+            
+            WS.write(row, 10, o.inventory_cost_only_buy or '', format_text) # K
+                
+            WS.write(row, 11, cost_fob, format_text) # L
+            WS.write(row, 12, 
                 o.mx_net_qty if data.get('with_stock', False) else '/', 
-                format_text) # J
-            WS.write(row, 10, o.inventory_cost_no_move, format_text) # K
-            WS.write(row, 11, duty, format_text) # L
-            WS.write(row, 12, transport, format_text) # M
-            WS.write(row, 13, usd, format_text) # N
-            WS.write(row, 14, cost_eur, format_text) # O
-            WS.write(row, 15, cost_duty_eur, format_text) # P            
-            WS.write(row, 16, cost_end_eur, format_text) # Q
+                format_text) # M
+            WS.write(row, 13, o.inventory_cost_no_move, format_text) # N
+            WS.write(row, 14, duty, format_text) # O
+            WS.write(row, 15, transport, format_text) # P
+            WS.write(row, 16, usd, format_text) # P
+            WS.write(row, 17, cost_eur, format_text) # R
+            WS.write(row, 18, cost_duty_eur, format_text) # S
+            WS.write(row, 19, cost_end_eur, format_text) # T
         WB.close()    
             
         # ---------------------------------------------------------------------
