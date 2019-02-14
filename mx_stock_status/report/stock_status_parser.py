@@ -134,8 +134,8 @@ class ProductProdcut(orm.Model):
                     self._picking_date[code] = date                        
                     self._picking_detailed[code] = '%s del %s (%s >> %s)' % (
                         picking.name or '',                        
-                        picking.bf_number or '',
                         (date or '')[:10],
+                        picking.bf_number or '',
                         picking.origin,
                         )
             return '' # First load
