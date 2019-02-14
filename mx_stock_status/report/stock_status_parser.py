@@ -99,13 +99,67 @@ class ProductProdcut(orm.Model):
             else:    
                 res += _('Tutti; ')            
         return res
+
+    def get_picking_last_date(self, cr, uid, code=False, load_all=False, 
+            context=None):
+        ''' Function used in parser for last picking date
+        '''
+        if context is None:
+            context = {}
+
+        detailed = context.get('detailed', False)
+ 
+        if load_all: # no code = load data
+            self._picking_date = {}
+            self._picking_detailed = {}
+            line_pool = self.pool.get('stock.move')
+
+            line_ids = line_pool.search(cr, uid, [
+                ('state', '=', 'done'),
+                ('picking_id.picking_type_id.code', '=', 'incoming'),
+                ], order='date desc', context=context)
+            
+            for line in line_pool.browse(
+                    cr, uid, line_ids, context=context):
+                code = line.product_id.default_code or False
+                date = line.date or line.create_date
+            
+                if not code:
+                    continue
+                    
+                if code not in self._picking_date or \
+                        date > self._picking_date[code]:
+                    # Update:
+                    picking = line.picking_id
+                    self._picking_date[code] = date                        
+                    self._picking_detailed[code] = '%s del %s (%s >> %s)' % (
+                        picking.name or '',                        
+                        picking.bf_number or '',
+                        (date or '')[:10],
+                        picking.origin,
+                        )
+            return '' # First load
+
+        if detailed:    
+            return (
+                self._picking_date.get(code, '/'),
+                self._picking_detailed.get(code, '/'),
+                )
+                
+        else:
+            return self._picking_date.get(code, '/')    
         
     def get_purchase_last_date(self, cr, uid, code=False, load_all=False, 
             context=None):
         ''' Function used in parser for last purchase date
-        '''        
-        self._purchase_date = {}
+        '''       
+        if context is None:
+            context = {}
+        detailed = context.get('detailed', False)
+ 
         if load_all: # no code = load data
+            self._purchase_date = {}
+            self._purchase_detailed = {}
             line_pool = self.pool.get('purchase.order.line')
             line_ids = line_pool.search(cr, uid, [
                 ('order_id.state', 'not in', ('draft', 'cancel', 'sent')),
@@ -120,13 +174,23 @@ class ProductProdcut(orm.Model):
             
                 if not code:
                     continue
-                if code in self._purchase_date:
-                    if date > self._purchase_date[code]:
-                        self._purchase_date[code] = date                        
-                else:
-                    self._purchase_date[code] = date                    
+                    
+                if code not in self._purchase_date or \
+                        date > self._purchase_date[code]:
+                    # Update:
+                    order = line.order_id
+                    self._purchase_date[code] = date                        
+                    self._purchase_detailed[code] = '%s del %s' % (
+                        order.name or '',
+                        date,
+                        #picking.bf_number or '',
+                        )
             return ''
-        return self._purchase_date.get(code, '/')    
+
+        if detailed:    
+            return self._purchase_detailed.get(code, '/')    
+        else:
+            return self._purchase_date.get(code, '/')    
             
     def stock_status_report_get_object(self, cr, uid, data=None, context=None):
         ''' Keep function here for call extra parser

@@ -164,6 +164,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         ''' Extract inventory as XLS extrenal files every category in different
             page
         '''    
+        if context is None:
+            context = {}
+
         product_pool = self.pool.get('product.product')
         
         # ---------------------------------------------------------------------
@@ -220,10 +223,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         WS.set_column('F:G', 15)
 
         WS.set_column('H:H', 35)
-        WS.set_column('I:L', 16)
-        WS.set_column('M:O', 8)
-        WS.set_column('P:P', 5)
-        WS.set_column('Q:S', 8)
+        
+        WS.set_column('I:J', 16)
+        WS.set_column('K:K', 4)
+        WS.set_column('L:M', 16)
+        WS.set_column('N:P', 8)
+        WS.set_column('Q:Q', 5)
+        WS.set_column('R:T', 8)
 
         # Rows:
         WS.set_row(3, 25)
@@ -235,19 +241,20 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         header = [
             'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
             'COLORE', 'GAMMA',
-            'CATEGORIA', 'FORNITORE', 'RIF. FORNITORE', 'ULTIMO ACQ.', 
+            'CATEGORIA', 'FORNITORE', 'RIF. FORNITORE', 'ULTIMO ACQ.', 'ATT.',
             'COSTO INV. SOLO ACQ.',
-            'COSTO FOM FORN.', 'ESISTENZA', 'COSTO INV.', 'DAZI', 
+            'COSTO FOB FORN.', 'ESISTENZA', 'COSTO INV.', 'DAZI', 
             'TRASPORTO', 'USD', 'COSTO EUR', 'DAZIO EUR', 'COSTO FIN. EUR',
             ]
         
         # Write 3 line of header:
+        context['detailed'] = True # Add extra information on last purchase
         write_header(
             WS, ['', 'RACCOLTA DATI PER INVENTARIO', ], 0, format_title)
         write_header(WS, [
             _('Filtro'), 
             product_pool.mx_stock_status_get_filter(data),
-            product_pool.get_purchase_last_date(False, True),
+            product_pool.get_picking_last_date(cr, uid, False, True),
             ], 1, format_title)        
         write_header(WS, header, 3, format_header)
             
@@ -258,6 +265,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         for o in product_pool.stock_status_report_get_object(
                     cr, uid, data=data, context=context):                    
             row += 1        
+            year = str(datetime.now().year)
             
             # Calculate:
             duty = product_pool.get_duty_this_product_rate(o) # L
@@ -286,6 +294,16 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 supplier = o.first_supplier_id.name or '?' # F
                 supplier_ref = '?'
             
+            purchase_date, purchase_reference = \
+                product_pool.get_picking_last_date(
+                    cr, uid, o.default_code, context=context)
+
+            # Check if is this year:
+            if purchase_date[:4] == year:
+                this_year = True
+            else:
+                this_year = False    
+                
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text) # A
             WS.write(row, 1, o.name or '', format_text) # B
@@ -298,22 +316,24 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(row, 6, o.categ_id.name or '', format_text) # G 
             WS.write(row, 7, supplier, format_text) # H
             WS.write(row, 8, supplier_ref, format_text) # I
-            WS.write(row, 9, product_pool.get_purchase_last_date(
-                cr, uid, o.default_code, context=context), format_text) # J
+            WS.write(row, 9, purchase_reference, format_text) # J
+            WS.write(row, 10, 'X' if this_year else '', format_text) # J
             
-            WS.write(row, 10, o.inventory_cost_only_buy or '', format_text) # K
+            WS.write(row, 11, o.inventory_cost_only_buy or '', format_text) # K
                 
-            WS.write(row, 11, cost_fob, format_text) # L
-            WS.write(row, 12, 
+            WS.write(row, 12, cost_fob, format_text) # L
+            WS.write(row, 13, 
                 o.mx_net_qty if data.get('with_stock', False) else '/', 
                 format_text) # M
-            WS.write(row, 13, o.inventory_cost_no_move, format_text) # N
-            WS.write(row, 14, duty, format_text) # O
-            WS.write(row, 15, transport, format_text) # P
-            WS.write(row, 16, usd, format_text) # P
-            WS.write(row, 17, cost_eur, format_text) # R
-            WS.write(row, 18, cost_duty_eur, format_text) # S
-            WS.write(row, 19, cost_end_eur, format_text) # T
+            WS.write(row, 14, o.inventory_cost_no_move, format_text) # N
+
+            # Only if bought in this year:
+            WS.write(row, 15, duty if this_year else 0.0, format_text) # O
+            WS.write(row, 16, transport if this_year else 0.0, format_text) # P
+            WS.write(row, 17, usd if this_year else 0.0, format_text) # P
+            WS.write(row, 18, cost_eur if this_year else 0.0, format_text) # R
+            WS.write(row, 19, cost_duty_eur if this_year else 0.0, format_text) # S
+            WS.write(row, 20, cost_end_eur if this_year else 0.0, format_text) # T
         WB.close()    
             
         # ---------------------------------------------------------------------
