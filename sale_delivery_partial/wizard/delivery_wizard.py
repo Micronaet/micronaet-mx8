@@ -189,6 +189,9 @@ class SaleDeliveryPartialLineWizard(orm.TransientModel):
         'price_unit': fields.float(
             'Unit Price', digits_compute=dp.get_precision('Product Price'), 
             readonly=True),
+        'mx_assigned_qty': fields.float(
+            'Assigned', digits_compute=dp.get_precision('Product UoS'), 
+            readonly=True),
         'product_uom_qty': fields.float(
             'Quantity', digits_compute=dp.get_precision('Product UoS'), 
             readonly=True),
@@ -263,6 +266,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 'product_id': line.product_id.id,
                 'price_unit': line.price_unit,
                 'product_uom_qty': line.product_uom_qty,
+                'mx_assigned_qty': line.mx_assigned_qty,
                 'product_uom_maked_sync_qty': b_qty, 
                 'product_uom': line.product_uom.id,
                 'date_deadline': line.date_deadline,

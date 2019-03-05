@@ -27,6 +27,7 @@
                                 <field name="price_unit" string="Price"/>
                                 <field name="product_uom" string="UM"/>
                                 <field name="product_uom_maked_sync_qty" string="B" />
+                                <field name="mx_assigned_qty" string="ASS." />
                                 <field name="product_uom_qty" string="Q."/>
 
                                 <field name="product_delivered_qty" string="Del."/>
