@@ -43,6 +43,16 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ResCompany(orm.Model):
+    """ Model name: Privacy policy
+    """
+    
+    _inherit = 'res.company'
+    
+    _columns = {
+        'privacy_policy': fields.text('Privacy policy', translate=True),
+        }
+
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
     """
