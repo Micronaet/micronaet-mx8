@@ -247,6 +247,10 @@ class Parser(report_sxw.rml_parse):
             qty: total to parcels
         '''
         res = []
+
+        # ---------------------------------------------------------------------
+        # With assigned management:
+        # ---------------------------------------------------------------------
         assigned = l.mx_assigned_qty
         delivered = l.delivered_qty
         
@@ -259,6 +263,7 @@ class Parser(report_sxw.rml_parse):
             B = 0.0 # As is used all!
         else: # B >= 0
             M = assigned        
+        # ---------------------------------------------------------------------
 
         elements = {
             'S': l.delivery_s, #remain, 
