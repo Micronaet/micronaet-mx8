@@ -150,14 +150,12 @@ class SaleOrder(orm.Model):
             all_produced = True
             for line in order.order_line:
                 remain = line.product_uom_qty - line.delivered_qty
-                if remain <= 0.0: # all delivered:
+                # all delivered:
+                if remain <= 0.0 or line.product_uom_qty <= line.delivered_qty: 
                     update_line['delivered'].append(line.id)
                 else: # Check type of operation:
-                    if line.product_uom_qty <= line.delivered_qty:
-                        update_line['delivered'].append(line.id)
-                    else:
-                        update_line['partial'].append(line.id)
-                        all_produced = False                        
+                    update_line['partial'].append(line.id)
+                    all_produced = False                        
                 # TODO remove no production line:
                 #if not line.product_id.internal_manufacture:                    
 

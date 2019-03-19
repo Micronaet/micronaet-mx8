@@ -114,7 +114,7 @@ class Parser(report_sxw.rml_parse):
                 7: 'LMU',
                 8: 'Pc.',
                 9: 'Ordered',
-                10: 'Maked',
+                10: 'Maked+Assigned',
                 11: 'Delivered',
                 12: 'Available',
                 13: 'Request',
@@ -162,24 +162,27 @@ class Parser(report_sxw.rml_parse):
         
         mode = self.get_mode()
  
+        # Qty used:
+        oc_qty = line.product_uom_qty
+        assigned_qty = line.mx_assigned_qty
+        b_qty = line.product_uom_maked_sync_qty
+        delivered_qty = line.delivered_qty
+
         if mode == 'odoo':
             if col == 0: # Total order
-                return int(line.product_uom_qty)
+                return int(oc_qty)
             elif col == 1: # Total producer
-                return int(line.product_uom_maked_sync_qty)
-            elif col ==2: # Total deliver
-                return int(line.delivered_qty)
+                return int(b_qty + assigned_qty)
+            elif col == 2: # Total deliver
+                return int(delivered_qty)
         else: # mexal
             if col == 0: # Remain order
-                return int(
-                    line.product_uom_qty - line.delivered_qty)
+                return int(oc_qty - delivered_qty)
             elif col == 1: # To produce
-                res = int(
-                    line.product_uom_qty - line.product_uom_maked_sync_qty)
+                res = int(oc_qty - assigned_qty - b_qty)
                 return res if res > 0 else 0
             elif col == 2: # To deliver
-                res = int(
-                    line.product_uom_maked_sync_qty - line.delivered_qty)
+                res = int(b_qty + assigned_qty - delivered_qty)
                 return res if res > 0 else 0    
         return _('ERROR')
         
