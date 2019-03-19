@@ -247,9 +247,23 @@ class Parser(report_sxw.rml_parse):
             qty: total to parcels
         '''
         res = []
+        assigned = l.mx_assigned_qty
+        delivered = l.delivered_qty
+        
+        # Rule: before delivery produced:
+        B = l.product_uom_maked_sync_qty - delivered
+        if B < 0.0:
+            M = assigned + B # algebrical, in real is "-" as in < 0
+            if M < 0.0:
+                 M = 0.0
+            B = 0.0 # As is used all!
+        else: # B >= 0
+            M = assigned        
+
         elements = {
             'S': l.delivery_s, #remain, 
-            'B': l.delivery_b,
+            'B': B, #l.delivery_b,
+            'M': M,
             }
                 
         _logger.info('Element for company 1 load report %s: %s' % (
@@ -259,7 +273,7 @@ class Parser(report_sxw.rml_parse):
         parcel_text = ''          
         product = l.product_id
         for key, v in elements.iteritems():
-            if v:
+            if v: # only if present qty:
                 # Counter totals:
                 # TODO volume from dimension (pack or piece?)
                 self.counters['volume'] += v * product.volume
@@ -286,6 +300,7 @@ class Parser(report_sxw.rml_parse):
                             self.counters['total_parcel'] += parcel
                     else:
                         parcel_text = ''
+
                 res.append((key, parcel_text, v, partial))
                 _logger.info('Counters: %s, %s' % (
                     product.default_code,

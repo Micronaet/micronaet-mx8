@@ -134,6 +134,7 @@
                                       <field name="product_uom_maked_sync_qty" />
                                       <field name="delivered_qty" />-->
                                       <field name="mx_closed" invisible="1" />
+                                      <field name="mx_assigned_qty" />
                                       
                                       <!--<field name="delivery_oc" />-->
                                       <field name="delivery_b" />
@@ -147,7 +148,7 @@
 
                                       <field name="mx_of_in" readonly="1"/>
                                       <button name="get_movements_of" string="OF in" type="object" icon="gtk-goto-first" colspan="1" class="oe_link" attrs="{'invisible': [('mx_of_in', '=', 0)]}" />
-                                      <field name="mx_of_date" readonly="1"/>                                      
+                                      <!--<field name="mx_of_date" readonly="1"/> -->
 
                                       
                                       <field name="delivery_ml_total" sum='ml_total' invisible="context.get('minimal_view',False)"/>
