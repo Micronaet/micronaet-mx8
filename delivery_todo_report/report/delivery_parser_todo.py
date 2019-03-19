@@ -262,13 +262,11 @@ class Parser(report_sxw.rml_parse):
             if v:
                 # Counter totals:
                 # TODO volume from dimension (pack or piece?)
-                self.counters['volume'] += v * (product.volume or 0.0)
-                self.counters['volume10'] += v * (
-                    (product.volume or 0.0) * 1.1)
-                self.counters['length'] += v* (product.linear_length or 0.0)
-                self.counters['weight'] += \
-                    v * ((product.weight or 0.0) or (
-                        product.weight_net or 0.0))
+                self.counters['volume'] += v * product.volume
+                self.counters['volume10'] += v * product.volume * 1.1
+                self.counters['length'] += v * product.linear_length
+                self.counters['weight'] += v * (
+                    product.weight or product.weight_net)
 
                 q_x_pack = l.product_id.q_x_pack
                 partial = False                    
