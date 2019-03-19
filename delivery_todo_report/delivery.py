@@ -182,16 +182,18 @@ class SaleOrder(orm.Model):
             all_produced = True
             for line in order.order_line:
                 remain = line.product_uom_qty - line.delivered_qty
+                # Produced + assigned
+                produced = \
+                    line.product_uom_maked_sync_qty + line.mx_assigned_qty
+                
                 if remain <= 0.0: # all delivered:
                     update_line['delivered'].append(line.id)
                 else: # Check type of operation:
                     # ---------------------------------------------------------
                     # stock:
                     # ---------------------------------------------------------
-                    if line.delivered_qty > line.product_uom_maked_sync_qty: 
-                        if line.product_uom_qty < line.delivered_qty:
-                            update_line['delivered'].append(line.id) #TODO over
-                        elif line.product_uom_qty == line.delivered_qty:
+                    if line.delivered_qty > produced: 
+                        if line.product_uom_qty <= line.delivered_qty:
                             update_line['delivered'].append(line.id)
                         else:
                             update_line['partial'].append(line.id)
@@ -200,14 +202,12 @@ class SaleOrder(orm.Model):
                     # mrp:
                     # ---------------------------------------------------------
                     else:
-                        if line.product_uom_qty <= \
-                                line.product_uom_maked_sync_qty:
+                        if line.product_uom_qty <= produced:
                             update_line['produced'].append(line.id)
-                        elif line.product_uom_maked_sync_qty > \
-                                line.delivered_qty:                           
+                        elif produced > line.delivered_qty:                           
                             update_line['partial'].append(line.id)
                             all_produced = False
-                        else: 
+                        else:
                             update_line['no'].append(line.id)
                             all_produced = False
             if all_produced:
@@ -284,10 +284,11 @@ class SaleOrder(orm.Model):
 
                 # TODO manage over delivery!!!!
                 delivery_oc = line.product_uom_qty - line.delivered_qty
-                if line.product_uom_maked_sync_qty > line.delivered_qty: 
+                produced = \
+                    line.product_uom_maked_sync_qty + line.mx_assigned_qty
+                if produced > line.delivered_qty: 
                     # MRP:
-                    delivery_b = \
-                        line.product_uom_maked_sync_qty - line.delivered_qty
+                    delivery_b = produced - line.delivered_qty
                     delivery_s = delivery_oc - delivery_b
                 else:    
                     # STOCK:
@@ -427,7 +428,7 @@ class SaleOrderLine(orm.Model):
 
     _columns = {
         'mrp_production_state': fields.selection([
-            ('over', 'Over delivered'),
+            ('over', 'Over delivered'), # XXX no more used
             ('delivered', 'Delivered'),
             ('produced', 'All produced'),
             ('partial', 'Partial deliver'),

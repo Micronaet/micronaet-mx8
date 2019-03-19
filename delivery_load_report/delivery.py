@@ -150,7 +150,7 @@ class SaleOrder(orm.Model):
             all_produced = True
             for line in order.order_line:
                 remain = line.product_uom_qty - line.delivered_qty
-                # all delivered:
+                # Line delivered:
                 if remain <= 0.0 or line.product_uom_qty <= line.delivered_qty: 
                     update_line['delivered'].append(line.id)
                 else: # Check type of operation:
@@ -174,9 +174,7 @@ class SaleOrder(orm.Model):
                 sol_pool.write(
                     cr, uid, update_line[key], data, context=context)
                 _logger.info('Line %s delivered (# %s)' % (
-                    key,
-                    len(update_line[key]),
-                    ))
+                    key, len(update_line[key])))
                
         if produced_ids:
             self.write(cr, uid, produced_ids, {
@@ -227,9 +225,11 @@ class SaleOrder(orm.Model):
                         'delivery_vol_partial': 0,
                         }, context=context)
                     continue
+
                 delivery_oc = line.product_uom_qty - line.delivered_qty
+
                 # STOCK:
-                delivery_b = 0.0
+                delivery_b = 0.0 # XXX Company B mode! (not used assigned mode)
                 delivery_s = delivery_oc
                 
                 ml = line.product_id.linear_length or 0.0

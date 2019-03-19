@@ -257,8 +257,8 @@ class Parser(report_sxw.rml_parse):
             l.product_id.default_code,
             ))  
         parcel_text = ''          
+        product = l.product_id
         for key, v in elements.iteritems():
-            product = l.product_id
             if v:
                 # Counter totals:
                 # TODO volume from dimension (pack or piece?)
