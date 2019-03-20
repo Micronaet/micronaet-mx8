@@ -18,7 +18,7 @@
 ###############################################################################
 
 {
-    'name': 'Parcel computation',
+    'name': 'Parcel and volume computation',
     'version': '0.1',
     'category': 'Customization',
     'description': '''        
@@ -33,6 +33,7 @@
         'account',
         'l10n_it_ddt',
         'no_parcels_count',
+        'excel_export',
         ],
     'init_xml': [],
     'demo': [],

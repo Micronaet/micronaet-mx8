@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="account_invoice_form_parcels_view_ddt" model="ir.ui.view">
-            <field name="name">account.invoice.form.ddt</field>
+        <record id="account_invoice_form_parcels_view_invoice" model="ir.ui.view">
+            <field name="name">account.invoice.form.invoice</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="l10n_it_ddt.invoice_form_view_ddt"/>
             <field name="arch" type="xml">
                  <field name="parcels" position="after">
-                     <button name="update_parcels_event" string="Auto counter" type="object" />
-                     <newline />
-                     <field name="parcels_note" nolabel="1" colspan="2"/>
+                     <group colspan="4" col="4">
+                         <button name="update_parcels_event" string="Auto counter" type="object" colspan="2"/>
+                         <button name="update_parcels_volume_event" string="Auto volume" type="object" colspan="2"/>
+
+                         <field name="parcels_note" nolabel="1" colspan="2"/>
+                         <field name="volume_note" nolabel="1" colspan="2"/>
+                     </group>    
                  </field>
             </field>
         </record>

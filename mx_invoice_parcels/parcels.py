@@ -74,9 +74,162 @@ class AccountInvoice(orm.Model):
             'parcels_note': parcels_note,
             }, context=context)            
                 
+    def update_parcels_volume_event(self, cr, uid, ids, context=None):
+        ''' Calculate volume box and extract Excel calc file used:
+        '''
+        assert len(ids) == 1, 'Use only for a single id at a time.'
+        
+        # ---------------------------------------------------------------------
+        # Excel file to evaluate volume data calc:
+        # ---------------------------------------------------------------------
+        excel_pool = self.pool.get('excel.writer')
+        ws_name = 'Controllo volumi'
+        excel_pool.create_worksheet(ws_name)
+
+        # Load formats:
+        f_title = excel_pool.get_format('title')
+        f_header = excel_pool.get_format('header')
+        
+        f_text = excel_pool.get_format('text')
+        f_text_red = excel_pool.get_format('bg_red')
+
+        f_number = excel_pool.get_format('number')
+        f_number_red = excel_pool.get_format('bg_red_number')
+        
+        # Setup columns width:
+        width = [
+            15, 35,
+            8, 8, 8, 8,
+            10, 10, 10, 10, 10, 
+            ]
+        excel_pool.column_width(ws_name, width)
+        
+        invoice = self.browse(cr, uid, ids, context=context)[0]
+        # ---------------------------------------------------------------------
+        # Title
+        # ---------------------------------------------------------------------
+        row = 0
+        excel_pool.write_xls_line(
+            ws_name, row, ['Fattura: %s del %s [Cliente: %s]' % (
+                invoice.number or '???',
+                invoice.date_invoice,
+                invoice.partner_id.name,
+                )], default_format=f_title)
+        row += 2
+
+        # ---------------------------------------------------------------------
+        # Print header
+        # ---------------------------------------------------------------------
+        header = [
+            'Codice', 'Descrizione', 
+
+            # Unit:
+            'Q x pack', 'Colli', 'Volume', 'm/l',
+            
+            # Total:
+            'Q.', 'Colli', 'Pallet', 'Tot. volume', 'Tot. m/l',
+            ]
+        excel_pool.write_xls_line(
+            ws_name, row, header, default_format=f_header)
+        
+        # ---------------------------------------------------------------------
+        # Print header
+        # ---------------------------------------------------------------------
+        # Init setup:
+        total_volume = 0.0
+        total_ml = 0.0
+        total_colls = 0.0
+        total_pallet = 0.0
+
+        row_start = row + 1
+        for line in invoice.invoice_line:
+            row += 1
+
+            product = line.product_id
+            qty = line.quantity
+
+            # Unit:
+            q_x_pack = product.q_x_pack
+            volume_1 = product.volume
+            colls_1 = product.colls
+            ml_1 = product.linear_length
+            
+            # Total:
+            volume = qty * volume_1
+            ml = qty * ml_1
+            colls = qty // (q_x_pack or 1.0) + (
+                1.0 if qty % (q_x_pack or 1.0) else 0.0)
+            
+            pallet = 0.0 # TODO     
+                            
+            total_volume += volume
+            total_ml += ml
+            total_colls += colls
+            total_pallet += pallet
+            
+            if volume and ml:
+                f_text_color = f_text
+                f_number_color = f_number
+            else:
+                f_text_color = f_text_red
+                f_number_color = f_number_red
+
+            data = [
+                (product.default_code or '/', f_text_color),
+                (product.name or '/', f_text_color),
+                
+                int(q_x_pack),
+                colls_1,
+                volume_1,
+                ml_1,
+                
+                qty, 
+                colls,
+                pallet,
+                volume,
+                ml,
+                ]
+
+            excel_pool.write_xls_line(
+                ws_name, row, data,
+                default_format=f_number_color
+                )
+        row_end = row
+
+        # ---------------------------------------------------------------------
+        # Total line:
+        # ---------------------------------------------------------------------
+        row += 1
+
+        # Pallet:
+        for col, total in (
+                (7, total_colls), 
+                (8, total_pallet), 
+                (9, total_volume),
+                (10, total_ml),
+                ):
+            formula = '=SUM(%s:%s)' % (
+                excel_pool.rowcol_to_cell(row_start, col),
+                excel_pool.rowcol_to_cell(row_end, col),
+                )
+            excel_pool.write_formula(
+                ws_name, row, col, formula, f_number, total)
+        
+        
+        self.write(cr, uid, ids, {
+            'volume_note': _(u'[Volume: %s m³]  [Lung.: %s m/l]') % (
+                #, Colli: %s, Pallet: %s') % (
+                total_volume,
+                total_ml,
+                #total_colls,
+                #total_pallet,
+                )}, context=context)        
+        return excel_pool.return_attachment(cr, uid, 'Volume')
+    
     _columns = {
         'parcels_note': fields.text(
             'Parcel note', help='Calculation procedure note') ,
+        'volume_note': fields.text('Volume'),
         }            
-            
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
