@@ -53,6 +53,16 @@ class ResCompany(orm.Model):
         'privacy_policy': fields.text('Privacy policy', translate=True),
         }
 
+class ResPartner(orm.Model):
+    """ Model name: Privacy policy
+    """
+    
+    _inherit = 'res.partner'
+    
+    _columns = {
+        'privacy_policy_signed': fields.boolean('Privacy policy firmata'),
+        }
+
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
     """
