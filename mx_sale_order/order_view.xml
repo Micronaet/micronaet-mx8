@@ -11,6 +11,16 @@
             </xpath>
         </field>
     </record>-->
+    <record model="ir.ui.view" id="view_sale_order_sent_button_form">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[1]" position="before">
+                <button name="action_order_sent" string="Conferma via mail" type="object" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
     </data>
 </openerp>
 

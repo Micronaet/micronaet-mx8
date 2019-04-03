@@ -43,7 +43,73 @@ class SaleOrder(orm.Model):
     """ Model name: Sale order
     """
     _inherit = 'sale.order'
-    
+
+    @api.multi
+    def action_order_sent(self, ):
+        """ Open a window to compose an email, with the edi invoice template
+            message loaded by default
+        """
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+
+        template = self.env.ref('account.email_template_edi_invoice', False)
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        import pdb; pdb.set_trace()
+
+        # Pool used:
+        template_pool = self.env['email.template']
+        #compose_pool = self.pool.get('mail.compose.message', False)
+
+        # ---------------------------------------------------------------------
+        # Compose message ID:
+        # ---------------------------------------------------------------------
+        compose_ids = compose_pool.search(cr, uid, [], context=context)
+        if compose_ids:
+            compose_form_id = compose_ids[0]
+        else:
+            compose_form_id = False    
+        
+        res = {
+            'name': _('Componi Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': context,
+            }
+
+        # ---------------------------------------------------------------------
+        # Read default template:
+        # ---------------------------------------------------------------------
+        template_ids = template_pool.search(cr, uid, [
+            ('default_send', '=', True),
+            ('model', '=', 'sale.order'),
+            ], context=context)
+
+        if not template_ids: # no default
+            # Take the first:
+            template_ids = template_pool.search(cr, uid, [
+                ('model', '=', 'sale.order'),
+                ], context=context)
+            if not template_ids:
+                return res
+        
+        res['context'] = {
+            'default_model': 'sale.order',
+            'default_res_id': ids[0],
+            'default_use_template': template_ids,
+            'default_template_id': template_ids[0],
+            'default_composition_mode': 'comment',
+            #mark_invoice_as_sent=True,
+            'default_use_template': True,
+            'default_template_id': template_ids[0],
+            }
+        import pdb; pdb.set_trace()
+        return res
+
+
     def log_sort_id(self, cr, uid, ids, context=None):
         ''' Log message to test ID order
         '''

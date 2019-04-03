@@ -31,6 +31,7 @@
         'base',
         'mx_sale',
         'sale',
+        'mail',
         ],
     'init_xml': [],
     'demo': [],
