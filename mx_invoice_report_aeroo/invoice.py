@@ -76,10 +76,16 @@ class AccountInvoice(orm.Model):
         if len(ids) > 1:
             return res
         
-        
         invoice_pool = self.pool.get('account.invoice')
-        
-        res[ids[0]] = 'prova'
+        invoice = invoice_pool.browse (cr, uid, ids, context=context)[0]
+        if invoice.partner_id.is_private:
+            res[ids[0]] = '''Fiscalmente valida come originale ai sensi della 
+                Ris. Min. 132/e del 28/05/1997'''
+        elif (invoice.partner_id.vat or '').upper().startswith('IT'):
+            res[ids[0]] = 'Non valida ai fini fiscali.'
+        else partner_id.vat[0:1] =! 'IT':
+            res[ids[0]] = '''Fiscally valid as original according to the the 
+                Ris. Min. 132/e of 28/05/1997.'''
         return res
 
     # Override function for report (button click)
