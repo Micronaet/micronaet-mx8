@@ -69,6 +69,19 @@ class AccountInvoice(orm.Model):
     
     _inherit = 'account.invoice'
 
+    def get_invoice_text_mail(self, cr, uid, ids, fields, args, context=None):
+        ''' Prepare text block for mail depend on customer:
+        ''' 
+        res = {}
+        if len(ids) > 1:
+            return res
+        
+        
+        invoice_pool = self.pool.get('account.invoice')
+        
+        res[ids[0]] = 'prova'
+        return res
+
     # Override function for report (button click)
     @api.multi
     def invoice_print(self):
@@ -80,4 +93,9 @@ class AccountInvoice(orm.Model):
         return self.env['report'].get_action(
             self, 'custom_mx_invoice_report')
 
+    _columns = {
+        'mail_invoice_text': fields.function(
+            get_invoice_text_mail, method=True, 
+            type='text', string='Mail text', store=False), 
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
