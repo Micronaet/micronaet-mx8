@@ -271,7 +271,7 @@ class DdTCreateInvoice(models.TransientModel):
                 #    if move.invoice_state != '2binvoiced':
                 #        raise Warning(
                 #            _('Move %s is not invoiceable') % move.name)
-
+        import pdb; pdb.set_trace()
         invoices = picking_pool.action_invoice_create(
             self.env.cr,
             self.env.uid,
