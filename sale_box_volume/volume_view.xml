@@ -10,8 +10,8 @@
                         <group col="6" colspan="4">
                            <field name="total" />
                            <field name="dimension_l" />
-                           <field name="dimension_h" />
                            <field name="dimension_s" />                            
+                           <field name="dimension_h" />
                         </group>
                     </sheet>        
                 </form>
@@ -25,8 +25,8 @@
                 <tree string="String" editable="bottom">        
                     <field name="total" />
                     <field name="dimension_l" />
-                    <field name="dimension_h" />
                     <field name="dimension_s" />                      
+                    <field name="dimension_h" />
                 </tree>
             </field>
         </record>
