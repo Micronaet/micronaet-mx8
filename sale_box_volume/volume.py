@@ -75,13 +75,13 @@ class StockDdt(orm.Model):
         for pack in ddt_proxy.volume_ids:
             total += pack.total or 1
             volume += pack.total * \
-                pack.dimension_l * pack.dimension_h * pack.dimension_s
-                 
-            pallet_text += 'N.: %s pallet %s x %s x %s\n' % (
+                pack.dimension_l * pack.dimension_s * pack.dimension_h
+
+            pallet_text += 'N.: %s pallet %s x %s x %sH\n' % (
                 pack.total,
                 pack.dimension_l,
-                pack.dimension_h,
                 pack.dimension_s,
+                pack.dimension_h,
                 )
         volume /= 1000000.0
         
