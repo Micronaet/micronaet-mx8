@@ -662,8 +662,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             # Write summary page:
             row += 1
+            print default_code
             excel_pool.write_xls_line(
-                WS_name, row, [product.name, qty], 
+                WS_name, row, [default_code, product.name, qty], 
                 )
 
         # ---------------------------------------------------------------------
@@ -704,7 +705,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS_name, row, header, default_format=format_mode['header'])
 
         # Print Excel file
-        for model in product_report:
+        for model in sorted(product_report):
             product = product_report[model][0]
 
             # Setup record to write:
