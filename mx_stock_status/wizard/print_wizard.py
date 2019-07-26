@@ -700,9 +700,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             # Setup record to write:
             record = ['' for item in range(0, cols + extra)]
-            record[0] = product.default_code
-            record[1] = product.name
-            record[2] = model
+            #record[0] = product.default_code
+            #record[1] = product.name
+            record[0] = model
             
             for color in product_report[model][1]:
                 qty = product_report[model][1][color]
