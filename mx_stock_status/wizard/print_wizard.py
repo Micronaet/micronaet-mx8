@@ -628,9 +628,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         
         #`Header line:
         row = 0 # Start line
-        #excel_pool.write_xls_line(
-        #    WS_name, row, ['Codice', 'Descrizione', 'Magazzino'], 
-        #    default_format=format_mode['header'])
+        excel_pool.write_xls_line(
+            WS_name, row, ['Codice', 'Descrizione', 'Magazzino'], 
+            default_format=format_mode['header'])
 
         product_report = {}
         colors = []
