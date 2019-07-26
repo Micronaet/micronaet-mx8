@@ -589,6 +589,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         for product in product_pool.browse(cr, uid, product_ids, 
                 context=context):    
             default_code = product.default_code
+            if len(default_code) in (8, 12):
+                model = default_code[3:-2]
+                color = default_code[-2:]
+            elif len(default_code) in (9, 13):
+                model = default_code[3:-3]
+                color = default_code[-3:]
+                
+                
             model = default_code[3:]
             if model[-1].isdigit(): # TODO raise error if 2 digits!
                 color = model[-3:]
