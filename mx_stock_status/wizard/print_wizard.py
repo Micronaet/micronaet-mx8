@@ -578,12 +578,60 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         
         inventory_ids = data['inventory_ids']
         inventory_name = ', '.join(data['inventory_name'])
-        
+
+        # ---------------------------------------------------------------------
+        #                              Excel report:
+        # ---------------------------------------------------------------------
+        # Create first populated after:
+        WS_name = _('Stato piani tavoli')
+        excel_pool.create_worksheet(WS_name)
+
+        # ---------------------------------------------------------------------
+        # Page table:
+        # ---------------------------------------------------------------------
+        WS_name = _('Elenco prodotti')
+        excel_pool.create_worksheet(WS_name)
+
+        # Load format used:
+        excel_pool.set_format(number_format='#,##0.#0')
+        format_mode = {
+            'title': excel_pool.get_format('title'),
+            'header': excel_pool.get_format('header'),
+            
+            'text': {
+                'white': excel_pool.get_format('text'),
+                'red': excel_pool.get_format('bg_red'),
+                'blue': excel_pool.get_format('bg_blue'),
+                },
+            'number': {
+                'white': excel_pool.get_format('number'),
+                'red': excel_pool.get_format('bg_red_number'),
+                'blue': excel_pool.get_format('bg_blue_number'),
+                },           
+            }
+        now = datetime.now().strftime(
+            DEFAULT_SERVER_DATE_FORMAT)
+
+        # ---------------------------------------------------------------------
+        # Collect data:        
+        # ---------------------------------------------------------------------
         product_ids = product_pool.search(cr, uid, [
             ('default_code', '=ilike', 'PIA%'), # Start with PIA
             ('inventory_category_id', 'in', inventory_ids), # Cat. selected.
             ], context=context)
         
+        # ---------------------------------------------------------------------
+        # Write file:
+        # ---------------------------------------------------------------------
+        # Cols setup:
+        excel_pool.column_width(WS_name, [12, 40, 10])
+        
+        #`Header line:
+        row = 0 # Start line
+        excel_pool.write_xls_line(
+            WS_name, row, ['Codice', 'Descrizione', 'Magazzino'], 
+            default_format=format_mode['header'])
+
         product_report = {}
         colors = []
         for product in product_pool.browse(cr, uid, product_ids, 
@@ -608,34 +656,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 colors.append(color)    
             if model not in product_report:
                 product_report[model] = (product, {})
-            product_report[model][1][color] = product.mx_net_mrp_qty
+            qty = product.mx_net_mrp_qty
+            product_report[model][1][color] = qty
+
+            # Write summary page:
+            row += 1
+            excel_pool.write_xls_line(
+                WS_name, row, [product.default_code, product.name, qty], 
+                default_format=format_mode['text'])
 
         # ---------------------------------------------------------------------
-        #                              Excel report:
+        # Page table:
         # ---------------------------------------------------------------------
-        WS_name = _('Stato piani tavoli')        
-        excel_pool.create_worksheet(WS_name)
-        
-        # Format used:
-        excel_pool.set_format(number_format='#,##0.#0')
-        format_mode = {
-            'title': excel_pool.get_format('title'),
-            'header': excel_pool.get_format('header'),
-            
-            'text': {
-                'white': excel_pool.get_format('text'),
-                'red': excel_pool.get_format('bg_red'),
-                'blue': excel_pool.get_format('bg_blue'),
-                },
-            'number': {
-                'white': excel_pool.get_format('number'),
-                'red': excel_pool.get_format('bg_red_number'),
-                'blue': excel_pool.get_format('bg_blue_number'),
-                },           
-            }
-        now = datetime.now().strftime(
-            DEFAULT_SERVER_DATE_FORMAT)
-
+        WS_name = _('Stato piani tavoli')
       
         # ---------------------------------------------------------------------
         # Setup format:
