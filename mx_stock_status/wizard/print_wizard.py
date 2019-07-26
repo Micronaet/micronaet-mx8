@@ -641,7 +641,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         header.extend([color.upper() for color in colors])
 
         # Cols setup:
-        col_width = [15, 35, 10, ] # Extra data:
+        col_width = [12, 35, 7, ] # Extra data:
         col_width.extend([5 for item in range(0, cols)])
         excel_pool.column_width(WS_name, col_width)
 
@@ -675,7 +675,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 qty = product_report[model][1][color]
                 position = colors.index(color) + extra # TODO check!
                 record[position] = (
-                    qty, format_mode['number']['white'])
+                    int(qty), format_mode['number']['white'])
 
             row += 1
             excel_pool.write_xls_line(
