@@ -637,7 +637,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         colors = []
         for product in product_pool.browse(cr, uid, product_ids, 
                 context=context):    
-            default_code = product.default_code
+            default_code = product.default_code or ''
             if len(default_code) in (8, 12):
                 model = default_code[3:-2]
                 color = default_code[-2:]
@@ -663,7 +663,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             # Write summary page:
             row += 1
             excel_pool.write_xls_line(
-                WS_name, row, [qty, ], 
+                WS_name, row, [product.name, qty], 
                 )
 
         # ---------------------------------------------------------------------
