@@ -675,7 +675,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 qty = product_report[model][1][color]
                 position = colors.index(color) + extra # TODO check!
                 record[position] = (
-                    int(qty), format_mode['number']['white'])
+                    str(int(qty)), format_mode['number']['white'])
 
             row += 1
             excel_pool.write_xls_line(
