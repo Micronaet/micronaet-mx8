@@ -13,9 +13,12 @@
                    </header>                   
                    <group colspan="4" col="4">
                         <field name="mode" />
-                        <field name="partner_id" />
+                        <field name="partner_id" attrs="{'invisible': [('mode','=','table')]}"/>
                    </group>
-                   <group colspan="4" col="4">
+                   <group colspan="4" col="4" attrs="{'invisible': [('mode','!=','table')]}">
+                        <field name="inventory_ids" widget="many2many_tags" />                       
+                   </group>                   
+                   <group colspan="4" col="4" attrs="{'invisible': [('mode','=','table')]}">
                         <field name="default_code" />
                         <field name="statistic_category" />
                         <field name="categ_ids" widget="many2many_tags" />

@@ -569,6 +569,121 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'target': 'self',
             }
 
+    def extract_xls_table_inventory(self, cr, uid, ids, data=None, 
+            context=None):
+        ''' Extract table inventory:
+        '''
+        product_pool = self.pool.get('product.product')
+        excel_pool = self.pool.get('excel.writer')
+        
+        inventory_ids = data['inventory_ids']
+        inventory_name = ', '.join(data['inventory_name'])
+        
+        product_ids = product_pool.search(cr, uid, [
+            ('default_code', '=ilike', 'PIA%'), # Start with PIA
+            ('inventory_category_id', 'in', inventory_ids), # Cat. selected.
+            ], context=context)
+        
+        product_report = {}
+        colors = []
+        for product in product_pool.browse(cr, uid, product_ids, 
+                context=context):    
+            default_code = product.default_code
+            model = default_code[3:]
+            if model[-1].isdigit(): # TODO raise error if 2 digits!
+                color = model[-3:]
+                model = model[:-3]
+            else:    
+                color = model[-2:]
+                model = model[:-2]
+            if color not in colors:
+                colors.append(color)    
+            if model not in product_report:
+                product_report[model] = (product, {})
+            product_report[model][1][color] = product.mx_net_mrp_qty
+
+        # ---------------------------------------------------------------------
+        #                              Excel report:
+        # ---------------------------------------------------------------------
+        WS_name = _('Stato piani tavoli')        
+        excel_pool.create_worksheet(WS_name)
+        
+        # Format used:
+        excel_pool.set_format(number_format='#,##0.#0')
+        format_mode = {
+            'title': excel_pool.get_format('title'),
+            'header': excel_pool.get_format('header'),
+            
+            'text': {
+                'white': excel_pool.get_format('text'),
+                'red': excel_pool.get_format('bg_red'),
+                'blue': excel_pool.get_format('bg_blue'),
+                },
+            'number': {
+                'white': excel_pool.get_format('number'),
+                'red': excel_pool.get_format('bg_red_number'),
+                'blue': excel_pool.get_format('bg_blue_number'),
+                },           
+            }
+        now = datetime.now().strftime(
+            DEFAULT_SERVER_DATE_FORMAT)
+
+      
+        # ---------------------------------------------------------------------
+        # Setup format:
+        # ---------------------------------------------------------------------
+        colors = sorted(colors)
+        cols = len(colors)
+
+        # Header setup:        
+        header = ['Codice', 'Descrizione', 'Modello'] # Extra data:
+        extra = len(header)
+        header.extend([color.upper() for color in colors])
+
+        # Cols setup:
+        col_width = [15, 35, 10, ] # Extra data:
+        col_width.extend([5 for item in range(0, cols)])
+        excel_pool.column_width(WS_name, col_width)
+
+        # ---------------------------------------------------------------------
+        # Write file:
+        # ---------------------------------------------------------------------
+        #`Title line:
+        row = 0 # Start line
+        excel_pool.write_xls_line(
+            WS_name, row, [
+                'Stato magazzino piani tavoli al %s: %s' % (
+                    now, inventory_name),
+                ], default_format=format_mode['title'])
+
+        # Header line:
+        row += 2
+        excel_pool.write_xls_line(
+            WS_name, row, header, default_format=format_mode['header'])
+
+        # Print Excel file
+        for model in product_report:
+            product = product_report[model][0]
+
+            # Setup record to write:
+            record = ['' for item in range(0, cols + extra)]
+            record[0] = product.default_code
+            record[1] = product.name
+            record[2] = model
+            
+            for color in product_report[model][1]:
+                qty = product_report[model][1][color]
+                position = colors.index(color) + extra # TODO check!
+                record[position] = (
+                    qty, format_mode['number']['white'])
+
+            row += 1
+            excel_pool.write_xls_line(
+                WS_name, row, record, 
+                default_format=format_mode['text']['white'])
+        
+        return excel_pool.return_attachment(cr, uid, 'Stato piani')
+        
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
         ''' Extract inventory as XLS extrenal files every category in different
@@ -698,6 +813,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'with_photo': wiz_proxy.with_photo,
             'with_stock': wiz_proxy.with_stock,
             'inventory_category_id': wiz_proxy.inventory_category_id.id,
+            'inventory_ids': [item.id for item in wiz_proxy.inventory_ids],
+            'inventory_name': [item.name for item in wiz_proxy.inventory_ids],
             }
 
         if wiz_proxy.statistic_category:
@@ -879,6 +996,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             #report_name = 'stock_status_inventory_report'
             return self.extract_stock_status_xls_inventory_file(
                 cr, uid, ids, datas, context=context)
+
+        elif datas['mode'] == 'table':
+            return self.extract_xls_table_inventory(
+                cr, uid, ids, datas, context=context)
             
         elif datas['mode'] == 'inventory_xls':
             return self.extract_xls_inventory_file(
@@ -917,6 +1038,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         'default_code': fields.char('Partial code', size=30), 
         'statistic_category': fields.char('Statistic category (separ.: |)', 
             size=50), 
+        'inventory_ids': fields.many2many(
+            'product.product.inventory.category', 'product_wiz_inv_cat_rel', 
+            'wizard_id', 'inventory_id', 
+            'Categorie inventario'),
         'categ_ids': fields.many2many(
             'product.category', 'product_category_status_rel', 
             'product_id', 'category_id', 
@@ -944,10 +1069,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('status', 'Stock status'),
             ('simple', 'Simple status'),
             ('inventory', 'Inventory'),
+            ('table', 'Inventario tavoli'),
             ('inventory_xls', 'Inventory XLS (exported not report)'),
             ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
             ('inventory_old_xls', 'Inventario precedente valorizzato'),            
-            ('available', 'Disponibile (non collegato a ordini)'),
+            ('available', 'Disponibile (non collegato a ordini)'),            
             ], 'Mode', required=True)
         }
         
