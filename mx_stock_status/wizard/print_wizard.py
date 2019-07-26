@@ -655,7 +655,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             row += 1
             excel_pool.write_xls_line(
                 WS_name, row, [default_code, product.name, qty], 
-                )
+                format_mode['text']['white'])
 
         # ---------------------------------------------------------------------
         # Page table:
