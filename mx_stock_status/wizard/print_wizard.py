@@ -589,8 +589,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Page table:
         # ---------------------------------------------------------------------
-        WS_name = _('Elenco prodotti')
-        excel_pool.create_worksheet(WS_name)
+        #WS_name = _('Elenco prodotti')
+        #excel_pool.create_worksheet(WS_name)
 
         # Load format used:
         excel_pool.set_format(number_format='#,##0.#0')
@@ -628,9 +628,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         
         #`Header line:
         row = 0 # Start line
-        excel_pool.write_xls_line(
-            WS_name, row, ['Codice', 'Descrizione', 'Magazzino'], 
-            default_format=format_mode['header'])
+        #excel_pool.write_xls_line(
+        #    WS_name, row, ['Codice', 'Descrizione', 'Magazzino'], 
+        #    default_format=format_mode['header'])
 
         product_report = {}
         colors = []
@@ -661,9 +661,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             # Write summary page:
             row += 1
-            excel_pool.write_xls_line(
-                WS_name, row, [product.default_code, product.name, qty], 
-                default_format=format_mode['text'])
+            #excel_pool.write_xls_line(
+            #    WS_name, row, [product.default_code, product.name, qty], 
+            #    default_format=format_mode['text'])
 
         # ---------------------------------------------------------------------
         # Page table:
