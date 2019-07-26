@@ -644,6 +644,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             elif len(default_code) in (9, 13):
                 model = default_code[3:-3]
                 color = default_code[-3:]
+            print default_code, color, model
                 
                 
             model = default_code[3:]
@@ -662,7 +663,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             # Write summary page:
             row += 1
-            print default_code
             excel_pool.write_xls_line(
                 WS_name, row, [default_code, product.name, qty], 
                 )
