@@ -589,8 +589,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Page table:
         # ---------------------------------------------------------------------
-        #WS_name = _('Elenco prodotti')
-        #excel_pool.create_worksheet(WS_name)
+        WS_name = _('Elenco prodotti')
+        excel_pool.create_worksheet(WS_name)
 
         # Load format used:
         excel_pool.set_format(number_format='#,##0.#0')
