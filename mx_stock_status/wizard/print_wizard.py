@@ -629,8 +629,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #`Header line:
         row = 0 # Start line
         excel_pool.write_xls_line(
-            WS_name, row, ['Codice', #'Descrizione', 
-                'Magazzino'], 
+            WS_name, row, ['Codice', 'Descrizione', 'Magazzino'], 
             default_format=format_mode['header'])
 
         product_report = {}
@@ -670,12 +669,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         cols = len(colors)
 
         # Header setup:        
-        header = ['Codice', 'Descrizione', 'Modello'] # Extra data:
+        header = ['Modello', ] # Extra data: 'Codice', 'Descrizione', 
         extra = len(header)
         header.extend([color.upper() for color in colors])
 
         # Cols setup:
-        col_width = [12, 35, 7, ] # Extra data:
+        col_width = [7, ] # Extra data: 12, 35,
         col_width.extend([5 for item in range(0, cols)])
         excel_pool.column_width(WS_name, col_width)
 
