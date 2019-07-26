@@ -644,16 +644,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             elif len(default_code) in (9, 13):
                 model = default_code[3:-3]
                 color = default_code[-3:]
-            print default_code, color, model
                 
-                
-            model = default_code[3:]
-            if model[-1].isdigit(): # TODO raise error if 2 digits!
-                color = model[-3:]
-                model = model[:-3]
-            else:    
-                color = model[-2:]
-                model = model[:-2]
             if color not in colors:
                 colors.append(color)    
             if model not in product_report:
