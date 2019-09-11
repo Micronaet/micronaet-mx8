@@ -750,7 +750,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Create work sheet:
         # ---------------------------------------------------------------------
         header = ['DB', 'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.', 
-            'CATEGORIA', 'FORNITORE', 'INV', 'INV. DELTA', 'MRP', 'ESISTENZA']
+            'CATEGORIA', 'FORNITORE', 'NETTO', 'LORDO', 
+            'INV', 'INV. DELTA', 'MRP', 'ESISTENZA']
         
         # Create elemnt for empty category:
         WS = {
@@ -811,16 +812,21 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 6, 
                 product.seller_ids[0].name.name if product.seller_ids else (
                     product.first_supplier_id.name or ''))
+                    
+            # Weight:        
+            record[0].write(record[1], 7, product.weight_net)
+            record[0].write(record[1], 8, product.weight)
+                    
             if data.get('with_stock', False): 
                 net_qty = product.mx_net_qty - product.mx_mrp_out
-                record[0].write(record[1], 7, product.inventory_start or '')
-                record[0].write(record[1], 8, product.inventory_delta or '')
-                record[0].write(record[1], 9, product.mx_mrp_out or '')
-                record[0].write(record[1], 10, net_qty or '')
+                record[0].write(record[1], 9, product.inventory_start or '')
+                record[0].write(record[1], 10, product.inventory_delta or '')
+                record[0].write(record[1], 11, product.mx_mrp_out or '')
+                record[0].write(record[1], 12, net_qty or '')
                 
             # TODO remove after print:    
             if with_parent_bom:         
-                record[0].write(record[1], 11, linked_bom.get(product.id, ''))
+                record[0].write(record[1], 13, linked_bom.get(product.id, ''))
                 
             record[1] += 1                    
         return True
