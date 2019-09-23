@@ -643,6 +643,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             elif len(default_code) in (9, 13):
                 model = default_code[3:-3]
                 color = default_code[-3:]
+            else:
+                _logger.error('Cannot locate color: %s' % default_code)
+                continue    
                 
             if color not in colors:
                 colors.append(color)    
