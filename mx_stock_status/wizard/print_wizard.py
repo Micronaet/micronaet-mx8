@@ -533,7 +533,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 color_format = cell_format['bg']['red']
 
-            excel_pool.write_xls_line(ws_name, row, [
+            excel_pool.write_xls_line(category_name, row, [
                 product.default_code,
                 product.name,
                 product.uom_id.name or '',
@@ -557,11 +557,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         ws_page = 'SENZA INVENTARIO'
         
         # Init setup:
-        excel_pool.column_width(ws_empty, [
+        excel_pool.column_width(ws_page, [
             10, 15, 30, 5,
             5, 15,
             ])
-        excel_pool.write_xls_line(ws_empty, 0, {
+        excel_pool.write_xls_line(ws_page, 0, {
             'CAT. INV.', 'CODICE', 'DESCRIZIONE', 'UM', 
             'CAT. STAT.', 'CATEGORIA',
             }, cell_format['header'])
@@ -580,7 +580,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     x.name,
                     )):
             row += 1        
-            excel_pool.write_xls_line(ws_name, row, [
+            excel_pool.write_xls_line(ws_page, row, [
                 product.inventory_category_id.name,
                 product.default_code,
                 product.name,
