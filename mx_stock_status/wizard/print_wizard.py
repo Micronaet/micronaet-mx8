@@ -504,6 +504,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         for category in inv_pool.browse(cr, uid, inv_ids, context=context):
             category_name = category.name
             ws_names[category_name] = 1 # jump header
+            excel_pool.create_worksheet(ws_name)
             
             # Init setup remain pages:
             excel_pool.column_width(category_name, width)
