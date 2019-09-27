@@ -494,7 +494,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         excel_pool.create_worksheet(ws_empty)
 
         # Load format:
-        excel_pool.set_format()
+        excel_pool.set_format(number_format='#,##0.####0')
         cell_format = {
             'title': excel_pool.get_format('title'),
             'header': excel_pool.get_format('header'),
