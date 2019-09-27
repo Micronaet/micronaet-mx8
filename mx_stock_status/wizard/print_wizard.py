@@ -613,18 +613,18 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'Categorie', '# Err.', 'Totale',
             }, cell_format['header'])
 
-        row = 0
+        row = 1
         for category_name in sorted(ws_names):
-            row, total, error = ws_names[category_name]
+            line, total, error = ws_names[category_name]
             if not category_name:
                 continue
                 
-            row += 1        
             excel_pool.write_xls_line(ws_page, row, [
                 category_name,
                 error,
                 (total, cell_format['number']),
                 ], cell_format['text'])
+            row += 1        
         
         # Generate attachment for return file:
         return excel_pool.return_attachment(
