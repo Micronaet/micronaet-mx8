@@ -381,7 +381,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 False, # 0. Date
                 '', # 1. Supplier
                 0.0, # 2. Price
-                0, # 3. Numer
+                0, # 3. Number of price found
                 '', # 4. Note
                 product.standard_price, # 5. Manual cost
                 product.weight, # 6. weight (for pipes)
@@ -414,6 +414,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             elif parent_code in self.parent_bom_cost:
                 res[2] = self.parent_bom_cost[parent_code]
                 res[1] = _('Preso da DB: %s') % parent_code
+            elif product.is_pipe:
+                try:
+                    cost = product.weight * product.pipe_material_id.last_price    
+                except:
+                    res[2] = cost    
             else: # Product is normal product
                 i = 0
                 for supplier in product.seller_ids:
