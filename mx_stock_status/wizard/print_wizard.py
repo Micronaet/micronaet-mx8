@@ -611,7 +611,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ])
         excel_pool.write_xls_line(ws_page, 0, {
             'Categorie', '# Err.', 'Totale',
-            }, cell_format['text'])
+            }, cell_format['header'])
 
         row = 0
         for category_name in sorted(ws_names):
