@@ -557,6 +557,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         ws_page = 'SENZA INVENTARIO'
         
         # Init setup:
+        excel_pool.create_worksheet(ws_page)
         excel_pool.column_width(ws_page, [
             10, 15, 30, 5,
             5, 15,
