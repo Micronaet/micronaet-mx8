@@ -477,7 +477,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ]     
         
         ws_names = { # Row position
-            '': 1, # Empty category (first row after header):
+            '': [1, 0.0, 0,], # Empty category (row, total, error):
             }
         ws_empty = 'Non assegnati'    
         excel_pool.create_worksheet(ws_empty)
@@ -506,7 +506,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Create all others category:
         for category in inv_pool.browse(cr, uid, inv_ids, context=context):
             category_name = category.name
-            ws_names[category_name] = 1 # jump header
+            ws_names[category_name] = [1, 0.0, 0] # jump header
             excel_pool.create_worksheet(category_name)
             
             # Init setup remain pages:
@@ -529,6 +529,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             (date, supplier, cost, number, note, standard_price, 
                 weight) = get_last_cost(product)
             inventory = product.mx_start_qty
+            total = cost * inventory
             
             # Color setup:
             if cost:
@@ -537,24 +538,27 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 color_format = cell_format['bg']['red']
                 color_number_format = cell_format['bg_number']['red']
-
-            excel_pool.write_xls_line(category_name, ws_names[category_name], [
-                product.default_code,
-                product.name,
-                product.uom_id.name or '',
-                #product.statistic_category or '',
-                #product.categ_id.name or '',
-                supplier,
-                (inventory, color_number_format),
-                date,
-                (number, color_number_format),
-                (cost, color_number_format),
-                (cost * inventory, color_number_format),
-                (standard_price, color_number_format),
-                (weight, color_number_format),
-                note,
-                ], color_format)
-            ws_names[category_name] += 1    
+                ws_names[category_name][2] += 1
+            
+            excel_pool.write_xls_line(category_name, 
+                ws_names[category_name][0], [
+                    product.default_code,
+                    product.name,
+                    product.uom_id.name or '',
+                    #product.statistic_category or '',
+                    #product.categ_id.name or '',
+                    supplier,
+                    (inventory, color_number_format),
+                    date,
+                    (number, color_number_format),
+                    (cost, color_number_format),
+                    (total, color_number_format),
+                    (standard_price, color_number_format),
+                    (weight, color_number_format),
+                    note,
+                    ], color_format)
+            ws_names[category_name][0] += 1    
+            ws_names[category_name][1] += total
 
         # ---------------------------------------------------------------------
         # Write empty page with no stock product:
@@ -593,6 +597,33 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 product.uom_id.name or '',
                 product.statistic_category or '',
                 product.categ_id.name or '',
+                ], cell_format['text'])
+
+        # ---------------------------------------------------------------------
+        # Write empty page with no stock product:
+        # ---------------------------------------------------------------------
+        ws_page = 'TOTALI'
+        
+        # Init setup:
+        excel_pool.create_worksheet(ws_page)
+        excel_pool.column_width(ws_page, [
+            30, 5, 15,
+            ])
+        excel_pool.write_xls_line(ws_page, 0, {
+            'Categorie', '# Err.', 'Totale',
+            }, cell_format['text'])
+
+        row = 0
+        for category_name in sorted(ws_names):
+            row, total, error = ws_names[category_name]
+            if not category_name:
+                continue
+                
+            row += 1        
+            excel_pool.write_xls_line(ws_page, row, [
+                category_name,
+                error,
+                (total, cell_format['number']),
                 ], cell_format['text'])
         
         # Generate attachment for return file:
