@@ -533,7 +533,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 color_format = cell_format['bg']['red']
 
-            excel_pool.write_xls_line(category_name, row, [
+            excel_pool.write_xls_line(category_name, ws_pages[category_name], [
                 product.default_code,
                 product.name,
                 product.uom_id.name or '',
