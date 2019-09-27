@@ -433,7 +433,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Pool used:
         product_pool = self.pool.get('product.product')
         inv_pool = self.pool.get('product.product.inventory.category')
+        excel_pool = self.pool.get('excel.writer')
         
+        # ---------------------------------------------------------------------
+        #                            Collect data:
+        # ---------------------------------------------------------------------
         # Load parent bom if necessary:
         self.parent_bom_cost = {} # reset value
         if 'bom_selection' in product_pool._columns: # DB with BOM price manage 
@@ -451,87 +455,122 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     self.parent_bom_cost[default_code[:6]] = p.to_industrial
 
         # ---------------------------------------------------------------------
-        #                        XLS log export:        
-        # ---------------------------------------------------------------------
-        filename = '/tmp/old_inventory_table.xlsx'
-        _logger.warning('Create file in: %s' % filename)
-        WB = xlsxwriter.Workbook(filename)
-
-        # ---------------------------------------------------------------------
         # Search all inventory category:
         # ---------------------------------------------------------------------        
         inv_ids = inv_pool.search(cr, uid, [], context=context)
 
         # ---------------------------------------------------------------------
-        # Create work sheet:
-        # ---------------------------------------------------------------------
-        header = ['CODICE', 'DESCRIZIONE', 'UM', 
-            #'CAT. STAT.', 'CATEGORIA', 
+        #                              EXCEL:
+        # ---------------------------------------------------------------------        
+        header = [
+            'CODICE', 'DESCRIZIONE', 'UM', 
             'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO', 
-            'TOTALE', 'COSTO MANUALE', 'PESO', 'ERRORE', 
+            'TOTALE', 'COSTO MANUALE', 'PESO',
             'NOTE',
             ]
+
+        width = [
+            15, 30, 5, 
+            15, 10, 10, 5, 10, 
+            15, 10, 10,
+            50,
+            ]     
         
-        # Create elemnt for empty category:
-        WS = {#ID: worksheet, counter
-            0: [WB.add_worksheet('Non assegnati'), 1],
+        ws_names = { # Row position
+            '': 1, # Empty category (first row after header):
             }
-        write_header(WS[0][0], header)
+        ws_empty = 'Non assegnati'    
+        excel_pool.create_worksheet(ws_empty)
+
+        # Load format:
+        excel_pool.set_format()
+        cell_format = {
+            'title': excel_pool.get_format('title'),
+            'header': excel_pool.get_format('header'),
+            'text': excel_pool.get_format('text'),
+            'number': excel_pool.get_format('number'),
             
-        # Create all others category:    
-        for category in inv_pool.browse(
-                cr, uid, inv_ids, context=context):
-            WS[category.id] = [WB.add_worksheet(category.name), 1]
-            write_header(WS[category.id][0], header)
+            'bg': {
+                excel_pool.get_format('bg_red'),            
+                excel_pool.get_format('bg_green'),            
+                },
+            }
+
+        # Init setup:
+        excel_pool.column_width(ws_empty, width)
+        excel_pool.write_xls_line(ws_empty, 0, header, cell_format['header'])
+
+        # Create all others category:
+        for category in inv_pool.browse(cr, uid, inv_ids, context=context):
+            category_name = category.name
+            ws_names[category_name] = 1 # jump header
             
+            # Init setup remain pages:
+            excel_pool.column_width(category_name, width)
+            excel_pool.write_xls_line(
+                category_name, 0, header, cell_format['header'])
+
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
         product_ids = product_pool.search(cr, uid, [
-            ('mx_start_qty', '>', 0.0), # Only present
-            ], context=context)            
+            ('mx_start_qty', '>', 0.0), # Only present start inventory
+            ], context=context)
+
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
-            if product.inventory_category_id.id in WS:
-                record = WS[product.inventory_category_id.id]
-            else:
-                record = WS[0]
+            category_name = product.inventory_category_id.name or ''            
             
             (date, supplier, cost, number, note, standard_price, 
                 weight) = get_last_cost(product)
             inventory = product.mx_start_qty
-            # Write data in correct WS:
-            record[0].write(record[1], 0, product.default_code)
-            record[0].write(record[1], 1, product.name)
-            record[0].write(record[1], 2, product.uom_id.name or '')
-            #record[0].write(record[1], 3, product.statistic_category or '')            
-            #record[0].write(record[1], 4, product.categ_id.name or '')
-            record[0].write(record[1], 3, supplier)
-            record[0].write(record[1], 4, inventory)
-            record[0].write(record[1], 5, date)
-            record[0].write(record[1], 6, number)
-            record[0].write(record[1], 7, cost)
-            record[0].write(record[1], 8, cost * inventory)
-            record[0].write(record[1], 9, standard_price)
-            record[0].write(record[1], 10, weight)            
-            record[0].write(record[1], 11, '' if cost else 'X')
-            record[0].write(record[1], 12, note)
-            record[1] += 1                    
+            
+            # Color setup:
+            if cost:
+                color_format = cell_format['text']
+            else:
+                color_format = cell_format['bg']['red']
+
+            excel_pool.write_xls_line(ws_name, row, [
+                product.default_code,
+                product.name,
+                product.uom_id.name or '',
+                product.statistic_category or '',
+                product.categ_id.name or '',
+                supplier,
+                inventory,
+                date,
+                number,
+                cost,
+                cost * inventory,
+                standard_price,
+                weight,
+                note,
+                ], color_format)
+            ws_pages[category_name] += 1    
 
         # ---------------------------------------------------------------------
         # Write empty page with no stock product:
         # ---------------------------------------------------------------------
-        WS_no = WB.add_worksheet('SENZA INVENTARIO')
-        header = [
+        ws_page = 'SENZA INVENTARIO'
+        
+        # Init setup:
+        excel_pool.column_width(ws_empty, [
+            10, 15, 30, 5,
+            5, 15,
+            ])
+        excel_pool.write_xls_line(ws_empty, 0, {
             'CAT. INV.', 'CODICE', 'DESCRIZIONE', 'UM', 
             'CAT. STAT.', 'CATEGORIA',
-            ]
+            }, cell_format['header'])
+
+        # Collect data:
         product_ids = product_pool.search(cr, uid, [
             ('mx_start_qty', '<=', 0.0), # No inventory present
             ], context=context)
-        write_header(WS_no, header)
-        i = 0
+
+        row = 0
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (
@@ -539,35 +578,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     x.default_code, 
                     x.name,
                     )):
-            i += 1    
-            WS_no.write(i, 0, product.inventory_category_id.name)
-            WS_no.write(i, 1, product.default_code)
-            WS_no.write(i, 2, product.name)
-            WS_no.write(i, 3, product.uom_id.name or '')
-            WS_no.write(i, 4, product.statistic_category or '')            
-            WS_no.write(i, 5, product.categ_id.name or '')
-        WB.close()                    
+            row += 1        
+            excel_pool.write_xls_line(ws_name, row, [
+                product.inventory_category_id.name,
+                product.default_code,
+                product.name,
+                product.uom_id.name or '',
+                product.statistic_category or '',
+                product.categ_id.name or '',
+                ], cell_format['text'])
         
-        # ---------------------------------------------------------------------
         # Generate attachment for return file:
-        # ---------------------------------------------------------------------        
-        attachment_pool = self.pool.get('ir.attachment')
-        b64 = open(filename, 'rb').read().encode('base64')
-        attachment_id = attachment_pool.create(cr, uid, {
-            'name': 'Inventario vecchio attachment',
-            'datas_fname': 'precedente_inventario_valorizzato.xlsx',
-            'type': 'binary',
-            'datas': b64,
-            'partner_id': 1,
-            'res_model': 'res.partner',
-            'res_id': 1,
-            }, context=context)        
-        return {
-            'type' : 'ir.actions.act_url',
-            'url': '/web/binary/saveas?model=ir.attachment&field=datas&'
-                'filename_field=datas_fname&id=%s' % attachment_id,
-            'target': 'self',
-            }
+        return excel_pool.return_attachment(
+            cr, uid, 'inventario_inizio_anno', context=context)
 
     def extract_xls_table_inventory(self, cr, uid, ids, data=None, 
             context=None):
