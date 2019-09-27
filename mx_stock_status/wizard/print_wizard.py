@@ -415,8 +415,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 res[2] = self.parent_bom_cost[parent_code]
                 res[1] = _('Preso da DB: %s') % parent_code
             elif product.is_pipe:
-                import pdb; pdb.set_trace()
-                res[2] = product.weight * product.pipe_material_id.last_price    
+                price = product.pipe_material_id.last_price
+                res[2] = product.weight * price
+                res[4] += '[Kg. %s x %s = %s]' % (
+                    weight,
+                    price,
+                    res[2],
+                    )
             else: # Product is normal product
                 i = 0
                 for supplier in product.seller_ids:
