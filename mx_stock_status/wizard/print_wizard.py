@@ -533,7 +533,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 color_format = cell_format['bg']['red']
 
-            excel_pool.write_xls_line(category_name, ws_pages[category_name], [
+            excel_pool.write_xls_line(category_name, ws_names[category_name], [
                 product.default_code,
                 product.name,
                 product.uom_id.name or '',
@@ -549,7 +549,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 weight,
                 note,
                 ], color_format)
-            ws_pages[category_name] += 1    
+            ws_names[category_name] += 1    
 
         # ---------------------------------------------------------------------
         # Write empty page with no stock product:
