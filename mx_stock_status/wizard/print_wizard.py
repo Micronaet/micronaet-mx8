@@ -491,8 +491,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'number': excel_pool.get_format('number'),
             
             'bg': {
-                excel_pool.get_format('bg_red'),            
-                excel_pool.get_format('bg_green'),            
+                'red': excel_pool.get_format('bg_red'),            
+                'green': excel_pool.get_format('bg_green'),            
                 },
             }
 
