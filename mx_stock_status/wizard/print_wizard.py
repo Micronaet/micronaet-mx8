@@ -551,24 +551,28 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 color_number_format = cell_format['bg_number']['red']
                 ws_names[category_name][2] += 1
             
+            data = [
+                product.default_code or '',
+                product.name or '',
+                product.uom_id.name or '',
+                #product.statistic_category or '',
+                #product.categ_id.name or '',
+                supplier or '',
+                (inventory, color_number_format),
+                date or '',
+                (number, color_number_format),
+                (cost, color_number_format),
+                (total, color_number_format),
+                (standard_price, color_number_format),
+                (weight, color_number_format),
+                note or '',
+                ]
             excel_pool.write_xls_line(
-                category_name, 
-                ws_names[category_name][0], [
-                    product.default_code,
-                    product.name,
-                    product.uom_id.name or '',
-                    #product.statistic_category or '',
-                    #product.categ_id.name or '',
-                    supplier,
-                    (inventory, color_number_format),
-                    date,
-                    (number, color_number_format),
-                    (cost, color_number_format),
-                    (total, color_number_format),
-                    (standard_price, color_number_format),
-                    (weight, color_number_format),
-                    note,
-                    ], default_format=color_format)
+                category_name or ws_empty, 
+                ws_names[category_name][0], 
+                data,                    
+                default_format=color_format,
+                )
             ws_names[category_name][0] += 1    
             ws_names[category_name][1] += total
 
