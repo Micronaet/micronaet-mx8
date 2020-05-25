@@ -209,6 +209,7 @@ class AccountInvoiceLine(orm.Model):
     _columns = {
         'refund_line': fields.boolean('Refund line', 
             help='Used for check the creation or the presence'),
+        'pre_payment': fields.boolean('Pagamento anticipato'),
         }
     
     
