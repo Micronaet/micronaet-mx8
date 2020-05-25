@@ -71,6 +71,7 @@ class AccountPaymentTerm(orm.Model):
     _inherit = 'account.payment.term'
     
     _columns = {
+        'pre_payment': fields.boolean('Pagamento anticipato'),
         'has_refund': fields.boolean('has refund cost'),
         'refund_number': fields.integer('# effects', 
             help='Number of effects to pay'), 
@@ -209,7 +210,6 @@ class AccountInvoiceLine(orm.Model):
     _columns = {
         'refund_line': fields.boolean('Refund line', 
             help='Used for check the creation or the presence'),
-        'pre_payment': fields.boolean('Pagamento anticipato'),
         }
     
     
