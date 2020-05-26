@@ -133,7 +133,7 @@ smtp = {
         %s 
 
         <b>Micronaet S.r.l.</b>
-        ''' % now, order_list,
+        ''' % (now, order_list),
     'subject': 'Dettaglio ordini pronti non chiusi: %s' % now,    
     }
 
