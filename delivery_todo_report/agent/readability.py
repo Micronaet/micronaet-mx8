@@ -146,7 +146,9 @@ smtp = {
 # -----------------------------------------------------------------------------
 # Get mailserver option:
 mailer_ids = mailer.search([
-    ('sequence', '=', 5)])
+    ('sequence', '=', 5),
+    ('forecasted_production_id', '!=', False),
+    ])
 if not mailer_ids:
     print '[ERR] No mail server configured in ODOO'
     sys.exit()
