@@ -51,9 +51,10 @@ odoo = erppeek.Client(
 # Pool used:
 order_pool = odoo.model('sale.order')
 
+# -----------------------------------------------------------------------------
 # Close all order:
+# -----------------------------------------------------------------------------
 print 'Inizio procedura di aggiornamento ordini:'
-
 print 'Chiusi gli ordini presenti consegnati'
 order_pool.scheduled_check_close_order()
 
@@ -72,4 +73,116 @@ for item_id in order_ids:
         print '%s. Ordine aggiornato: %s' % (i, item_id)
     except:
         print '%s. Errore aggiornando: %s' % (i, item_id)
-print 'Procedura terminata'
+
+# -----------------------------------------------------------------------------
+# Controllo pronti da chiudere
+# -----------------------------------------------------------------------------
+print 'Controllo ordini pronti da consegnare'
+now = ('%s' %datetime.now())[:19]
+
+order_ids = order_pool.search([
+    ('state', 'not in', ('cancel', 'sent', 'draft')),
+    ('mx_closed', '=', False),    
+    ('all_produced', '=', True),
+    ])
+    
+if not order_ids:
+    print 'Nessun ordine pronto, procedura terminata'
+    sys.exit()
+    
+print 'Trovati %s ordini da valutare' % len(order_ids)
+
+order_list = []
+for order in order_pool.browse(order_ids):
+    order_list.append('Ordine: %s del %s (Scad. %s) Cliente %s [Tot. %s]' % (
+        order.name,
+        order.date_confirm or '',
+        order.date_deadline or '',
+        order.partner_id.name,
+        order.amount_total,
+        ))
+
+# -----------------------------------------------------------------------------
+# Mail:
+# -----------------------------------------------------------------------------
+import pdb; pdb.set_trace()
+smtp = {
+    'to': config.get('smtp', 'to'),
+    'text': '''
+        <p>Spett.li responsabili vendite,</p>
+        <p>Questa &egrave; una mail automatica giornaliera inviata da 
+            <b>ODOO</b> con lo stato ordini pronti non chiusi.
+        </p>
+
+        <p>Situazione aggiornata alla data di riferimento: <b>%s</b></p>
+
+        <b>Micronaet S.r.l.</b>
+        ''' % now,
+    'subject': 'Dettaglio ordini pronti non chiusi: %s' % now,    
+    'folder': config.get('smtp', 'folder'),
+    }
+filename = 'ordini_pronti_non_chiusi_%s.xlsx' % now.replace(
+    '/', '_').replace(':', '_').replace('-', '_')
+fullname = os.path.expanduser(
+    os.path.join(smtp['folder'], filename))
+
+# -----------------------------------------------------------------------------
+# Connect to ODOO:
+# -----------------------------------------------------------------------------
+odoo = erppeek.Client(
+    'http://%s:%s' % (odoo['server'], odoo['port']), 
+    db=odoo['database'],
+    user=odoo['user'],
+    password=odoo['password'],
+    )
+
+# -----------------------------------------------------------------------------
+# SMTP Sent:
+# -----------------------------------------------------------------------------
+# Get mailserver option:
+mailer_ids = mailer.search([])
+if not mailer_ids:
+    print '[ERR] No mail server configured in ODOO'
+    sys.exit()
+
+odoo_mailer = mailer.browse(mailer_ids)[0]
+
+# Open connection:
+print '[INFO] Sending using "%s" connection [%s:%s]' % (
+    odoo_mailer.name,
+    odoo_mailer.smtp_host,
+    odoo_mailer.smtp_port,
+    )
+
+if odoo_mailer.smtp_encryption in ('ssl', 'starttls'):
+    smtp_server = smtplib.SMTP_SSL(
+        odoo_mailer.smtp_host, odoo_mailer.smtp_port)
+else:
+    print '[ERR] Connect only SMTP SSL server!'
+    sys.exit()
+    #server_smtp.start() # TODO Check
+
+smtp_server.login(odoo_mailer.smtp_user, odoo_mailer.smtp_pass)
+for to in smtp['to'].replace(' ', '').split(','):
+    print 'Senting mail to: %s ...' % to
+    msg = MIMEMultipart()
+    msg['Subject'] = smtp['subject']
+    msg['From'] = odoo_mailer.smtp_user
+    msg['To'] = smtp['to'] #', '.join(self.EMAIL_TO)
+    msg.attach(MIMEText(smtp['text'], 'html'))
+
+
+    part = MIMEBase('application', 'octet-stream')
+    part.set_payload(open(fullname, 'rb').read())
+    Encoders.encode_base64(part)
+    part.add_header(
+        'Content-Disposition', 'attachment; filename="%s"' % filename)
+
+    msg.attach(part)
+
+    # Send mail:
+    smtp_server.sendmail(odoo_mailer.smtp_user, to, msg.as_string())
+
+smtp_server.quit()
+
+print 'Procedura terminata con invio mail ordini pendenti da consegnare'
