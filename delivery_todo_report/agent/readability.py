@@ -27,7 +27,8 @@ import ConfigParser
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEBase import MIMEBase
 from email.mime.text import MIMEText
-from email import Encodersfrom datetime import datetime
+from email import Encoders
+from datetime import datetime
 
 # -----------------------------------------------------------------------------
 #                             Read Parameters:
