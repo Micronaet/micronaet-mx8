@@ -92,7 +92,7 @@ order_ids = order_pool.search([
     ('state', 'not in', ('cancel', 'sent', 'draft')),
     ('mx_closed', '=', False),    
     ('all_produced', '=', True),
-    ('previsional', '=', True),
+    ('previsional', '=', False),
     ('forecasted_production_id', '=', False),
     ])
     
