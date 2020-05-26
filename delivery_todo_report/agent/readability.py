@@ -61,6 +61,7 @@ mailer = odoo.model('ir.mail_server')
 # -----------------------------------------------------------------------------
 # Close all order:
 # -----------------------------------------------------------------------------
+"""
 print 'Inizio procedura di aggiornamento ordini:'
 print 'Chiusi gli ordini presenti consegnati'
 order_pool.scheduled_check_close_order()
@@ -80,7 +81,7 @@ for item_id in order_ids:
         print '%s. Ordine aggiornato: %s' % (i, item_id)
     except:
         print '%s. Errore aggiornando: %s' % (i, item_id)
-
+"""
 # -----------------------------------------------------------------------------
 # Controllo pronti da chiudere
 # -----------------------------------------------------------------------------
