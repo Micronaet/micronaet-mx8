@@ -51,6 +51,7 @@ odoo = erppeek.Client(
 
 # Pool used:
 order_pool = odoo.model('sale.order')
+mailer = odoo.model('ir.mail_server')
 
 # -----------------------------------------------------------------------------
 # Close all order:
@@ -79,7 +80,6 @@ for item_id in order_ids:
 # -----------------------------------------------------------------------------
 # Controllo pronti da chiudere
 # -----------------------------------------------------------------------------
-import pdb; pdb.set_trace()
 print 'Controllo ordini pronti da consegnare'
 now = ('%s' %datetime.now())[:19]
 
@@ -119,7 +119,6 @@ order_list += '</table>'
 # -----------------------------------------------------------------------------
 # Mail:
 # -----------------------------------------------------------------------------
-import pdb; pdb.set_trace()
 smtp = {
     'to': config.get('smtp', 'to'),
     'text': '''
@@ -138,16 +137,6 @@ smtp = {
     }
 
 # -----------------------------------------------------------------------------
-# Connect to ODOO:
-# -----------------------------------------------------------------------------
-odoo = erppeek.Client(
-    'http://%s:%s' % (odoo['server'], odoo['port']), 
-    db=odoo['database'],
-    user=odoo['user'],
-    password=odoo['password'],
-    )
-
-# -----------------------------------------------------------------------------
 # SMTP Sent:
 # -----------------------------------------------------------------------------
 # Get mailserver option:
@@ -164,7 +153,7 @@ print '[INFO] Sending using "%s" connection [%s:%s]' % (
     odoo_mailer.smtp_host,
     odoo_mailer.smtp_port,
     )
-
+import pdb; pdb.set_trace()
 if odoo_mailer.smtp_encryption in ('ssl', 'starttls'):
     smtp_server = smtplib.SMTP_SSL(
         odoo_mailer.smtp_host, odoo_mailer.smtp_port)
