@@ -22,6 +22,7 @@
 
 import erppeek
 import sys
+import smtplib
 import ConfigParser
 from datetime import datetime
 
