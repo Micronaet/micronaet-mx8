@@ -24,7 +24,10 @@ import erppeek
 import sys
 import smtplib
 import ConfigParser
-from datetime import datetime
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.mime.text import MIMEText
+from email import Encodersfrom datetime import datetime
 
 # -----------------------------------------------------------------------------
 #                             Read Parameters:
