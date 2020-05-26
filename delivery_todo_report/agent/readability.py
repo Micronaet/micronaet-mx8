@@ -77,6 +77,7 @@ for item_id in order_ids:
 # -----------------------------------------------------------------------------
 # Controllo pronti da chiudere
 # -----------------------------------------------------------------------------
+import pdb; pdb.set_trace()
 print 'Controllo ordini pronti da consegnare'
 now = ('%s' %datetime.now())[:19]
 
@@ -119,7 +120,6 @@ smtp = {
         <b>Micronaet S.r.l.</b>
         ''' % now,
     'subject': 'Dettaglio ordini pronti non chiusi: %s' % now,    
-    'folder': config.get('smtp', 'folder'),
     }
 filename = 'ordini_pronti_non_chiusi_%s.xlsx' % now.replace(
     '/', '_').replace(':', '_').replace('-', '_')
