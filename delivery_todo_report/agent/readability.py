@@ -95,15 +95,26 @@ if not order_ids:
     
 print 'Trovati %s ordini da valutare' % len(order_ids)
 
-order_list = []
+order_list = '''
+    <table>
+       <th>
+           <td>Ordine</td>
+           <td>Data</td>
+           <td>Scad.</td>
+           <td>Cliente</td>
+           <td>Totale</td>
+       </th>           
+'''
+
 for order in order_pool.browse(order_ids):
-    order_list.append('Ordine: %s del %s (Scad. %s) Cliente %s [Tot. %s]' % (
+    order_list += '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
         order.name,
         order.date_confirm or '',
         order.date_deadline or '',
         order.partner_id.name,
         order.amount_total,
         ))
+order_list += '</table>'
 
 # -----------------------------------------------------------------------------
 # Mail:
@@ -118,15 +129,13 @@ smtp = {
         </p>
 
         <p>Situazione aggiornata alla data di riferimento: <b>%s</b></p>
+         
+        %s 
 
         <b>Micronaet S.r.l.</b>
-        ''' % now,
+        ''' % now, order_list,
     'subject': 'Dettaglio ordini pronti non chiusi: %s' % now,    
     }
-filename = 'ordini_pronti_non_chiusi_%s.xlsx' % now.replace(
-    '/', '_').replace(':', '_').replace('-', '_')
-fullname = os.path.expanduser(
-    os.path.join(smtp['folder'], filename))
 
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
@@ -171,16 +180,6 @@ for to in smtp['to'].replace(' ', '').split(','):
     msg['Subject'] = smtp['subject']
     msg['From'] = odoo_mailer.smtp_user
     msg['To'] = smtp['to'] #', '.join(self.EMAIL_TO)
-    msg.attach(MIMEText(smtp['text'], 'html'))
-
-
-    part = MIMEBase('application', 'octet-stream')
-    part.set_payload(open(fullname, 'rb').read())
-    Encoders.encode_base64(part)
-    part.add_header(
-        'Content-Disposition', 'attachment; filename="%s"' % filename)
-
-    msg.attach(part)
 
     # Send mail:
     smtp_server.sendmail(odoo_mailer.smtp_user, to, msg.as_string())
