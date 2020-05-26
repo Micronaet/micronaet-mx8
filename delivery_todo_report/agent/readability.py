@@ -23,6 +23,7 @@
 import erppeek
 import sys
 import ConfigParser
+from datetime import datetime
 
 # -----------------------------------------------------------------------------
 #                             Read Parameters:
@@ -54,6 +55,7 @@ order_pool = odoo.model('sale.order')
 # -----------------------------------------------------------------------------
 # Close all order:
 # -----------------------------------------------------------------------------
+"""
 print 'Inizio procedura di aggiornamento ordini:'
 print 'Chiusi gli ordini presenti consegnati'
 order_pool.scheduled_check_close_order()
@@ -73,7 +75,7 @@ for item_id in order_ids:
         print '%s. Ordine aggiornato: %s' % (i, item_id)
     except:
         print '%s. Errore aggiornando: %s' % (i, item_id)
-
+"""
 # -----------------------------------------------------------------------------
 # Controllo pronti da chiudere
 # -----------------------------------------------------------------------------
@@ -182,7 +184,6 @@ for to in smtp['to'].replace(' ', '').split(','):
 
     # Send mail:
     smtp_server.sendmail(odoo_mailer.smtp_user, to, msg.as_string())
-
 smtp_server.quit()
 
 print 'Procedura terminata con invio mail ordini pendenti da consegnare'
