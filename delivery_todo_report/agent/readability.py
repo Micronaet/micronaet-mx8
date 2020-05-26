@@ -113,7 +113,7 @@ for order in order_pool.browse(order_ids):
         order.date_deadline or '',
         order.partner_id.name,
         order.amount_total,
-        ))
+        )
 order_list += '</table>'
 
 # -----------------------------------------------------------------------------
