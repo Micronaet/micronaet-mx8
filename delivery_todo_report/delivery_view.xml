@@ -284,6 +284,7 @@
 
                     <field name="delivery_amount_b" string="B" />
                     <field name="delivery_amount_s" string="S"/>
+                    <field name="delivery_amount_oc" string="OC Residuo"/>
                     
                     <field name="state" invisible="1"/>             
                     <field name="text_delivery_note" />
