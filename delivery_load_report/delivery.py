@@ -265,7 +265,7 @@ class SaleOrder(orm.Model):
             self.write(cr, uid, order.id, {
                 'delivery_amount_b': order_amount_b,
                 'delivery_amount_s': order_amount_s,
-                'delivery_amount_oc': order_amount_s + order_amount_b,
+                #'delivery_amount_oc': order_amount_s + order_amount_b,
 
                 'delivery_ml_total': order_ml_tot,
                 'delivery_ml_partial': order_ml_part,
@@ -309,7 +309,7 @@ class SaleOrder(orm.Model):
         # Total:
         'delivery_amount_b': fields.float('Amount B', digits=(16, 2)),             
         'delivery_amount_s': fields.float('Amount S', digits=(16, 2)),
-        'delivery_amount_oc': fields.float('Residuo OC', digits=(16, 2)),
+        #'delivery_amount_oc': fields.float('Residuo OC', digits=(16, 2)),
 
         'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
         'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
