@@ -166,6 +166,21 @@ class AccountInvoice(orm.Model):
     # Override validation for update pick:   
     # ------------------------------------
     def invoice_validate(self, cr, uid, ids, context=None):
+        # Check mandatory data:
+        invoice = self.browse(cr, uid, ids, context=context)[0]
+        partner = invoice.partner_id
+        destination = invoice.destination_partner_id
+        if not partner.sql_customer_code:
+            raise osv.except_osv(
+                _('Errore'), 
+                _('Sincronizzare il cliente di Mexal o mettere il codice!'),
+                )
+        if destination and not destination.sql_customer_code:
+            raise osv.except_osv(
+                _('Errore'), 
+                _('Indicare il codice di mexal nella destinazione!'),
+                )
+        
         res = super(AccountInvoice, self).invoice_validate(cr, uid, ids, 
             context=context)
             
