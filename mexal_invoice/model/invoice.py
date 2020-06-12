@@ -175,7 +175,7 @@ class AccountInvoice(orm.Model):
                 _('Errore'), 
                 _('Sincronizzare il cliente di Mexal o mettere il codice!'),
                 )
-        if destination and not destination.sql_customer_code:
+        if destination and not destination.sql_destination_code:
             raise osv.except_osv(
                 _('Errore'), 
                 _('Indicare il codice di mexal nella destinazione!'),
