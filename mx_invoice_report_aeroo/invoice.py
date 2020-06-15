@@ -53,7 +53,7 @@ class ProductProduct(orm.Model):
     _columns = {
         'is_pallet': fields.boolean(
             'E\' un Pallet',
-            help='Utilizzato per calcolare i totali pallet dove occorre')
+            help='Utilizzato per calcolare i totali pallet dove occorre'),
         'not_intra_cee_report': fields.boolean(
             'Non in intra CEE',
             help='Non utilizzare l\'articolo nella pagina extra Intra CEE')
