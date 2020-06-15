@@ -36,6 +36,7 @@
         'base',
         'account',
         'report_aeroo',
+        #'l10n_it_ddt_intra_extra',
         # 'l10n_it_ddt',  # For DDT data intra CEE report
         # 'force_description', # TODO
         # 'report_aeroo_ooo',
