@@ -203,7 +203,7 @@ class Parser(report_sxw.rml_parse):
             return o.force_vector or ''
         elif o.default_carrier_id and o.default_carrier_id.partner_id:
             partner = o.default_carrier_id.partner_id
-            return '''%s\n%s\n%s %s %s\nP.IVA: %s Tel.: %s\nN. Albo Trasp.: %s''' % (
+            return '''%s\n%s - %s %s %s\nP.IVA: %s Tel.: %s - N. Albo Trasp.: %s''' % (
                     partner.name or '',
                     partner.street or '',
                     partner.zip or '',
