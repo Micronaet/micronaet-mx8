@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_carriage_condition_intra_tree" model="ir.ui.view">
+            <field name="name">stock.picking.carriage_condition.tree</field>
+            <field name="model">stock.picking.carriage_condition</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_carriage_condition_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="intra_cee_page" />
+                </field>
+            </field>
+        </record>
+        <record id="view_carriage_condition_intra_form" model="ir.ui.view">
+            <field name="name">stock.picking.carriage_condition.form</field>
+            <field name="model">stock.picking.carriage_condition</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_carriage_condition_form"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="intra_cee_page" />
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

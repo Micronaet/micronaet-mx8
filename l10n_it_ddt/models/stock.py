@@ -44,10 +44,6 @@ class StockPickingCarriageCondition(models.Model):
     name = fields.Char(string='Carriage Condition', required=True,
        translate=True)
     note = fields.Text(string='Note')
-    intra_cee_page = fields.Boolean(
-        string='Pagina Intra CEE',
-        help='Richiesta la pagina Intra CEE in fattura',
-        )
 
 
 class StockPickingGoodsDescription(models.Model):

@@ -194,7 +194,6 @@
             <field name="arch" type="xml">
                 <tree string="Carriage Conditions">
                     <field name="name"/>
-                    <field name="intra_cee_page" />
                 </tree>
             </field>
         </record>
@@ -207,7 +206,6 @@
                 <form string="Carriage Condition">
                     <group>
                         <field name="name"/>
-                        <field name="intra_cee_page" />
                         <field name="note"/>
                     </group>
                 </form>
