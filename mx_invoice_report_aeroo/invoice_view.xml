@@ -12,7 +12,7 @@
              </field>
          </field>
      </record>
-     
+
      <record model="ir.ui.view" id="view_res_partner_form">
          <field name="name">res.partner.form</field>
          <field name="model">res.partner</field>
@@ -23,7 +23,17 @@
              </field>
          </field>
      </record>
-     
-</data>    
+
+     <record model="ir.ui.view" id="product_normal_form_for_pallet_view">
+         <field name="name">product.product.form</field>
+         <field name="model">product.product</field>
+         <field name="inherit_id" ref="product.product_normal_form_view"/>
+         <field name="arch" type="xml">
+             <field name="active" position="after">
+                 <field name="is_pallet" />
+             </field>
+         </field>
+     </record>
+</data>
 </openerp>
 

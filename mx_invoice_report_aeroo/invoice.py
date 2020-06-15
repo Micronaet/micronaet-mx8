@@ -35,50 +35,66 @@ from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 
 _logger = logging.getLogger(__name__)
 
+
+class ProductProduct(orm.Model):
+    """ Model name: Extra data for product
+    """
+
+    _inherit = 'product.product'
+
+    _columns = {
+        'is_pallet': fields.boolean(
+            'E\' un Pallet',
+            help='Utilizzato per calcolare i totali pallet dove occorre')
+    }
+
+
 class ResCompany(orm.Model):
     """ Model name: Privacy policy
     """
-    
+
     _inherit = 'res.company'
-    
+
     _columns = {
         'privacy_policy': fields.text('Privacy policy', translate=True),
         }
 
+
 class ResPartner(orm.Model):
     """ Model name: Privacy policy
     """
-    
+
     _inherit = 'res.partner'
-    
+
     _columns = {
         'privacy_policy_signed': fields.boolean('Privacy policy firmata'),
         }
 
+
 class AccountInvoice(orm.Model):
     """ Model name: AccountInvoice
     """
-    
+
     _inherit = 'account.invoice'
 
     def get_invoice_text_mail(self, cr, uid, ids, fields, args, context=None):
-        ''' Prepare text block for mail depend on customer:
-        ''' 
+        """ Prepare text block for mail depend on customer:
+        """
         res = {}
         if len(ids) > 1:
             return res
-        
+
         invoice_pool = self.pool.get('account.invoice')
         invoice = invoice_pool.browse (cr, uid, ids, context=context)[0]
-        
+
         if invoice.partner_id.is_private:
             res[ids[0]] = '''Fiscalmente valida come originale ai sensi della 
                 Ris. Min. 132/e del 28/05/1997'''
@@ -102,7 +118,6 @@ class AccountInvoice(orm.Model):
 
     _columns = {
         'mail_invoice_text': fields.function(
-            get_invoice_text_mail, method=True, 
-            type='text', string='Mail text', store=False), 
+            get_invoice_text_mail, method=True,
+            type='text', string='Mail text', store=False),
         }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
