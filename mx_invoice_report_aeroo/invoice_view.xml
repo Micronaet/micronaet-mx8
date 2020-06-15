@@ -31,6 +31,7 @@
          <field name="arch" type="xml">
              <field name="active" position="after">
                  <field name="is_pallet" />
+                 <field name="not_intra_cee_report"/>
              </field>
          </field>
      </record>

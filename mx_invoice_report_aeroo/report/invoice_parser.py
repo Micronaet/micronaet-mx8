@@ -137,7 +137,7 @@ class Parser(report_sxw.rml_parse):
             'get_imponibile_mode': self.get_imponibile_mode,
             'template_substitute': self.template_substitute,
 
-            #Intra CEE management:
+            # Intra CEE management:
             'has_intra_cee_page': self.has_intra_cee_page,
             'intra_cee_total_pallet': self.intra_cee_total_pallet,
 
