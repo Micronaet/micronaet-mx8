@@ -156,8 +156,8 @@ class Parser(report_sxw.rml_parse):
     def has_intra_cee_page(self, invoice):
         """ Check if need extra CEE page
         """
-        # TODO check here if needed
-        return True
+        return (invoice.fiscal_position.intra_cee_page and
+                invoice.carriage_condition_id.intra_cee_page)
 
     def intra_cee_total_pallet(self, invoice):
         """ Check if need extra CEE page

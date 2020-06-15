@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-# ODOO (ex OpenERP) 
+# ODOO (ex OpenERP)
 # Open Source Management Solution
 # Copyright (C) 2001-2015 Micronaet S.r.l. (<http://www.micronaet.it>)
 # Developer: Nicola Riolini @thebrush (<https://it.linkedin.com/in/thebrush>)
@@ -13,7 +13,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
@@ -23,32 +23,31 @@
 
 
 {
-    'name' : 'Italian localization - Mx Invoice report aeroo',
-    'version' : '0.1',
-    'category' : 'Localization/Italy/Reporting',
-    'description' : '''
+    'name': 'Italian localization - Mx Invoice report aeroo',
+    'version': '0.1',
+    'category': 'Localization/Italy/Reporting',
+    'description': '''
         Base invoice in Aeroo:
         ''',
     'author': 'Micronaet S.r.l. - Nicola Riolini',
     'website': 'http://www.micronaet.it',
     'license': 'AGPL-3',
-    'depends' : [
+    'depends': [
         'base',
         'account',
         'report_aeroo',
-        #'force_description', # TODO 
-        #'report_aeroo_ooo',
-        #'excel_export', # Used for export volume calc.
+        # 'l10n_it_ddt',  # For DDT data intra CEE report
+        # 'force_description', # TODO
+        # 'report_aeroo_ooo',
+        # 'excel_export', # Used for export volume calc.
         ],
-    'init_xml' : [], 
-    'data' : [
+    'init_xml': [],
+    'data': [
         'invoice_view.xml',
         'report/invoice_report.xml',
         ],
-    'demo_xml' : [],
+    'demo_xml': [],
     'test': [],
-    'active' : False, 
-    'installable' : True, 
+    'active': False,
+    'installable': True,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

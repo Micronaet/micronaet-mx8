@@ -35,6 +35,17 @@
              </field>
          </field>
      </record>
+
+     <record model="ir.ui.view" id="view_account_position_intra_cee_report_form">
+         <field name="name">account.fiscal.position.intra.report.form</field>
+         <field name="model">account.fiscal.position</field>
+         <field name="inherit_id" ref="account.view_account_position_form"/>
+         <field name="arch" type="xml">
+             <field name="active" position="after">
+                 <field name="intra_cee_page"/>
+             </field>
+         </field>
+     </record>
 </data>
 </openerp>
 

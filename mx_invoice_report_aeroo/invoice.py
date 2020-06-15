@@ -60,6 +60,19 @@ class ProductProduct(orm.Model):
     }
 
 
+class AccountFiscalPosition(orm.Model):
+    """ Model name: Extra data for fiscal position
+    """
+
+    _inherit = 'account.fiscal.position'
+
+    _columns = {
+        'intra_cee_page': fields.boolean(
+            'Pagina Intra CEE',
+            help='Richiesta la pagina Intra CEE in fattura'),
+    }
+
+
 class ResCompany(orm.Model):
     """ Model name: Privacy policy
     """
