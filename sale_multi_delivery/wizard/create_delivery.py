@@ -49,8 +49,9 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         # Pool used:
         order_pool = self.pool.get('sale.order')
         line_pool = self.pool.get('sale.order.line')
+        delivery_id = ids[0]
 
-        wizard = self.browse(cr, uid, ids, context=context)
+        wizard = self.browse(cr, uid, delivery_id, context=context)
         if wizard.order_ids:
             raise osv.except_osv(
                 _('Errore'),
@@ -87,7 +88,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         # Read Excel file
         # ---------------------------------------------------------------------
         ws = wb.sheet_by_index(0)
-        _logger.warning('Read page: %s' % ws_name)
+        _logger.warning('Read first page')
         import pdb; pdb.set_trace()
 
         linked_ids = []
@@ -162,11 +163,12 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
             if order_id not in linked_ids:
                 linked_ids.append(order_id)
                 order_pool.write(cr, uid, [order_id], {
-                    'multi_delivery_id': self.id,
+                    'multi_delivery_id': delivery_id,
                 }, context=context)
 
             # b. Link sale line q.
             line_pool.write(cr, uid, [line_id], {
+                'multi_delivery_id': delivery_id,  # TODO only this line?
                 'to_delivery_qty': quantity,
             }, context=context)
         return True
@@ -311,7 +313,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                     order.partner_id.name,
                     order.date_order,
                     )
-        res += "</table>" # close table for list element
+        res += "</table>"  # close table for list element
         return res
 
     _columns = {

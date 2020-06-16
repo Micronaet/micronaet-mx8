@@ -365,6 +365,7 @@ class StockPicking(orm.Model):
             'sale.order.delivery', 'Multi delivery', ondelete='set null'),
         }
 
+
 class SaleOrderLine(orm.Model):
     """ Model name: SaleOrder
     """
@@ -394,7 +395,7 @@ class SaleOrderLine(orm.Model):
                 line_proxy.product_uom_qty - line_proxy.delivered_qty,
             }, context=context)
 
-    #def _get_move_lines(self, cr, uid, ids, context=None):
+    # def _get_move_lines(self, cr, uid, ids, context=None):
     #    ''' When change ref. in order also in lines
     #    '''
     #    sale_pool = self.pool['sale.order']
@@ -404,7 +405,7 @@ class SaleOrderLine(orm.Model):
     #            res.append(line.id)
     #    return res
 
-    #def _get_move_line_lines(self, cr, uid, ids, context=None):
+    # def _get_move_line_lines(self, cr, uid, ids, context=None):
     #    ''' When change ref. in order also in lines
     #    '''
     #    return ids
@@ -414,7 +415,7 @@ class SaleOrderLine(orm.Model):
         'multi_delivery_id': fields.many2one(
             'sale.order.delivery', 'Multi delivery', ondelete='set null'),
 
-        #'multi_delivery_id': fields.related(
+        # 'multi_delivery_id': fields.related(
         #    'order_id', 'multi_delivery_id',
         #    type='many2one', relation='sale.order.delivery',
         #    string='Multi delivery', store={
