@@ -194,6 +194,7 @@ class SaleOrderDelivery(orm.Model):
                 note += '%s\n%s' % (mode.upper(), text)
         self.write(cr, uid, [delivery_id], {
             'partner_id': partner_id,
+            'file': False,  # Remove attachment no more used
             'note': note,
         }, context=context)
 
