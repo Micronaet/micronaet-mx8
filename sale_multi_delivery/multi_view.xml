@@ -7,10 +7,10 @@
              <field name="model">sale.order.line</field>
              <field name="priority" eval="40" />
              <field name="arch" type="xml">
-                 <search string="Sale order delivery" version="7.0">        
+                 <search string="Sale order delivery" version="7.0">
                      <field name="product_uom_qty" />
-                     <field name="client_order_ref" readonly="1" />                                             
-                     <field name="multi_delivery_id" filter_domain="[('multi_delivery_id','=',self)]"/>                     
+                     <field name="client_order_ref" readonly="1" />
+                     <field name="multi_delivery_id" filter_domain="[('multi_delivery_id','=',self)]"/>
 
                      <filter name="open_state" string="Open delivery" domain="[('state','=','draft')]"/>
                      <filter name="closed_state" string="Closed delivery" domain="[('state','!=','draft')]"/>
@@ -18,15 +18,15 @@
                      <filter name="my_open_delivery" string="My open delivery" domain="[('create_uid', '=', user.id),('state','=','draft')]"/>
 
                      <filter name="to_deliver_item" string="To deliver" domain="[('to_deliver_qty','>',0.0)]"/>
-                     
+
                      <group expand="0" string="Group By">
                          <filter name="group_product" string="Product" context="{'group_by': 'product_uom_id'}"/>
                          <filter name="group_deadline" string="Deadline" context="{'group_by': 'date_deadline'}"/>
-                     </group>                
+                     </group>
                  </search>
              </field>
          </record>
-         
+
          <record model="ir.ui.view" id="view_sale_order_line_for_delivery_tree">
              <field name="name">sale.order.line.for.delivery.form</field>
              <field name="model">sale.order.line</field>
@@ -35,7 +35,7 @@
                  <tree string="Sale order to deliver" editable="bottom" colors="blue:to_deliver_qty>0">
                      <field name="multi_delivery_id" readonly="1" /><!--TODO invisible-->
                      <field name="order_id" readonly="1"/>
-                     <field name="client_order_ref" readonly="1" />                                             
+                     <field name="client_order_ref" readonly="1" />
                      <field name="product_id" readonly="1" />
                      <field name="product_uom" readonly="1" />
                      <field name="product_uom_qty" readonly="1" />
@@ -59,25 +59,30 @@
              <field name="search_view_id" ref="view_sale_order_line_for_delivery_search"/>
              <field name="context">{'search_default_multi_delivery_id': active_id}</field>
              <!--<field name="domain">[('multi_delivery_id','=',active_id)]</field>-->
-         </record>         
+         </record>
 
          <!--sale.order.delivery-->
          <record model="ir.ui.view" id="view_sale_order_delivery_form">
              <field name="name">sale.order.delivery.form</field>
              <field name="model">sale.order.delivery</field>
              <field name="arch" type="xml">
-                 <form string="Sale order delivery" version="7.0">        
-                     <head>                        
+                 <form string="Sale order delivery" version="7.0">
+                     <head>
                          <field name="state"  widget="statusbar" statusbar_visible="draft,done"/>
                      </head>
                      <sheet>
                          <group col="4" colspan="4">
-                             <field name="name" /> 
+                             <field name="name" />
                              <field name="partner_id" />
                              <field name="create_date" />
                              <field name="create_uid" />
                              <button name="action_delivery" string="Create pickings" type="object" icon="gtk-go-forward" colspan="1" attrs="{'invisible':[('state','!=','draft')]}"/>
-                             
+
+                             <group colspan="4" col="4" attrs="{'invisible': [('order_ids', '!=', False)]}">
+                                 <field name="file" />
+                                 <button name="import_load_delivery_file" type="object" string="Carica consegna da file" icon="STOCK_DND" />
+                             </group>
+
                              <notebook colspan="4">
                                  <page string="Picking"  attrs="{'invisible':[('state','=','draft')]}">
                                      <button name="button_open_all_picking" string="Open all pick" type="object" icon="gtk-edit" colspan="1" attrs="{'invisible':[('state','=','draft')]}"/>
@@ -94,7 +99,7 @@
                                              <button name="button_open_invoice" string="Open" type="object" icon="gtk-go-forward" attrs="{'invisible':[('invoice_id','=',False)]}"/>
                                              <field name="invoice_id" readonly="1"/>
                                              <field name="state" invisible="1" />
-                                             
+
                                              <!--<field name="name" readonly="1"/>
                                              <field name="partner_id" readonly="1" />
                                              <field name="destination_partner_id" readonly="1" />
@@ -113,7 +118,7 @@
                                              <button name="button_open_order" string="Open" type="object" icon="gtk-go-forward"/>
                                              <field name="mx_closed" readonly="1"/>
                                              <field name="name" readonly="1"/>
-                                             <field name="client_order_ref" readonly="1" />                                             
+                                             <field name="client_order_ref" readonly="1" />
                                              <field name="partner_id" readonly="1" />
                                              <field name="mx_agent_id" readonly="1" />
                                              <field name="destination_partner_id" readonly="1" />
@@ -131,7 +136,7 @@
                                          <tree string="Lines currently linked" editable="bottom" create="0" delete="0" colors="blue:to_deliver_qty>0">
                                              <field name="partner_id" readonly="1" />
                                              <field name="order_id" readonly="1" />
-                                             <field name="client_order_ref" readonly="1" />                                             
+                                             <field name="client_order_ref" readonly="1" />
                                              <field name="date_deadline" readonly="1" />
                                              <field name="product_id" readonly="1" />
                                              <field name="name" readonly="1"/>
@@ -151,7 +156,7 @@
                                  </page>
                              </notebook>
                          </group>
-                     </sheet>        
+                     </sheet>
                  </form>
              </field>
          </record>
@@ -159,9 +164,9 @@
              <field name="name">sale.order.delivery.tree</field>
              <field name="model">sale.order.delivery</field>
              <field name="arch" type="xml">
-                 <tree string="Sale order delivery">        
-                     <field name="name" /> 
-                     <field name="partner_id" /> 
+                 <tree string="Sale order delivery">
+                     <field name="name" />
+                     <field name="partner_id" />
                      <field name="create_date" />
                      <field name="create_uid" />
                      <field name="state" />
@@ -173,22 +178,22 @@
              <field name="name">sale.order.delivery.tree</field>
              <field name="model">sale.order.delivery</field>
              <field name="arch" type="xml">
-                 <search string="Sale order delivery" version="7.0">        
+                 <search string="Sale order delivery" version="7.0">
                      <field name="create_date" />
                      <field name="create_uid" />
-                     
+
                      <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
 
-                     <filter name="my_open_delivery" string="My open delivery" domain="[('create_uid', '=', uid),('state','=','draft')]"/>                     
+                     <filter name="my_open_delivery" string="My open delivery" domain="[('create_uid', '=', uid),('state','=','draft')]"/>
                      <filter name="state_draft" string="Draft state" domain="[('state','=','draft')]"/>
                      <filter name="state_done" string="Done state" domain="[('state','=','done')]"/>
-                     
+
                      <group expand="0" string="Group By">
                          <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
                          <filter name="group_state" string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                          <filter name="group_date" string="Date" context="{'group_by': 'crete_date'}"/>
                          <filter name="group_uid" string="User" context="{'group_by': 'crete_uid'}"/>
-                     </group>                
+                     </group>
                  </search>
              </field>
          </record>
@@ -202,12 +207,12 @@
              <field name="context">{'search_default_my_open_delivery': True}</field>
              <field name="domain">[]</field>
          </record>
-         
-         <menuitem 
-             parent="sale.menu_sale_order" 
-             id="menu_action_sale_order_delivery" 
+
+         <menuitem
+             parent="sale.menu_sale_order"
+             id="menu_action_sale_order_delivery"
              action="action_sale_order_delivery"
-             sequence="10"             
+             sequence="10"
              />
     </data>
 </openerp>

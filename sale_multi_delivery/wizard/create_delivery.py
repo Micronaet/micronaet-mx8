@@ -167,6 +167,8 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                 partner_id = order_partner_id
                 self.write(cr, uid, [delivery_id], {
                     'partner_id': partner_id,
+                    # 'create_date'
+                    # 'create_uid'
                     'note': 'Importato da file di consegna',
                 }, context=context)
 
