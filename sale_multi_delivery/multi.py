@@ -19,6 +19,8 @@
 ###############################################################################
 import os
 import sys
+import base64
+import xlrd
 import logging
 import openerp
 import openerp.netsvc as netsvc
@@ -52,22 +54,23 @@ class SaleOrderDelivery(orm.Model):
         order_pool = self.pool.get('sale.order')
         line_pool = self.pool.get('sale.order.line')
         delivery_id = ids[0]
+        import pdb; pdb.set_trace()
 
-        wizard = self.browse(cr, uid, delivery_id, context=context)
-        if wizard.order_ids:
+        delivery = self.browse(cr, uid, delivery_id, context=context)
+        if delivery.order_ids:
             raise osv.except_osv(
                 _('Errore'),
                 _(u'Questa consegna ha già dei documenti collegati, partire da'
                   u' una vuota!'),
                 )
-        if wizard.file:
+        if delivery.file:
             raise osv.except_osv(
                 _('Errore'),
                 _(u'Caricare prima il file qui a sinistra!'),
                 )
 
         # Load and save Excel file:
-        b64_file = base64.decodestring(wizard.file)
+        b64_file = base64.decodestring(delivery.file)
         now = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         filename = '/tmp/delivery_%s.xlsx' % now.replace(
             ':', '_').replace('-', '_')
@@ -192,7 +195,6 @@ class SaleOrderDelivery(orm.Model):
                 'to_delivery_qty': quantity,
             }, context=context)
         return True
-
 
     def button_open_all_picking(self, cr, uid, ids, context=None):
         """ Open order
