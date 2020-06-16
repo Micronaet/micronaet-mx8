@@ -54,7 +54,6 @@ class SaleOrderDelivery(orm.Model):
         order_pool = self.pool.get('sale.order')
         line_pool = self.pool.get('sale.order.line')
         delivery_id = ids[0]
-        import pdb; pdb.set_trace()
 
         delivery = self.browse(cr, uid, delivery_id, context=context)
         if delivery.order_ids:
@@ -112,9 +111,9 @@ class SaleOrderDelivery(orm.Model):
                 if ws.cell(row, 0).value == 'START':
                     start = True
                     for col in range(ws.ncols):
-                        ws.cell(row, col).value == 'QUANTITY'
-                        quantity_col = col
-                        break
+                        if ws.cell(row, col).value == 'QUANTITY':
+                            quantity_col = col
+                            break
                     if not quantity_col:
                         raise osv.except_osv(
                             _('Errore'),
