@@ -63,7 +63,7 @@ class SaleOrderDelivery(orm.Model):
                 _(u'Questa consegna ha già dei documenti collegati, partire da'
                   u' una vuota!'),
                 )
-        if delivery.file:
+        if not delivery.file:
             raise osv.except_osv(
                 _('Errore'),
                 _(u'Caricare prima il file qui a sinistra!'),
