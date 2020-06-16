@@ -98,9 +98,9 @@ class SaleOrderDelivery(orm.Model):
         partner_id = False
         start = False
         result = {
-            'error': '',
-            'warning': '',
-            'info': '',
+            'error': [],
+            'warning': [],
+            'info': [],
         }
 
         for row in range(ws.nrows):
@@ -129,17 +129,17 @@ class SaleOrderDelivery(orm.Model):
             # -----------------------------------------------------------------
             # a. Quantity positive:
             if not quantity:
-                result['info'] += u'%s. Riga senza quantità' % human_row
+                result['info'].append(u'%s. Riga senza quantità' % human_row)
                 continue
             if quantity < 0:
-                result['info'] += u'%s. Riga con q. negativa!' % human_row
+                result['info'].append('%s. Riga con q. negativa!' % human_row)
                 continue
 
             # b. ID row not found:
             try:
                 line = line_pool.browse(cr, uid, line_id, context=context)
             except:
-                result['error'] += '%s. ID riga non trovato!' % (row + 1)
+                result['error'].append('%s. ID riga non trovato!' % human_row)
                 raise osv.except_osv(
                     _('Errore'),
                     _(u'ID riga non trovata!'),
@@ -154,12 +154,12 @@ class SaleOrderDelivery(orm.Model):
                          - line.delivered_qty)
             if quantity > available:
                 if available:
-                    result['warning'] += \
+                    result['warning'].append(
                         '%s. Q. %s > %s (disponibile) preso la disponibile' % (
-                            human_row, quantity, available)
+                            human_row, quantity, available))
                     quantity = available
                 else:
-                    result['error'] += u'%s. Nulla da consegnare!'
+                    result['error'].append(u'%s. Nulla da consegnare!')
                     quantity = 0
 
             # d. Check partner
@@ -188,14 +188,14 @@ class SaleOrderDelivery(orm.Model):
             # b. Link sale line q.
             line_pool.write(cr, uid, [line_id], {
                 'multi_delivery_id': delivery_id,  # TODO only this line?
-                'to_delivery_qty': quantity,
+                'to_deliver_qty': quantity,
             }, context=context)
         # Update log information:
         note = 'Importato da file di consegna:\n'
         for mode in result:
-            text = result[mode]
+            text = '\n'.join(result[mode])
             if text:
-                note += '%s\n%s' % (mode.upper(), text)
+                note += '\n%s\n%s' % (mode.upper(), text)
         self.write(cr, uid, [delivery_id], {
             'partner_id': partner_id,
             'file': False,  # Remove attachment no more used
