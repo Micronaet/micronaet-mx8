@@ -163,6 +163,8 @@ class SaleOrderDelivery(orm.Model):
                 mrp_qty = 0
             available = (mrp_qty + line.mx_assigned_qty
                          - line.delivered_qty)
+            if available < 0:
+                available = 0
             if quantity > available:
                 if available:
                     result['warning'].append(
