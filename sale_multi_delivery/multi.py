@@ -93,7 +93,6 @@ class SaleOrderDelivery(orm.Model):
         # ---------------------------------------------------------------------
         ws = wb.sheet_by_index(0)
         _logger.warning('Read first page')
-        import pdb; pdb.set_trace()
 
         linked_ids = []
         partner_id = False
@@ -125,6 +124,7 @@ class SaleOrderDelivery(orm.Model):
             line_id = ws.cell(row, 0).value
             quantity = ws.cell(row, quantity_col).value
 
+            import pdb; pdb.set_trace()
             # -----------------------------------------------------------------
             # Check data:
             # -----------------------------------------------------------------
@@ -138,7 +138,7 @@ class SaleOrderDelivery(orm.Model):
 
             # b. ID row not found:
             try:
-                line = line_pool.browse(cr, uid, line_id, context=context)
+                line = line_pool.browse(cr, uid, int(line_id), context=context)
             except:
                 result['error'] += '%s. ID riga non trovato!' % (row + 1)
                 raise osv.except_osv(
