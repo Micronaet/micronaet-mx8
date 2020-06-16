@@ -30,9 +30,9 @@ from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 _logger = logging.getLogger(__name__)
@@ -40,27 +40,27 @@ _logger = logging.getLogger(__name__)
 
 class SaleOrderLine(orm.Model):
     """ Model name: SaleOrder
-    """    
+    """
     _inherit = 'sale.order.line'
-    
-    # Override for use production test 
+
+    # Override for use production test
     # TODO change when quants!!!!!!!  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     def set_all_qty(self, cr, uid, ids, context=None):
-        ''' Set qty depend on remain (overridable from MRP!!!)
-        '''
+        """ Set qty depend on remain (overridable from MRP!!!)
+        """
         assert len(ids) == 1, 'Only one line a time'
-        
+
         line_proxy = self.browse(cr, uid, ids, context=context)[0]
         if line_proxy.is_manufactured:
             if line_proxy.product_uom_maked_sync_qty < line_proxy.delivered_qty:
                 # Use manual!!
                 raise osv.except_osv(
-                    _('Error'), 
-                    _('Stock is used! Write manual to deliver qty!'))                    
-        
+                    _('Error'),
+                    _('Stock is used! Write manual to deliver qty!'))
+
             to_deliver_qty = line_proxy.product_uom_maked_sync_qty - \
                 line_proxy.delivered_qty
-        else:        
+        else:
             to_deliver_qty = line_proxy.product_uom_qty - \
                 line_proxy.delivered_qty
 
@@ -70,9 +70,5 @@ class SaleOrderLine(orm.Model):
                 }, context=context)
         else:
             raise osv.except_osv(
-                _('Warning'), 
+                _('Warning'),
                 _('0 was move, no stock, try set manual!'))
-                
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
