@@ -122,7 +122,7 @@ class SaleOrderDelivery(orm.Model):
 
             # Read data:
             line_id = int(ws.cell(row, 0).value)
-            quantity = int(ws.cell(row, quantity_col).value)
+            quantity = int(ws.cell(row, quantity_col).value or '0')
 
             # -----------------------------------------------------------------
             # Check data:
