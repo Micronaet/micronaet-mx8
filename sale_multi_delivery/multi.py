@@ -432,6 +432,7 @@ class SaleOrderLine(orm.Model):
         #        }),
         }
 
+
 class SaleOrderDelivery(orm.Model):
     """ Model name: SaleOrderDelivery for 2many elements
     """
@@ -445,5 +446,3 @@ class SaleOrderDelivery(orm.Model):
         'line_ids': fields.one2many('sale.order.line', 'multi_delivery_id',
             'Lines'),
         }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
