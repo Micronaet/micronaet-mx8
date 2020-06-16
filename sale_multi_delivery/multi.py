@@ -204,15 +204,16 @@ class SaleOrderDelivery(orm.Model):
                 'to_deliver_qty': quantity,
             }, context=context)
         # Update log information:
-        note = 'Importato da file di consegna:\n'
+        import_log = ''
         for mode in result:
             text = '\n'.join(result[mode])
             if text:
-                note += '\n%s\n%s' % (mode.upper(), text)
+                import_log += '\n%s\n%s' % (mode.upper(), text)
         self.write(cr, uid, [delivery_id], {
             'partner_id': partner_id,
             'file': False,  # Remove attachment no more used
-            'note': note,
+            'note': 'Importato da file di consegna:',
+            'import_log': import_log,
         }, context=context)
 
         return True
@@ -417,6 +418,7 @@ class SaleOrderDelivery(orm.Model):
         'file': fields.binary('XLSX file', filters=None),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'note': fields.text('Note'),
+        'import_log': fields.text('Log import.'),
         'state': fields.selection([
             ('draft', 'Draft'), ('done', 'Done'),
             ], 'State', readonly=True),
