@@ -121,12 +121,22 @@ class SaleOrderDelivery(orm.Model):
                 continue
 
             # Read data:
-            line_id = int(ws.cell(row, 0).value)
-            quantity = int(ws.cell(row, quantity_col).value or '0')
+            try:
+                line_id = int(ws.cell(row, 0).value)
+            except:
+                line_id = 0
+            try:
+                quantity = int(ws.cell(row, quantity_col).value)
+            except:
+                quantity = 0
 
             # -----------------------------------------------------------------
             # Check data:
             # -----------------------------------------------------------------
+            if not line_id:
+                result['info'].append(u'%s. Riga senza ID ODOO' % human_row)
+                continue
+
             # a. Quantity positive:
             if not quantity:
                 result['info'].append(u'%s. Riga senza quantità' % human_row)
