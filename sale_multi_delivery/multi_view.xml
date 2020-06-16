@@ -78,7 +78,7 @@
                              <field name="create_uid" />
                              <button name="action_delivery" string="Create pickings" type="object" icon="gtk-go-forward" colspan="1" attrs="{'invisible':[('state','!=','draft')]}"/>
 
-                             <group colspan="4" col="4" attrs="{'invisible': [('order_ids', '!=', []])]}">
+                             <group colspan="4" col="4" attrs="{'invisible': [('order_ids', '!=', [])]}">
                                  <field name="file" />
                                  <button name="import_load_delivery_file" type="object" string="Carica consegna da file" icon="STOCK_DND" />
                              </group>
