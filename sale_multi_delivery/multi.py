@@ -146,7 +146,11 @@ class SaleOrderDelivery(orm.Model):
                 )
 
             # c. Check available:
-            available = (line.product_uom_maked_sync_qty + line.mx_assigned_qty
+            try:
+                mrp_qty = line.product_uom_maked_sync_qty
+            except:
+                mrp_qty = 0
+            available = (mrp_qty + line.mx_assigned_qty
                          - line.delivered_qty)
             if quantity > available:
                 if available:
