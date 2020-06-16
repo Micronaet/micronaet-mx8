@@ -124,7 +124,6 @@ class SaleOrderDelivery(orm.Model):
             line_id = int(ws.cell(row, 0).value)
             quantity = int(ws.cell(row, quantity_col).value)
 
-            import pdb; pdb.set_trace()
             # -----------------------------------------------------------------
             # Check data:
             # -----------------------------------------------------------------
@@ -160,7 +159,7 @@ class SaleOrderDelivery(orm.Model):
                     quantity = 0
 
             # d. Check partner
-            order_partner_id = line.order_id.partner_id
+            order_partner_id = line.order_id.partner_id.id
             if partner_id:
                 if partner_id != order_partner_id:
                     raise osv.except_osv(
@@ -190,10 +189,10 @@ class SaleOrderDelivery(orm.Model):
         # Update log information:
         note = 'Importato da file di consegna:\n'
         for mode in result:
-            text = result['mode']
+            text = result[mode]
             if text:
                 note += '%s\n%s' % (mode.upper(), text)
-
+        import pdb; pdb.set_trace()
         self.write(cr, uid, [delivery_id], {
             'partner_id': partner_id,
             'note': note,
