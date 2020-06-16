@@ -92,6 +92,7 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
         import pdb; pdb.set_trace()
 
         linked_ids = []
+        partner_id = False
         start = False
         result = {
             'error': '',
@@ -153,6 +154,21 @@ class CreateSaleOrderDeliveryWizard(orm.TransientModel):
                 else:
                     result['error'] += u'%s. Tutto già consegnato!'
                     continue
+
+            # d. Check partner
+            order_partner_id = line.order_id.partner_id
+            if partner_id:
+                if partner_id != order_partner_id:
+                    raise osv.except_osv(
+                        _('Error XLSX'),
+                        _('Partner differenti negli ordini collegati!'),
+                    )
+            else:  # Update multi delivery partner
+                partner_id = order_partner_id
+                self.write(cr, uid, [delivery_id], {
+                    'partner_id': partner_id,
+                    'note': 'Importato da file di consegna',
+                }, context=context)
 
             # -----------------------------------------------------------------
             # Generate delivery data:
