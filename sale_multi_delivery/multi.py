@@ -122,7 +122,7 @@ class SaleOrderDelivery(orm.Model):
 
             # Read data:
             line_id = ws.cell(row, 0).value
-            quantity = ws.cell(row, quantity_col).value
+            quantity = int(ws.cell(row, quantity_col).value)
 
             import pdb; pdb.set_trace()
             # -----------------------------------------------------------------
