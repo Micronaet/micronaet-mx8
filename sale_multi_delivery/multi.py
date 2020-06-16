@@ -172,7 +172,8 @@ class SaleOrderDelivery(orm.Model):
                             human_row, quantity, available))
                     quantity = available
                 else:
-                    result['error'].append(u'%s. Nulla da consegnare!')
+                    result['error'].append(
+                        u'%s. Nulla da consegnare!' % human_row)
                     quantity = 0
 
             # d. Check partner
