@@ -192,7 +192,6 @@ class SaleOrderDelivery(orm.Model):
             text = result[mode]
             if text:
                 note += '%s\n%s' % (mode.upper(), text)
-        import pdb; pdb.set_trace()
         self.write(cr, uid, [delivery_id], {
             'partner_id': partner_id,
             'note': note,
