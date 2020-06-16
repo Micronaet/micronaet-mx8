@@ -156,8 +156,8 @@ class SaleOrderDelivery(orm.Model):
                             human_row, quantity, available)
                     quantity = available
                 else:
-                    result['error'] += u'%s. Tutto già consegnato!'
-                    continue
+                    result['error'] += u'%s. Nulla da consegnare!'
+                    quantity = 0
 
             # d. Check partner
             order_partner_id = line.order_id.partner_id
@@ -169,12 +169,6 @@ class SaleOrderDelivery(orm.Model):
                     )
             else:  # Update multi delivery partner
                 partner_id = order_partner_id
-                self.write(cr, uid, [delivery_id], {
-                    'partner_id': partner_id,
-                    # 'create_date'
-                    # 'create_uid'
-                    'note': 'Importato da file di consegna',
-                }, context=context)
 
             # -----------------------------------------------------------------
             # Generate delivery data:
@@ -193,6 +187,18 @@ class SaleOrderDelivery(orm.Model):
                 'multi_delivery_id': delivery_id,  # TODO only this line?
                 'to_delivery_qty': quantity,
             }, context=context)
+        # Update log information:
+        note = 'Importato da file di consegna:\n'
+        for mode in result:
+            text = result['mode']
+            if text:
+                note += '%s\n%s' % (mode.upper(), text)
+
+        self.write(cr, uid, [delivery_id], {
+            'partner_id': partner_id,
+            'note': note,
+        }, context=context)
+
         return True
 
     def button_open_all_picking(self, cr, uid, ids, context=None):
