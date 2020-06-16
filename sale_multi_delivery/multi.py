@@ -140,10 +140,11 @@ class SaleOrderDelivery(orm.Model):
             # a. Quantity positive:
             if not quantity:
                 result['info'].append(u'%s. Riga senza quantità' % human_row)
-                continue
+                # continue
             if quantity < 0:
                 result['info'].append('%s. Riga con q. negativa!' % human_row)
-                continue
+                quantity = 0
+                # continue
 
             # b. ID row not found:
             try:
