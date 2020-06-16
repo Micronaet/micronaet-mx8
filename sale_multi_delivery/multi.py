@@ -121,7 +121,7 @@ class SaleOrderDelivery(orm.Model):
                 continue
 
             # Read data:
-            line_id = ws.cell(row, 0).value
+            line_id = int(ws.cell(row, 0).value)
             quantity = int(ws.cell(row, quantity_col).value)
 
             import pdb; pdb.set_trace()
@@ -138,7 +138,7 @@ class SaleOrderDelivery(orm.Model):
 
             # b. ID row not found:
             try:
-                line = line_pool.browse(cr, uid, int(line_id), context=context)
+                line = line_pool.browse(cr, uid, line_id, context=context)
             except:
                 result['error'] += '%s. ID riga non trovato!' % (row + 1)
                 raise osv.except_osv(
