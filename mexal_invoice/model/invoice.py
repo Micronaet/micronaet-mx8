@@ -35,23 +35,24 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 
 _logger = logging.getLogger(__name__)
 
+
 class StockPicking(orm.Model):
-    ''' Add button event:
-    '''
+    """ Add button event:
+    """
     _inherit = 'stock.picking'
-    
+
     # Button event:
     def open_pick_out(self, cr, uid, ids, context=None):
-        ''' Open document Pick
-        '''
+        """ Open document Pick
+        """
         return {
             'type': 'ir.actions.act_window',
             'name': 'Linked pickout',
@@ -59,18 +60,18 @@ class StockPicking(orm.Model):
             'res_id': ids[0],
             'view_type': 'form',
             'view_mode': 'form,tree',
-            #'view_id': view_id,
-            #'target': 'new',
-            #'nodestroy': True,
+            # 'view_id': view_id,
+            # 'target': 'new',
+            # 'nodestroy': True,
             }
 
     def open_ddt(self, cr, uid, ids, context=None):
-        ''' Open document DDT
-        '''
+        """ Open document DDT
+        """
         pick_proxy = self.browse(cr, uid, ids, context=context)[0]
         if not pick_proxy.ddt_id:
             return {}
-        
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Linked DDT',
@@ -81,12 +82,12 @@ class StockPicking(orm.Model):
             }
 
     def open_order(self, cr, uid, ids, context=None):
-        ''' Open document DDT
-        '''
+        """ Open document DDT
+        """
         pick_proxy = self.browse(cr, uid, ids, context=context)[0]
         if not pick_proxy.sale_id:
             return {}
-        
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Linked Order',
@@ -94,17 +95,18 @@ class StockPicking(orm.Model):
             'res_id': pick_proxy.sale_id.id,
             'view_type': 'form',
             'view_mode': 'form,tree',
-            }        
-        
+            }
+
+
 class AccountInvoice(orm.Model):
-    ''' Add some extra field used in report and in management as account
+    """ Add some extra field used in report and in management as account
         invoice
-    '''
+    """
     _inherit = 'account.invoice'
-    
+
     def action_invoice_sent(self, cr, uid, ids, context=None):
-        ''' Override action to save all message to partner
-        '''
+        """ Override action to save all message to partner
+        """
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         invoice_proxy = self.browse(cr, uid, ids, context=context)[0]
         partner_id = invoice_proxy.partner_id.id
@@ -117,12 +119,12 @@ class AccountInvoice(orm.Model):
 
         return super(AccountInvoice, self).action_invoice_sent(
             cr, uid, ids, context=context)
-    
+
     def link_pickout_document(self, cr, uid, ids, context=None):
-        ''' Link pick out depend on origin text
-        '''
+        """ Link pick out depend on origin text
+        """
         assert len(ids), 'Run only with one record!'
-        
+
         pick_pool = self.pool.get('stock.picking')
         origin = self.browse(cr, uid, ids, context=context)[0].origin
         if origin:
@@ -137,17 +139,17 @@ class AccountInvoice(orm.Model):
                     'invoice_id': ids[0],
                     }, context=context)
                 _logger.warning('Linked pick to invoice: %s' % origin)
-        return True             
+        return True
 
     # Override partner_id onchange for set up carrier_id
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice, 
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice,
             payment_term, partner_bank_id, company_id, context=None):
-        ''' Set also carrier ID and default payment
-        '''    
+        """ Set also carrier ID and default payment
+        """
         res = super(AccountInvoice, self).onchange_partner_id(
-            cr, uid, ids, type, partner_id, date_invoice, 
+            cr, uid, ids, type, partner_id, date_invoice,
             payment_term, partner_bank_id, company_id, context=context)
-        
+
         if partner_id:
             partner_pool = self.pool.get('res.partner')
             partner_proxy = partner_pool.browse(
@@ -160,35 +162,38 @@ class AccountInvoice(orm.Model):
         else:
             res['value']['default_carrier_id'] = False
             res['value']['used_bank_id'] = False
-        return res    
+        return res
 
     # ------------------------------------
-    # Override validation for update pick:   
+    # Override validation for update pick:
     # ------------------------------------
-    def invoice_validate(self, cr, uid, ids, context=None):
+    def action_date_assign(self, cr, uid, ids, context=None):
         # Check mandatory data:
         invoice = self.browse(cr, uid, ids, context=context)[0]
         partner = invoice.partner_id
         destination = invoice.destination_partner_id
         if not partner.sql_customer_code:
             raise osv.except_osv(
-                _('Errore'), 
+                _('Errore'),
                 _('Sincronizzare il cliente di Mexal o mettere il codice!'),
                 )
         if destination and not destination.sql_destination_code:
             raise osv.except_osv(
-                _('Errore'), 
+                _('Errore'),
                 _('Indicare il codice di mexal nella destinazione!'),
                 )
-        
-        res = super(AccountInvoice, self).invoice_validate(cr, uid, ids, 
+        return super(AccountInvoice, self).action_date_assign(cr, uid, ids,
             context=context)
-            
+
+    def invoice_validate(self, cr, uid, ids, context=None):
+        res = super(AccountInvoice, self).invoice_validate(cr, uid, ids,
+            context=context)
+
         # Unload pick stock:
-        _logger.info('Update pick out moves')    
+        _logger.info('Update pick out moves')
         move_pool = self.pool.get('stock.move')
         pick_pool = self.pool.get('stock.picking')
-        
+
         # ---------------------------------------
         # Update pick and assign to this invoice:
         # ---------------------------------------
@@ -201,7 +206,7 @@ class AccountInvoice(orm.Model):
         pick_ids = pick_pool.search(cr, uid, [
             ('invoice_id', 'in', ids),
             ], context=context)
-        
+
         todo = []
         for pick in pick_pool.browse(cr, uid, pick_ids,
                 context=context):
@@ -211,17 +216,17 @@ class AccountInvoice(orm.Model):
                     todo.append(move.id)
         if todo:
             move_pool.action_done(cr, uid, todo, context=context)
-            _logger.info('>>>>>> Pick out moves: %s' % (todo, ))    
+            _logger.info('>>>>>> Pick out moves: %s' % (todo, ))
         return res
-        
+
     _columns = {
         'direct_invoice': fields.boolean('Direct invoice'), # TODO use it!
-        'start_transport': fields.datetime('Start transport', 
+        'start_transport': fields.datetime('Start transport',
             help='Used in direct invoice'),
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
             help='Partner bank account used for payment'),
         'default_carrier_id': fields.many2one(
-            'delivery.carrier', 'Carrier'), 
+            'delivery.carrier', 'Carrier'),
         'invoice_type': fields.selection([
             ('ft1', 'FT 1 (normal)'),
             ('ft2', 'FT 2 ()'),
@@ -229,10 +234,10 @@ class AccountInvoice(orm.Model):
             ], 'Invoice module'),
 
         'invoiced_picking_ids': fields.one2many(
-            'stock.picking', 'invoice_id', 'Picking'), 
-        }    
-        
+            'stock.picking', 'invoice_id', 'Picking'),
+        }
+
     _defaults = {
         'invoice_type': lambda *x: 'ft1',
-        }    
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
