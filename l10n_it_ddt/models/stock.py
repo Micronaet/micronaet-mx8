@@ -28,9 +28,9 @@ from openerp import _
 from openerp.exceptions import Warning
 from openerp.osv import osv
 from datetime import datetime, timedelta
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 _logger = logging.getLogger(__name__)
@@ -75,10 +75,12 @@ class StockPickingTransportationMethod(models.Model):
        translate=True)
     note = fields.Text(string='Note')
 
+
 class StockMove(models.Model):
     _inherit = "stock.move"
 
     ddt_id = fields.Many2one('stock.ddt', ondelete="set null")
+
 
 class StockDdT(models.Model):
 
@@ -101,12 +103,12 @@ class StockDdT(models.Model):
     # -------------------------------------------------------------------------
     @api.multi
     def get_date_now(self):
-        ''' 
-        '''
+        """
+        """
         now = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         _logger.warning('DDT now: %s' % now)
         return now
-        
+
     @api.multi
     def get_sequence(self):
         # XXX: allow config of default seq per company
@@ -115,11 +117,11 @@ class StockDdT(models.Model):
 
     name = fields.Char(string='Number')
     date = fields.Datetime(
-        required=True, 
+        required=True,
         default=get_date_now,
         # XXX DOESN'T WORK!:
-        #default=fields.Datetime.now(),
-        #default=datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        # default=fields.Datetime.now(),
+        # default=datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         )
     delivery_date = fields.Datetime()
     sequence = fields.Many2one(
@@ -132,7 +134,7 @@ class StockDdT(models.Model):
         compute='_get_lines')
     invoice_id = fields.Many2one(
         'account.invoice', string='Invoice', required=False)
-    not_invoiced = fields.Boolean('Not invoiced')    
+    not_invoiced = fields.Boolean('Not invoiced')
     partner_id = fields.Many2one(
         'res.partner', string='Partner', required=True)
     delivery_address_id = fields.Many2one(
@@ -163,7 +165,7 @@ class StockDdT(models.Model):
         for ddt in self:
             for picking in ddt.picking_ids:
                 ddt.ddt_lines += picking.move_lines
-        
+
     @api.multi
     def set_number(self):
         for ddt in self:
@@ -212,24 +214,23 @@ class StockPicking(models.Model):
     parcels = fields.Integer()
     ddt_id = fields.Many2one('stock.ddt', string='DdT')
     ddt_type = fields.Selection(
-        string="DdT Type", related='picking_type_id.code')        
-    #invoice_id = fields.Many2one('account.invoice', string="Invoice", 
+        string="DdT Type", related='picking_type_id.code')
+    # invoice_id = fields.Many2one('account.invoice', string="Invoice",
     #    related='ddt_id.invoice_id', store=False, readonly=True)
     invoice_id = fields.Many2one('account.invoice', string='Direct invoice')
-
 
     def action_invoice_create(
             self, cr, uid, ids, journal_id, group=False, type='out_invoice',
             context=None):
-        ''' Action for create invoice from pickings (or DDT > pick > invoice)
+        """ Action for create invoice from pickings (or DDT > pick > invoice)
             Note: Inherit Append DDT extra data
-        '''    
+        """
         if not context:
             context = {}
         invoice_obj = self.pool['account.invoice']
         res = super(StockPicking, self).action_invoice_create(
             cr, uid, ids, journal_id, group, type, context)
-            
+
         # TODO Use only first element?
         note_pre = ''
         note_pre_list = []
@@ -252,17 +253,17 @@ class StockPicking(models.Model):
                 note_post_list.append(post_all)
 
             # TODO remove from middle of the loop and check that are all
-            # equals!!!    
+            # equals!!!
             if not destination_partner_id and picking.destination_partner_id:
                 destination_partner_id = picking.destination_partner_id.id
             if destination_partner_id != picking.destination_partner_id.id:
                 raise osv.except_osv(_('Error'), _('Different destination!'))
-            invoice_obj.write(cr, uid, res, {                
+            invoice_obj.write(cr, uid, res, {
                 # DDT fields:
                 'destination_partner_id':
                 picking.destination_partner_id and
-                picking.destination_partner_id.id, 
-                #TODO invoice?!?!             
+                picking.destination_partner_id.id,
+                # TODO invoice?!?!
                 'carriage_condition_id':
                 picking.carriage_condition_id and
                 picking.carriage_condition_id.id,
@@ -275,10 +276,10 @@ class StockPicking(models.Model):
                 'transportation_method_id':
                 picking.transportation_method_id and
                 picking.transportation_method_id.id,
-                'parcels': picking.parcels,                
+                'parcels': picking.parcels,
             })
         invoice_obj.write(cr, uid, res, {
             'text_note_pre': note_pre,
-            'text_note_post': note_post,            
-            })            
+            'text_note_post': note_post,
+            })
         return res

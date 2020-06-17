@@ -36,19 +36,20 @@ from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 
 _logger = logging.getLogger(__name__)
 
+
 class StockDdt(orm.Model):
     _inherit = 'stock.ddt'
 
     def open_ddt_report(self, cr, uid, ids, context=None):
-        ''' Open DDT form if present        
+        ''' Open DDT form if present
         '''
         assert len(ids) == 1, 'Only one picking!'
 
@@ -56,9 +57,9 @@ class StockDdt(orm.Model):
             'type': 'ir.actions.report.xml',
             'report_name': 'custom_ddt_report',
             'datas': context,
-            }         
+            }
 
-    # Override for confirm all picking    
+    # Override for confirm all picking
     @api.multi
     def action_confirm(self):
         self.write({'state': 'confirmed'})
@@ -71,11 +72,11 @@ class StockDdt(orm.Model):
                 if move.state in ('assigned', 'confirmed'):
                     todo.append(move.id)
         if todo:
-            move_pool.action_done(self.env.cr, self.env.uid, todo, 
+            move_pool.action_done(self.env.cr, self.env.uid, todo,
                 context=self.env.context)
-                        
-        #TODO if start from draft...
-        #for pick in self.browse(cr, uid, ids, context=context):
+
+        # TODO if start from draft...
+        # for pick in self.browse(cr, uid, ids, context=context):
         #    for move in pick.move_lines:
         #        if move.state == 'draft':
         #            todo.extend(self.pool.get('stock.move').action_confirm(
@@ -90,16 +91,15 @@ class StockDdt(orm.Model):
 
         # XXX there's also carrier_id...
         'default_carrier_id': fields.many2one(
-            'delivery.carrier', 'Default carrier'),     
+            'delivery.carrier', 'Default carrier'),
         }
+
 
 class StockPicking(orm.Model):
     # TODO remove!!!
     _inherit = 'stock.picking'
-    
+
     _columns = {
         'used_bank_id': fields.many2one('res.partner.bank', 'Used bank',
-            help='Partner bank account used for payment'),        
+            help='Partner bank account used for payment'),
         }
-        
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
