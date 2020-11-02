@@ -799,7 +799,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         
     def extract_xls_inventory_file(self, cr, uid, ids, data=None,
             context=None):
-        ''' Extract inventory as XLS extrenal files every category in different
+        ''' Extract inventory as XLS external files every category in different
             page
         '''        
         # ---------------------------------------------------------------------
