@@ -34,6 +34,7 @@
         'l10n_it_ddt',
         'no_parcels_count',
         'excel_export',
+        'duty_management',  # Duty box
         ],
     'init_xml': [],
     'demo': [],

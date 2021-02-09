@@ -8,11 +8,17 @@
             <field name="arch" type="xml">
                  <field name="parcels" position="after">
                      <group colspan="4" col="4">
-                         <button name="update_parcels_event" string="Auto counter" type="object" colspan="2"/>
-                         <button name="update_parcels_volume_event" string="Auto volume" type="object" colspan="2"/>
-
-                         <field name="parcels_note" nolabel="1" colspan="2"/>
-                         <field name="volume_note" nolabel="1" colspan="2"/>
+                         <group colspan="2" col="2">                     
+                             <button name="update_parcels_event" string="Auto counter" type="object" colspan="2"/>
+                             <field name="parcels_note" nolabel="1" colspan="2"/>
+                         </group>    
+                         <group colspan="2" col="2">
+                             <button name="update_parcels_volume_event" string="Auto volume" type="object" colspan="2"/>
+                             <field name="volume_note" nolabel="1" colspan="2"/>
+                             
+                             <button name="generate_duty_block" string="Blocco dogana" type="object" colspan="2"/>
+                             <field name="duty_block" nolabel="1" colspan="2"/>
+                         </group>                         
                      </group>    
                  </field>
             </field>
