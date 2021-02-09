@@ -16,9 +16,9 @@
                              <button name="update_parcels_volume_event" string="Auto volume" type="object" colspan="2"/>
                              <field name="volume_note" nolabel="1" colspan="2"/>
                              
-                             <button name="generate_duty_block" string="Blocco dogana" type="object" colspan="2"/>
+                             <!--<button name="generate_duty_block" string="Blocco dogana" type="object" colspan="2"/>
                              <field name="duty_block" nolabel="1" colspan="2"/>                             
-                             <field name="duty_error" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('duty_error','=',False)]}"/>
+                             <field name="duty_error" nolabel="1" colspan="2" readonly="1" attrs="{'invisible': [('duty_error','=',False)]}"/>-->
                          </group>                         
                      </group>    
                  </field>
