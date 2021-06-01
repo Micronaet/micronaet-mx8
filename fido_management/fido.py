@@ -162,7 +162,7 @@ class StockPicking(orm.Model):
 class ResPartner(orm.Model):
     """ FIDO fields for add management
     """
-    _inherit ='res.partner'
+    _inherit = 'res.partner'
 
     # -------------------------------------------------------------------------
     # Button event:
@@ -224,7 +224,7 @@ class ResPartner(orm.Model):
         """ Fields function for calculate
         """
         res = {}
-        fido_yellow = 0.85 # TODO parametrize?
+        fido_yellow = 0.85  # TODO parametrize?
 
         # ---------------------------------------------------------------------
         # Read parameter for FIDO:
@@ -383,7 +383,7 @@ class ResPartner(orm.Model):
         invoice_ids = invoice_pool.search(cr, uid, domain, context=context)
         for invoice in invoice_pool.browse(
                 cr, uid, invoice_ids, context=context):
-              if invoice.partner_id.id not in partner_ids:
+            if invoice.partner_id.id not in partner_ids:
                 partner_ids.append(invoice.partner_id.id)
 
         # Write fido_update for force update operation
@@ -421,7 +421,7 @@ class ResPartner(orm.Model):
             type='float', string='Uncovered amount',
             multi=True, store={
                 'res.partner':
-                    (_force_FIDO_refresh, ['fido_update'], 10),
+                    (_force_FIDO_refresh, ['fido_update', 'fido_total'], 10),
                     },
             ),
         'uncovered_state': fields.function(
@@ -437,7 +437,7 @@ class ResPartner(orm.Model):
             type='selection', string='Uncovered state', method=True,
             multi=True, store={
                 'res.partner':
-                    (_force_FIDO_refresh, ['fido_update'], 10),
+                    (_force_FIDO_refresh, ['fido_update', 'fido_total'], 10),
                     },
             ),
         }
