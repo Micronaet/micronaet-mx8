@@ -30,9 +30,9 @@ from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 
@@ -42,13 +42,14 @@ _logger = logging.getLogger(__name__)
 # TODO REMOVE !!!!
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 class SaleOrder(orm.Model):
-    ''' FIDO in order 
-    '''
+    """ FIDO in order
+    """
     _inherit ='sale.order'
-    
-    def _get_open_amount_total_order(self, cr, uid, ids, fields, args, context=None):
-        ''' Fields function for calculate 
-        '''
+
+    def _get_open_amount_total_order(
+            self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = 0.0
@@ -61,9 +62,9 @@ class SaleOrder(orm.Model):
 
     _columns = {
         'open_amount_total': fields.function(
-            _get_open_amount_total_order, method=True, 
-            type='float', string='Open amount', 
-            store=False),                         
+            _get_open_amount_total_order, method=True,
+            type='float', string='Open amount',
+            store=False),
         }
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -74,16 +75,16 @@ class SaleOrder(orm.Model):
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 class ResUsers(orm.Model):
     """ Model name: SaleOrder
-    """    
+    """
     _inherit = 'res.users'
-   
+
     def set_no_inventory_status(self, cr, uid, value=False, context=None):
-        ''' Set inventory status uid
+        """ Set inventory status uid
             return previous value
             default is True
-        '''
+        """
         user_proxy = self.browse(cr, uid, uid, context=context)
-        
+
         previous = user_proxy.no_inventory_status
         self.write(cr, uid, uid, {
             'no_fido_status': value
@@ -91,7 +92,7 @@ class ResUsers(orm.Model):
         _logger.warning('>>> Set user [%s] No FIDO status: %s > %s' % (
             user_proxy.login, previous, value))
         return previous
-            
+
     _columns = {
         'no_fido_status': fields.boolean('No FIDO status'),
         }
@@ -100,42 +101,42 @@ class ResUsers(orm.Model):
 # TODO move away:
 class SaleOrder(orm.Model):
     """ Model name: SaleOrder
-    """    
+    """
     _inherit = 'sale.order'
-   
+
     def set_context_no_fido(self, cr, uid, ids, context=None):
-        ''' Set no inventory in res.users parameter
-        '''
+        """ Set no inventory in res.users parameter
+        """
         _logger.info('Stop fido for user: %s' % uid)
         self.pool.get('res.users').write(cr, uid, [uid], {
             'no_fido_status': True,
             }, context=context)
-        return     
+        return
 
     def set_context_yes_fido(self, cr, uid, ids, context=None):
-        ''' Set no inventory in res.users parameter
-        '''    
+        """ Set no inventory in res.users parameter
+        """
         _logger.info('Start fido for user: %s' % uid)
         self.pool.get('res.users').write(cr, uid, [uid], {
             'no_fido_status': False,
             }, context=context)
-        return            
+        return
 # -----------------------------------------------------------------------------
 
 class StockPicking(orm.Model):
-    ''' FIDO in ddt 
-    '''
+    """ FIDO in ddt
+    """
     _inherit ='stock.picking'
-    
+
     def _get_open_amount_total_ddt(self, cr, uid, ids, fields, args, context=None):
-        ''' Fields function for calculate 
-        '''
+        """ Fields function for calculate
+        """
         res = {}
         for ddt in self.browse(cr, uid, ids, context=context):
             res[ddt.id] = 0.0
             for line in ddt.move_lines:
                 qty = line.product_uom_qty
-                
+
                 if qty:
                     # Proportional with subtotal referred in order line:
                     if line.sale_line_id.product_uom_qty:
@@ -143,38 +144,38 @@ class StockPicking(orm.Model):
                             line.sale_line_id.price_subtotal * qty / \
                                 line.sale_line_id.product_uom_qty
                     else:
-                        _logger.info('Division by zero!!')            
+                        _logger.info('Division by zero!!')
         return res
-        
+
     _columns = {
         'open_amount_total': fields.function(
-            _get_open_amount_total_ddt, method=True, 
-            type='float', string='Open amount', 
-            store=False),                         
+            _get_open_amount_total_ddt, method=True,
+            type='float', string='Open amount',
+            store=False),
         }
 
 class ResPartner(orm.Model):
-    ''' FIDO fields for add management
-    '''
+    """ FIDO fields for add management
+    """
     _inherit ='res.partner'
-    
+
     # -------------------------------------------------------------------------
     # Button event:
     # -------------------------------------------------------------------------
     def test_refresh_FIDO_button(self, cr, uid, ids, context=None):
-        ''' Test button for refresh fido:
-        '''
+        """ Test button for refresh fido:
+        """
         return self.write(cr, uid, ids, {
             'fido_update': True,
             }, context=context)
-            
+
     def res_partner_return_form_view(self, cr, uid, ids, context=None):
-        ''' Open form partner
-        '''
+        """ Open form partner
+        """
         model_pool = self.pool.get('ir.model.data')
         view_id = model_pool.get_object_reference(
             cr, uid, 'base','view_partner_form')[1]
-    
+
         return {
             'type': 'ir.actions.act_window',
             'name': _('FIDO Detail'),
@@ -191,13 +192,13 @@ class ResPartner(orm.Model):
             }
 
     def res_partner_fido_detail(self, cr, uid, ids, context=None):
-        ''' Open form FIDO detail
-        '''
+        """ Open form FIDO detail
+        """
         model_pool = self.pool.get('ir.model.data')
         view_id = model_pool.get_object_reference(
             cr, uid, 'fido_management', 'view_res_partner_fido_details_form',
             )[1]
-    
+
         return {
             'type': 'ir.actions.act_window',
             'name': _('FIDO Detail'),
@@ -213,13 +214,13 @@ class ResPartner(orm.Model):
             'nodestroy': False,
             }
 
-    def _get_uncovered_amount_total(self, cr, uid, ids, fields, args, 
+    def _get_uncovered_amount_total(self, cr, uid, ids, fields, args,
             context=None):
-        ''' Fields function for calculate 
-        '''
+        """ Fields function for calculate
+        """
         res = {}
         fido_yellow = 0.85 # TODO parametrize?
-        
+
         # ---------------------------------------------------------------------
         # Read parameter for FIDO:
         # ---------------------------------------------------------------------
@@ -230,14 +231,14 @@ class ResPartner(orm.Model):
         #    _logger.error('USER: %s NO FIDO INFORMATION' % uid)
         #else:
         #    _logger.info('USER: %s FIDO INFORMATION' % uid)
-        
-        for partner in self.browse(cr, uid, ids, context=context):       
+
+        for partner in self.browse(cr, uid, ids, context=context):
             #if no_fido_status:
             #    res[partner.id] = {
-            #        'uncovered_amount': 0, 
+            #        'uncovered_amount': 0,
             #        'uncovered_state': 'grey',
             #        }
-            #    continue 
+            #    continue
 
             res[partner.id] = {}
             opened = 0.0 # total
@@ -252,18 +253,18 @@ class ResPartner(orm.Model):
                 if not fido_date or not invoice_date or \
                         fido_date <= invoice_date:
                     opened += payment.__getattribute__('in')
-            
+
             # ----------
             # OC opened:
             # ----------
             for order in partner.open_order_ids:
                 opened += order.open_amount_total
-                
+
             # ----------------
             # DDT not invoice:
             # ----------------
             for ddt in partner.open_picking_ids:
-                opened += ddt.open_amount_total  
+                opened += ddt.open_amount_total
 
             res[partner.id]['uncovered_amount'] = fido_total - opened
 
@@ -274,24 +275,24 @@ class ResPartner(orm.Model):
                 res[partner.id]['uncovered_state'] = 'red'
             elif opened / fido_total > fido_yellow:
                 res[partner.id]['uncovered_state'] = 'yellow'
-            else:    
-                res[partner.id]['uncovered_state'] = 'green'                
+            else:
+                res[partner.id]['uncovered_state'] = 'green'
         _logger.warning('END FIDO CHECK')
         return res
-        
+
     def _force_FIDO_refresh(self, cr, uid, ids, context=None):
-        ''' Refresh FIDO information for 
-        '''
+        """ Refresh FIDO information for
+        """
         _logger.warning('Refresh FIDO info: %s' % (ids, ))
         return ids
 
-    # -------------------------------------------------------------------------        
+    # -------------------------------------------------------------------------
     # Scheduled procedure
-    # -------------------------------------------------------------------------            
+    # -------------------------------------------------------------------------
     def schedule_update_fido_information(
             self, cr, uid, from_date=False, context=None):
-        ''' Refresh partner FIDO
-        '''
+        """ Refresh partner FIDO
+        """
         # Check open mode:
         if from_date: # nigthly update
             daily_update = False
@@ -306,11 +307,11 @@ class ResPartner(orm.Model):
                 f.close()
             else:
                 from_date = now.strftime('%Y-%m-%d 00:00:00')
-                
+
             f = open(filename, 'w')
             f.write(from_now)
             f.close()
-        
+
         partner_ids = []
         # ---------------------------------------------------------------------
         # TODO payment update (imported from account)
@@ -327,15 +328,15 @@ class ResPartner(orm.Model):
         # Search Order from data
         # ---------------------------------------------------------------------
         order_pool = self.pool.get('sale.order')
-        if daily_update: 
+        if daily_update:
             domain = [
                 '|',
                 ('create_date', '>=', from_date),
                 ('write_date', '>=', from_date),
-                ] 
+                ]
         else: # nightly update
             domain = [('date_order', '>=', from_date)]
-             
+
         order_ids = order_pool.search(cr, uid, domain, context=context)
         for order in order_pool.browse(
                 cr, uid, order_ids, context=context):
@@ -364,26 +365,26 @@ class ResPartner(orm.Model):
         # Search invoice from date
         # ---------------------------------------------------------------------
         invoice_pool = self.pool.get('account.invoice')
-        if daily_update: 
+        if daily_update:
             domain = [
                 '|',
                 ('create_date', '>=', from_date),
                 ('write_date', '>=', from_date),
-                ] 
+                ]
         else: # nightly update
             domain = [('date_invoice', '>=', from_date)]
-                  
+
         invoice_ids = invoice_pool.search(cr, uid, domain, context=context)
         for invoice in invoice_pool.browse(
                 cr, uid, invoice_ids, context=context):
-              if invoice.partner_id.id not in partner_ids: 
-                partner_ids.append(invoice.partner_id.id) 
-        
+              if invoice.partner_id.id not in partner_ids:
+                partner_ids.append(invoice.partner_id.id)
+
         # Write fido_update for force update operation
         return self.write(cr, uid, partner_ids, {
             'fido_update': True},
              context=context)
-        
+
     _columns = {
         'empty': fields.char(' '),
         'fido_date': fields.date('FIDO from date'),
@@ -391,29 +392,29 @@ class ResPartner(orm.Model):
         'fido_total': fields.float('Total FIDO', digits=(16, 2)),
         'fido_update': fields.boolean(
             'Update FIDO trigger', help='Trigger for update partner FIDO'),
-        
+
         # Open order:
         'open_order_ids': fields.one2many(
-            'sale.order', 'partner_id', 
+            'sale.order', 'partner_id',
             'Order open', domain=[
                 ('mx_closed', '=', False), # still open
                 ('pricelist_order', '=', False), # not pricelist
                 ('state', 'not in', ('cancel', 'draft', 'sent')), # not closed
-                ]), 
-            
+                ]),
+
         # Open order:
         'open_picking_ids': fields.one2many(
-            'stock.picking', 'partner_id', 
+            'stock.picking', 'partner_id',
             'Open DDT', domain=[
                 ('ddt_id', '!=', False), # is DDT
                 ('invoice_id', '=', False), # not invoiced
                 ]),
 
         'uncovered_amount': fields.function(
-            _get_uncovered_amount_total, method=True, 
-            type='float', string='Uncovered amount', 
+            _get_uncovered_amount_total, method=True,
+            type='float', string='Uncovered amount',
             multi=True, store={
-                'res.partner': 
+                'res.partner':
                     (_force_FIDO_refresh, ['fido_update'], 10),
                     },
             ),
@@ -424,19 +425,19 @@ class ResPartner(orm.Model):
                 ('yellow', '> 85% FIDO'),
                 ('red', 'FIDO uncovered or no FIDO'),
                 ('black', 'FIDO removed'),
-                
-                ('grey', 'No FIDO check'),                
-                ], 
+
+                ('grey', 'No FIDO check'),
+                ],
             type='selection', string='Uncovered state', method=True,
             multi=True, store={
-                'res.partner': 
+                'res.partner':
                     (_force_FIDO_refresh, ['fido_update'], 10),
-                    },                
+                    },
             ),
         }
-        
+
     _defaults = {
         'empty': lambda *x: ' ',
         }
-        
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
