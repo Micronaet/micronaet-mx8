@@ -44,7 +44,7 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(orm.Model):
     """ FIDO in order
     """
-    _inherit ='sale.order'
+    _inherit = 'sale.order'
 
     def _get_open_amount_total_order(
             self, cr, uid, ids, fields, args, context=None):
@@ -67,6 +67,7 @@ class SaleOrder(orm.Model):
             store=False),
         }
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 # -----------------------------------------------------------------------------
 # NO FIDO Management:
@@ -98,6 +99,7 @@ class ResUsers(orm.Model):
         }
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 # TODO move away:
 class SaleOrder(orm.Model):
     """ Model name: SaleOrder
@@ -123,12 +125,14 @@ class SaleOrder(orm.Model):
         return
 # -----------------------------------------------------------------------------
 
+
 class StockPicking(orm.Model):
     """ FIDO in ddt
     """
-    _inherit ='stock.picking'
+    _inherit = 'stock.picking'
 
-    def _get_open_amount_total_ddt(self, cr, uid, ids, fields, args, context=None):
+    def _get_open_amount_total_ddt(
+            self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
         res = {}
@@ -154,6 +158,7 @@ class StockPicking(orm.Model):
             store=False),
         }
 
+
 class ResPartner(orm.Model):
     """ FIDO fields for add management
     """
@@ -174,7 +179,7 @@ class ResPartner(orm.Model):
         """
         model_pool = self.pool.get('ir.model.data')
         view_id = model_pool.get_object_reference(
-            cr, uid, 'base','view_partner_form')[1]
+            cr, uid, 'base', 'view_partner_form')[1]
 
         return {
             'type': 'ir.actions.act_window',
@@ -214,8 +219,8 @@ class ResPartner(orm.Model):
             'nodestroy': False,
             }
 
-    def _get_uncovered_amount_total(self, cr, uid, ids, fields, args,
-            context=None):
+    def _get_uncovered_amount_total(
+            self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
         res = {}
@@ -225,15 +230,16 @@ class ResPartner(orm.Model):
         # Read parameter for FIDO:
         # ---------------------------------------------------------------------
         _logger.warning('START FIDO CHECK')
-        #user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        #no_fido_status = user.no_fido_status
-        #if no_fido_status:
+        # user = self.pool.get('res.users').browse(cr, uid, uid,
+        # context=context)
+        # no_fido_status = user.no_fido_status
+        # if no_fido_status:
         #    _logger.error('USER: %s NO FIDO INFORMATION' % uid)
-        #else:
+        # else:
         #    _logger.info('USER: %s FIDO INFORMATION' % uid)
 
         for partner in self.browse(cr, uid, ids, context=context):
-            #if no_fido_status:
+            # if no_fido_status:
             #    res[partner.id] = {
             #        'uncovered_amount': 0,
             #        'uncovered_state': 'grey',
@@ -241,7 +247,7 @@ class ResPartner(orm.Model):
             #    continue
 
             res[partner.id] = {}
-            opened = 0.0 # total
+            opened = 0.0  # total
             fido_date = partner.fido_date or False
             fido_total = partner.fido_total or 0.0
 
@@ -269,9 +275,9 @@ class ResPartner(orm.Model):
             res[partner.id]['uncovered_amount'] = fido_total - opened
 
             # Check black listed:
-            if partner.fido_ko: # No computation partner is black listed!
+            if partner.fido_ko:  # No computation partner is black listed!
                 res[partner.id]['uncovered_state'] = 'black'
-            elif not fido_total or fido_total < opened: # No Fido amount!
+            elif not fido_total or fido_total < opened:  # No Fido amount!
                 res[partner.id]['uncovered_state'] = 'red'
             elif opened / fido_total > fido_yellow:
                 res[partner.id]['uncovered_state'] = 'yellow'
@@ -294,9 +300,9 @@ class ResPartner(orm.Model):
         """ Refresh partner FIDO
         """
         # Check open mode:
-        if from_date: # nigthly update
+        if from_date:  # nigthly update
             daily_update = False
-        else: # daily update:
+        else:  # daily update:
             daily_update = True
             filename = '/tmp/fido.log'
             now = datetime.now()
@@ -334,7 +340,7 @@ class ResPartner(orm.Model):
                 ('create_date', '>=', from_date),
                 ('write_date', '>=', from_date),
                 ]
-        else: # nightly update
+        else:  # nightly update
             domain = [('date_order', '>=', from_date)]
 
         order_ids = order_pool.search(cr, uid, domain, context=context)
@@ -371,7 +377,7 @@ class ResPartner(orm.Model):
                 ('create_date', '>=', from_date),
                 ('write_date', '>=', from_date),
                 ]
-        else: # nightly update
+        else:  # nightly update
             domain = [('date_invoice', '>=', from_date)]
 
         invoice_ids = invoice_pool.search(cr, uid, domain, context=context)
@@ -397,17 +403,17 @@ class ResPartner(orm.Model):
         'open_order_ids': fields.one2many(
             'sale.order', 'partner_id',
             'Order open', domain=[
-                ('mx_closed', '=', False), # still open
-                ('pricelist_order', '=', False), # not pricelist
-                ('state', 'not in', ('cancel', 'draft', 'sent')), # not closed
+                ('mx_closed', '=', False),  # still open
+                ('pricelist_order', '=', False),  # not pricelist
+                ('state', 'not in', ('cancel', 'draft', 'sent')),  # not closed
                 ]),
 
         # Open order:
         'open_picking_ids': fields.one2many(
             'stock.picking', 'partner_id',
             'Open DDT', domain=[
-                ('ddt_id', '!=', False), # is DDT
-                ('invoice_id', '=', False), # not invoiced
+                ('ddt_id', '!=', False),  # is DDT
+                ('invoice_id', '=', False),  # not invoiced
                 ]),
 
         'uncovered_amount': fields.function(
@@ -439,5 +445,3 @@ class ResPartner(orm.Model):
     _defaults = {
         'empty': lambda *x: ' ',
         }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
