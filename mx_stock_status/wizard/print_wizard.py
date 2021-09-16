@@ -959,7 +959,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         filter_text = u'Movimenti di corrispettivo: '
 
         # Read wizard data:
-        partner = wiz_proxy.partner_id
+        partner = wiz_proxy.customer_id
         destination = wiz_proxy.destination_id
 
         from_date = wiz_proxy.from_date
