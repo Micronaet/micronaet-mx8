@@ -960,7 +960,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         # Read wizard data:
         partner = wiz_proxy.customer_id
-        destination = wiz_proxy.destination_id
+        destination = wiz_proxy.destination_partner_id
 
         from_date = wiz_proxy.from_date
         to_date = wiz_proxy.to_date
