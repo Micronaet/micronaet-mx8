@@ -32,20 +32,21 @@
         'base',
         'stock',
         'product',
-        'purchase', # for last purchase date
-        'sql_product', # for stat. cat.
+        'purchase',  # for last purchase date
+        'sql_product',  # for stat. cat.
         'close_residual_order',
-        'product_image_base', # for image in report
-        'inventory_status', # stock dispo
-        'inventory_field', # for category
-        'csv_import_campaign', # campaign dispo        
-        'catalog_management', # some categorization
-        'excel_export', # Excel report management (for available)
+        'product_image_base',  # for image in report
+        'inventory_status',  # stock dispo
+        'inventory_field',  # for category
+        'csv_import_campaign',  # campaign dispo
+        'catalog_management',  # some categorization
+        'excel_export',  # Excel report management (for available)
+        # 'force_as_corresponding',  # Must be added
         ],
     'init_xml': [],
     'demo': [],
     'data': [
-        #'security/ir.model.access.csv',    
+        # 'security/ir.model.access.csv',
         'report/status_report.xml',
         'wizard/print_wizard_view.xml',
         ],
