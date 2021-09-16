@@ -16,6 +16,8 @@
                         <field name="partner_id" attrs="{'invisible': [('mode','in',('table', 'corresponding'))]}"/>
                    </group>
                    <group colspan="4" col="4" attrs="{'invisible': [('mode','!=','corresponding')]}">
+                        <field name="customer_id" />
+                        <field name="destination_partner_id" />
                         <field name="from_date" />
                         <field name="to_date" />
                    </group>

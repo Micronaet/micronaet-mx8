@@ -959,6 +959,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         filter_text = u'Movimenti di corrispettivo: '
 
         # Read wizard data:
+        partner = wiz_proxy.partner_id
+        destination = wiz_proxy.destination_id
+
         from_date = wiz_proxy.from_date
         to_date = wiz_proxy.to_date
 
@@ -968,6 +971,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         domain = [
             ('picking_id.correspond', '=', True),
         ]
+        if partner:
+            domain.append(('picking_id.partner_id', '=', partner.id))
+            filter_text += 'Partner %s ' % partner.name
+        if destination:
+            domain.append(
+                ('picking_id.destination_partner_id', '=', destination.id))
+            filter_text += 'Destinazione %s ' % destination.name
         if from_date:
             domain.append(('picking_id.date', '>=', '%s 00:00:00' % from_date))
             filter_text += 'Dalla data %s ' % from_date
@@ -1237,6 +1247,16 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ('is_company', '=', True),
                 ('is_address', '=', False),
                 ]),
+        'customer_id': fields.many2one(
+            'res.partner', 'Cliente',
+            domain=[
+                ('is_company', '=', True),
+                ('is_address', '=', False),
+                ]),
+        'destination_partner_id': fields.many2one(
+            'res.partner', 'Destinazione',
+            domain="[('is_address', '=', True), "
+                   "('parent_id', '=', customer_id)]"),
         'from_date': fields.date('Dalla data'),
         'to_date': fields.date('Alla data'),
         'default_code': fields.char('Partial code', size=30),
