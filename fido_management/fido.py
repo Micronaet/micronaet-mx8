@@ -38,6 +38,7 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+
 # TODO move in a module:
 # TODO REMOVE !!!!
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -146,7 +147,7 @@ class StockPicking(orm.Model):
                     if line.sale_line_id.product_uom_qty:
                         res[ddt.id] += \
                             line.sale_line_id.price_subtotal * qty / \
-                                line.sale_line_id.product_uom_qty
+                            line.sale_line_id.product_uom_qty
                     else:
                         _logger.info('Division by zero!!')
         return res
@@ -192,7 +193,7 @@ class ResPartner(orm.Model):
             'views': [(view_id, 'form'), (False, 'tree')],
             'domain': [],
             'context': context,
-            'target': 'current', # 'new'
+            'target': 'current',  # 'new'
             'nodestroy': False,
             }
 
@@ -393,7 +394,8 @@ class ResPartner(orm.Model):
 
     _columns = {
         'empty': fields.char(' '),
-        'fido_date': fields.date('FIDO from date'),
+        'fido_date': fields.date('FIDO dalla data'),
+        # 'fido_date_end': fields.date('FIDO alla data'),
         'fido_ko': fields.boolean('FIDO removed'),
         'fido_total': fields.float('Total FIDO', digits=(16, 2)),
         'fido_update': fields.boolean(
