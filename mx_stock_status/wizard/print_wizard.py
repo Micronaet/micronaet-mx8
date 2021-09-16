@@ -1011,7 +1011,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 picking.date[:10],
                 product.default_code or '?',
                 product.name,
-                (move.quantity, f_number),
+                (move.product_qty, f_number),
             ], f_text)
 
         return excel_pool.return_attachment(
