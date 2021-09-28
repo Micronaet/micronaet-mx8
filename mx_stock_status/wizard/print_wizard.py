@@ -135,7 +135,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             linked_bom_ids = line_pool.search(cr, uid, [
                 ('bom_id.bom_category', '=', 'parent'),
                 ], context=context)
-            for line in line_pool.browse(cr, uid, linked_bom_ids,
                     context=context):
                 linked_bom[
                     line.product_id.id] = line.bom_id.product_id.default_code
@@ -329,8 +328,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                             'approved', 'except_picking', 'except_invoice')),
                     ], context=context)
                 if purchase_ids:
-                    purchase_line = purchase_line_pool.browse(
-                        cr, uid, purchase_ids[-1], context=context)
+                    purchase_line = sorted(
+                        purchase_line_pool.browse(
+                            cr, uid, purchase_ids, context=context),
+                        key=lambda x: x.order_id.date_order)[-1]
+
                     inventory_cost_only_buy = '%s [%s]' % (
                         purchase_line.price_unit,
                         purchase_line.order_id.name,
