@@ -181,6 +181,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             context = {}
 
         product_pool = self.pool.get('product.product')
+        purchase_line_pool = self.pool.get('purchase.order.line')
 
         # ---------------------------------------------------------------------
         #                        XLS log export:
@@ -317,6 +318,22 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 this_year = False
 
+            # Change inventory_cost_only_buy price with last purchase price:
+            product_id = o.id
+            inventory_cost_only_buy = o.inventory_cost_only_buy
+            if this_year:        
+                # todo integrate in get_picking_last_date?
+                purchase_ids = purchase_line_pool.search(
+                    cr, uid, [
+                        ('product_id', '=', product_id),
+                        ('order_id.state', 'in', (
+                            'approved', 'except_picking', 'except_invoice')),)
+                    ], context=context)    
+                if purchase_ids: 
+                    purchase_line = purchase_line_pool.browse(
+                        cr, uid, purchase_ids[0], context=context)                        
+                    inventory_cost_only_buy = purchase_line.price_unit
+            
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text) # A
             WS.write(row, 1, o.name or '', format_text) # B
@@ -332,7 +349,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(row, 9, purchase_reference, format_text) # J
             WS.write(row, 10, 'X' if this_year else '', format_text) # J
 
-            WS.write(row, 11, o.inventory_cost_only_buy or '', format_text) # K
+            WS.write(row, 11, inventory_cost_only_buy or '', format_text) # K
 
             WS.write(row, 12, cost_fob, format_text) # L
             WS.write(row, 13,
