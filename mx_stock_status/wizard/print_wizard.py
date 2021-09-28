@@ -43,15 +43,15 @@ _logger = logging.getLogger(__name__)
 class ProductProduct(orm.Model):
     """ Model name: ProductProduct
     """
-    
+
     _inherit = 'product.product'
-    
+
     _columns = {
         'inventory_excluded': fields.boolean(
-            'Escluso dal calcolo inventario', 
+            'Escluso dal calcolo inventario',
             help='Viene conteggiato ma non valorizzato in inventario'),
     }
-    
+
 # ---------------------------------------------------------------------
 # Utility:
 # ---------------------------------------------------------------------
@@ -321,23 +321,23 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             # Change inventory_cost_only_buy price with last purchase price:
             product_id = o.id
             inventory_cost_only_buy = o.inventory_cost_only_buy
-            if this_year:        
+            if this_year:
                 # todo integrate in get_picking_last_date?
                 purchase_ids = purchase_line_pool.search(
                     cr, uid, [
                         ('product_id', '=', product_id),
                         ('order_id.state', 'in', (
-                            'approved', 'except_picking', 'except_invoice')),)
-                    ], context=context)    
-                if purchase_ids: 
+                            'approved', 'except_picking', 'except_invoice')),
+                    ], context=context)
+                if purchase_ids:
                     import pdb; pdb.set_trace()
                     purchase_line = purchase_line_pool.browse(
-                        cr, uid, purchase_ids[0], context=context)                        
+                        cr, uid, purchase_ids[0], context=context)
                     inventory_cost_only_buy = '%s [%s]' % (
                         purchase_line.price_unit,
                         purchase_line.order_id.name,
                         )
-            
+
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text) # A
             WS.write(row, 1, o.name or '', format_text) # B
