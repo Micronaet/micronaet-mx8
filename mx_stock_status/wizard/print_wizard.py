@@ -330,7 +330,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                             'approved', 'except_picking', 'except_invoice')),
                     ], context=context)
                 if purchase_ids:
-                    import pdb; pdb.set_trace()
                     purchase_line = purchase_line_pool.browse(
                         cr, uid, purchase_ids[0], context=context)
                     inventory_cost_only_buy = '%s [%s]' % (
