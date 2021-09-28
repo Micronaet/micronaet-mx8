@@ -135,6 +135,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             linked_bom_ids = line_pool.search(cr, uid, [
                 ('bom_id.bom_category', '=', 'parent'),
                 ], context=context)
+            for line in line_pool.browse(cr, uid, linked_bom_ids,
                     context=context):
                 linked_bom[
                     line.product_id.id] = line.bom_id.product_id.default_code
