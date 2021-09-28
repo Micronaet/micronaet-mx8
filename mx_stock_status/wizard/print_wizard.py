@@ -289,13 +289,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             if usd:
                 cost_eur = cost_fob / usd # O
-                cost_duty_eur = cost_fob * duty / 100.0 / usd # P
-                cost_end_eur = cost_eur + cost_duty_eur + transport # Q
+                cost_duty_eur = cost_fob * duty / 100.0 / usd  # P
+                cost_end_eur = cost_eur + cost_duty_eur + transport  # Q
             else:
                 cost_eur = 'ERR' # O
                 cost_duty_eur = 'ERR' # P
                 cost_end_eur = 'ERR' # Q
-
 
             if o.seller_ids:
                 supplier = \
@@ -303,9 +302,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 supplier_ref = '%s %s' % (
                     o.seller_ids[0].product_code or '',
                     o.seller_ids[0].product_name or '',
-                    ) # G
+                    )  # G
             else:
-                supplier = o.first_supplier_id.name or '?' # F
+                supplier = o.first_supplier_id.name or '?'  # F
                 supplier_ref = '?'
 
             purchase_date, purchase_reference = \
@@ -331,42 +330,45 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     ], context=context)
                 if purchase_ids:
                     purchase_line = purchase_line_pool.browse(
-                        cr, uid, purchase_ids[0], context=context)
+                        cr, uid, purchase_ids[-1], context=context)
                     inventory_cost_only_buy = '%s [%s]' % (
                         purchase_line.price_unit,
                         purchase_line.order_id.name,
                         )
 
             # Write data in correct WS:
-            WS.write(row, 0, o.default_code or '????', format_text) # A
-            WS.write(row, 1, o.name or '', format_text) # B
-            WS.write(row, 2, o.uom_id.name or '', format_text) # C
-            WS.write(row, 3, o.statistic_category or '', format_text) # D
+            WS.write(row, 0, o.default_code or '????', format_text)  # A
+            WS.write(row, 1, o.name or '', format_text)  # B
+            WS.write(row, 2, o.uom_id.name or '', format_text)  # C
+            WS.write(row, 3, o.statistic_category or '', format_text)  # D
 
-            WS.write(row, 4, o.colour or '', format_text) # E
-            WS.write(row, 5, o.status or '', format_text) # F
+            WS.write(row, 4, o.colour or '', format_text)  # E
+            WS.write(row, 5, o.status or '', format_text)  # F
 
-            WS.write(row, 6, o.categ_id.name or '', format_text) # G
-            WS.write(row, 7, supplier, format_text) # H
-            WS.write(row, 8, supplier_ref, format_text) # I
-            WS.write(row, 9, purchase_reference, format_text) # J
-            WS.write(row, 10, 'X' if this_year else '', format_text) # J
+            WS.write(row, 6, o.categ_id.name or '', format_text)  # G
+            WS.write(row, 7, supplier, format_text)  # H
+            WS.write(row, 8, supplier_ref, format_text)  # I
+            WS.write(row, 9, purchase_reference, format_text)  # J
+            WS.write(row, 10, 'X' if this_year else '', format_text)  # J
 
-            WS.write(row, 11, inventory_cost_only_buy or '', format_text) # K
+            WS.write(row, 11, inventory_cost_only_buy or '', format_text)  # K
 
-            WS.write(row, 12, cost_fob, format_text) # L
+            WS.write(row, 12, cost_fob, format_text)  # L
             WS.write(row, 13,
                 o.mx_net_qty if data.get('with_stock', False) else '/',
-                format_text) # M
-            WS.write(row, 14, o.inventory_cost_no_move, format_text) # N
+                format_text)  # M
+            WS.write(row, 14, o.inventory_cost_no_move, format_text)  # N
 
             # Only if bought in this year:
-            WS.write(row, 15, duty if this_year else 0.0, format_text) # O
-            WS.write(row, 16, transport if this_year else 0.0, format_text) # P
-            WS.write(row, 17, usd if this_year else 0.0, format_text) # P
-            WS.write(row, 18, cost_eur if this_year else 0.0, format_text) # R
-            WS.write(row, 19, cost_duty_eur if this_year else 0.0, format_text) # S
-            WS.write(row, 20, cost_end_eur if this_year else 0.0, format_text) # T
+            WS.write(row, 15, duty if this_year else 0.0, format_text)  # O
+            WS.write(
+                row, 16, transport if this_year else 0.0, format_text)  # P
+            WS.write(row, 17, usd if this_year else 0.0, format_text)  # P
+            WS.write(row, 18, cost_eur if this_year else 0.0, format_text)  # R
+            WS.write(
+                row, 19, cost_duty_eur if this_year else 0.0, format_text)  # S
+            WS.write(
+                row, 20, cost_end_eur if this_year else 0.0, format_text)  # T
         WB.close()
 
         # ---------------------------------------------------------------------
