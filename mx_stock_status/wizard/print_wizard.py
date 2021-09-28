@@ -40,6 +40,18 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+class ProductProduct(orm.Model):
+    """ Model name: ProductProduct
+    """
+    
+    _inherit = 'product.product'
+    
+    _columns = {
+        'inventory_excluded': fields.boolean(
+            'Escluso dal calcolo inventario', 
+            help='Viene conteggiato ma non valorizzato in inventario'),
+    }
+    
 # ---------------------------------------------------------------------
 # Utility:
 # ---------------------------------------------------------------------
@@ -531,6 +543,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         product_ids = product_pool.search(cr, uid, [
             ('mx_start_qty', '>', 0.0), # Only present start inventory
+            ('inventory_excluded', '=', False),  # Remove excluded element
             ], context=context)
 
         for product in sorted(
