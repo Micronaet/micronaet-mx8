@@ -182,7 +182,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             context = {}
 
         product_pool = self.pool.get('product.product')
-        purchase_line_pool = self.pool.get('purchase.order.line')
 
         # ---------------------------------------------------------------------
         #                        XLS log export:
@@ -263,7 +262,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ]
 
         # Write 3 line of header:
-        context['detailed'] = True  # Add extra information on last purchase
+        context['full'] = True  # Add extra information on last purchase
+        # context['detailed'] = True  # Add extra information on last purchase
         write_header(
             WS, ['', 'RACCOLTA DATI PER INVENTARIO', ], 0, format_title)
         write_header(WS, [
@@ -271,8 +271,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             product_pool.mx_stock_status_get_filter(data),
             product_pool.get_picking_last_date(cr, uid, False, True),
             ], 1, format_title)
-        context['detailed'] = False  # Add extra information on last purchase
-        context['full'] = True  # Add extra information on last purchase
+        # context['detailed'] = False  # Add extra information on last purchase
         write_header(WS, header, 3, format_header)
 
         # ---------------------------------------------------------------------
