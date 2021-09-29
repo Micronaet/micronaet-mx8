@@ -110,7 +110,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         price_db = {}
         for price in price_pool.browse(cr, uid, price_ids, context=context):
-            product = price.product_id #suppinfo_id.name
+            product = price.product_id  # suppinfo_id.name
             # price.suppinfo_id.product_tmpl_id.id
             if product.id in price_db:
                 continue
@@ -152,24 +152,25 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             price_item = price_db.get(product.id, ('', '', ''))
 
             # Write data in correct WS:
-            WS.write(counter, 0, 'X' if product.id in in_bom_ids else '') # A
-            WS.write(counter, 1, product.default_code) # B
-            WS.write(counter, 2, product.name) # C
-            WS.write(counter, 3, product.uom_id.name or '') # D
-            WS.write(counter, 4, product.statistic_category or '') # E
-            WS.write(counter, 5, product.categ_id.name or '') # F
-            WS.write(counter, 6,
+            WS.write(counter, 0, 'X' if product.id in in_bom_ids else '')  # A
+            WS.write(counter, 1, product.default_code)  # B
+            WS.write(counter, 2, product.name)  # C
+            WS.write(counter, 3, product.uom_id.name or '')  # D
+            WS.write(counter, 4, product.statistic_category or '')  # E
+            WS.write(counter, 5, product.categ_id.name or '')  # F
+            WS.write(
+                counter, 6,
                 product.seller_ids[0].name.name if product.seller_ids else (
-                    product.first_supplier_id.name or '')) # G
-            WS.write(counter, 7, product.inventory_start or '') # H
-            WS.write(counter, 8, product.inventory_delta or '') # I
-            WS.write(counter, 9, product.mx_mrp_out or '') # J
-            WS.write(counter, 10, product.inventory_category_id.name) # K
-            WS.write(counter, 11, product.mx_history_net_qty or '') # L
-            WS.write(counter, 12, product.mx_start_qty or '') # M
-            WS.write(counter, 13, price_item[0]) # N
-            WS.write(counter, 14, price_item[1]) # O
-            WS.write(counter, 15, price_item[2]) # P
+                    product.first_supplier_id.name or ''))  # G
+            WS.write(counter, 7, product.inventory_start or '')  # H
+            WS.write(counter, 8, product.inventory_delta or '')  # I
+            WS.write(counter, 9, product.mx_mrp_out or '')  # J
+            WS.write(counter, 10, product.inventory_category_id.name)  # K
+            WS.write(counter, 11, product.mx_history_net_qty or '')  # L
+            WS.write(counter, 12, product.mx_start_qty or '')  # M
+            WS.write(counter, 13, price_item[0])  # N
+            WS.write(counter, 14, price_item[1])  # O
+            WS.write(counter, 15, price_item[2])  # P
         return True
 
     def extract_stock_status_xls_inventory_file(self, cr, uid, ids, data=None,
@@ -262,7 +263,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ]
 
         # Write 3 line of header:
-        context['detailed'] = True # Add extra information on last purchase
+        context['detailed'] = True  # Add extra information on last purchase
         write_header(
             WS, ['', 'RACCOLTA DATI PER INVENTARIO', ], 0, format_title)
         write_header(WS, [
@@ -270,6 +271,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             product_pool.mx_stock_status_get_filter(data),
             product_pool.get_picking_last_date(cr, uid, False, True),
             ], 1, format_title)
+        context['detailed'] = False  # Add extra information on last purchase
+        context['full'] = True  # Add extra information on last purchase
         write_header(WS, header, 3, format_header)
 
         # ---------------------------------------------------------------------
@@ -292,13 +295,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 cost_duty_eur = cost_fob * duty / 100.0 / usd  # P
                 cost_end_eur = cost_eur + cost_duty_eur + transport  # Q
             else:
-                cost_eur = 'ERR' # O
-                cost_duty_eur = 'ERR' # P
-                cost_end_eur = 'ERR' # Q
+                cost_eur = 'ERR'  # O
+                cost_duty_eur = 'ERR'  # P
+                cost_end_eur = 'ERR'  # Q
 
             if o.seller_ids:
                 supplier = \
-                    o.first_supplier_id.name or o.seller_ids[0].name.name # F
+                    o.first_supplier_id.name or o.seller_ids[0].name.name  # F
                 supplier_ref = '%s %s' % (
                     o.seller_ids[0].product_code or '',
                     o.seller_ids[0].product_name or '',
@@ -307,37 +310,17 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 supplier = o.first_supplier_id.name or '?'  # F
                 supplier_ref = '?'
 
-            purchase_date, purchase_reference = \
+            purchase_date, purchase_reference, purchase_price = \
                 product_pool.get_picking_last_date(
                     cr, uid, o.default_code, context=context)
 
             # Check if is this year:
             if purchase_date[:4] == year:
                 this_year = True
+                inventory_cost_only_buy = purchase_price
             else:
                 this_year = False
-
-            # Change inventory_cost_only_buy price with last purchase price:
-            product_id = o.id
-            inventory_cost_only_buy = o.inventory_cost_only_buy
-            if this_year:
-                # todo integrate in get_picking_last_date?
-                purchase_ids = purchase_line_pool.search(
-                    cr, uid, [
-                        ('product_id', '=', product_id),
-                        ('order_id.state', 'in', (
-                            'approved', 'except_picking', 'except_invoice')),
-                    ], context=context)
-                if purchase_ids:
-                    purchase_line = sorted(
-                        purchase_line_pool.browse(
-                            cr, uid, purchase_ids, context=context),
-                        key=lambda x: x.order_id.date_order)[-1]
-
-                    inventory_cost_only_buy = '%s [%s]' % (
-                        purchase_line.price_unit,
-                        purchase_line.order_id.name,
-                        )
+                inventory_cost_only_buy = o.inventory_cost_only_buy
 
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text)  # A
@@ -357,7 +340,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(row, 11, inventory_cost_only_buy or '', format_text)  # K
 
             WS.write(row, 12, cost_fob, format_text)  # L
-            WS.write(row, 13,
+            WS.write(
+                row, 13,
                 o.mx_net_qty if data.get('with_stock', False) else '/',
                 format_text)  # M
             WS.write(row, 14, o.inventory_cost_no_move, format_text)  # N

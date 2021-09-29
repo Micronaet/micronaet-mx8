@@ -108,10 +108,12 @@ class ProductProdcut(orm.Model):
             context = {}
 
         detailed = context.get('detailed', False)
+        full = context.get('detailed', False)
 
         if load_all:  # no code = load data
             self._picking_date = {}
-            self._picking_detailed = {}
+            self._picking_detailed = {}  # reference
+            self._picking_full = {}  # price
             line_pool = self.pool.get('stock.move')
 
             line_ids = line_pool.search(cr, uid, [
@@ -138,6 +140,8 @@ class ProductProdcut(orm.Model):
                         picking.bf_number or '',
                         picking.origin,
                         )
+                    self._picking_full[code] = \
+                        line.purchase_line_id.price_unit or line.price_unit
             return ''  # First load
 
         if detailed:
@@ -145,8 +149,14 @@ class ProductProdcut(orm.Model):
                 self._picking_date.get(code, '/'),
                 self._picking_detailed.get(code, '/'),
                 )
+        elif full:
+            return (
+                self._picking_date.get(code, '/'),
+                self._picking_detailed.get(code, '/'),
+                self._picking_full.get(code, 0.0),
+                )
 
-        else:
+        else:  # normal
             return self._picking_date.get(code, '/')
 
     def get_purchase_last_date(self, cr, uid, code=False, load_all=False,
