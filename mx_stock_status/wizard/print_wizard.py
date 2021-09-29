@@ -218,10 +218,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         format_text = WB.add_format({
             'font_name': 'Courier 10 Pitch',
             'font_size': 8,
-            #'align': 'right',
-            #'bg_color': 'c1e7b3',
+            # 'align': 'right',
+            # 'bg_color': 'c1e7b3',
             'border': 1,
-            #'num_format': '0.00',
+            # 'num_format': '0.00',
             })
 
         # ---------------------------------------------------------------------
@@ -262,8 +262,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ]
 
         # Write 3 line of header:
-        context['full'] = True  # Add extra information on last purchase
-        # context['detailed'] = True  # Add extra information on last purchase
+        context['detailed'] = True  # Add extra information on last purchase
         write_header(
             WS, ['', 'RACCOLTA DATI PER INVENTARIO', ], 0, format_title)
         write_header(WS, [
@@ -271,7 +270,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             product_pool.mx_stock_status_get_filter(data),
             product_pool.get_picking_last_date(cr, uid, False, True),
             ], 1, format_title)
-        # context['detailed'] = False  # Add extra information on last purchase
+        context['detailed'] = False  # Add extra information on last purchase
+        context['full'] = True  # Add extra information on last purchase
         write_header(WS, header, 3, format_header)
 
         # ---------------------------------------------------------------------

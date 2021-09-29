@@ -108,7 +108,7 @@ class ProductProdcut(orm.Model):
             context = {}
 
         detailed = context.get('detailed', False)
-        full = context.get('detailed', False)
+        full = context.get('full', False)
 
         if load_all:  # no code = load data
             self._picking_date = {}
