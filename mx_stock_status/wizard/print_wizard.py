@@ -173,9 +173,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(counter, 15, price_item[2])  # P
         return True
 
-    def extract_stock_status_xls_inventory_file(self, cr, uid, ids, data=None,
-            context=None):
-        """ Extract inventory as XLS extrenal files every category in different
+    def extract_stock_status_xls_inventory_file(
+            self, cr, uid, ids, data=None, context=None):
+        """ Extract inventory as XLS external files every category in different
             page
         """
         if context is None:
@@ -284,13 +284,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             year = str(datetime.now().year)
 
             # Calculate:
-            duty = product_pool.get_duty_this_product_rate(o) # L
-            cost_fob = o.standard_price # I
-            usd = o.inventory_cost_exchange # N
-            transport = o.inventory_cost_transport # M
+            duty = product_pool.get_duty_this_product_rate(o)  # L
+            cost_fob = o.standard_price  # I
+            usd = o.inventory_cost_exchange  # N
+            transport = o.inventory_cost_transport  # M
 
             if usd:
-                cost_eur = cost_fob / usd # O
+                cost_eur = cost_fob / usd  # O
                 cost_duty_eur = cost_fob * duty / 100.0 / usd  # P
                 cost_end_eur = cost_eur + cost_duty_eur + transport  # Q
             else:
@@ -372,14 +372,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'res_id': 1,
             }, context=context)
         return {
-            'type' : 'ir.actions.act_url',
+            'type': 'ir.actions.act_url',
             'url': '/web/binary/saveas?model=ir.attachment&field=datas&'
-                'filename_field=datas_fname&id=%s' % attachment_id,
+                   'filename_field=datas_fname&id=%s' % attachment_id,
             'target': 'self',
             }
 
-    def extract_old_xls_inventory_file(self, cr, uid, ids, data=None,
-            context=None):
+    def extract_old_xls_inventory_file(
+            self, cr, uid, ids, data=None, context=None):
         """ Extract inventory as XLS extrenal files every category in different
             page old version (from anagraphic)
         """
@@ -399,14 +399,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             """ Get last (supplier, cost)
             """
             res = [
-                False, # 0. Date
-                '', # 1. Supplier
-                0.0, # 2. Price
-                0, # 3. Number of price found
-                '', # 4. Note
-                product.standard_price, # 5. Manual cost
-                product.weight, # 6. weight (for pipes)
-                ] # Date, supplier, price, #
+                False,  # 0. Date
+                '',  # 1. Supplier
+                0.0,  # 2. Price
+                0,  # 3. Number of price found
+                '',  # 4. Note
+                product.standard_price,  # 5. Manual cost
+                product.weight,  # 6. weight (for pipes)
+                ]  # Date, supplier, price, #
 
             default_code = product.default_code
             if default_code.startswith('MT'):
@@ -414,7 +414,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 parent_code = default_code[:6]
 
-            if product.relative_type == 'half': # Product is HW
+            if product.relative_type == 'half':  # Product is HW
                 no_price = False
                 for line in product.half_bom_ids:
                     cost = get_last_cost(line.product_id)[2]
@@ -446,7 +446,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     price,
                     res[2],
                     )
-            else: # Product is normal product
+            else:  # Product is normal product
                 i = 0
                 for supplier in product.seller_ids:
                     for price in supplier.pricelist_ids:
@@ -471,7 +471,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #                            Collect data:
         # ---------------------------------------------------------------------
         # Load parent bom if necessary:
-        self.parent_bom_cost = {} # reset value
+        self.parent_bom_cost = {}  # reset value
         if 'bom_selection' in product_pool._columns: # DB with BOM price manage
             product_ids = product_pool.search(cr, uid, [
                 ('bom_selection', '=', True),
@@ -508,8 +508,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             70,
             ]
 
-        ws_names = { # Row position
-            '': [1, 0.0, 0,], # Empty category (row, total, error):
+        ws_names = {  # Row position
+            '': [1, 0.0, 0, ],  # Empty category (row, total, error):
             }
         ws_empty = 'Non assegnati'
         excel_pool.create_worksheet(ws_empty)
@@ -577,8 +577,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 product.default_code or '',
                 product.name or '',
                 product.uom_id.name or '',
-                #product.statistic_category or '',
-                #product.categ_id.name or '',
+                # product.statistic_category or '',
+                # product.categ_id.name or '',
                 supplier or '',
                 (int(inventory), color_number_format),
                 date or '',
