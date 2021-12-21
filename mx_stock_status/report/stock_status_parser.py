@@ -100,9 +100,13 @@ class ProductProdcut(orm.Model):
                 res += _('Tutti; ')
         return res
 
-    def get_picking_last_date(self, cr, uid, code=False, load_all=False,
+    def get_picking_last_date(
+            self, cr, uid, code=False, load_all=False,
             context=None):
         """ Function used in parser for last picking date
+            code: item to search
+            load_all: load all database in object for future check (first call)
+            # 21 dic 2021 add some extra parameters for exchange and duty
         """
         if context is None:
             context = {}
@@ -111,9 +115,10 @@ class ProductProdcut(orm.Model):
         full = context.get('full', False)
 
         if load_all:  # no code = load data
-            self._picking_date = {}
+            self._picking_date = {}  # date
             self._picking_detailed = {}  # reference
             self._picking_full = {}  # price
+            # self._picking_exchange = {}  # exchange
             line_pool = self.pool.get('stock.move')
 
             line_ids = line_pool.search(cr, uid, [
@@ -133,6 +138,8 @@ class ProductProdcut(orm.Model):
                         date > self._picking_date[code]:
                     # Update:
                     picking = line.picking_id
+                    # self._picking_exchange[code] = \
+                    #    picking.inventory_cost_exchange
                     self._picking_date[code] = date
                     self._picking_detailed[code] = '%s del %s (%s >> %s)' % (
                         picking.name or '',
@@ -154,6 +161,7 @@ class ProductProdcut(orm.Model):
                 self._picking_date.get(code, '/'),
                 self._picking_detailed.get(code, '/'),
                 self._picking_full.get(code, 0.0),
+                # Exchange used
                 )
 
         else:  # normal
@@ -229,8 +237,8 @@ class ProductProdcut(orm.Model):
         status = data.get('status', False)
         sortable = data.get('sortable', False)
         inventory_category_id = data.get('inventory_category_id', False)
-        #mode = data.get('mode', False)
-        #with_stock = data.get('with_stock', False)
+        # mode = data.get('mode', False)
+        # with_stock = data.get('with_stock', False)
 
         if partner_id:
             # -----------------------------------------------------------------
@@ -248,7 +256,7 @@ class ProductProdcut(orm.Model):
             product_ids.extend(tmpl_product_ids)
 
             # -----------------------------------------------------------------
-            # B. Get product supplier by partner (field: first_supplier_id
+            # B. Get product supplier by partner (field: first_supplier_id)
             # -----------------------------------------------------------------
             first_supplier_product_ids = product_pool.search(
                 cr, uid, [
@@ -259,7 +267,7 @@ class ProductProdcut(orm.Model):
         # PRODUCT FILTER:
         # ---------------------------------------------------------------------
         domain = []
-        if product_ids: # filtered for partner
+        if product_ids:  # filtered for partner
             domain.append(('id', 'in', product_ids))
 
         if default_code:
@@ -286,12 +294,13 @@ class ProductProdcut(orm.Model):
 
         # TODO ADD other (and filter)
 
-        #if mode == 'simple' and with_stock:
+        # if mode == 'simple' and with_stock:
         #    domain.append(('mx_net_qty', '>', 0))
 
         product_ids = product_pool.search(cr, uid, domain, context=context)
         products = product_pool.browse(cr, uid, product_ids, context=context)
         return products
+
 
 class Parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

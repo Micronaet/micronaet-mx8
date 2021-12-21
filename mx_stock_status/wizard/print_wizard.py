@@ -268,7 +268,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         write_header(WS, [
             _('Filtro'),
             product_pool.mx_stock_status_get_filter(data),
-            product_pool.get_picking_last_date(cr, uid, False, True),
+            product_pool.get_picking_last_date(  # Load data for future call)
+                cr, uid, code=False, load_all=True),
             ], 1, format_title)
         context['detailed'] = False  # Add extra information on last purchase
         context['full'] = True  # Add extra information on last purchase
@@ -289,15 +290,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             usd = o.inventory_cost_exchange  # N
             transport = o.inventory_cost_transport  # M
 
-            if usd:
-                cost_eur = cost_fob / usd  # O
-                cost_duty_eur = cost_fob * duty / 100.0 / usd  # P
-                cost_end_eur = cost_eur + cost_duty_eur + transport  # Q
-            else:
-                cost_eur = 'ERR'  # O
-                cost_duty_eur = 'ERR'  # P
-                cost_end_eur = 'ERR'  # Q
-
             if o.seller_ids:
                 supplier = \
                     o.first_supplier_id.name or o.seller_ids[0].name.name  # F
@@ -312,6 +304,15 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             purchase_date, purchase_reference, purchase_price = \
                 product_pool.get_picking_last_date(
                     cr, uid, o.default_code, context=context)
+
+            if usd:
+                cost_eur = purchase_price / usd  # O  (ex. costo_fob)
+                cost_duty_eur = cost_fob * duty / 100.0 / usd  # P
+                cost_end_eur = cost_eur + cost_duty_eur + transport  # Q
+            else:
+                cost_eur = 'ERR'  # O
+                cost_duty_eur = 'ERR'  # P
+                cost_end_eur = 'ERR'  # Q
 
             # Check if is this year:
             this_year = purchase_date[:4] == year
@@ -334,7 +335,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(row, 10, 'X' if this_year else '', format_text)  # K
             WS.write(
                 row, 11, o.inventory_cost_only_buy or '', format_text)  # L
-            # WS.write(row, 12, cost_fob, format_text)  # M (da pick-OF-prezzo)
             WS.write(
                 row, 12, purchase_price, format_text)  # M (da pick-OF-prezzo)
             WS.write(
