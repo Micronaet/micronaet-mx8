@@ -314,12 +314,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     cr, uid, o.default_code, context=context)
 
             # Check if is this year:
-            if purchase_date[:4] == year:
-                this_year = True
-                inventory_cost_only_buy = purchase_price
-            else:
-                this_year = False
-                inventory_cost_only_buy = o.inventory_cost_only_buy
+            this_year = purchase_date[:4] == year
 
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text)  # A
@@ -334,27 +329,30 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             WS.write(row, 7, supplier, format_text)  # H
             WS.write(row, 8, supplier_ref, format_text)  # I
             WS.write(row, 9, purchase_reference, format_text)  # J
-            WS.write(row, 10, 'X' if this_year else '', format_text)  # J
 
-            WS.write(row, 11, inventory_cost_only_buy or '', format_text)  # K
-
-            WS.write(row, 12, cost_fob, format_text)  # L
+            # todo CAMBIARE:
+            WS.write(row, 10, 'X' if this_year else '', format_text)  # K
+            WS.write(
+                row, 11, o.inventory_cost_only_buy or '', format_text)  # L
+            # WS.write(row, 12, cost_fob, format_text)  # M (da pick-OF-prezzo)
+            WS.write(
+                row, 12, purchase_price, format_text)  # M (da pick-OF-prezzo)
             WS.write(
                 row, 13,
                 o.mx_net_qty if data.get('with_stock', False) else '/',
-                format_text)  # M
-            WS.write(row, 14, o.inventory_cost_no_move, format_text)  # N
+                format_text)  # N
+            WS.write(row, 14, o.inventory_cost_no_move, format_text)  # O
 
             # Only if bought in this year:
-            WS.write(row, 15, duty if this_year else 0.0, format_text)  # O
+            WS.write(row, 15, duty if this_year else 0.0, format_text)  # P
             WS.write(
-                row, 16, transport if this_year else 0.0, format_text)  # P
-            WS.write(row, 17, usd if this_year else 0.0, format_text)  # P
-            WS.write(row, 18, cost_eur if this_year else 0.0, format_text)  # R
+                row, 16, transport if this_year else 0.0, format_text)  # Q
+            WS.write(row, 17, usd if this_year else 0.0, format_text)  # R
+            WS.write(row, 18, cost_eur if this_year else 0.0, format_text)  # S
             WS.write(
-                row, 19, cost_duty_eur if this_year else 0.0, format_text)  # S
+                row, 19, cost_duty_eur if this_year else 0.0, format_text)  # T
             WS.write(
-                row, 20, cost_end_eur if this_year else 0.0, format_text)  # T
+                row, 20, cost_end_eur if this_year else 0.0, format_text)  # U
         WB.close()
 
         # ---------------------------------------------------------------------
@@ -380,7 +378,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
     def extract_old_xls_inventory_file(
             self, cr, uid, ids, data=None, context=None):
-        """ Extract inventory as XLS extrenal files every category in different
+        """ Extract inventory as XLS external files every category in different
             page old version (from anagraphic)
         """
         # ---------------------------------------------------------------------
@@ -1223,7 +1221,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             report_name = 'stock_status_simple_report'
         elif datas['mode'] == 'inventory':
             # XXX Migrate in Excel:
-            #report_name = 'stock_status_inventory_report'
+            # report_name = 'stock_status_inventory_report'
             return self.extract_stock_status_xls_inventory_file(
                 cr, uid, ids, datas, context=context)
 
