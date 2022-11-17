@@ -347,6 +347,7 @@ class SaleOrder(orm.Model):
                     esit = False
                     log.append('Write error line, order %s' % order.name)
                     _logger.info(log[-1])
+                    continue  # todo remove!
 
                     if order.id not in write_error_order:
                         write_error_order.append(order.id)
