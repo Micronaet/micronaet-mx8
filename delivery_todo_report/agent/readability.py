@@ -174,7 +174,7 @@ else:
 
 smtp_server.login(odoo_mailer.smtp_user, odoo_mailer.smtp_pass)
 for to in smtp['to'].replace(' ', '').split(','):
-    print('Senting mail to: %s ...' % to)
+    print('Sending mail to: %s ...' % to)
     msg = MIMEMultipart()
     msg['Subject'] = smtp['subject']
     msg['From'] = odoo_mailer.smtp_user
