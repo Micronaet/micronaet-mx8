@@ -30,9 +30,9 @@ from openerp import SUPERUSER_ID #, api
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT, 
-    DEFAULT_SERVER_DATETIME_FORMAT, 
-    DATETIME_FORMATS_MAP, 
+from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
     float_compare)
 
 _logger = logging.getLogger(__name__)
@@ -43,17 +43,17 @@ class SaleOrder(orm.Model):
     _inherit = 'sale.order'
 
     def open_detailed_order(self, cr, uid, ids, context=None):
-        ''' Open detailed order popup
-        '''
+        """ Open detailed order popup
+        """
         context = context or {}
         # Choose form:
-        try:        
+        try:
             model_pool = self.pool.get('ir.model.data')
             form_view = model_pool.get_object_reference(
-                cr, uid, 'delivery_load_report', 
+                cr, uid, 'delivery_load_report',
                 'view_sale_order_delivery_form')[1]
         except:
-            tree_view = False        
+            tree_view = False
 
         return {
             'type': 'ir.actions.act_window',
@@ -63,16 +63,16 @@ class SaleOrder(orm.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'views': [
-                (form_view or False, 'form'), 
+                (form_view or False, 'form'),
                 ],
             #'domain': [('id', 'in', item_ids)],
             'target': 'new',
             'context': {'minimal_view': True},
             }
-           
+
     def open_original(self, cr, uid, ids, context=None):
-        ''' Open original order
-        '''
+        """ Open original order
+        """
         return {
             'type': 'ir.actions.act_window',
             'name': 'Order',
@@ -80,21 +80,21 @@ class SaleOrder(orm.Model):
             'res_id': ids[0],
             'view_type': 'form',
             'view_mode': 'form,tree',
-            #'view_id': view_id,
-            #'target': 'new',
-            #'nodestroy': True,
-            #'domain': [('product_id', 'in', ids)],
+            # 'view_id': view_id,
+            # 'target': 'new',
+            # 'nodestroy': True,
+            # 'domain': [('product_id', 'in', ids)],
             }
 
     # Procedure to update
     def force_parameter_for_delivery(self, cr, uid, ids, context=None):
-        ''' Compute all not closed order for delivery
-        '''
+        """ Compute all not closed order for delivery
+        """
         return self.scheduled_check_close_order(cr, uid, context=context)
 
     def force_parameter_for_delivery_one(self, cr, uid, ids, context=None):
-        ''' Compute all not closed order for delivery
-        '''        
+        """ Compute all not closed order for delivery
+        """
         context = context or {}
         context['force_one'] = ids[0]
         return self.scheduled_check_close_order(cr, uid, context=context)
@@ -104,27 +104,27 @@ class SaleOrder(orm.Model):
     # -----------------
     # TODO correct procedure as todo report
     def scheduled_check_close_order(self, cr, uid, context=None):
-        ''' Override original procedure for write all producted
-        '''
+        """ Override original procedure for write all producted
+        """
         # ---------------------------------------------------------------------
         #                       Mark order close and mrp:
         # ---------------------------------------------------------------------
         # Call original to update closed parameters:
         super(SaleOrder, self).scheduled_check_close_order(
             cr, uid, context=context)
-  
+
         context = context or {}
         force_one = context.get('force_one', False)
-        
+
         # --------------------------------
         # All closed are produced in view:
         # --------------------------------
         sol_pool = self.pool.get('sale.order.line')
-        
+
         # Pricelist order are set to closed:
         if force_one:
             order_ids = [force_one]
-        else:    
+        else:
             order_ids = self.search(cr, uid, [
                 ('state', 'not in', ('cancel', 'sent', 'draft')),
                 ('mx_closed', '=', False),
@@ -135,15 +135,15 @@ class SaleOrder(orm.Model):
 
         _logger.info('Update production in order (# %s)' % len(
             order_ids))
-           
-        produced_ids = []  
 
-        # 4 states:        
+        produced_ids = []
+
+        # 4 states:
         update_line = {
             'delivered': [],
             'produced': [],
             'partial': [],
-            'no': [],            
+            'no': [],
             }
 
         for order in self.browse(cr, uid, order_ids, context=context):
@@ -151,13 +151,13 @@ class SaleOrder(orm.Model):
             for line in order.order_line:
                 remain = line.product_uom_qty - line.delivered_qty
                 # Line delivered:
-                if remain <= 0.0 or line.product_uom_qty <= line.delivered_qty: 
+                if remain <= 0.0 or line.product_uom_qty <= line.delivered_qty:
                     update_line['delivered'].append(line.id)
-                else: # Check type of operation:
+                else:  # Check type of operation:
                     update_line['partial'].append(line.id)
-                    all_produced = False                        
-                # TODO remove no production line:
-                #if not line.product_id.internal_manufacture:                    
+                    all_produced = False
+                # todo remove no production line:
+                # if not line.product_id.internal_manufacture:
 
             if all_produced:
                 produced_ids.append(order.id)
@@ -170,16 +170,16 @@ class SaleOrder(orm.Model):
                     }
                 if key in closed_state:
                     data.update({'mx_closed': True})
-                    
+
                 sol_pool.write(
                     cr, uid, update_line[key], data, context=context)
                 _logger.info('Line %s delivered (# %s)' % (
                     key, len(update_line[key])))
-               
+
         if produced_ids:
             self.write(cr, uid, produced_ids, {
                 'all_produced': True,
-                }, context=context)                
+                }, context=context)
             _logger.info('Order all produced (# %s)' % len(
                 produced_ids))
 
@@ -188,23 +188,23 @@ class SaleOrder(orm.Model):
         # ---------------------------------------------------------------------
         _logger.info('Readability parameter')
         sol_pool = self.pool.get('sale.order.line')
-        
-        # Pricelist order are set to closed:        
+
+        # Pricelist order are set to closed:
         if force_one:
             order_ids = [force_one]
-        else:        
+        else:
             order_ids = self.search(cr, uid, [
                 ('state', 'not in', ('cancel', 'sent', 'draft')),
                 ('mx_closed', '=', False),
                 ], context=context)
-        
+
         _logger.info('Update %s order...' % len(order_ids))
         i = 0
         for order in self.browse(cr, uid, order_ids, context=context):
             i += 1
             if i % 20 == 0:
                 _logger.info('%s order updated...' % i)
-                
+
             # Order counter:
             order_ml_part = 0.0
             order_ml_tot = 0.0
@@ -212,7 +212,7 @@ class SaleOrder(orm.Model):
             order_volume_part = 0.0
             order_amount_b = 0.0
             order_amount_s = 0.0
-            
+
             for line in order.order_line:
                 if line.mrp_production_state == 'delivered':
                     sol_pool.write(cr, uid, line.id, {
@@ -231,10 +231,10 @@ class SaleOrder(orm.Model):
                 # STOCK:
                 delivery_b = 0.0 # XXX Company B mode! (not used assigned mode)
                 delivery_s = delivery_oc
-                
+
                 ml = line.product_id.linear_length or 0.0
                 volume = line.product_id.volume or 0.0
-                
+
                 delivery_ml_total = delivery_oc * ml
                 delivery_ml_partial = delivery_b * ml
                 delivery_vol_total = delivery_oc * volume
@@ -246,7 +246,7 @@ class SaleOrder(orm.Model):
                         line.product_uom_qty
                     order_amount_s += delivery_s * line.price_subtotal / \
                         line.product_uom_qty
-                        
+
                 order_ml_tot += delivery_ml_total
                 order_ml_part += delivery_ml_partial
                 order_volume_tot += delivery_vol_total
@@ -272,15 +272,15 @@ class SaleOrder(orm.Model):
                 'delivery_vol_total': order_volume_tot,
                 'delivery_vol_partial': order_volume_part,
                 }, context=context)
-                
+
         # Update totale in order
         _logger.info('Total order updated')
         return
-    
-    def _function_get_remain_order(self, cr, uid, ids, fields, args, 
+
+    def _function_get_remain_order(self, cr, uid, ids, fields, args,
             context=None):
-        ''' Fields function for calculate 
-        '''
+        """ Fields function for calculate
+        """
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = [
@@ -289,36 +289,36 @@ class SaleOrder(orm.Model):
         return res
 
     def mark_as_delivering(self, cr, uid, ids, context=None):
-        ''' Set as delivering
-        '''
+        """ Set as delivering
+        """
         return self.write(cr, uid, ids, {
             'delivering_status': True,
             }, context=None)
 
     def mark_as_no_delivering(self, cr, uid, ids, context=None):
-        ''' Set as no delivering
-        '''
+        """ Set as no delivering
+        """
         return self.write(cr, uid, ids, {
             'delivering_status': False,
             }, context=None)
-        
+
     _columns = {
         'delivering_status': fields.boolean('Delivering status'),
         'all_produced': fields.boolean('All produced'),
 
         # Total:
-        'delivery_amount_b': fields.float('Amount B', digits=(16, 2)),             
+        'delivery_amount_b': fields.float('Amount B', digits=(16, 2)),
         'delivery_amount_s': fields.float('Amount S', digits=(16, 2)),
         #'delivery_amount_oc': fields.float('Residuo OC', digits=(16, 2)),
 
-        'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
+        'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),
         'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
         'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),
-        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),             
-        
-        'remain_order_line': fields.function(_function_get_remain_order, 
-            method=True, type='one2many', string='Residual order line', 
-            relation='sale.order.line', store=False), 
+        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),
+
+        'remain_order_line': fields.function(_function_get_remain_order,
+            method=True, type='one2many', string='Residual order line',
+            relation='sale.order.line', store=False),
         }
 
 class SaleOrderLine(orm.Model):
@@ -327,8 +327,8 @@ class SaleOrderLine(orm.Model):
     _inherit = 'sale.order.line'
 
     def nothing(self, cr, uid, ids, context=None):
-        '''  do nothing
-        '''
+        """  do nothing
+        """
         return True
 
     _columns = {
@@ -338,18 +338,18 @@ class SaleOrderLine(orm.Model):
             ('partial', 'Partial deliver'),
             ('no', 'Nothing to deliver'),
             ], 'Production state', readonly=False),
-        
-        'delivery_oc': fields.float('OC remain', digits=(16, 2)),     
-        'delivery_b': fields.float('B(lock)', digits=(16, 2)),     
-        'delivery_s': fields.float('S(uspend)', digits=(16, 2)),             
-        
-        'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),             
+
+        'delivery_oc': fields.float('OC remain', digits=(16, 2)),
+        'delivery_b': fields.float('B(lock)', digits=(16, 2)),
+        'delivery_s': fields.float('S(uspend)', digits=(16, 2)),
+
+        'delivery_ml_total': fields.float('m/l tot', digits=(16, 2)),
         'delivery_ml_partial': fields.float('m/l part', digits=(16, 2)),
-        'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),             
-        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),             
+        'delivery_vol_total': fields.float('vol. tot', digits=(16, 2)),
+        'delivery_vol_partial': fields.float('vol. part', digits=(16, 2)),
         }
 
     _defaults = {
-        'mrp_production_state': lambda *x: 'no',            
+        'mrp_production_state': lambda *x: 'no',
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

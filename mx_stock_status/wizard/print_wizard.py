@@ -481,7 +481,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                     continue
                 if default_code.startswith('MT'): # MT half worked
                     self.parent_bom_cost[default_code[:7]] = p.to_industrial
-                else: # Product
+                else:  # Product
                     self.parent_bom_cost[default_code[:6]] = p.to_industrial
 
         # ---------------------------------------------------------------------
@@ -548,7 +548,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Populate product in correct page
         # ---------------------------------------------------------------------
         product_ids = product_pool.search(cr, uid, [
-            ('mx_start_qty', '>', 0.0), # Only present start inventory
+            ('mx_start_qty', '>', 0.0),  # Only present start inventory
             ('inventory_excluded', '=', False),  # Remove excluded element
             ], context=context)
 
@@ -1244,7 +1244,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         elif datas['mode'] == 'corresponding':
             return self.extract_corresponding(
                 cr, uid, ids, wiz_proxy, context=context)
-        #elif datas['mode'] == 'inventory_web':
+        # elif datas['mode'] == 'inventory_web':
         #    return self.extract_web_inventory_file(
         #        cr, uid, ids, datas, context=context)
         else:
