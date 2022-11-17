@@ -137,14 +137,14 @@ class SaleOrder(orm.Model):
         log = []
 
         # ---------------------------------------------------------------------
-        #                       Mark order close and mrp:
+        #                    Mark order close and mrp:
         # ---------------------------------------------------------------------
+        # Select orders:
         if force_one:
             order_ids = [force_one]
 
             log.append('Force one order: %s' % (force_one, ))
             _logger.info(log[-1])
-            pdb.set_trace()
         else:
             # Call original to update closed parameters:
             # super(SaleOrder, self).scheduled_check_close_order(
@@ -157,6 +157,7 @@ class SaleOrder(orm.Model):
 
             log.append('Force one order: all')
             _logger.info(log[-1])
+        # ---------------------------------------------------------------------
 
         # --------------------------------
         # All closed are produced in view:
@@ -170,7 +171,7 @@ class SaleOrder(orm.Model):
         log.append('Update production in order (# %s)' % len(order_ids))
         _logger.info(log[-1])
 
-        # 4 states:
+        # 4 states for lines:
         update_line = {
             'over': [],
             'delivered': [],
@@ -180,6 +181,9 @@ class SaleOrder(orm.Model):
             }
         produced_ids = []
 
+        # ---------------------------------------------------------------------
+        # Loop order line for raise status
+        # ---------------------------------------------------------------------
         for order in self.browse(cr, uid, order_ids, context=context):
             all_produced = True
             for line in order.order_line:
@@ -218,6 +222,9 @@ class SaleOrder(orm.Model):
             if all_produced:
                 produced_ids.append(order.id)
 
+        # ---------------------------------------------------------------------
+        # Manage line status collected: Update line status
+        # ---------------------------------------------------------------------
         closed_state = ('delivered', 'over')
         for key in update_line:
             if update_line[key]:
@@ -234,6 +241,9 @@ class SaleOrder(orm.Model):
                     key, len(update_line[key])))
                 _logger.info(log[-1])
 
+        # ---------------------------------------------------------------------
+        # Mark all produced line:
+        # ---------------------------------------------------------------------
         if produced_ids:
             self.write(cr, uid, produced_ids, {
                 'all_produced': True,
@@ -241,9 +251,10 @@ class SaleOrder(orm.Model):
             log.append('Order all produced (# %s)' % len(produced_ids))
             _logger.info(log[-1])
 
-        # ---------------------------------------------------------------------
-        # Update readability parameter in line
-        # ---------------------------------------------------------------------
+        # =====================================================================
+        #               Update readability parameter in line
+        # =====================================================================
+        # Update reading status yet updated:
         log.append('Readability parameter')
         _logger.info(log[-1])
 
@@ -259,6 +270,7 @@ class SaleOrder(orm.Model):
         log.append('Update %s order...' % len(order_ids))
         _logger.info(log[-1])
         i = 0
+        pdb.set_trace()
         for order in self.browse(cr, uid, order_ids, context=context):
             i += 1
             log.append('%s order update: %s' % (i, order.name))
@@ -381,14 +393,15 @@ class SaleOrder(orm.Model):
             _logger.error('Error write log file: %s' % logfile)
         return esit
 
-    def _function_get_remain_order(self, cr, uid, ids, fields, args, context=None):
+    def _function_get_remain_order(
+            self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = [
                 line.id for line in order.order_line if line.delivery_oc > 0]
-                #if line.product_uom_qty > line.delivered_qty
+                # if line.product_uom_qty > line.delivered_qty
         return res
 
     def mark_as_delivering(self, cr, uid, ids, context=None):
