@@ -286,9 +286,11 @@ class SaleOrder(orm.Model):
             counter = 0
             for line in order.order_line:
                 counter += 1
+                # todo remove log:
                 _logger.warning('%s. %s >> Stato %s' % (
                     counter, line.product_id.default_code,
                     line.mrp_production_state))
+
                 if line.mrp_production_state == 'delivered':
                     sol_pool.write(cr, uid, line.id, {
                         'delivery_oc': 0,
