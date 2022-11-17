@@ -34,7 +34,7 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 #                             Read Parameters:
 # -----------------------------------------------------------------------------
-cfg_file = 'cron.cfg' # same directory
+cfg_file = 'cron.cfg'  # same directory (cron user)
 config = ConfigParser.ConfigParser()
 config.read(cfg_file)
 
