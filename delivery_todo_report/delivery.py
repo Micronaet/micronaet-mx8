@@ -133,7 +133,8 @@ class SaleOrder(orm.Model):
         sol_pool = self.pool.get('sale.order.line')
         esit = True
 
-        logfile = '/home/administrator/photo/log/order/readability_todo.log'
+        # logfile = '/home/administrator/photo/log/order/readability_todo.log'
+        logfile = '/tmp/order_readability_todo.log'
         log = []
 
         # ---------------------------------------------------------------------
