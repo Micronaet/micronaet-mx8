@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-# ODOO (ex OpenERP) 
+# ODOO (ex OpenERP)
 # Open Source Management Solution
 # Copyright (C) 2001-2015 Micronaet S.r.l. (<http://www.micronaet.it>)
 # Developer: Nicola Riolini @thebrush (<https://it.linkedin.com/in/thebrush>)
@@ -12,7 +12,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
@@ -33,7 +33,7 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 #                             Read Parameters:
 # -----------------------------------------------------------------------------
-cfg_file = 'odoo.cfg' # same directory
+cfg_file = 'cron.cfg' # same directory
 config = ConfigParser.ConfigParser()
 config.read(cfg_file)
 
@@ -48,9 +48,9 @@ password = config.get('odoo', 'password')
 #                               Start procedure:
 # -----------------------------------------------------------------------------
 odoo = erppeek.Client(
-    'http://%s:%s' % (server, port), 
-    db=database, 
-    user=user, 
+    'http://%s:%s' % (server, port),
+    db=database,
+    user=user,
     password=password
     )
 
@@ -61,45 +61,45 @@ mailer = odoo.model('ir.mail_server')
 # -----------------------------------------------------------------------------
 # Close all order:
 # -----------------------------------------------------------------------------
-print 'Inizio procedura di aggiornamento ordini:'
-print 'Chiusi gli ordini presenti consegnati'
+print('Inizio procedura di aggiornamento ordini:')
+print('Chiusi gli ordini presenti consegnati')
 order_pool.scheduled_check_close_order()
 
 # Search open order:
 order_ids = order_pool.search([
     ('state', 'not in', ('cancel', 'sent', 'draft')),
-    ('mx_closed', '=', False),    
+    ('mx_closed', '=', False),
     ])
-print 'Trovati %s ordini da valutare' % len(order_ids)
-    
+print('Trovati %s ordini da valutare' % len(order_ids))
+
 i = 0
 for item_id in order_ids:
     i += 1
     try:
         order_pool.force_parameter_for_delivery_one([item_id])
-        print '%s. Ordine aggiornato: %s' % (i, item_id)
+        print('%s. Ordine aggiornato: %s' % (i, item_id))
     except:
-        print '%s. Errore aggiornando: %s' % (i, item_id)
+        print('%s. Errore aggiornando: %s' % (i, item_id))
 
 # -----------------------------------------------------------------------------
 # Controllo pronti da chiudere
 # -----------------------------------------------------------------------------
-print 'Controllo ordini pronti da consegnare'
-now = ('%s' %datetime.now())[:19]
+print('Controllo ordini pronti da consegnare')
+now = ('%s' % datetime.now())[:19]
 
 order_ids = order_pool.search([
     ('state', 'not in', ('cancel', 'sent', 'draft')),
-    ('mx_closed', '=', False),    
+    ('mx_closed', '=', False),
     ('all_produced', '=', True),
     ('previsional', '=', False),
     ('forecasted_production_id', '=', False),
     ])
-    
+
 if not order_ids:
-    print 'Nessun ordine pronto, procedura terminata'
+    print('Nessun ordine pronto, procedura terminata')
     sys.exit()
-    
-print 'Trovati %s ordini da valutare' % len(order_ids)
+
+print('Trovati %s ordini da valutare' % len(order_ids))
 
 order_list = '''
     <table>
@@ -139,7 +139,7 @@ smtp = {
 
         <b>Micronaet S.r.l.</b>
         ''' % (now, order_list),
-    'subject': 'Dettaglio ordini pronti non chiusi: %s' % now,    
+    'subject': 'Dettaglio ordini pronti non chiusi: %s' % now,
     }
 
 # -----------------------------------------------------------------------------
@@ -150,37 +150,36 @@ mailer_ids = mailer.search([
     ('sequence', '=', 5),
     ])
 if not mailer_ids:
-    print '[ERR] No mail server configured in ODOO'
+    print('[ERR] No mail server configured in ODOO')
     sys.exit()
 
 odoo_mailer = mailer.browse(mailer_ids)[0]
 
 # Open connection:
-print '[INFO] Sending using "%s" connection [%s:%s]' % (
+print('[INFO] Sending using "%s" connection [%s:%s]' % (
     odoo_mailer.name,
     odoo_mailer.smtp_host,
     odoo_mailer.smtp_port,
-    )
+    ))
 
 if odoo_mailer.smtp_encryption in ('ssl', 'starttls'):
     smtp_server = smtplib.SMTP_SSL(
         odoo_mailer.smtp_host, odoo_mailer.smtp_port)
 else:
-    print '[ERR] Connect only SMTP SSL server!'
+    print('[ERR] Connect only SMTP SSL server!')
     sys.exit()
-    #server_smtp.start() # TODO Check
+    # server_smtp.start() # TODO Check
 
 smtp_server.login(odoo_mailer.smtp_user, odoo_mailer.smtp_pass)
 for to in smtp['to'].replace(' ', '').split(','):
-    print 'Senting mail to: %s ...' % to
+    print('Senting mail to: %s ...' % to)
     msg = MIMEMultipart()
     msg['Subject'] = smtp['subject']
     msg['From'] = odoo_mailer.smtp_user
     msg['To'] = smtp['to'] #', '.join(self.EMAIL_TO)
     msg.attach(MIMEText(smtp['text'], 'html'))
-    
+
     # Send mail:
     smtp_server.sendmail(odoo_mailer.smtp_user, to, msg.as_string())
 smtp_server.quit()
-
-print 'Procedura terminata con invio mail ordini pendenti da consegnare'
+print('Procedura terminata con invio mail ordini pendenti da consegnare')
