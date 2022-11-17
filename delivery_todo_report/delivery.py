@@ -282,9 +282,12 @@ class SaleOrder(orm.Model):
 
             write_error = False
             write_error_order = []
+            counter = 0
             for line in order.order_line:
-                _logger.warning('%s >> Stato %s' % (
-                    line.product_id.default_code, line.mrp_production_state))
+                counter += 1
+                _logger.warning('%s. %s >> Stato %s' % (
+                    counter, line.product_id.default_code,
+                    line.mrp_production_state))
                 if line.mrp_production_state == 'delivered':
                     sol_pool.write(cr, uid, line.id, {
                         'delivery_oc': 0,
