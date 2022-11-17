@@ -276,12 +276,9 @@ class SaleOrder(orm.Model):
             _logger.info(log[-1])
 
             # Order counter:
-            order_ml_part = 0.0
-            order_ml_tot = 0.0
-            order_volume_tot = 0.0
-            order_volume_part = 0.0
-            order_amount_b = 0.0
-            order_amount_s = 0.0
+            order_ml_part = order_ml_tot = 0.0
+            order_volume_tot = order_volume_part = 0.0
+            order_amount_b = order_amount_s = 0.0
 
             write_error = False
             write_error_order = []
