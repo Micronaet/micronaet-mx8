@@ -114,13 +114,14 @@ order_list = '''
 '''
 
 for order in order_pool.browse(order_ids):
-    order_list += '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
-        order.name,
-        order.date_confirm or '',
-        order.date_deadline or '',
-        order.partner_id.name,
-        order.amount_total,
-        )
+    order_list += \
+        '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
+            order.name,
+            order.date_confirm or '',
+            order.date_deadline or '',
+            order.partner_id.name,
+            order.amount_total,
+            )
 order_list += '</table>'
 
 # -----------------------------------------------------------------------------
@@ -177,7 +178,7 @@ for to in smtp['to'].replace(' ', '').split(','):
     msg = MIMEMultipart()
     msg['Subject'] = smtp['subject']
     msg['From'] = odoo_mailer.smtp_user
-    msg['To'] = smtp['to'] #', '.join(self.EMAIL_TO)
+    msg['To'] = smtp['to']  # ', '.join(self.EMAIL_TO)
     msg.attach(MIMEText(smtp['text'], 'html'))
 
     # Send mail:
