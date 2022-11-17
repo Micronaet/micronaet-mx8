@@ -270,7 +270,6 @@ class SaleOrder(orm.Model):
         log.append('Update %s order...' % len(order_ids))
         _logger.info(log[-1])
         i = 0
-        pdb.set_trace()
         for order in self.browse(cr, uid, order_ids, context=context):
             i += 1
             log.append('%s order update: %s' % (i, order.name))
@@ -300,8 +299,9 @@ class SaleOrder(orm.Model):
                     continue
 
                 # todo manage over delivery!!!!
+                ordered = line.product_uom_qty
                 delivered = line.delivered_qty
-                delivery_oc = line.product_uom_qty - delivered
+                delivery_oc = ordered - delivered
                 produced = \
                     line.product_uom_maked_sync_qty + line.mx_assigned_qty
                 if produced > delivered:
@@ -313,8 +313,8 @@ class SaleOrder(orm.Model):
                     delivery_b = 0.0
                     delivery_s = delivery_oc
 
-                ml = line.product_id.linear_length or 0.0
-                volume = line.product_id.volume or 0.0
+                ml = line.product_id.linear_length
+                volume = line.product_id.volume
 
                 delivery_ml_total = delivery_oc * ml
                 delivery_ml_partial = delivery_b * ml
@@ -322,11 +322,10 @@ class SaleOrder(orm.Model):
                 delivery_vol_partial = delivery_b * volume
 
                 # Total for order:
-                if line.product_uom_qty:
-                    order_amount_b += delivery_b * line.price_subtotal / \
-                        line.product_uom_qty
-                    order_amount_s += delivery_s * line.price_subtotal / \
-                        line.product_uom_qty
+                if ordered:
+                    subtotal = line.price_subtotal
+                    order_amount_b += delivery_b * subtotal / ordered
+                    order_amount_s += delivery_s * subtotal / ordered
 
                 order_ml_tot += delivery_ml_total
                 order_ml_part += delivery_ml_partial
@@ -344,6 +343,7 @@ class SaleOrder(orm.Model):
                         'delivery_vol_partial': delivery_vol_partial,
                         }, context=context)
                 except:
+                    pdb.set_trace()
                     write_error = True
                     esit = False
                     log.append('Write error line, order %s' % order.name)
