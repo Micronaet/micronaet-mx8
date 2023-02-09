@@ -18,7 +18,7 @@
             <field name="model">sale.order.line</field>
             <field name="inherit_id" ref="sale_multi_delivery.view_sale_order_delivery_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='//line_ids']/tree/field[@name='product_uom_qty']" position="before">
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_uom_qty']" position="before">
                     <field name="product_uom_assigned_qty" string="Assegnati" readonly="1"/>
                 </xpath>
             </field>
