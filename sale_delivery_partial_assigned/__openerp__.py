@@ -31,7 +31,7 @@
         'base',
         'sale',
         'sale_multi_delivery',
-        'production_accounting_external',
+        'inventory_status',
         ],
     'init_xml': [],
     'demo': [],
