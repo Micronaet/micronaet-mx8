@@ -155,6 +155,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
             help='Used for force delivery of deadline records'),
         }
 
+
 class SaleDeliveryPartialLineWizard(orm.TransientModel):
     """ Temp object for document line
     """
@@ -261,7 +262,7 @@ class SaleDeliveryPartialWizard(orm.TransientModel):
                 b_qty = 0
 
             res.append((0, False, {
-                #'wizard_id': 1,
+                # 'wizard_id': 1,
                 'order_line_id': line.id,
                 'sequence': line.sequence,
                 'product_id': line.product_id.id,

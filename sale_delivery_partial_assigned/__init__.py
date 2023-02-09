@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #    Copyright (C) 2001-2014 Micronaet SRL (<http://www.micronaet.it>).
@@ -17,34 +18,4 @@
 #
 ###############################################################################
 
-{
-    'name': 'Multi delivery',
-    'version': '0.1',
-    'category': 'Sale',
-    'description': '''        
-        Add wizard for manage sales order under a "delivery" object for
-        show lines and decide how much items deliver and create multi
-        pick after choose.
-        ''',
-    'author': 'Micronaet S.r.l. - Nicola Riolini',
-    'website': 'http://www.micronaet.it',
-    'license': 'AGPL-3',
-    'depends': [
-        'base',
-        'sale',
-        'mx_sale',
-        'order_destination',  # multi destination
-        'mx_close_order',  # for close state
-        'mx_discount_scale_order',  # for discount
-        ],
-    'init_xml': [],
-    'demo': [],
-    'data': [
-        'security/ir.model.access.csv',
-        'multi_view.xml',
-        'wizard/create_delivery_view.xml',
-        ],
-    'active': False,
-    'installable': True,
-    'auto_install': False,
-    }
+
