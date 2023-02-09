@@ -13,7 +13,7 @@
             </field>
       </record>
 
-      <record id="view_sale_order_delivery_assigned_form" model="ir.ui.view">
+      <!--<record id="view_sale_order_delivery_assigned_form" model="ir.ui.view">
             <field name="name">Assigned q.</field>
             <field name="model">sale.order.line</field>
             <field name="inherit_id" ref="sale_multi_delivery.view_sale_order_delivery_form"/>
@@ -22,7 +22,7 @@
                     <field name="product_uom_assigned_qty" string="Assegnati" readonly="1"/>
                 </xpath>
             </field>
-      </record>
+      </record>-->
     </data>
 </openerp>
 
