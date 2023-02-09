@@ -30,7 +30,7 @@
     'depends': [
         'base',
         'sale',
-        'sale_delivery_partial',
+        'sale_multi_delivery',
         'production_accounting_external',
         ],
     'init_xml': [],
