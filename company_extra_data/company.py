@@ -47,6 +47,7 @@ class ResCompany(orm.Model):
         'header_rea': fields.char('REA', size=15, translate=True),
         'header_capital': fields.float('Capital', size=40, translate=True),
         'header_mecc': fields.char('Mecc. code', size=12, translate=True),
+        'header_aee': fields.char('AEE n.', size=40, translate=True),
         'header2': fields.text('Sub slogan', translate=True),
         'header3': fields.text('Order slogan', translate=True),
         'footer_note': fields.text('Footer note', translate=True),

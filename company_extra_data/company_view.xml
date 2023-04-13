@@ -15,6 +15,7 @@
                         <field name="header_capital" />
                         <field name="header_rea" />
                         <field name="header_mecc" />
+                        <field name="header_aee" />
                         <field name="footer_note" />
                     </group>    
                 </field>                
