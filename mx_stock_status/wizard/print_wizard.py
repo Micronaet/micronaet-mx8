@@ -406,7 +406,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 product.weight,  # 6. weight (for pipes)
                 ]  # Date, supplier, price, #
 
-            default_code = product.default_code
+            default_code = product.default_code or ''
             if default_code.startswith('MT'):
                 parent_code = default_code[:7]
             else:
