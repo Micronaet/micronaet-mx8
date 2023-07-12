@@ -566,7 +566,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ]
 
         product_ids = product_pool.search(cr, uid, domain, context=context)
-        without_inventory_ids = []
+        without_inventory = {}
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
@@ -578,7 +578,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             if mode == 'current':
                 inventory = product.mx_net_mrp_qty  # Current inv.
                 if inventory <= 0:
-                    without_inventory_ids.append(product.id)
+                    without_inventory[product.id] = inventory
             else:
                 inventory = product.mx_start_qty  # Start inv.
             total = cost * inventory
@@ -626,16 +626,16 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         excel_pool.create_worksheet(ws_page)
         excel_pool.column_width(ws_page, [
             20, 15, 40, 5,
-            8, 20,
+            8, 20, 10,
             ])
         excel_pool.write_xls_line(ws_page, 0, {
             'CAT. INV.', 'CODICE', 'DESCRIZIONE', 'UM',
-            'CAT. STAT.', 'CATEGORIA',
+            'CAT. STAT.', 'CATEGORIA', 'Q.',
             }, cell_format['header'])
 
         # Collect data:
         if mode == 'current':
-            product_ids = without_inventory_ids
+            product_ids = without_inventory.keys()
         else:
             product_ids = product_pool.search(cr, uid, [
                 ('mx_start_qty', '<=', 0.0),  # No inventory present
@@ -657,6 +657,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 product.uom_id.name or '',
                 product.statistic_category or '',
                 product.categ_id.name or '',
+                without_inventory.get(product.id, 0.0),
                 ], cell_format['text'])
 
         # ---------------------------------------------------------------------
