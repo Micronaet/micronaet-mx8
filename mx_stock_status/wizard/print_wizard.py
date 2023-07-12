@@ -483,7 +483,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 default_code = p.default_code
                 if not default_code:
                     continue
-                if default_code.startswith('MT'): # MT half worked
+                if default_code.startswith('MT'):  # MT half worked
                     self.parent_bom_cost[default_code[:7]] = p.to_industrial
                 else:  # Product
                     self.parent_bom_cost[default_code[:6]] = p.to_industrial
@@ -579,6 +579,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 inventory = product.mx_net_mrp_qty  # Current inv.
                 if inventory <= 0:
                     without_inventory[product.id] = inventory
+                    continue  # Written after in no inventory page!
             else:
                 inventory = product.mx_start_qty  # Start inv.
             total = cost * inventory
