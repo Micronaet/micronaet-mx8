@@ -576,8 +576,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 weight) = get_last_cost(product)
 
             if mode == 'current':
-                # inventory = product.mx_net_mrp_qty  # Current inv.
-                inventory = product.mx_lord_mrp_qty  # Current inv.
+                inventory = product.mx_net_mrp_qty  # Current inv.
+                # inventory = product.mx_lord_mrp_qty  # Current inv.
                 if inventory <= 0:
                     without_inventory[product.id] = inventory
                     continue  # Written after in no inventory page!
