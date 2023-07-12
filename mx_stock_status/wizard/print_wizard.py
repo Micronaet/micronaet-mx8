@@ -566,7 +566,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ]
 
         product_ids = product_pool.search(cr, uid, domain, context=context)
-        without_inventory = {}
+        without_inventory = {}  # In current mode used for this page
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
