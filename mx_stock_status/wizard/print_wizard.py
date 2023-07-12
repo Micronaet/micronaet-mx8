@@ -462,6 +462,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # todo keep in parameter!
         mode = 'current'  # 'start'
+        _logger.warning('Stampa inventario valorizzato modo: %s' % mode)
 
         # Pool used:
         product_pool = self.pool.get('product.product')
