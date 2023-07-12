@@ -509,7 +509,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         width = [
             15, 40, 3,
-            25, 9, 9, 5, 8,
+            25, 9, 9, 7, 8,
             10, 10, 10,
             70,
             ]
