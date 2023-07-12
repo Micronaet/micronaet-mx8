@@ -496,16 +496,20 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         #                              EXCEL:
         # ---------------------------------------------------------------------
+        if mode == 'current':
+            inv_text = 'INV. ATT.'
+        else:
+            inv_text = 'INV. INIZ.'
         header = [
             'CODICE', 'DESCRIZIONE', 'UM',
-            'FORNITORE', 'INV', 'DATA RIF.', '#', 'COSTO',
+            'FORNITORE', inv_text, 'DATA RIF.', '#', 'COSTO',
             'TOTALE', 'COSTO MANUALE', 'PESO',
             'NOTE',
             ]
 
         width = [
             15, 40, 3,
-            25, 7, 9, 3, 8,
+            25, 9, 9, 5, 8,
             10, 10, 10,
             70,
             ]
