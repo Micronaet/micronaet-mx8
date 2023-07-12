@@ -460,6 +460,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         #                          START PROCEDURE:
         # ---------------------------------------------------------------------
+        # todo keep in parameter!
+        mode = 'current'  # 'start'
+
         # Pool used:
         product_pool = self.pool.get('product.product')
         inv_pool = self.pool.get('product.product.inventory.category')
@@ -470,7 +473,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Load parent bom if necessary:
         self.parent_bom_cost = {}  # reset value
-        if 'bom_selection' in product_pool._columns: # DB with BOM price manage
+        if 'bom_selection' in product_pool._columns:  # DB with BOM price mng.
             product_ids = product_pool.search(cr, uid, [
                 ('bom_selection', '=', True),
                 ], context=context)
@@ -547,11 +550,18 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
-        product_ids = product_pool.search(cr, uid, [
-            ('mx_start_qty', '>', 0.0),  # Only present start inventory
-            ('inventory_excluded', '=', False),  # Remove excluded element
-            ], context=context)
+        if mode == 'current':
+            domain = [
+                ('inventory_excluded', '=', False),  # Remove excluded element
+                ]
+        else:
+            domain = [
+                ('mx_start_qty', '>', 0.0),  # Only present start inventory
+                ('inventory_excluded', '=', False),  # Remove excluded element
+                ]
 
+        product_ids = product_pool.search(cr, uid, domain, context=context)
+        without_inventory_ids = []
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
@@ -559,7 +569,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             (date, supplier, cost, number, note, standard_price,
                 weight) = get_last_cost(product)
-            inventory = product.mx_start_qty
+
+            if mode == 'current':
+                inventory = product.mx_net_mrp_qty  # Current inv.
+                if inventory <= 0:
+                    without_inventory_ids.append(product.id)
+            else:
+                inventory = product.mx_start_qty  # Start inv.
             total = cost * inventory
 
             # Color setup:
@@ -613,9 +629,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             }, cell_format['header'])
 
         # Collect data:
-        product_ids = product_pool.search(cr, uid, [
-            ('mx_start_qty', '<=', 0.0), # No inventory present
-            ], context=context)
+        if mode == 'current':
+            product_ids = without_inventory_ids
+        else:
+            product_ids = product_pool.search(cr, uid, [
+                ('mx_start_qty', '<=', 0.0),  # No inventory present
+                ], context=context)
 
         row = 0
         for product in sorted(
@@ -663,11 +682,15 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             row += 1
 
         # Generate attachment for return file:
-        return excel_pool.return_attachment(
-            cr, uid, 'inventario_inizio_anno', context=context)
+        if mode == 'current':
+            return excel_pool.return_attachment(
+                cr, uid, 'inventario_attuale_magazzino', context=context)
+        else:
+            return excel_pool.return_attachment(
+                cr, uid, 'inventario_inizio_anno', context=context)
 
-    def extract_xls_table_inventory(self, cr, uid, ids, data=None,
-            context=None):
+    def extract_xls_table_inventory(
+            self, cr, uid, ids, data=None, context=None):
         """ Extract table inventory:
         """
         product_pool = self.pool.get('product.product')
