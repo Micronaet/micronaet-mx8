@@ -315,7 +315,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 cost_end_eur = 'ERR'  # Q
 
             # Check if is this year:
-            this_year = purchase_date[:4] == year
+            this_year = purchase_date[:4] == '2023'  # year
 
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text)  # A
