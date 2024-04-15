@@ -50,10 +50,27 @@ class AssignStockToOrderWizard(orm.TransientModel):
             context = {}
 
         # Wizard proxy:
-        wiz_proxy = self.browse(cr, uid, ids, context=context)[0]
+        wizard = self.browse(cr, uid, ids, context=context)[0]
 
         line_pool = self.pool.get('sale.order.line')
         # todo
+        for line in wizard.line_ids:
+            line_id = line.line_id
+
+            oc_qty = line.oc_qty
+            assigned_qty = line.assigned_qty
+            this_assign_qty = line.this_assign_qty
+            if assigned_qty == this_assign_qty:
+                _logger.warning('No change in assigned qty')
+                continue
+
+            if this_assign_qty > oc_qty:
+                _logger.warning('No assigned over order')
+                this_assign_qty = oc_qty
+
+            line_pool.write(cr, uid, [line_id], {
+                'mx_assigned_qty': this_assign_qty,
+            }, context=context)
         return True
 
     _columns = {
