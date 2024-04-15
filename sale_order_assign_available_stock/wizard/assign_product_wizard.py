@@ -54,27 +54,54 @@ class AssignStockToOrderWizard(orm.TransientModel):
         # Wizard proxy:
         wizard = self.browse(cr, uid, ids, context=context)[0]
 
-        # todo
+        chat_message = ''
         for line in wizard.line_ids:
             line_id = line.line_id.id
             if not line_id:
                 continue
 
+            product = line.product_id
+            default_code = product.default_code or product.name
+
             oc_qty = line.oc_qty
+            available_qty = line.available_qty
             assigned_qty = line.assigned_qty
             this_assign_qty = line.this_assign_qty
+
+            # -----------------------------------------------------------------
+            # Check data:
+            # -----------------------------------------------------------------
+            # Over available
+            # todo (complicazione con già assegnato)
+
+            # Same assigned no modify:
             if assigned_qty == this_assign_qty:
                 _logger.warning('No change in assigned qty')
+                chat_message += \
+                    '[WARN] {} da {} a {} (stessa q. nessuna modifica'.format(
+                        default_code,
+                        assigned_qty,
+                        this_assign_qty,
+                    )
                 continue
 
+            # Over order:
             if this_assign_qty > oc_qty:
                 _logger.warning('No assigned over order')
+                chat_message += \
+                    '[WARN] {} Assegnato oltre ordine {}, corretto q.'.format(
+                        default_code,
+                        this_assign_qty,
+                    )
                 this_assign_qty = oc_qty
 
             line_pool.write(cr, uid, [line_id], {
                 'mx_assigned_qty': this_assign_qty,
             }, context=context)
-        return True
+
+        # Write log message:
+        return self.message_post(
+            cr, uid, ids, body=chat_message, context=context)
 
     _columns = {
         'order_id': fields.many2one('sale.order', 'Ordine')
