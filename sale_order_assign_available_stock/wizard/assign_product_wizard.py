@@ -46,16 +46,19 @@ class AssignStockToOrderWizard(orm.TransientModel):
     def action_assign_stock(self, cr, uid, ids, context=None):
         """ Create delivery order from sale
         """
+        line_pool = self.pool.get('sale.order.line')
+
         if context is None:
             context = {}
 
         # Wizard proxy:
         wizard = self.browse(cr, uid, ids, context=context)[0]
 
-        line_pool = self.pool.get('sale.order.line')
         # todo
         for line in wizard.line_ids:
-            line_id = line.line_id
+            line_id = line.line_id.id
+            if not line_id:
+                continue
 
             oc_qty = line.oc_qty
             assigned_qty = line.assigned_qty
