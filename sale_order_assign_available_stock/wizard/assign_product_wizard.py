@@ -127,7 +127,10 @@ class SaleOrderInherit(orm.Model):
 
             oc_qty = line.prodcut_uom_qty
             assigned_qty = line.mx_assigned_qty
-            available_qty = min(oc_qty, mx_lord_mrp_qty)
+            available_qty = this_assign_qty = min(oc_qty, mx_lord_mrp_qty)
+            if this_assign_qty < assigned_qty:
+                _logger.warning('Keep always assigned qty if new is less!')
+                this_assign_qty = assigned_qty
 
             line_pool.create(cr, uid, {
                 'wizard_id': wizard_id,
@@ -136,7 +139,7 @@ class SaleOrderInherit(orm.Model):
                 'oc_qty': oc_qty,
                 'assigned_qty': assigned_qty,
                 'available_qty': available_qty,
-                'this_assign_qty': available_qty,
+                'this_assign_qty': this_assign_qty,
             }, context=context)
 
         # Open Wizard
