@@ -58,6 +58,7 @@ class AssignStockToOrderWizard(orm.TransientModel):
 
         chat_message = ''
         for line in wizard.line_ids:
+            warning = ''
             sale_line = line.line_id
             line_id = sale_line.id
             if not line_id:
@@ -74,42 +75,35 @@ class AssignStockToOrderWizard(orm.TransientModel):
             # -----------------------------------------------------------------
             # Check data:
             # -----------------------------------------------------------------
-            # Over available
+            # 1. Over available
             # todo (complicazione con già assegnato)
 
-            # Same assigned no modify:
+            # 2. Same assigned no modify:
             if assigned_qty == this_assign_qty:
                 _logger.warning('No change in assigned qty')
-                chat_message += \
-                    '[WARN] {} da {} a {} ' \
-                    '(stessa q. nessuna modifica)\n'.format(
-                        default_code,
-                        assigned_qty,
-                        this_assign_qty,
-                    )
-                continue
+                warning += \
+                    '[Stessa assegnazione, nessuna modifica] '
 
-            # Over order:
-            if this_assign_qty > oc_qty:
+            # 3. Over order:
+            elif this_assign_qty > oc_qty:
                 _logger.warning('No assigned over order')
-                chat_message += \
-                    '[WARN] {} Assegnato oltre ordine {}, ' \
-                    'corretto q.\n'.format(
-                        default_code,
-                        this_assign_qty,
-                    )
+                warning += \
+                    '[Assegnato oltre OC corretto q.] '
                 this_assign_qty = oc_qty
 
+            # 4. Update:
             line_pool.write(cr, uid, [line_id], {
                 'mx_assigned_qty': this_assign_qty,
             }, context=context)
+
             chat_message += \
                 '[INFO] {} Assegnato magazzino per q. {} (prec. {}) ' \
-                '[Dispo mag: {}]\n'.format(
+                '[Dispo mag: {}] {}\n'.format(
                     default_code,
                     this_assign_qty,
                     assigned_qty,
                     available_qty,
+                    warning
                 )
 
         # Write log message:
