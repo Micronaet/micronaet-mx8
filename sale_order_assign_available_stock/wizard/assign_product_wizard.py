@@ -56,11 +56,12 @@ class AssignStockToOrderWizard(orm.TransientModel):
 
         chat_message = ''
         for line in wizard.line_ids:
-            line_id = line.line_id.id
+            sale_line = line.line_id
+            line_id = sale_line.id
             if not line_id:
                 continue
 
-            product = line.product_id
+            product = sale_line.product_id
             default_code = product.default_code or product.name
 
             oc_qty = line.oc_qty
