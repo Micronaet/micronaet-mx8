@@ -108,7 +108,9 @@ class AssignStockToOrderWizard(orm.TransientModel):
 
         # Write log message:
         return order_pool.message_post(
-            cr, uid, [order_id], body=chat_message, context=context)
+            cr, uid, [order_id],
+            body=chat_message.replace('\n', '<br/>'),
+            context=context)
 
     _columns = {
         'order_id': fields.many2one('sale.order', 'Ordine')
