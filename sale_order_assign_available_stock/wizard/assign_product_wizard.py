@@ -54,6 +54,7 @@ class AssignStockToOrderWizard(orm.TransientModel):
 
         # Wizard proxy:
         wizard = self.browse(cr, uid, ids, context=context)[0]
+        order_id = wizard.order_id.id
 
         chat_message = ''
         for line in wizard.line_ids:
@@ -109,7 +110,7 @@ class AssignStockToOrderWizard(orm.TransientModel):
 
         # Write log message:
         return order_pool.message_post(
-            cr, uid, ids, body=chat_message, context=context)
+            cr, uid, [order_id], body=chat_message, context=context)
 
     _columns = {
         'order_id': fields.many2one('sale.order', 'Ordine')
