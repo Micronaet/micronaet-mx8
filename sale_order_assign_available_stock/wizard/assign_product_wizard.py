@@ -142,7 +142,7 @@ class SaleOrderInherit(orm.Model):
                 ))
                 continue
 
-            oc_qty = line.prodcut_uom_qty
+            oc_qty = line.product_uom_qty
             assigned_qty = line.mx_assigned_qty
             available_qty = this_assign_qty = min(oc_qty, mx_lord_mrp_qty)
             if this_assign_qty < assigned_qty:
