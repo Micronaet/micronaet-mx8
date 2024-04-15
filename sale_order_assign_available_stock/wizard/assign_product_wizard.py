@@ -46,6 +46,7 @@ class AssignStockToOrderWizard(orm.TransientModel):
     def action_assign_stock(self, cr, uid, ids, context=None):
         """ Create delivery order from sale
         """
+        order_pool = self.pool.get('sale.order')
         line_pool = self.pool.get('sale.order.line')
 
         if context is None:
@@ -99,9 +100,15 @@ class AssignStockToOrderWizard(orm.TransientModel):
             line_pool.write(cr, uid, [line_id], {
                 'mx_assigned_qty': this_assign_qty,
             }, context=context)
+            chat_message += \
+                '[INFO] {} Assegnato magazzino per q. {} (prec. {}'.format(
+                    default_code,
+                    this_assign_qty,
+                    assigned_qty,
+                )
 
         # Write log message:
-        return self.message_post(
+        return order_pool.message_post(
             cr, uid, ids, body=chat_message, context=context)
 
     _columns = {
