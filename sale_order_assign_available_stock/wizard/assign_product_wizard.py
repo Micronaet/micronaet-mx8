@@ -81,7 +81,7 @@ class AssignStockToOrderWizard(orm.TransientModel):
             if assigned_qty == this_assign_qty:
                 _logger.warning('No change in assigned qty')
                 chat_message += \
-                    '[WARN] {} da {} a {} (stessa q. nessuna modifica'.format(
+                    '[WARN] {} da {} a {} (stessa q. nessuna modifica)'.format(
                         default_code,
                         assigned_qty,
                         this_assign_qty,
@@ -102,10 +102,12 @@ class AssignStockToOrderWizard(orm.TransientModel):
                 'mx_assigned_qty': this_assign_qty,
             }, context=context)
             chat_message += \
-                '[INFO] {} Assegnato magazzino per q. {} (prec. {}'.format(
+                '[INFO] {} Assegnato magazzino per q. {} (prec. {}) ' \
+                '[Dispo mag: {}]'.format(
                     default_code,
                     this_assign_qty,
                     assigned_qty,
+                    available_qty,
                 )
 
         # Write log message:
@@ -170,12 +172,12 @@ class SaleOrderInherit(orm.Model):
         # Create lines
         for line in order.order_line:
             product = line.product_id
-            mx_lord_mrp_qty = product.mx_lord_mrp_qty
+            available_qty = product.mx_lord_mrp_qty
 
             # todo Check service?
 
             # Check product availability
-            if mx_lord_mrp_qty <= 0.0:
+            if available_qty <= 0.0:
                 _logger.warning('No stock for product {}'.format(
                     product.default_code or product.name,
                 ))
@@ -183,7 +185,7 @@ class SaleOrderInherit(orm.Model):
 
             oc_qty = line.product_uom_qty
             assigned_qty = line.mx_assigned_qty
-            available_qty = this_assign_qty = min(oc_qty, mx_lord_mrp_qty)
+            this_assign_qty = min(oc_qty, available_qty)
             if this_assign_qty < assigned_qty:
                 _logger.warning('Keep always assigned qty if new is less!')
                 this_assign_qty = assigned_qty
