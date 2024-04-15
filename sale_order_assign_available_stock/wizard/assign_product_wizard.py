@@ -81,7 +81,8 @@ class AssignStockToOrderWizard(orm.TransientModel):
             if assigned_qty == this_assign_qty:
                 _logger.warning('No change in assigned qty')
                 chat_message += \
-                    '[WARN] {} da {} a {} (stessa q. nessuna modifica)'.format(
+                    '[WARN] {} da {} a {} ' \
+                    '(stessa q. nessuna modifica)\n'.format(
                         default_code,
                         assigned_qty,
                         this_assign_qty,
@@ -92,7 +93,8 @@ class AssignStockToOrderWizard(orm.TransientModel):
             if this_assign_qty > oc_qty:
                 _logger.warning('No assigned over order')
                 chat_message += \
-                    '[WARN] {} Assegnato oltre ordine {}, corretto q.'.format(
+                    '[WARN] {} Assegnato oltre ordine {}, ' \
+                    'corretto q.\n'.format(
                         default_code,
                         this_assign_qty,
                     )
@@ -103,7 +105,7 @@ class AssignStockToOrderWizard(orm.TransientModel):
             }, context=context)
             chat_message += \
                 '[INFO] {} Assegnato magazzino per q. {} (prec. {}) ' \
-                '[Dispo mag: {}]'.format(
+                '[Dispo mag: {}]\n'.format(
                     default_code,
                     this_assign_qty,
                     assigned_qty,
