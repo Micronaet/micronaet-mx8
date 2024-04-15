@@ -178,7 +178,8 @@ class SaleDeliveryPartialLineWizard(orm.TransientModel):
 
     _columns = {
         # Sale order line reference:
-        'wizard_id': fields.many2one('sale.delivery.partial.wizard',
+        'wizard_id': fields.many2one(
+            'sale.delivery.partial.wizard',
             'Wizard ref.', ondelete='cascade'),
         'order_line_id': fields.many2one('sale.order.line', 'Order line ref.'),
         'sequence': fields.integer(

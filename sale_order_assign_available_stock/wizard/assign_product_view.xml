@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!--sale.order-->
+         <record model="ir.ui.view" id="view_sale_order_pricelist_form">
+             <field name="name">sale.order.pricelist.form</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form"/>
+             <field name="arch" type="xml">
+                 <xpath expr="/form/header/button[1]" position="after">
+                      <button name="assign_stock_order_wizard" string="Assegna magazzino" type="object" icon="gtk-jump-to" class="oe_highlight" />
+                 </xpath>
+             </field>
+         </record>
+
+        <!-- assign.stock.to.order.line.wizard -->
+        <record id="assign_stock_to_order_line_wizard_view" model="ir.ui.view">
+            <field name="name">Assegna magazzino</field>
+            <field name="model">assign.stock.to.order.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Assegna magazzino a ordine" version="7.0">
+                   <header>
+                       <button string="Cancel" special="cancel" />
+                       <button name="action_assign_stock" string="Assegna magazzino" type="object" icon="gtk-refresh" class="oe_highlight" />
+                   </header>
+                   <group colspan="4" col="4">
+                        <field name="order_id" />
+                        <separator string="Dettaglio righe:"  colspan="4"/>
+                        <field name="line_ids" nolabel="1" colspan="4">
+                            <tree string="Righe" editable="bottom">
+                                <field name="line_id" readonly="1" />
+                                <field name="oc_qty" readonly="1" />
+                                <field name="assigned_qty" readonly="1" />
+                                <field name="available_qty" readonly="1" />
+                                <field name="this_assign_qty" />
+                            </tree>
+                        </field>
+                   </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
