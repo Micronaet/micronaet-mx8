@@ -170,7 +170,12 @@ class SaleOrderInherit(orm.Model):
         # Create lines
         for line in order.order_line:
             product = line.product_id
-            available_qty = product.mx_lord_mrp_qty
+            net_qty = product.mx_net_mrp_qty
+            oc_qty = product.mx_oc_out
+            prev_qty = product.mx_oc_out_prev
+
+            available_qty = net_qty - oc_qty + prev_qty
+            # available_qty = product.mx_lord_mrp_qty
 
             # todo Check service?
 
@@ -181,9 +186,9 @@ class SaleOrderInherit(orm.Model):
                 ))
                 continue
 
-            oc_qty = line.product_uom_qty
+            this_oc_qty = line.product_uom_qty
             assigned_qty = line.mx_assigned_qty
-            this_assign_qty = min(oc_qty, available_qty)
+            this_assign_qty = min(this_oc_qty, available_qty)
             if this_assign_qty < assigned_qty:
                 _logger.warning('Keep always assigned qty if new is less!')
                 this_assign_qty = assigned_qty
@@ -192,7 +197,7 @@ class SaleOrderInherit(orm.Model):
                 'wizard_id': wizard_id,
                 'line_id': line.id,
 
-                'oc_qty': oc_qty,
+                'oc_qty': this_oc_qty,
                 'assigned_qty': assigned_qty,
                 'available_qty': available_qty,
                 'this_assign_qty': this_assign_qty,
