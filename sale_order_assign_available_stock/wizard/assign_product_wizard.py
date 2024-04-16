@@ -170,12 +170,14 @@ class SaleOrderInherit(orm.Model):
         # Create lines
         for line in order.order_line:
             product = line.product_id
+            b_qty = product.mx_mrp_b_locked
             net_qty = product.mx_net_mrp_qty
             oc_qty = product.mx_oc_out
             prev_qty = product.mx_oc_out_prev
 
-            available_qty = net_qty - oc_qty + prev_qty
+            # available_qty = net_qty - oc_qty + prev_qty
             # available_qty = product.mx_lord_mrp_qty
+            available_qty = net_qty - b_qty
 
             # todo Check service?
 
