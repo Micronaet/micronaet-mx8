@@ -43,8 +43,8 @@ class Parser(report_sxw.rml_parse):
         })
 
     def get_vector_address(self, o):
-        ''' return vector address
-        '''
+        """ return vector address
+        """
         res = ''
         if o.carrier_id:
             res = _('VETTORE: %s') % o.carrier_id.name or ''
@@ -64,10 +64,10 @@ class Parser(report_sxw.rml_parse):
         return res
 
     def get_tax_line(self, sol):
-        ''' Tax line for order / proforma invoice
+        """ Tax line for order / proforma invoice
             self: instance of class
             sol: sale order lines for loop
-        '''
+        """
         res = {}
         for line in sol:
             if line.tax_id not in res:
@@ -83,60 +83,60 @@ class Parser(report_sxw.rml_parse):
         return res.iteritems()
 
     def get_company_bank(self, o, field):
-        ''' Short function for readability
-        '''
+        """ Short function for readability
+        """
         try:
            return obj.bank_account_company_id.__getattr__(field)
         except:
             return ''
 
     def get_counter(self, name):
-        ''' Get counter with name passed (else create an empty)
-        '''
+        """ Get counter with name passed (else create an empty)
+        """
         if name not in self.counters:
             self.counters[name] = False
         return self.counters[name]
 
     def set_counter(self, name, value):
-        ''' Set counter with name with value passed
-        '''
+        """ Set counter with name with value passed
+        """
         self.counters[name] = value
-        return "" # empty so no write in module
+        return ""  # empty so no write in module
 
     def get_language(self, key, lang):
-            ''' Get correct language
-            '''
+        """ Get correct language
+        """
 
             lang_dict = {
                 'en_US': {
-                    'CLIENTE': 'CUSTOMER',
-                    'PARTITA IVA': 'VAT N.',
-                    'DOCUMENTO': 'DOCUMENT',
-                    'CONDIZIONI DI PAGAMENTO': 'PAYMENT TERMS',
-                    'NUMERO': 'NUMBER',
-                    'APPOGGIO BANCARIO': 'BANK DETAILS',
-                    'DATA': 'DATE',
-                    'SPETT.LE': 'MESSRS',
-                    'DESTINATARIO': 'CONSIGNEE',
-                    'CODICE ARTICOLO': 'ITEM',
-                    'DESCRIZIONE ARTICOLO': 'DESCRIPTION',
-                    'COLORE': 'COLOR',
-                    'Q.TA\'': 'Q.TY',
+                    'CLIENTE': u'CUSTOMER',
+                    'PARTITA IVA': u'VAT N.',
+                    'DOCUMENTO': u'DOCUMENT',
+                    'CONDIZIONI DI PAGAMENTO': u'PAYMENT TERMS',
+                    'NUMERO': u'NUMBER',
+                    'APPOGGIO BANCARIO': u'BANK DETAILS',
+                    'DATA': u'DATE',
+                    'SPETT.LE': u'MESSRS',
+                    'DESTINATARIO': u'CONSIGNEE',
+                    'CODICE ARTICOLO': u'ITEM',
+                    'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
+                    'COLORE': u'COLOR',
+                    'Q.TA\'': u'Q.TY',
 
-                    'CAUSALE TRASPORTO': 'REASON OF TRANSPORT',
-                    'DATA INIZIO TRASPORTO': 'DATE OF TAKING OVER',
-                    'INCARICATO DEL TRASPORTO': 'TRANSPORT BY',
+                    'CAUSALE TRASPORTO': u'REASON OF TRANSPORT',
+                    'DATA INIZIO TRASPORTO': u'DATE OF TAKING OVER',
+                    'INCARICATO DEL TRASPORTO': u'TRANSPORT BY',
                     'FIRMA DESTINATARIO': "CONSIGNEE'S SIGNATURE",
-                    'NOTE': 'NOTES',
-                    'MEZZO': 'BY',
-                    'RIF. ORDINE CLIENTE': 'CUSTOMER ORDER REF.',
-                    'CONSEGNA (SALVO IMPREVISTI)': 'EXPECTED DELIVERY DATE',
-                    'AGENTE': 'AGENT',
-                    'COD. CLIENTE': 'CUSTOM. REF',
+                    'NOTE': u'NOTES',
+                    'MEZZO': u'BY',
+                    'RIF. ORDINE CLIENTE': u'CUSTOMER ORDER REF.',
+                    'CONSEGNA (SALVO IMPREVISTI)': u'EXPECTED DELIVERY DATE',
+                    'AGENTE': u'AGENT',
+                    'COD. CLIENTE': u'CUSTOM. REF',
                     'TELEFONO DESTINATARIO': "PHONE CONSIGNEE'S",
-                    'ASPETTO DEI BENI': 'PACKAGE DESCRIPTION',
-                    'PORTO': 'PORT',
-                    'N.COLLI': 'PACKAGES',
+                    'ASPETTO DEI BENI': u'PACKAGE DESCRIPTION',
+                    'PORTO': u'PORT',
+                    'N.COLLI': u'PACKAGES',
                     },
 
                 'fr_FR': {
