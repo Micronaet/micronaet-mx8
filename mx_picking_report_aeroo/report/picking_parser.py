@@ -61,7 +61,7 @@ class Parser(report_sxw.rml_parse):
 
             res += _('\nP.IVA: %s') % (o.carrier_id.partner_id.vat or '')
             res += _('\nTel: %s') % (o.carrier_id.partner_id.phone or '')
-            res += _('\nNr. Albo Trasp.: %s') % '' # TODO
+            res += _('\nNr. Albo Trasp.: %s') % ''  # TODO
         return res
 
     def get_tax_line(self, sol):
