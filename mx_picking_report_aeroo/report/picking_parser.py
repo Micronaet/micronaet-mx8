@@ -27,9 +27,9 @@ from openerp.tools.translate import _
 
 class Parser(report_sxw.rml_parse):
     counters = {}
-    
+
     def __init__(self, cr, uid, name, context):
-        
+
         super(Parser, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_counter': self.get_counter,
@@ -37,9 +37,9 @@ class Parser(report_sxw.rml_parse):
             'bank': self.get_company_bank,
             'get_vector_address': self.get_vector_address,
             'get_language': self.get_language,
-            
+
             # Proforma:
-            'get_tax_line': self.get_tax_line,            
+            'get_tax_line': self.get_tax_line,
         })
 
     def get_vector_address(self, o):
@@ -57,29 +57,29 @@ class Parser(report_sxw.rml_parse):
                 o.carrier_id.partner_id.city or '')
             res += ' %s' % (
                 o.carrier_id.partner_id.state_id.code or '')
-            
+
             res += _('\nP.IVA: %s') % (o.carrier_id.partner_id.vat or '')
             res += _('\nTel: %s') % (o.carrier_id.partner_id.phone or '')
             res += _('\nNr. Albo Trasp.: %s') % '' # TODO
-        return res    
+        return res
 
     def get_tax_line(self, sol):
-        ''' Tax line for order / proforma invoice        
+        ''' Tax line for order / proforma invoice
             self: instance of class
-            sol: sale order lines for loop 
+            sol: sale order lines for loop
         '''
         res = {}
         for line in sol:
             if line.tax_id not in res:
                 res[line.tax_id] = [
-                    line.price_subtotal, 
+                    line.price_subtotal,
                     line.price_subtotal * line.tax_id.amount,
                     ]
             else:
                 res[line.tax_id][0] += line.price_subtotal
                 res[line.tax_id][1] += line.price_subtotal * \
                     line.tax_id.amount
-                    
+
         return res.iteritems()
 
     def get_company_bank(self, o, field):
@@ -88,7 +88,7 @@ class Parser(report_sxw.rml_parse):
         try:
            return obj.bank_account_company_id.__getattr__(field)
         except:
-            return ''   
+            return ''
 
     def get_counter(self, name):
         ''' Get counter with name passed (else create an empty)
@@ -140,38 +140,37 @@ class Parser(report_sxw.rml_parse):
                     },
 
                 'fr_FR': {
-                    'CLIENTE': 'CLIENT',
-                    'PARTITA IVA': 'NUMÉRO DE TVA',
-                    'DOCUMENTO': 'DOCUMENT',
-                    'CONDIZIONI DI PAGAMENTO': 'CONDITIONS DE PAIEMENT',
-                    'NUMERO': 'NUMÉRO',
-                    'APPOGGIO BANCARIO': 'BANCAIRE',
-                    'DATA': 'DATE',
-                    'SPETT.LE': 'CHER',
-                    'DESTINATARIO': 'DESTINATAIRE',
+                    'CLIENTE': u'CLIENT',
+                    'PARTITA IVA': u'NUMÉRO DE TVA',
+                    'DOCUMENTO': u'DOCUMENT',
+                    'CONDIZIONI DI PAGAMENTO': u'CONDITIONS DE PAIEMENT',
+                    'NUMERO': u'NUMÉRO',
+                    'APPOGGIO BANCARIO': u'BANCAIRE',
+                    'DATA': u'DATE',
+                    'SPETT.LE': u'CHER',
+                    'DESTINATARIO': u'DESTINATAIRE',
                     'CODICE ARTICOLO': "CODE D'ARTICLE",
-                    'DESCRIZIONE ARTICOLO': 'DESCRIPTION',
-                    'COLORE': 'COULEUR',
-                    'Q.TA\'': 'QTÉ',
+                    'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
+                    'COLORE': u'COULEUR',
+                    'Q.TA\'': u'QTÉ',
 
-                    'CAUSALE TRASPORTO': 'CAUSAL TRANSPORT',
-                    'DATA INIZIO TRASPORTO': 'DATE DÉBUT TRANSPORT',
-                    'FIRMA': 'SIGNATURE',
-                    'INCARICATO DEL TRASPORTO': 'ENGAGÉÈ DU TRANSPORT',
-                    'FIRMA DESTINATARIO': 'SIGNATURE ALLOCUTAIRE',
-                    'NOTE': 'NOTES',
-                    'MEZZO': 'MOYEN',
-                    'RIF. ORDINE CLIENTE': 'RÉF. COMMANDE CLIENT',
-                    'CONSEGNA (SALVO IMPREVISTI)': 'LIVRAISON (SAUF IMPRÉVU)',
-                    'AGENTE': 'AGENT',
-                    
+                    'CAUSALE TRASPORTO': u'CAUSAL TRANSPORT',
+                    'DATA INIZIO TRASPORTO': u'DATE DÉBUT TRANSPORT',
+                    'FIRMA': u'SIGNATURE',
+                    'INCARICATO DEL TRASPORTO': u'ENGAGÉÈ DU TRANSPORT',
+                    'FIRMA DESTINATARIO': u'SIGNATURE ALLOCUTAIRE',
+                    'NOTE': u'NOTES',
+                    'MEZZO': u'MOYEN',
+                    'RIF. ORDINE CLIENTE': u'RÉF. COMMANDE CLIENT',
+                    'CONSEGNA (SALVO IMPREVISTI)': u'LIVRAISON (SAUF IMPRÉVU)',
+                    'AGENTE': u'AGENT',
+
                     }
                 }
-            
+
             if key in lang_dict or lang == 'it_IT':
                 return key
-            
+
             return lang_dict[lang].get(key, '??')
-                
+
             return self.counters[name]
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
