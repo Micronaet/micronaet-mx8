@@ -201,7 +201,7 @@ class Parser(report_sxw.rml_parse):
                 'DATA': u'DATE',
                 'SPETT.LE': u'CHER',
                 'DESTINATARIO': u'DESTINATAIRE',
-                'CODICE ARTICOLO': "CODE D'ARTICLE",
+                'CODICE ARTICOLO': u'CODE D\'ARTICLE',
                 'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
                 'COLORE': u'COULEUR',
                 'Q.TA\'': u'QTÉ',
