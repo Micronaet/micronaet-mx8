@@ -25,6 +25,7 @@ from openerp.report import report_sxw
 from openerp.report.report_sxw import rml_parse
 from openerp.tools.translate import _
 
+
 class Parser(report_sxw.rml_parse):
     counters = {}
 
@@ -82,7 +83,7 @@ class Parser(report_sxw.rml_parse):
 
         return res.iteritems()
 
-    def get_company_bank(self, o, field):
+    def get_company_bank(self, obj, field):
         """ Short function for readability
         """
         try:
@@ -106,71 +107,69 @@ class Parser(report_sxw.rml_parse):
     def get_language(self, key, lang):
         """ Get correct language
         """
+        lang_dict = {
+            'en_US': {
+                'CLIENTE': u'CUSTOMER',
+                'PARTITA IVA': u'VAT N.',
+                'DOCUMENTO': u'DOCUMENT',
+                'CONDIZIONI DI PAGAMENTO': u'PAYMENT TERMS',
+                'NUMERO': u'NUMBER',
+                'APPOGGIO BANCARIO': u'BANK DETAILS',
+                'DATA': u'DATE',
+                'SPETT.LE': u'MESSRS',
+                'DESTINATARIO': u'CONSIGNEE',
+                'CODICE ARTICOLO': u'ITEM',
+                'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
+                'COLORE': u'COLOR',
+                'Q.TA\'': u'Q.TY',
 
-            lang_dict = {
-                'en_US': {
-                    'CLIENTE': u'CUSTOMER',
-                    'PARTITA IVA': u'VAT N.',
-                    'DOCUMENTO': u'DOCUMENT',
-                    'CONDIZIONI DI PAGAMENTO': u'PAYMENT TERMS',
-                    'NUMERO': u'NUMBER',
-                    'APPOGGIO BANCARIO': u'BANK DETAILS',
-                    'DATA': u'DATE',
-                    'SPETT.LE': u'MESSRS',
-                    'DESTINATARIO': u'CONSIGNEE',
-                    'CODICE ARTICOLO': u'ITEM',
-                    'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
-                    'COLORE': u'COLOR',
-                    'Q.TA\'': u'Q.TY',
+                'CAUSALE TRASPORTO': u'REASON OF TRANSPORT',
+                'DATA INIZIO TRASPORTO': u'DATE OF TAKING OVER',
+                'INCARICATO DEL TRASPORTO': u'TRANSPORT BY',
+                'FIRMA DESTINATARIO': "CONSIGNEE'S SIGNATURE",
+                'NOTE': u'NOTES',
+                'MEZZO': u'BY',
+                'RIF. ORDINE CLIENTE': u'CUSTOMER ORDER REF.',
+                'CONSEGNA (SALVO IMPREVISTI)': u'EXPECTED DELIVERY DATE',
+                'AGENTE': u'AGENT',
+                'COD. CLIENTE': u'CUSTOM. REF',
+                'TELEFONO DESTINATARIO': "PHONE CONSIGNEE'S",
+                'ASPETTO DEI BENI': u'PACKAGE DESCRIPTION',
+                'PORTO': u'PORT',
+                'N.COLLI': u'PACKAGES',
+                },
 
-                    'CAUSALE TRASPORTO': u'REASON OF TRANSPORT',
-                    'DATA INIZIO TRASPORTO': u'DATE OF TAKING OVER',
-                    'INCARICATO DEL TRASPORTO': u'TRANSPORT BY',
-                    'FIRMA DESTINATARIO': "CONSIGNEE'S SIGNATURE",
-                    'NOTE': u'NOTES',
-                    'MEZZO': u'BY',
-                    'RIF. ORDINE CLIENTE': u'CUSTOMER ORDER REF.',
-                    'CONSEGNA (SALVO IMPREVISTI)': u'EXPECTED DELIVERY DATE',
-                    'AGENTE': u'AGENT',
-                    'COD. CLIENTE': u'CUSTOM. REF',
-                    'TELEFONO DESTINATARIO': "PHONE CONSIGNEE'S",
-                    'ASPETTO DEI BENI': u'PACKAGE DESCRIPTION',
-                    'PORTO': u'PORT',
-                    'N.COLLI': u'PACKAGES',
-                    },
+            'fr_FR': {
+                'CLIENTE': u'CLIENT',
+                'PARTITA IVA': u'NUMÉRO DE TVA',
+                'DOCUMENTO': u'DOCUMENT',
+                'CONDIZIONI DI PAGAMENTO': u'CONDITIONS DE PAIEMENT',
+                'NUMERO': u'NUMÉRO',
+                'APPOGGIO BANCARIO': u'BANCAIRE',
+                'DATA': u'DATE',
+                'SPETT.LE': u'CHER',
+                'DESTINATARIO': u'DESTINATAIRE',
+                'CODICE ARTICOLO': "CODE D'ARTICLE",
+                'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
+                'COLORE': u'COULEUR',
+                'Q.TA\'': u'QTÉ',
 
-                'fr_FR': {
-                    'CLIENTE': u'CLIENT',
-                    'PARTITA IVA': u'NUMÉRO DE TVA',
-                    'DOCUMENTO': u'DOCUMENT',
-                    'CONDIZIONI DI PAGAMENTO': u'CONDITIONS DE PAIEMENT',
-                    'NUMERO': u'NUMÉRO',
-                    'APPOGGIO BANCARIO': u'BANCAIRE',
-                    'DATA': u'DATE',
-                    'SPETT.LE': u'CHER',
-                    'DESTINATARIO': u'DESTINATAIRE',
-                    'CODICE ARTICOLO': "CODE D'ARTICLE",
-                    'DESCRIZIONE ARTICOLO': u'DESCRIPTION',
-                    'COLORE': u'COULEUR',
-                    'Q.TA\'': u'QTÉ',
+                'CAUSALE TRASPORTO': u'CAUSAL TRANSPORT',
+                'DATA INIZIO TRASPORTO': u'DATE DÉBUT TRANSPORT',
+                'FIRMA': u'SIGNATURE',
+                'INCARICATO DEL TRASPORTO': u'ENGAGÉÈ DU TRANSPORT',
+                'FIRMA DESTINATARIO': u'SIGNATURE ALLOCUTAIRE',
+                'NOTE': u'NOTES',
+                'MEZZO': u'MOYEN',
+                'RIF. ORDINE CLIENTE': u'RÉF. COMMANDE CLIENT',
+                'CONSEGNA (SALVO IMPREVISTI)': u'LIVRAISON (SAUF IMPRÉVU)',
+                'AGENTE': u'AGENT',
 
-                    'CAUSALE TRASPORTO': u'CAUSAL TRANSPORT',
-                    'DATA INIZIO TRASPORTO': u'DATE DÉBUT TRANSPORT',
-                    'FIRMA': u'SIGNATURE',
-                    'INCARICATO DEL TRASPORTO': u'ENGAGÉÈ DU TRANSPORT',
-                    'FIRMA DESTINATARIO': u'SIGNATURE ALLOCUTAIRE',
-                    'NOTE': u'NOTES',
-                    'MEZZO': u'MOYEN',
-                    'RIF. ORDINE CLIENTE': u'RÉF. COMMANDE CLIENT',
-                    'CONSEGNA (SALVO IMPREVISTI)': u'LIVRAISON (SAUF IMPRÉVU)',
-                    'AGENTE': u'AGENT',
-
-                    }
                 }
+            }
 
-            if key in lang_dict or lang == 'it_IT':
-                return key
+        if key in lang_dict or lang == 'it_IT':
+            return key
 
-            return lang_dict[lang].get(key, '??')
-
-            return self.counters[name]
+        return lang_dict[lang].get(key, '??')
+        # return self.counters[name]
