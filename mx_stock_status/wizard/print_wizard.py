@@ -891,9 +891,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             'CATEGORIA', 'FORNITORE', 'NETTO', 'LORDO',
             'INV', 'INV. DELTA', 'MRP', 'ESISTENZA']
 
-        # Create elemnt for empty category:
+        # Create element for empty category:
         WS = {
-            #ID: worksheet, counter
+            # ID: worksheet, counter
             0: [WB.add_worksheet('Non assegnati'), 1],
             }
         write_header(WS[0][0], header)
