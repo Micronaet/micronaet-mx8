@@ -871,9 +871,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # filename = '/home/administrator/photo/output/inventory_table.xlsx'
         dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
+        now = datetime.now().replace(
+            ':', '').replace('/', '').replace('\\', '').replace('.', '')
         filename = os.path.join(
             os.path.expanduser('~/NAS/industria40/Report/Inventario'),
-            'current_inventory_category_{}.xlsx'.format(dbname),
+            'current_inventory_category_{}_{}.xlsx'.format(dbname, now),
         )
         _logger.info('Sharepoint doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
