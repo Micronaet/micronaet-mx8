@@ -848,7 +848,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         return excel_pool.return_attachment(cr, uid, 'Stato piani')
 
-    def extract_xls_inventory_file(self, cr, uid, ids, data=None,
+    def extract_xls_inventory_file(
+            self, cr, uid, ids, data=None,
             context=None):
         """ Extract inventory as XLS external files every category in different
             page
@@ -868,7 +869,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         #                        XLS log export:
         # ---------------------------------------------------------------------
-        filename = '/home/administrator/photo/output/inventory_table.xlsx'
+        # filename = '/home/administrator/photo/output/inventory_table.xlsx'
+        dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
+        filename = os.path.join(
+            os.path.expanduser('~/NAS/industria40/Report/Inventario'),
+            'current_inventory_category_{}.xlsx'.format(dbname),
+        )
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
