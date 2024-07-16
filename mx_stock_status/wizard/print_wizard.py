@@ -1351,7 +1351,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('simple', 'Simple status'),
             ('inventory', 'Inventory'),
             ('table', 'Inventario tavoli'),
-            ('inventory_xls', 'Inventory XLS (exported not report)'),
+            ('inventory_xls', 'Inventario per categoria XLSX (Sharepoint)'),
             ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
             ('inventory_old_xls', 'Inventario precedente valorizzato'),
             ('available', 'Disponibile (non collegato a ordini)'),
