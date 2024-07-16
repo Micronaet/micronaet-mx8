@@ -871,7 +871,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # filename = '/home/administrator/photo/output/inventory_table.xlsx'
         dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
-        now = datetime.now().replace(
+        now = str(datetime.now())[:19].replace(
             ':', '').replace('/', '').replace('\\', '').replace('.', '')
         filename = os.path.join(
             os.path.expanduser('~/NAS/industria40/Report/Inventario'),
