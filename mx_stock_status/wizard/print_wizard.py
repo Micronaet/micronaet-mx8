@@ -875,6 +875,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             os.path.expanduser('~/NAS/industria40/Report/Inventario'),
             'current_inventory_category_{}.xlsx'.format(dbname),
         )
+        _logger.info('Sharepoint doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
