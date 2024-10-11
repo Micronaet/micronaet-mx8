@@ -21,6 +21,7 @@
 ###############################################################################
 
 import os
+import pdb
 import sys
 import logging
 import openerp
@@ -380,6 +381,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             self, cr, uid, ids, data=None, context=None):
         """ Extract inventory as XLS external files every category in different
             page old version (from anagraphic)
+            context: open_mode: current or old
         """
         # ---------------------------------------------------------------------
         # Utility:
@@ -567,6 +569,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         product_ids = product_pool.search(cr, uid, domain, context=context)
         without_inventory = {}  # In current mode used for this page
+        pdb.set_trace()
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
@@ -1255,6 +1258,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         """
         if context is None:
             context = {}
+        ctx = context.copy()
 
         wiz_proxy = self.browse(cr, uid, ids)[0]
         datas = self.get_data_dict(wiz_proxy)
@@ -1280,8 +1284,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             return self.extract_xls_check_inventory_file(
                 cr, uid, ids, datas, context=context)
         elif datas['mode'] == 'inventory_old_xls':
+            ctx['open_mode'] = 'old'
             return self.extract_old_xls_inventory_file(
-                cr, uid, ids, datas, context=context)
+                cr, uid, ids, datas, context=ctx)
         elif datas['mode'] == 'available':
             return self.extract_available_stock_status(
                 cr, uid, ids, wiz_proxy, context=context)
