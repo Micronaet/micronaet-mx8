@@ -571,7 +571,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         product_ids = product_pool.search(cr, uid, domain, context=context)
         without_inventory = {}  # In current mode used for this page
-        pdb.set_trace()
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
