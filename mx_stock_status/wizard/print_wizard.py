@@ -502,7 +502,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         if mode == 'current':
             inv_text = 'INV. ATT.'
-        else:
+        else:  # 'old'
             inv_text = 'INV. INIZ.'
         header = [
             'CODICE', 'DESCRIZIONE', 'UM',
@@ -563,7 +563,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             domain = [
                 ('inventory_excluded', '=', False),  # Remove excluded element
                 ]
-        else:
+        else:  # 'old'
             domain = [
                 ('mx_start_qty', '>', 0.0),  # Only present start inventory
                 ('inventory_excluded', '=', False),  # Remove excluded element
