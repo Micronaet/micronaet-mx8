@@ -281,10 +281,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Populate product in correct page
         # ---------------------------------------------------------------------
         row = 3
+        pdb.set_trace()
         for o in product_pool.stock_status_report_get_object(
                     cr, uid, data=data, context=context):
             row += 1
-            year = str(datetime.now().year)
+            # year = str(datetime.now().year)
 
             # Calculate:
             duty = product_pool.get_duty_this_product_rate(o)  # L
