@@ -182,6 +182,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         if context is None:
             context = {}
 
+        current_year = datetime.now().year
         product_pool = self.pool.get('product.product')
 
         # ---------------------------------------------------------------------
@@ -316,7 +317,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 cost_end_eur = 'ERR'  # Q
 
             # Check if is this year:
-            this_year = purchase_date[:4] == '2023'  # year
+            this_year = purchase_date[:4] == current_year  # year
 
             # Write data in correct WS:
             WS.write(row, 0, o.default_code or '????', format_text)  # A
