@@ -182,7 +182,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         if context is None:
             context = {}
 
-        current_year = datetime.now().year
+        current_year = str(datetime.now().year)
         product_pool = self.pool.get('product.product')
 
         # ---------------------------------------------------------------------
@@ -281,7 +281,6 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Populate product in correct page
         # ---------------------------------------------------------------------
         row = 3
-        pdb.set_trace()
         for o in product_pool.stock_status_report_get_object(
                     cr, uid, data=data, context=context):
             row += 1
