@@ -51,8 +51,21 @@ class Parser(report_sxw.rml_parse):
             'set_counter': self.set_counter,            
             'report_init_reset':  self.report_init_reset,
             'get_partic_description': self.get_partic_description,
+
+            'return_note': self.return_note,
+            
         })
         
+    def return_note(self, note):
+        """ Check if exist and after return \n note
+        """
+        try:
+            note = note.strip()
+            if note:
+                return '\n%s' % note
+        except:
+            return ''
+                    
     def get_vector_data(self, o): 
         ''' Reset parameter used in report 
         '''
