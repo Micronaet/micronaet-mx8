@@ -70,7 +70,7 @@ class Parser(report_sxw.rml_parse):
         """ Check if exist and after return \n note
         """
         try:
-            note = note.strip()
+            note = (note or '').strip()
             if note:
                 return '\n%s' % note
         except:
