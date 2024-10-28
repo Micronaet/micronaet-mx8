@@ -39,6 +39,8 @@ class Parser(report_sxw.rml_parse):
             'get_vector_address': self.get_vector_address,
             'get_language': self.get_language,
 
+            'return_note': self.return_note,
+
             # Proforma:
             'get_tax_line': self.get_tax_line,
         })
@@ -63,6 +65,16 @@ class Parser(report_sxw.rml_parse):
             res += _('\nTel: %s') % (o.carrier_id.partner_id.phone or '')
             res += _('\nNr. Albo Trasp.: %s') % ''  # TODO
         return res
+
+    def return_note(self, note):
+        """ Check if exist and after return \n note
+        """
+        try:
+            note = note.strip()
+            if note:
+                return '\n%s' % note
+        except:
+            return ''
 
     def get_tax_line(self, sol):
         """ Tax line for order / proforma invoice
