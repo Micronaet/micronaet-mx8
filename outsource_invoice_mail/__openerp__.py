@@ -30,9 +30,10 @@
     'license': 'AGPL-3',
     'depends': [
         'base',
+        'sale',
         'outsource_product',
-        'account_invoice_line_stat', # Repo: Micronaet/micronaet-mx8
-        'excel_export', # Micronaet/micronaet-utility
+        'account_invoice_line_stat',  # Repo: Micronaet/micronaet-mx8
+        'excel_export',  # Micronaet/micronaet-utility
         ],
     'init_xml': [],
     'demo': [],
