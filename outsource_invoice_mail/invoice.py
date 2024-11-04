@@ -343,7 +343,8 @@ class SaleOrder(orm.Model):
                     ):
                 row += 1
                 order = line.order_id
-                if order.order_date[:10] == today:
+                date_order = order.date_order[:10]
+                if date_order == today:
                     has_today = True
                     row_text = row_text_red
                     row_number = row_number_red
@@ -356,7 +357,7 @@ class SaleOrder(orm.Model):
                         # Header:
                         order.name,
                         order.partner_id.name,
-                        order.order_date[:10],
+                        date_order,
 
                         # Detail:
                         line.product_id.default_code,
