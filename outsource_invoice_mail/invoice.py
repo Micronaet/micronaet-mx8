@@ -283,8 +283,8 @@ class SaleOrder(orm.Model):
         row_number_red = excel_pool.get_format('number_red')
 
         today = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
-        # from_date = (datetime.now() - timedelta(days=days)).strftime(
-        #    DEFAULT_SERVER_DATE_FORMAT)
+        from_date = (datetime.now() - timedelta(days=days)).strftime(
+            DEFAULT_SERVER_DATE_FORMAT)
 
         row = 0  # Start line
         excel_pool.column_width(ws_name, [
@@ -304,6 +304,7 @@ class SaleOrder(orm.Model):
         line_pool = self.pool.get('sale.order.line')
         line_ids = line_pool.search(cr, uid, [
             ('order_id.state', 'not in', ('cancel', 'draft', 'sent')),
+            ('order_id.date_order', '>=', from_date),
             ('product_id.marketed', '=', True),
             ], context=context)
 
