@@ -364,7 +364,7 @@ class SaleOrder(orm.Model):
                         (line.product_uom_qty, row_number),
                         ], default_format=row_text)
         else:
-            _logger.warning('Sale order not writed')
+            _logger.warning('Sale order not written')
 
         # Send mail:
         if not line_ids:
