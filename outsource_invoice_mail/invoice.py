@@ -335,7 +335,7 @@ class SaleOrder(orm.Model):
             for line in sorted(
                     line_pool.browse(cr, uid, line_ids, context=context),
                     key=lambda x: (
-                        x.order_id.date[:10],
+                        x.order_id.date_order[:10],
                         x.order_id.partner_id.name,
                         x.order_id.name,
                         ),
