@@ -272,7 +272,7 @@ class SaleOrder(orm.Model):
         # ---------------------------------------------------------------------
         # Format used:
         # ---------------------------------------------------------------------
-        has_today = False # Not today event (for subject)
+        has_today = False  # Not today event (for subject)
         title_text = excel_pool.get_format('title')
         header_text = excel_pool.get_format('header')
 
@@ -283,8 +283,8 @@ class SaleOrder(orm.Model):
         row_number_red = excel_pool.get_format('number_red')
 
         today = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
-        from_date = (datetime.now() - timedelta(days=days)).strftime(
-            DEFAULT_SERVER_DATE_FORMAT)
+        # from_date = (datetime.now() - timedelta(days=days)).strftime(
+        #    DEFAULT_SERVER_DATE_FORMAT)
 
         row = 0  # Start line
         excel_pool.column_width(ws_name, [
@@ -309,7 +309,7 @@ class SaleOrder(orm.Model):
 
         if line_ids:
             # Title:
-            title = 'Prodotti commercializzati consegnati (DDT aperti)'
+            title = 'Prodotti commercializzati in OC'
             excel_pool.write_xls_line(
                 ws_name, row, [title, ], default_format=title_text)
 
