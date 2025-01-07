@@ -182,7 +182,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         if context is None:
             context = {}
 
-        current_year = str(datetime.now().year)  # '2024'
+        current_year = str(datetime.now().year)  # '2024'  # Force previous
         product_pool = self.pool.get('product.product')
 
         # ---------------------------------------------------------------------
