@@ -36,6 +36,7 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 
 _logger = logging.getLogger(__name__)
 
+
 class Parser(report_sxw.rml_parse):
     counters = {}
     last_record_id = 0
@@ -71,30 +72,89 @@ class Parser(report_sxw.rml_parse):
             'get_stock_value': self.get_stock_value,
             
             'has_extra_description': self.has_extra_description,
+            'get_partner_note': self.get_partner_note,
         })
         self.reset_counter()
         # TODO remove        
         self.total_parcel = 0.0
 
+    def get_partner_note(self, partner_id, department):
+        """ Read all partner, destination, order, product, line from
+            object and get all data from note system
+            filter also depend on data
+            department is the name of Production or Cut Department
+
+            @return list
+        """
+        cr = self.cr
+        uid = self.uid
+        context = {}
+
+        # Pool used:
+        dept_pool = self.pool.get('note.department')
+        type_pool = self.pool.get('note.type')
+        note_pool = self.pool.get('note.note')
+
+        # ---------------------------------------------------------------------
+        # Find all type for filter note:
+        # ---------------------------------------------------------------------
+        # Get department ID:
+        dept_ids = dept_pool.search(cr, uid, [
+            ('name', '=', department),
+        ], context=context)
+        if not dept_ids:
+            return 'ERR: Nessun dipartimento %s presente' % department
+
+        dept_id = dept_ids[0]
+
+        # Get type ID:
+        type_ids = type_pool.search(cr, uid, [], context=context)
+        selected_type_ids = []
+        for item in type_pool.browse(
+                cr, uid, type_ids, context=context):
+            if dept_id in [c.id for c in item.department_ids]:
+                selected_type_ids.append(item.id)
+        if not selected_type_ids:
+            return 'ERR: Nessuna categoria con dipartimento %s' % department
+
+        # ---------------------------------------------------------------------
+        # Find partner note:
+        # ---------------------------------------------------------------------
+        note_ids = note_pool.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('address_id', '=', False),
+            ('product_id', '=', False),
+            ('order_id', '=', False),
+            ('line_id', '=', False),
+            ('print_label', '=', False),
+            ('type_id', 'in', selected_type_ids),  # only category
+        ], context=context)
+
+        res = ''
+        for note in note_pool.browse(cr, uid, note_ids, context=context):
+            res += note.description or note.name or ''
+
+        return res
+
     def has_extra_description(self, o):
-        ''' Test if partner required extra columns for his description
-        '''
+        """ Test if partner required extra columns for his description
+        """
         return o.partner_id.extra_description_load_list
         
     def get_mode(self, ):
-        ''' Utility for check the mode of report depend on name
-        '''
+        """ Utility for check the mode of report depend on name
+        """
         if self.name == 'custom_mx1_todo_summary_report':
             return 'odoo'
         else: # custom_mx2_todo_internal_summary_report
             return 'mexal'
 
     def get_header_string(self, data, col):
-        ''' Check report mode and return correct header
-            mode: 
+        """ Check report mode and return correct header
+            mode:
                 'odoo' (OC, B, Del.) *default
-                'mexal' (OC, S, B)                
-        ''' 
+                'mexal' (OC, S, B)
+        """
         if data is None:
            data = {}
 
@@ -152,11 +212,11 @@ class Parser(report_sxw.rml_parse):
         return translate[mode].get(col, _('ERROR'))
 
     def get_stock_value(self, data, line, col):
-        ''' Get 3 cols with correct qty data
-            mode: 
+        """ Get 3 cols with correct qty data
+            mode:
                 'odoo' (OC, B, Del.) *default
-                'mexal' (OC, S, B)      
-        ''' 
+                'mexal' (OC, S, B)
+        """
         if data is None:
            data = {}
         
@@ -207,15 +267,15 @@ class Parser(report_sxw.rml_parse):
         return ''    
             
     def get_counter(self, name):
-        ''' Get counter with name passed (else create an empty)
-        '''
+        """ Get counter with name passed (else create an empty)
+        """
         if name not in self.counters:
             self.counters[name] = 0.0
         return self.counters[name]
 
     def set_counter(self, name, value):
-        ''' Set counter with name with value passed
-        '''
+        """ Set counter with name with value passed
+        """
         self.counters[name] = value
         return "" # empty so no write in module
 
@@ -227,10 +287,10 @@ class Parser(report_sxw.rml_parse):
         
 
     def get_parcels(self, product, qty):
-        ''' Get text for parcels totals:
+        """ Get text for parcels totals:
             product: proxy obj for product
             qty: total to parcels
-        '''
+        """
         res = ''
         q_x_pack = product.q_x_pack
         if q_x_pack:
@@ -242,10 +302,10 @@ class Parser(report_sxw.rml_parse):
         return res
 
     def get_parcels_table_load(self, l): #product, qty):
-        ''' Get text for parcels totals:
+        """ Get text for parcels totals:
             product: proxy obj for product
             qty: total to parcels
-        '''
+        """
         res = []
 
         # ---------------------------------------------------------------------
@@ -314,8 +374,8 @@ class Parser(report_sxw.rml_parse):
         return res
 
     def get_partic_browse(self, line):
-        ''' Return browse object for line passed:
-        '''
+        """ Return browse object for line passed:
+        """
         partic_pool = self.pool.get('res.partner.product.partic')
         partic_ids = partic_pool.search(self.cr, self.uid, [
             ('partner_id', '=', line.order_id.partner_id.id),
@@ -327,8 +387,8 @@ class Parser(report_sxw.rml_parse):
             return False    
         
     def get_partic(self, line):
-        ''' Return return if present partner-product partic code
-        '''
+        """ Return if present partner-product partic code
+        """
         partic_proxy = self.get_partic_browse(line)
         if partic_proxy:
             return partic_proxy.partner_code or '/'
@@ -336,8 +396,8 @@ class Parser(report_sxw.rml_parse):
             return ''
 
     def get_partic_description(self, line):
-        ''' Return return if present partner-product partic code
-        '''
+        """ Return if present partner-product partic code
+        """
         partic_proxy = self.get_partic_browse(line)
         if partic_proxy:
             return '%s %s' % (
@@ -348,19 +408,19 @@ class Parser(report_sxw.rml_parse):
             return ''
 
     def get_datetime(self):
-        ''' Return datetime obj
-        '''
+        """ Return datetime obj
+        """
         return datetime
 
     def get_datetime_now(self):
-        ''' Return datetime obj
-        '''
+        """ Return datetime obj
+        """
         return datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _get_fully_list(self, objects):
-        ''' Return list of object browse id list merged with no replication 
-            with al record masked for print 
-        '''
+        """ Return list of object browse id list merged with no replication
+            with al record masked for print
+        """
         sale_pool = self.pool.get('sale.order')
         
         # Selection by check:
@@ -389,8 +449,8 @@ class Parser(report_sxw.rml_parse):
         return res    
 
     def get_object_line(self, objects):
-        ''' Selected object + print object
-        '''
+        """ Selected object + print object
+        """
         products = {}
         res = []
         sale_pool = self.pool.get('sale.order')
@@ -415,11 +475,9 @@ class Parser(report_sxw.rml_parse):
         return res
         
     def reset_print(self):
-        ''' Called at the end of report to reset print check
-        '''
+        """ Called at the end of report to reset print check
+        """
         sale_pool = self.pool.get('sale.order')
         sale_pool.reset_print(self.cr, self.uid, False)
         _logger.info('Reset selection')
         return ''
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
