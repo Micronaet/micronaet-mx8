@@ -132,9 +132,8 @@ class Parser(report_sxw.rml_parse):
 
         res = ''
         for note in note_pool.browse(cr, uid, note_ids, context=context):
-            res += note.description or note.name or ''
-
-        return res
+            res += '{}\n'.format(note.description or note.name or '')
+        return res.strip()
 
     def has_extra_description(self, o):
         """ Test if partner required extra columns for his description
