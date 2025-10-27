@@ -43,8 +43,8 @@ class ResPartner(orm.Model):
     _inherit = 'res.partner'
     
     def force_missed_country_invoice_line(self, cr, uid, ids, context=None):
-        ''' Update this country partner in invoice line
-        '''
+        """ Update this country partner in invoice line
+        """
         line_pool = self.pool.get('account.invoice.line')
         line_ids = line_pool.search(cr, uid, [
             ('country_id', '=', False),
@@ -65,15 +65,15 @@ class ResPartner(orm.Model):
         return True
 
     def force_country_on_invoice_line(self, cr, uid, ids, context=None):
-        ''' Update this country partner in invoice line
-        '''
+        """ Update this country partner in invoice line
+        """
         line_pool = self.pool.get('account.invoice.line')
         line_ids = line_pool.search(cr, uid, [
             ('invoice_id.partner_id', '=', ids[0])
             ], context=context)
             
         res = {}
-        print 'Updating %s invoice line' % len(line_ids)
+        print('Updating %s invoice line' % len(line_ids))
         for line in line_pool.browse(cr, uid, line_ids, context=context):
             try:
                 res[line.id] = line.invoice_id.partner_id.country_id.id
@@ -86,11 +86,23 @@ class ResPartner(orm.Model):
                 }, context=context)        
         return True
 
-class AccountInvoiceLine(orm.Model):
+class AccountInvoiceInherit(orm.Model):
     """ Model name: Account invoice line
     """    
+    _inherit = 'account.invoice'
+
+    _columns = {
+        'country_id': fields.related(
+            'partner_id', 'country_id', type='many2one', relation='res.country', string='Nazione', store=True),
+        'zone_id': fields.related(
+            'partner_id', 'zone_id', type='many2one', relation='res.partner.zone', string='Zone', store=True),
+    }
+
+class AccountInvoiceLine(orm.Model):
+    """ Model name: Account invoice line
+    """
     _inherit = 'account.invoice.line'
-    
+
     """def _get_date_order_from_order(self, cr, uid, ids, context=None):
         ''' When change sol line order
         '''
@@ -129,8 +141,8 @@ class AccountInvoiceLine(orm.Model):
     """
     # Temporary procedure:
     def first_populate_date_invoice(self, cr, uid, context=None):
-        ''' First populate of date taked from account invoice
-        '''
+        """ First populate of date taked from account invoice
+        """
         invoice_pool = self.pool.get('account.invoice')
         invoice_ids = invoice_pool.search(cr, uid, [
             #('type', '=', 'out_invoice'),
@@ -160,8 +172,8 @@ class AccountInvoiceLine(orm.Model):
         return True    
         
     def _get_first_supplier_from_product(self, cr, uid, ids, context=None):
-        ''' When change first supplier in product
-        '''
+        """ When change first supplier in product
+        """
         line_pool = self.pool.get('account.invoice.line')
         _logger.info('Update account line (change first supplier product)')
         return line_pool.search(cr, uid, [
@@ -169,31 +181,31 @@ class AccountInvoiceLine(orm.Model):
             
     def _get_first_supplier_from_product_line(
             self, cr, uid, ids, context=None):
-        ''' When change product_id in sol line order 
-        '''
+        """ When change product_id in sol line order
+        """
         _logger.info('Update account line (change product in line) %s' % (  
             len(ids)))
         return ids
 
     def _get_invoice_destination(self, cr, uid, ids, context=None):
-        ''' When change sol line order
-        '''
+        """ When change sol line order
+        """
         line_pool = self.pool.get('account.invoice.line')
         #_logger.info('Update account line (change invoice destination)')
         return line_pool.search(cr, uid, [
             ('invoice_id', 'in', ids)], context=context)
 
     def _get_invoice_agent(self, cr, uid, ids, context=None):
-        ''' When change invoice agent
-        '''
+        """ When change invoice agent
+        """
         line_pool = self.pool.get('account.invoice.line')
         #_logger.info('Update account line (change agent in invoice)')
         return line_pool.search(cr, uid, [
             ('invoice_id', 'in', ids)], context=context)
 
     def _get_invoice_date_change(self, cr, uid, ids, context=None):
-        ''' When change invoice date 
-        '''
+        """ When change invoice date
+        """
         line_pool = self.pool.get('account.invoice.line')
         #_logger.info('Update account line (change date invoice)')
         return line_pool.search(cr, uid, [
@@ -203,8 +215,8 @@ class AccountInvoiceLine(orm.Model):
     # Store function region_id:
     # -------------------------------------------------------------------------
     def _refresh_invoice_partner(self, cr, uid, ids, context=None):
-        ''' Change account.invoice >> partner_id
-        '''
+        """ Change account.invoice >> partner_id
+        """
         line_ids = self.pool.get('account.invoice.line').search(cr, uid, [
             ('invoice_id', 'in', ids),
             ], context=context)
@@ -213,8 +225,8 @@ class AccountInvoiceLine(orm.Model):
         return line_ids
 
     def _refresh_res_partner_city(self, cr, uid, ids, context=None):
-        ''' Change res.partner >> state_id
-        '''
+        """ Change res.partner >> state_id
+        """
         invoice_ids = self.pool.get('account.invoice').search(cr, uid, [
             ('partner_id', 'in', ids),
             ], context=context)            
@@ -225,8 +237,8 @@ class AccountInvoiceLine(orm.Model):
             cr, uid, invoice_ids, context=context)
 
     def _refresh_state_region(self, cr, uid, ids, context=None):
-        ''' Change res.country.state >> region_id
-        '''
+        """ Change res.country.state >> region_id
+        """
         partner_ids = self.pool.get('res.partner').search(cr, uid, [
             ('state_id', 'in', ids),
             ], context=context)
@@ -240,28 +252,27 @@ class AccountInvoiceLine(orm.Model):
     # Store function state_id:
     # -------------------------------------------------------------------------
     def _refresh_state_id_invoice_partner_id(self, cr, uid, ids, context=None):
-        ''' Change partner_id (account.invoice)
-        '''
+        """ Change partner_id (account.invoice)
+        """
         return self.pool.get('account.invoice.line').search(cr, uid, [
             ('invoice_id', 'in', ids), # line with this invoice partner changed
             ], context=context)
 
     def _refresh_state_id_partner_state_id(self, cr, uid, ids, context=None):
-        ''' Change partner state (res.partner)
-        '''
+        """ Change partner state (res.partner)
+        """
         invoice_ids = self.pool.get('account.invoice').search(cr, uid, [
            ('partner_id', 'in', ids),
            ], context=context)
-        return self.pool.get('account.invoice.line'
-            )._refresh_state_id_invoice_partner_id(
+        return self.pool.get('account.invoice.line')._refresh_state_id_invoice_partner_id(
                 cr, uid, invoice_ids, context=context)
     
     # -------------------------------------------------------------------------
     # Field function:
     # -------------------------------------------------------------------------
     def _get_line_state_id(self, cr, uid, ids, fields, args, context=None):
-        ''' Fields function for calculate 
-        '''       
+        """ Fields function for calculate
+        """
         res = {}     
         for line in self.browse(cr, uid, ids, context=context):
             try:
@@ -272,8 +283,8 @@ class AccountInvoiceLine(orm.Model):
         
     def _get_region_invoiced_line(self, cr, uid, ids, fields, args, 
             context=None):
-        ''' Fields function for calculate 
-        '''       
+        """ Fields function for calculate
+        """
         res = {}     
         for line in self.browse(cr, uid, ids, context=context):
             try:
@@ -356,14 +367,10 @@ class AccountInvoiceLine(orm.Model):
                 ], string='Type', store=True),
                 
         'zone_id': fields.related(
-            'partner_id', 'zone_id', 
-            type='many2one', relation='res.partner.zone', 
-            string='Zone', store=True),
+            'partner_id', 'zone_id', type='many2one', relation='res.partner.zone', string='Zone', store=True),
 
         #'property_account_position': fields.related(
         #    'partner_id', 'property_account_position', 
         #    type='many2one', relation='account.fiscal.position', 
         #    string='Fiscal position', store=True),
         }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

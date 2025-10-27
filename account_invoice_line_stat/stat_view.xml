@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!--res.partner-->
         <record model="ir.ui.view" id="view_res_partner_force_country_form">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
@@ -12,11 +13,30 @@
                 </field>
             </field>
         </record>
+
+        <!--account.invoice-->
+        <record model="ir.ui.view" id="view_account_invoice_extra_search">
+             <field name="name">account.invoice.extra.search</field>
+             <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+             <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="zone_id" filter_domain="[('zone_id.name','ilike',self)]" />
+                    <field name="country_id" filter_domain="[('country_id.name','ilike',self)]"/>
+                </field>
+                 <filter name="group_by_partner_id" position="after">
+                     <filter name="group_by_zone_id" string="Zona" context="{'group_by':'zone_id'}"/>
+                     <filter name="group_by_country_id" string="Nazione" context="{'group_by':'country_id'}"/>
+                 </filter>
+             </field>
+        </record>
+
+        <!--account.invoice.line-->
         <record model="ir.ui.view" id="view_account_invoice_line_search">
              <field name="name">account.invoice.line.search</field>
              <field name="model">account.invoice.line</field>
              <field name="arch" type="xml">
-                <search string="Invoice line" version="7.0">        
+                <search string="Invoice line" version="7.0">
                     <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
                     <field name="destination_partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
                     <field name="first_supplier_id" />
