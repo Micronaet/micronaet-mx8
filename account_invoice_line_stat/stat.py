@@ -139,6 +139,7 @@ class AccountInvoiceLine(orm.Model):
                 }, string='Order date',            
             )
     """
+
     # Temporary procedure:
     def first_populate_date_invoice(self, cr, uid, context=None):
         """ First populate of date taked from account invoice
