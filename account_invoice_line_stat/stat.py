@@ -305,22 +305,17 @@ class AccountInvoiceLine(orm.Model):
             _get_region_invoiced_line, method=True, 
             type='many2one', string='Regione', relation='res.country.region',
             store={
-                'account.invoice': (
-                    _refresh_invoice_partner, ['partner_id'], 10),
-                'res.partner': (
-                    _refresh_res_partner_city, ['state_id'], 10),
-                'res.country.state': (
-                    _refresh_state_region, ['region_id'], 10),
+                'account.invoice': (_refresh_invoice_partner, ['partner_id'], 10),
+                'res.partner': (_refresh_res_partner_city, ['state_id'], 10),
+                'res.country.state': (_refresh_state_region, ['region_id'], 10),
                 }), 
 
         'state_id': fields.function(
             _get_line_state_id, method=True, 
             type='many2one', string='Città', relation='res.country.state',
             store={
-                'account.invoice': (
-                    _refresh_state_id_invoice_partner_id, ['partner_id'], 10),
-                'res.partner': (
-                    _refresh_state_id_partner_state_id, ['state_id'], 10),
+                'account.invoice': (_refresh_state_id_invoice_partner_id, ['partner_id'], 10),
+                'res.partner': (_refresh_state_id_partner_state_id, ['state_id'], 10),
                 }), 
 
         # TODO change:
