@@ -142,7 +142,7 @@ class AccountInvoiceLine(orm.Model):
 
     # Temporary procedure:
     def first_populate_date_invoice(self, cr, uid, context=None):
-        """ First populate of date taked from account invoice
+        """ First populate of date taken from account invoice
         """
         invoice_pool = self.pool.get('account.invoice')
         invoice_ids = invoice_pool.search(cr, uid, [
