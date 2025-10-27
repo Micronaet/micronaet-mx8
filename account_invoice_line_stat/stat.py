@@ -51,7 +51,7 @@ class ResPartner(orm.Model):
             ], context=context)
             
         res = {}
-        print 'Updating %s invoice line' % len(line_ids)
+        _logger.info('Updating %s invoice line' % len(line_ids))
         for line in line_pool.browse(cr, uid, line_ids, context=context):
             try:
                 res[line.id] = line.invoice_id.partner_id.country_id.id
@@ -73,7 +73,7 @@ class ResPartner(orm.Model):
             ], context=context)
             
         res = {}
-        print('Updating %s invoice line' % len(line_ids))
+        _logger.info('Updating %s invoice line' % len(line_ids))
         for line in line_pool.browse(cr, uid, line_ids, context=context):
             try:
                 res[line.id] = line.invoice_id.partner_id.country_id.id
