@@ -94,8 +94,8 @@ class AccountInvoiceInherit(orm.Model):
     _columns = {
         'country_id': fields.related(
             'partner_id', 'country_id', type='many2one', relation='res.country', string='Nazione', store=True),
-        'zone_id': fields.related(
-            'partner_id', 'zone_id', type='many2one', relation='res.partner.zone', string='Zone', store=True),
+        # 'zone_id': fields.related(
+        #     'partner_id', 'zone_id', type='many2one', relation='res.partner.zone', string='Zone', store=True),
     }
 
 class AccountInvoiceLine(orm.Model):

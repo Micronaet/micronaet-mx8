@@ -21,11 +21,11 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
              <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="zone_id" filter_domain="[('zone_id.name','ilike',self)]" />
+                    <!--<field name="zone_id" filter_domain="[('zone_id.name','ilike',self)]" />-->
                     <field name="country_id" filter_domain="[('country_id.name','ilike',self)]"/>
                 </field>
                  <filter name="group_by_partner_id" position="after">
-                     <filter name="group_by_zone_id" string="Zona" context="{'group_by':'zone_id'}"/>
+                     <!--<filter name="group_by_zone_id" string="Zona" context="{'group_by':'zone_id'}"/>-->
                      <filter name="group_by_country_id" string="Nazione" context="{'group_by':'country_id'}"/>
                  </filter>
              </field>
