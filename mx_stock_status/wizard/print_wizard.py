@@ -941,10 +941,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 linked_bom[
                     line.product_id.id] = line.bom_id.product_id.default_code
 
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------------
         # Populate product in correct page
-        # ---------------------------------------------------------------------
-        pdb.set_trace()
+        # --------------------------------------------------------------------------------------------------------------
         for product in product_pool.stock_status_report_get_object(cr, uid, data=data, context=context):
             if product.inventory_category_id.id in WS:
                 record = WS[product.inventory_category_id.id]
@@ -953,11 +952,11 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             # Supplier data:
             if product.seller_ids:
-                first_supplier = product.seller_ids[0].name.name
-                supplier_product_name = product.seller_ids[0].product_name or '/'
+                first_supplier = u'{}'.format(product.seller_ids[0].name.name or '')
+                supplier_product_name = u'{}'.format(product.seller_ids[0].product_name or '/')
             else:
-                first_supplier = product.first_supplier_id.name or 'Non presente'
-                supplier_product_name = '/'
+                first_supplier = product.first_supplier_id.name or u'Non presente'
+                supplier_product_name = u'/'
 
             # Write data in correct WS:
             record[0].write(record[1], 0, product.id)
