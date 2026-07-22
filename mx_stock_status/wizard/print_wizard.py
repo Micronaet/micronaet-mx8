@@ -859,9 +859,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         """ Extract inventory as XLS external files every category in different
             page
         """
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------------
         # Utility:
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------------
         def write_header(current_WS, header):
             """ Write header in first line:
             """
@@ -874,14 +874,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         #                        XLS log export:
         # ---------------------------------------------------------------------
-        # filename = '/home/administrator/photo/output/inventory_table.xlsx'
         dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
         now = str(datetime.now())[:19].replace(
             ':', '').replace('/', '').replace('\\', '').replace('.', '')
+        # OLD: Sharepoint
+        # filename = os.path.join(
+        #    os.path.expanduser('~/NAS/industria40/Report/Inventario'),
+        #    'current_inventory_category_{}_{}.xlsx'.format(dbname, now),
+        # )
         filename = os.path.join(
-            os.path.expanduser('~/NAS/industria40/Report/Inventario'),
-            'current_inventory_category_{}_{}.xlsx'.format(dbname, now),
+            '/home/administrator/photo/report/inventory',
+            'inventory_x_category_{}_{}.xlsx'.format(dbname, now),
         )
+
         _logger.info('Sharepoint doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
 
@@ -896,7 +901,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         header = [
             'ID', 'DB', 'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.',
-            'CATEGORIA', 'FORNITORE', 'NETTO', 'LORDO',
+            'CATEGORIA', 'FORNITORE', 'PROD. X FORN.', 'NETTO', 'LORDO',
             'INV', 'INV. DELTA', 'MRP', 'ESISTENZA']
 
         # Create element for empty category:
@@ -907,7 +912,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         write_header(WS[0][0], header)
         # WS.autofilter(0, 0, 0, len(header))
 
-        # Create all others category:
+        # Create all other categories:
         for category in inv_pool.browse(
                 cr, uid, inv_ids, context=context):
             WS[category.id] = [WB.add_worksheet(category.name), 1]
@@ -948,6 +953,14 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             else:
                 record = WS[0]
 
+            # Supplier data:
+            if product.seller_ids:
+                first_supplier = product.seller_ids[0].name.name
+                supplier_product_name = product.seller_ids[0].product_name or '/'
+            else:
+                first_supplier = product.first_supplier_id.name or 'Non presente'
+                supplier_product_name = '/'
+
             # Write data in correct WS:
             record[0].write(record[1], 0, product.id)
             record[0].write(
@@ -957,25 +970,27 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 4, product.uom_id.name or '')
             record[0].write(record[1], 5, product.statistic_category or '')
             record[0].write(record[1], 6, product.categ_id.name or '')
-            record[0].write(
-                record[1], 7,
-                product.seller_ids[0].name.name if product.seller_ids else (
-                    product.first_supplier_id.name or ''))
+            # record[0].write(  # OLD mode
+            #    record[1], 7,
+            #    product.seller_ids[0].name.name if product.seller_ids else (
+            #        product.first_supplier_id.name or ''))
+            record[0].write(record[1], 7, first_supplier)
+            record[0].write(record[1], 8, supplier_product_name)
 
             # Weight:
-            record[0].write(record[1], 8, product.weight_net)
-            record[0].write(record[1], 9, product.weight)
+            record[0].write(record[1], 9, product.weight_net)
+            record[0].write(record[1], 10, product.weight)
 
             if data.get('with_stock', False):
                 net_qty = product.mx_net_qty - product.mx_mrp_out
-                record[0].write(record[1], 10, product.inventory_start or '')
-                record[0].write(record[1], 11, product.inventory_delta or '')
-                record[0].write(record[1], 12, product.mx_mrp_out or '')
-                record[0].write(record[1], 13, net_qty or '')
+                record[0].write(record[1], 11, product.inventory_start or '')
+                record[0].write(record[1], 12, product.inventory_delta or '')
+                record[0].write(record[1], 13, product.mx_mrp_out or '')
+                record[0].write(record[1], 14, net_qty or '')
 
             # TODO remove after print:
             if with_parent_bom:
-                record[0].write(record[1], 14, linked_bom.get(product.id, ''))
+                record[0].write(record[1], 15, linked_bom.get(product.id, ''))
 
             record[1] += 1
         return True
@@ -1276,25 +1291,19 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 cr, uid, ids, datas, context=context)
 
         elif datas['mode'] == 'table':
-            return self.extract_xls_table_inventory(
-                cr, uid, ids, datas, context=context)
+            return self.extract_xls_table_inventory(cr, uid, ids, datas, context=context)
 
         elif datas['mode'] == 'inventory_xls':
-            return self.extract_xls_inventory_file(
-                cr, uid, ids, datas, context=context)
+            return self.extract_xls_inventory_file(cr, uid, ids, datas, context=context)
         elif datas['mode'] == 'inventory_check_xls':
-            return self.extract_xls_check_inventory_file(
-                cr, uid, ids, datas, context=context)
+            return self.extract_xls_check_inventory_file(cr, uid, ids, datas, context=context)
         elif datas['mode'] == 'inventory_old_xls':
             ctx['open_mode'] = 'old'
-            return self.extract_old_xls_inventory_file(
-                cr, uid, ids, datas, context=ctx)
+            return self.extract_old_xls_inventory_file(cr, uid, ids, datas, context=ctx)
         elif datas['mode'] == 'available':
-            return self.extract_available_stock_status(
-                cr, uid, ids, wiz_proxy, context=context)
+            return self.extract_available_stock_status(cr, uid, ids, wiz_proxy, context=context)
         elif datas['mode'] == 'corresponding':
-            return self.extract_corresponding(
-                cr, uid, ids, wiz_proxy, context=context)
+            return self.extract_corresponding(cr, uid, ids, wiz_proxy, context=context)
         # elif datas['mode'] == 'inventory_web':
         #    return self.extract_web_inventory_file(
         #        cr, uid, ids, datas, context=context)
@@ -1364,7 +1373,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('simple', 'Simple status'),
             ('inventory', 'Inventory'),
             ('table', 'Inventario tavoli'),
-            ('inventory_xls', 'Inventario per categoria XLSX (Sharepoint)'),
+            ('inventory_xls', 'File per fare Inventario fine stagione'),  # ex. Sharepoint
             ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
             ('inventory_old_xls', 'Inventario precedente valorizzato'),
             ('available', 'Disponibile (non collegato a ordini)'),
