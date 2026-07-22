@@ -887,8 +887,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #    os.path.expanduser('~/NAS/industria40/Report/Inventario'),
         #    'current_inventory_category_{}_{}.xlsx'.format(dbname, now),
         # )
-        # filename = '/home/administrator/photo/report/inventory/inventory_x_category_{}_{}.xlsx'.format(dbname, now)
-        filename = '/tmp/{}_{}.xlsx'.format(dbname, now)
+        filename = '/home/administrator/photo/report/inventory/inventory_x_category_{}_{}.xlsx'.format(dbname, now)
 
         _logger.info(u'Samba doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
