@@ -884,9 +884,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #    os.path.expanduser('~/NAS/industria40/Report/Inventario'),
         #    'current_inventory_category_{}_{}.xlsx'.format(dbname, now),
         # )
-        filename = '/home/administrator/photo/report/inventory/inventory_x_category_{}_{}.xlsx'.format(dbname, now)
+        # filename = '/home/administrator/photo/report/inventory/inventory_x_category_{}_{}.xlsx'.format(dbname, now)
+        filename = '/tmp/prova/{}_{}.xlsx'.format(dbname, now)
 
-        _logger.info('Samba doc: {}'.format(filename))
+        _logger.info(u'Samba doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
@@ -899,9 +900,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # Create worksheet:
         # ---------------------------------------------------------------------
         header = [
-            'ID', 'DB', 'CODICE', 'DESCRIZIONE', 'UM', 'CAT. STAT.',
-            'CATEGORIA', 'FORNITORE', 'PROD. X FORN.', 'NETTO', 'LORDO',
-            'INV', 'INV. DELTA', 'MRP', 'ESISTENZA']
+            u'ID', u'DB', u'CODICE', u'DESCRIZIONE', u'UM', u'CAT. STAT.',
+            u'CATEGORIA', u'FORNITORE', u'PROD. X FORN.', u'NETTO', u'LORDO',
+            u'INV', u'INV. DELTA', u'MRP', u'ESISTENZA']
 
         # Create element for empty category:
         WS = {
@@ -951,12 +952,13 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 record = WS[0]
 
             # Supplier data:
-            if product.seller_ids:
-                first_supplier = u'{}'.format(product.seller_ids[0].name.name or u'')
-                supplier_product_name = u'{}'.format(product.seller_ids[0].product_name or u'/')
+            '''if product.seller_ids:
+                first_supplier = u'{}'.format(product.seller_ids[0].name.name or '')
+                supplier_product_name = u'{}'.format(product.seller_ids[0].product_name or '/')
             else:
                 first_supplier = product.first_supplier_id.name or u'Non presente'
                 supplier_product_name = u'/'
+            '''
 
             # Write data in correct WS:
             record[0].write(record[1], 0, product.id)
@@ -966,11 +968,10 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 4, product.uom_id.name or '')
             record[0].write(record[1], 5, product.statistic_category or '')
             record[0].write(record[1], 6, product.categ_id.name or '')
-            # record[0].write(  # OLD mode
-            #    record[1], 7,
-            #    product.seller_ids[0].name.name if product.seller_ids else (
-            #        product.first_supplier_id.name or ''))
-
+            record[0].write(  # OLD mode
+                record[1], 7,
+                product.seller_ids[0].name.name if product.seller_ids else (
+                    product.first_supplier_id.name or ''))
             # record[0].write(record[1], 7, first_supplier)
             # record[0].write(record[1], 8, supplier_product_name)
 
