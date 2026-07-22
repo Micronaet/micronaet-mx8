@@ -874,6 +874,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         #                        XLS log export:
         # ---------------------------------------------------------------------
+        product_pool = self.pool.get('product.product')
+
         dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
         now = str(datetime.now())[:19].replace(
             ':', '').replace('/', '').replace('\\', '').replace('.', '')
@@ -882,10 +884,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #    os.path.expanduser('~/NAS/industria40/Report/Inventario'),
         #    'current_inventory_category_{}_{}.xlsx'.format(dbname, now),
         # )
-        filename = os.path.join(
-            '/home/administrator/photo/report/inventory',
-            'inventory_x_category_{}_{}.xlsx'.format(dbname, now),
-        )
+        filename = '/home/administrator/photo/report/inventory/inventory_x_category_{}_{}.xlsx'.format(dbname, now)
 
         _logger.info('Sharepoint doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
@@ -945,9 +944,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
-        for product in self.pool.get(
-                'product.product').stock_status_report_get_object(
-                    cr, uid, data=data, context=context):
+        for product in product_pool.stock_status_report_get_object(cr, uid, data=data, context=context):
             if product.inventory_category_id.id in WS:
                 record = WS[product.inventory_category_id.id]
             else:
