@@ -886,7 +886,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # )
         filename = '/home/administrator/photo/report/inventory/inventory_x_category_{}_{}.xlsx'.format(dbname, now)
 
-        _logger.info('Sharepoint doc: {}'.format(filename))
+        _logger.info('Samba doc: {}'.format(filename))
         WB = xlsxwriter.Workbook(filename)
 
         # ---------------------------------------------------------------------
@@ -944,6 +944,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         # Populate product in correct page
         # ---------------------------------------------------------------------
+        pdb.set_trace()
         for product in product_pool.stock_status_report_get_object(cr, uid, data=data, context=context):
             if product.inventory_category_id.id in WS:
                 record = WS[product.inventory_category_id.id]
@@ -980,6 +981,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             if data.get('with_stock', False):
                 net_qty = product.mx_net_qty - product.mx_mrp_out
+
                 record[0].write(record[1], 11, product.inventory_start or '')
                 record[0].write(record[1], 12, product.inventory_delta or '')
                 record[0].write(record[1], 13, product.mx_mrp_out or '')
