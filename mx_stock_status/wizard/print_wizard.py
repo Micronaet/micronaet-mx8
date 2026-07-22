@@ -878,7 +878,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
         now = str(datetime.now())[:19].replace(
-            ':', '').replace('/', '').replace('\\', '').replace('.', '')
+            ':', '').replace('/', '').replace('\\', '').replace('.', '').replace(' ', '_')
         # OLD: Sharepoint
         # filename = os.path.join(
         #    os.path.expanduser('~/NAS/industria40/Report/Inventario'),
