@@ -952,16 +952,15 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             # Supplier data:
             if product.seller_ids:
-                first_supplier = u'{}'.format(product.seller_ids[0].name.name or '')
-                supplier_product_name = u'{}'.format(product.seller_ids[0].product_name or '/')
+                first_supplier = u'{}'.format(product.seller_ids[0].name.name or u'')
+                supplier_product_name = u'{}'.format(product.seller_ids[0].product_name or u'/')
             else:
                 first_supplier = product.first_supplier_id.name or u'Non presente'
                 supplier_product_name = u'/'
 
             # Write data in correct WS:
             record[0].write(record[1], 0, product.id)
-            record[0].write(
-                record[1], 1, 'X' if product.id in in_bom_ids else '')
+            record[0].write(record[1], 1, 'X' if product.id in in_bom_ids else '')
             record[0].write(record[1], 2, product.default_code)
             record[0].write(record[1], 3, product.name)
             record[0].write(record[1], 4, product.uom_id.name or '')
@@ -971,8 +970,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             #    record[1], 7,
             #    product.seller_ids[0].name.name if product.seller_ids else (
             #        product.first_supplier_id.name or ''))
-            record[0].write(record[1], 7, first_supplier)
-            record[0].write(record[1], 8, supplier_product_name)
+
+            # record[0].write(record[1], 7, first_supplier)
+            # record[0].write(record[1], 8, supplier_product_name)
 
             # Weight:
             record[0].write(record[1], 9, product.weight_net)
