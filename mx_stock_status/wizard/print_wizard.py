@@ -941,8 +941,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 ], context=context)
             for line in line_pool.browse(cr, uid, linked_bom_ids,
                     context=context):
-                linked_bom[
-                    line.product_id.id] = line.bom_id.product_id.default_code
+                linked_bom[line.product_id.id] = line.bom_id.product_id.default_code
 
         # --------------------------------------------------------------------------------------------------------------
         # Populate product in correct page
@@ -954,13 +953,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
                 record = WS[0]
 
             # Supplier data:
-            '''if product.seller_ids:
+            if product.seller_ids:
                 first_supplier = u'{}'.format(product.seller_ids[0].name.name or '')
                 supplier_product_name = u'{}'.format(product.seller_ids[0].product_name or '/')
             else:
                 first_supplier = product.first_supplier_id.name or u'Non presente'
                 supplier_product_name = u'/'
-            '''
 
             # Write data in correct WS:
             record[0].write(record[1], 0, product.id)
@@ -970,12 +968,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             record[0].write(record[1], 4, product.uom_id.name or '')
             record[0].write(record[1], 5, product.statistic_category or '')
             record[0].write(record[1], 6, product.categ_id.name or '')
-            record[0].write(  # OLD mode
-                record[1], 7,
-                product.seller_ids[0].name.name if product.seller_ids else (
-                    product.first_supplier_id.name or ''))
-            # record[0].write(record[1], 7, first_supplier)
-            # record[0].write(record[1], 8, supplier_product_name)
+            # record[0].write(  # OLD mode
+            #    record[1], 7,
+            #    product.seller_ids[0].name.name if product.seller_ids else (
+            #        product.first_supplier_id.name or ''))
+            record[0].write(record[1], 7, first_supplier)
+            record[0].write(record[1], 8, supplier_product_name)
 
             # Weight:
             record[0].write(record[1], 9, product.weight_net)
