@@ -875,9 +875,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         #                                       XLS log export:
         # --------------------------------------------------------------------------------------------------------------
         product_pool = self.pool.get('product.product')
-        excel_pool = self.pool.get('excel.writer')
-        ws_name = 'Controllo volumi'
-        excel_pool.create_worksheet(ws_name)
+        # excel_pool = self.pool.get('excel.writer')
+        # ws_name = 'Controllo volumi'
+        # excel_pool.create_worksheet(ws_name)
 
         dbname = cr.dbname.replace('.', '').replace('/', '').replace('\\', '')
         now = str(datetime.now())[:19].replace(
