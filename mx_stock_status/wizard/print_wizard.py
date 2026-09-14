@@ -546,7 +546,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         excel_pool.column_width(ws_empty, width)
         excel_pool.write_xls_line(ws_empty, 0, header, cell_format['header'])
 
-        # Create all others category:
+        # Create all other categories:
         for category in inv_pool.browse(cr, uid, inv_ids, context=context):
             category_name = category.name
             ws_names[category_name] = [1, 0.0, 0] # jump header
@@ -575,6 +575,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         for product in sorted(
                 product_pool.browse(cr, uid, product_ids, context=context),
                 key=lambda x: (x.default_code, x.name)):
+
             category_name = product.inventory_category_id.name or ''
 
             (date, supplier, cost, number, note, standard_price,
@@ -1300,6 +1301,9 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         elif datas['mode'] == 'inventory_old_xls':
             ctx['open_mode'] = 'old'
             return self.extract_old_xls_inventory_file(cr, uid, ids, datas, context=ctx)
+        elif datas['mode'] == 'inventory_current_xls':
+            ctx['open_mode'] = 'current'
+            return self.extract_old_xls_inventory_file(cr, uid, ids, datas, context=ctx)
         elif datas['mode'] == 'available':
             return self.extract_available_stock_status(cr, uid, ids, wiz_proxy, context=context)
         elif datas['mode'] == 'corresponding':
@@ -1375,7 +1379,8 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             ('table', 'Inventario tavoli'),
             ('inventory_xls', 'File per rilevare Inventario (SMB ODOO)'),  # ex. Sharepoint
             ('inventory_check_xls', 'Inventory check XLS (exported not report)'),
-            ('inventory_old_xls', 'Inventario precedente valorizzato'),
+            ('inventory_old_xls', 'Inventario precedente valorizzato (A)'),
+            ('inventory_current_xls', 'Inventario attuale valorizzato (B)'),
             ('available', 'Disponibile (non collegato a ordini)'),
             ('corresponding', 'Scaricato con corrispettivo'),
             ], 'Mode', required=True)
