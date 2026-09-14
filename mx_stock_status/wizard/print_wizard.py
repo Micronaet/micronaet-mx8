@@ -578,8 +578,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
             category_name = product.inventory_category_id.name or ''
 
-            (date, supplier, cost, number, note, standard_price,
-                weight) = get_last_cost(product)
+            date, supplier, cost, number, note, standard_price, weight = get_last_cost(product)
 
             if mode == 'current':
                 inventory = product.mx_net_mrp_qty  # Current inv.
