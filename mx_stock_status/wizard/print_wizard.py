@@ -418,7 +418,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
             if product.relative_type == 'half':  # Product is HW
                 no_price = False
                 for line in product.half_bom_ids:
-                    cost = get_last_cost(line.product_id)[2]
+                    try:
+                        cost = get_last_cost(line.product_id)[2]
+                    except:
+                        _logger.error('Not found cost for {}'.format(line.product_id.name))
+                        cost = 0.0
+
                     price = line.product_qty * cost
                     if not price:
                         no_price = True
@@ -465,6 +470,7 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
         # ---------------------------------------------------------------------
         if context is None:
             context = {}
+
         # todo keep in parameter!
         mode = context.get('open_mode', 'old')
         _logger.warning('Stampa inventario valorizzato modo: %s' % mode)
@@ -572,12 +578,12 @@ class StockStatusPrintImageReportWizard(orm.TransientModel):
 
         product_ids = product_pool.search(cr, uid, domain, context=context)
         without_inventory = {}  # In current mode used for this page
-        for product in sorted(
-                product_pool.browse(cr, uid, product_ids, context=context),
-                key=lambda x: (x.default_code, x.name)):
+        product_sorted = sorted(
+            product_pool.browse(cr, uid, product_ids, context=context),
+            key=lambda x: (x.default_code, x.name))
 
+        for product in product_sorted:
             category_name = product.inventory_category_id.name or ''
-
             date, supplier, cost, number, note, standard_price, weight = get_last_cost(product)
 
             if mode == 'current':
